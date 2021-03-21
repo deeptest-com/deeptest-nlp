@@ -1,0 +1,42 @@
+{
+  "language": "zh",
+  "messages": [
+    {
+      "id": "for_example",
+      "translation": "例如 %s"
+    },
+
+    {
+      "id": "invalid_actions",
+      "translation": "无效的动作%s在%q中。"
+    },
+    {
+      "id": "launch_in_terminal",
+      "translation": "从终端启动。"
+    },
+    {
+      "id": "launch_in_service",
+      "translation": "从系统服务启动。"
+    },
+    {
+      "id": "running",
+      "translation": "正在运行于%v。"
+    },
+    {
+      "id": "stopping",
+      "translation": "正在停止。"
+    },
+    {
+      "id": "start_to_run",
+      "translation": "执行定时任务。"
+    },
+    {
+      "id": "success_to_register",
+      "translation": "成功注册虚拟机到服务器%s."
+    },
+    {
+      "id": "fail_to_register",
+      "translation": "失败注册虚拟机到服务器%s，响应为%#v."
+    }
+  ]
+}

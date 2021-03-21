@@ -1,0 +1,46 @@
+go-bindata -o=res/res.go -pkg=res res/... ui/dist/...
+
+# 安装Python3环境
+
+MAC
+brew search python3
+brew reinstall python@3.8
+echo 'export PATH="/usr/local/opt/python@3.8/bin:$PATH"' >> /Users/aaron/.bash_profile
+source .bash_profile
+
+Linux
+sudo apt update
+sudo apt install python3-dev python3-pip
+sudo apt-get install python3-venv
+
+多环境
+python3 -m venv --system-site-packages ./venv
+source ./venv/bin/activate
+pip3 install --upgrade pip3
+
+# 安装rasa
+pip3 install rasa
+pip3 install --upgrade tensorflow
+pip3 install --upgrade rasa
+
+pip install git+https://github.com/mit-nlp/MITIE.git
+如果拉不下来，手工下载
+cd ../../software/MITIE-master
+python3 setup.py build
+python3 setup.py install
+
+pip3 install --upgrade jieba
+
+# 安装rasax
+pip3 install rasa-x --extra-index-url https://pypi.rasa.com/simple --use-deprecated=legacy-resolver
+
+# 初始化
+rasa train
+rasa run --enable-api -m models --log-file out.log
+rasa run actions
+
+# 转换MD为YAML
+rasa data convert nlu -f yaml --data=in --out=out
+rasa data convert nlg -f yaml --data=in --out=out
+rasa data convert core -f yaml --data=in --out=out
+
