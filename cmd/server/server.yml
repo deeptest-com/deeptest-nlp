@@ -16,7 +16,7 @@ admin: # 管理员账号信息，用于数据填充
   password: P2ssw0rd
 
 db:
-  adapter: sqlite3 # 数据库类型
+  adapter: mysql # 数据库类型
   host: localhost # 数据库地址
   port: 3306 #数据库端口
   name: utl #数据库名称
