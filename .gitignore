@@ -4,6 +4,5 @@
 /bin/
 /res/server/res.go
 /res/agent/res.go
-/rasa/test/res/total_word_feature_extractor_zh.dat
 /rasa/test/models/*.gz
 /rasa/temp/
