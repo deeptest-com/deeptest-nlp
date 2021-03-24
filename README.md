@@ -2,7 +2,7 @@
 
 ## Unified Testing Language
 
-[Rasa Nlu](https://github.com/RasaHQ/rasa), Vue.js, Golang, MySQL
+[Rasa Nlu](https://github.com/RasaHQ/rasa), Golang, MySQL, Vue.js
 
 ### Quick start
 TODO
