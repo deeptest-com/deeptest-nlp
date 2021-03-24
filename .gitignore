@@ -6,3 +6,4 @@
 /res/agent/res.go
 /rasa/test/models/*.gz
 /rasa/temp/
+/rasa/test/res/*.dat
