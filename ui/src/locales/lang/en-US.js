@@ -18,6 +18,16 @@ const locale = {
   'menu.sys.admin': 'System',
   'menu.sys.settings': 'Global Settings',
 
+  'menu.intent': 'Intent',
+  'menu.intent.list': 'Intent List',
+  'menu.intent.edit': 'Intent Edit',
+  'menu.synonym': 'Synonym',
+  'menu.synonym.list': 'Synonym List',
+  'menu.synonym.edit': 'Synonym Edit',
+  'menu.lookup': 'Lookup',
+  'menu.lookup.list': 'Lookup List',
+  'menu.lookup.edit': 'Lookup Edit',
+
   'menu.dashboard': 'Dashboard',
   'menu.dashboard.analysis': 'Analysis',
   'menu.dashboard.monitor': 'Monitor',

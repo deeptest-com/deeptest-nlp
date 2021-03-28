@@ -1,6 +1,9 @@
 package handler
 
 import (
+	"github.com/go-playground/validator/v10"
+	"github.com/iris-contrib/middleware/jwt"
+	"github.com/kataras/iris/v12"
 	"github.com/utlai/utl/internal/pkg/utils"
 	"github.com/utlai/utl/internal/server/biz/domain"
 	"github.com/utlai/utl/internal/server/biz/redis"
@@ -9,9 +12,6 @@ import (
 	"github.com/utlai/utl/internal/server/cfg"
 	"github.com/utlai/utl/internal/server/repo"
 	"github.com/utlai/utl/internal/server/service"
-	"github.com/go-playground/validator/v10"
-	"github.com/iris-contrib/middleware/jwt"
-	"github.com/kataras/iris/v12"
 )
 
 type AccountCtrl struct {
@@ -79,6 +79,10 @@ func (c *AccountCtrl) UserLogin(ctx iris.Context) {
 	}
 
 	response, code, msg := c.UserService.CheckLogin(ctx, user, aul.Password)
+	if code != 200 {
+		_, _ = ctx.JSON(_utils.ApiRes(code, msg, response))
+		return
+	}
 	response.RememberMe = aul.RememberMe
 
 	refreshToken := ""

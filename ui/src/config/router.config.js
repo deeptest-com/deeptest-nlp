@@ -14,12 +14,12 @@ export const asyncRouterMap = [
     name: 'index',
     component: BasicLayout,
     meta: { title: 'menu.home' },
-    redirect: '/platform',
+    redirect: '/platform/intent/list',
     children: [
       {
         path: '/platform',
         name: 'platform',
-        redirect: '/project/list',
+        redirect: '/platform/intent/list',
         component: RouteView,
         meta: { title: 'menu.platform', keepAlive: true, icon: bxAnaalyse, permission: [ 'platform' ] },
         hideChildrenInMenu: false,
@@ -31,18 +31,68 @@ export const asyncRouterMap = [
             meta: { title: 'menu.platform.dashboard', keepAlive: true, permission: [ 'platform' ] }
           },
           {
-            path: '/project',
-            name: 'project',
-            redirect: '/project/list',
+            path: '/platform/intent',
+            name: 'intent',
+            redirect: '/platform/intent/list',
             component: RouteView,
-            meta: { title: 'menu.platform.project', keepAlive: true, permission: [ 'project' ] },
+            meta: { title: 'menu.intent', keepAlive: true, permission: [ 'intent' ] },
             hideChildrenInMenu: true,
             children: [
               {
-                path: '/project/list',
-                name: 'platform-list',
-                component: () => import('@/views/project/List'),
-                meta: { title: 'menu.project.list', keepAlive: true, permission: [ 'project' ] }
+                path: '/platform/intent/list',
+                name: 'intent-list',
+                component: () => import('@/views/intent/List'),
+                meta: { title: 'menu.intent.list', keepAlive: true, permission: [ 'intent' ] }
+              },
+              {
+                path: '/platform/intent/edit',
+                name: 'intent-edit',
+                component: () => import('@/views/intent/Edit'),
+                meta: { title: 'menu.intent.edit', keepAlive: true, permission: [ 'intent' ] }
+              }
+            ]
+          },
+          {
+            path: '/platform/synonym',
+            name: 'synonym',
+            redirect: '/platform/synonym/list',
+            component: RouteView,
+            meta: { title: 'menu.synonym', keepAlive: true, permission: [ 'synonym' ] },
+            hideChildrenInMenu: true,
+            children: [
+              {
+                path: '/platform/synonym/list',
+                name: 'synonym-list',
+                component: () => import('@/views/synonym/List'),
+                meta: { title: 'menu.synonym.list', keepAlive: true, permission: [ 'synonym' ] }
+              },
+              {
+                path: '/platform/synonym/edit',
+                name: 'synonym-edit',
+                component: () => import('@/views/synonym/Edit'),
+                meta: { title: 'menu.synonym.edit', keepAlive: true, permission: [ 'synonym' ] }
+              }
+            ]
+          },
+          {
+            path: '/platform/lookup',
+            name: 'lookup',
+            redirect: '/platform/lookup/list',
+            component: RouteView,
+            meta: { title: 'menu.lookup', keepAlive: true, permission: [ 'lookup' ] },
+            hideChildrenInMenu: true,
+            children: [
+              {
+                path: '/platform/lookup/list',
+                name: 'lookup-list',
+                component: () => import('@/views/lookup/List'),
+                meta: { title: 'menu.intent.list', keepAlive: true, permission: [ 'lookup' ] }
+              },
+              {
+                path: '/platform/lookup/edit',
+                name: 'lookup-edit',
+                component: () => import('@/views/lookup/Edit'),
+                meta: { title: 'menu.intent.edit', keepAlive: true, permission: [ 'lookup' ] }
               }
             ]
           }

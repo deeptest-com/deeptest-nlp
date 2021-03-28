@@ -23,6 +23,16 @@ const locale = {
   'menu.dashboard.monitor': '监控页',
   'menu.dashboard.workplace': '工作台',
 
+  'menu.intent': '意图',
+  'menu.intent.list': '意图列表',
+  'menu.intent.edit': '意图编辑',
+  'menu.synonym': '同义词',
+  'menu.synonym.list': '同义词列表',
+  'menu.synonym.edit': '同义词编辑',
+  'menu.lookup': '词表',
+  'menu.lookup.list': '词表列表',
+  'menu.lookup.edit': '词表编辑',
+
   'common.notify': '通知',
 
   'action.create': '创建',

@@ -2,13 +2,13 @@ package service
 
 import (
 	"fmt"
+	logger "github.com/sirupsen/logrus"
 	_fileUtils "github.com/utlai/utl/internal/pkg/libs/file"
 	"github.com/utlai/utl/internal/pkg/utils"
 	"github.com/utlai/utl/internal/server/biz/domain"
 	"github.com/utlai/utl/internal/server/cfg"
 	"github.com/utlai/utl/internal/server/model"
 	"github.com/utlai/utl/internal/server/repo"
-	logger "github.com/sirupsen/logrus"
 	"math/rand"
 	"path/filepath"
 	"time"
@@ -211,6 +211,7 @@ func (s *SeederService) CreateAdminUser() {
 			Avatar:   "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIPbZRufW9zPiaGpfdXgU7icRL1licKEicYyOiace8QQsYVKvAgCrsJx1vggLAD2zJMeSXYcvMSkw9f4pw/132",
 			Intro:    "超级弱鸡程序猿一枚！！！！",
 		}
+
 		admin.RoleIds = roleIds
 		if err := s.UserService.CreateUser(admin); err != nil {
 			logger.Println(fmt.Sprintf("管理员填充错误：%+v\n", err))
