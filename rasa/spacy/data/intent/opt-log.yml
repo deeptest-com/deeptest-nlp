@@ -1,0 +1,8 @@
+version: "2.0"
+
+nlu:
+
+- intent: opt_log
+  examples: |
+    - [打印]{"entity":"print", "value":"syn_print"}[消息]{"entity":"log_level", "value":"lkp_log_level"}[内容](message)
+    - [打印]{"entity":"print", "value":"syn_print"}[消息]{"entity":"log_level", "value":"lkp_log_level"}日志[内容](message)
