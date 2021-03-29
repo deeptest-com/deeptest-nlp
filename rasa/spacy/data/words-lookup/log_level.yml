@@ -2,7 +2,7 @@ version: "2.0"
 
 nlu:
 
-- lookup: lkp_log_level
+- lookup: lkp_loglevel
   examples: |
     - 消息
     - 警告
