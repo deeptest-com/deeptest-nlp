@@ -45,3 +45,13 @@ rasa data convert nlu -f yaml --data=in --out=out
 rasa data convert nlg -f yaml --data=in --out=out
 rasa data convert core -f yaml --data=in --out=out
 
+# spacy
+pip install -U pip setuptools wheel
+pip install -U spacy
+pip install -U pip setuptools wheel
+pip install -U spacy
+
+pip install spacy-transformers
+pip install spacy-lookups-data
+python -m spacy download zh_core_web_md
+python -m spacy download zh_core_web_lg

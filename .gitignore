@@ -7,3 +7,5 @@
 /rasa/test/models/*.gz
 /rasa/test/res/*.dat
 /rasa/temp/
+/rasa/spacy/models/*.gz
+/rasa/spacy/res/*.gz
