@@ -10,6 +10,12 @@ entities:
   - message
 
 slots:
+  print:
+    type: text
+    influence_conversation: false
+  log_level:
+    type: text
+    influence_conversation: false
   message:
     type: text
     influence_conversation: false
