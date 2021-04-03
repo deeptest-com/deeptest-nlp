@@ -14,106 +14,116 @@ export const asyncRouterMap = [
     name: 'index',
     component: BasicLayout,
     meta: { title: 'menu.home' },
-    redirect: '/platform/intent/list',
+    redirect: '/nlu/intent/list',
     children: [
       {
         path: '/platform',
         name: 'platform',
-        redirect: '/platform/intent/list',
+        redirect: '/platform/dashboard',
         component: RouteView,
-        meta: { title: 'menu.platform', keepAlive: true, icon: bxAnaalyse, permission: [ 'platform' ] },
+        meta: { title: 'menu.platform', keepAlive: true, icon: bxAnaalyse, permission: ['nlu'] },
         hideChildrenInMenu: false,
         children: [
           {
             path: '/platform/dashboard',
             name: 'platform-dashboard',
             component: () => import('@/views/platform/Dashboard'),
-            meta: { title: 'menu.platform.dashboard', keepAlive: true, permission: [ 'platform' ] }
+            meta: { title: 'menu.platform.dashboard', keepAlive: true, permission: ['nlu'] }
           },
           {
             path: '/platform/project',
             name: 'project',
             redirect: '/platform/project/list',
             component: RouteView,
-            meta: { title: 'menu.project', keepAlive: true, permission: [ 'project' ] },
+            meta: { title: 'menu.project', keepAlive: true, permission: ['project'] },
             hideChildrenInMenu: true,
             children: [
               {
                 path: '/platform/project/list',
                 name: 'project-list',
-                component: () => import('@/views/project/List'),
-                meta: { title: 'menu.project.list', keepAlive: true, permission: [ 'project' ] }
+                component: () => import('@/views/platform/project/List'),
+                meta: { title: 'menu.project.list', keepAlive: true, permission: ['project'] }
               },
               {
                 path: '/platform/project/edit',
                 name: 'project-edit',
-                component: () => import('@/views/project/Edit'),
-                meta: { title: 'menu.project.edit', keepAlive: true, permission: [ 'project' ] }
+                component: () => import('@/views/platform/project/Edit'),
+                meta: { title: 'menu.project.edit', keepAlive: true, permission: ['project'] }
               }
             ]
-          },
+          }
+        ]
+      },
+      {
+        path: '/nlu',
+        name: 'nlu',
+        redirect: '/nlu/intent/list',
+        component: RouteView,
+        meta: { title: 'menu.nlu', keepAlive: true, icon: bxAnaalyse, permission: [ 'nlu' ] },
+        hideChildrenInMenu: false,
+        children: [
           {
-            path: '/platform/intent',
+            path: '/nlu/intent',
             name: 'intent',
-            redirect: '/platform/intent/list',
+            redirect: '/nlu/intent/list',
             component: RouteView,
             meta: { title: 'menu.intent', keepAlive: true, permission: [ 'intent' ] },
             hideChildrenInMenu: true,
             children: [
               {
-                path: '/platform/intent/list',
+                path: '/nlu/intent/list',
                 name: 'intent-list',
-                component: () => import('@/views/intent/List'),
+                component: () => import('@/views/nlu/intent/List'),
                 meta: { title: 'menu.intent.list', keepAlive: true, permission: [ 'intent' ] }
               },
               {
-                path: '/platform/intent/edit',
+                path: '/nlu/intent/edit',
                 name: 'intent-edit',
-                component: () => import('@/views/intent/Edit'),
+                component: () => import('@/views/nlu/intent/Edit'),
                 meta: { title: 'menu.intent.edit', keepAlive: true, permission: [ 'intent' ] }
               }
             ]
           },
           {
-            path: '/platform/synonym',
+            path: '/nlu/synonym',
             name: 'synonym',
-            redirect: '/platform/synonym/list',
+            redirect: '/nlu/synonym/list',
             component: RouteView,
             meta: { title: 'menu.synonym', keepAlive: true, permission: [ 'synonym' ] },
             hideChildrenInMenu: true,
             children: [
               {
-                path: '/platform/synonym/list',
+                path: '/nlu/synonym/list',
                 name: 'synonym-list',
-                component: () => import('@/views/synonym/List'),
+                component: () => import('@/views/nlu/synonym/List'),
                 meta: { title: 'menu.synonym.list', keepAlive: true, permission: [ 'synonym' ] }
               },
               {
-                path: '/platform/synonym/edit',
+                path: '/nlu/synonym/edit',
                 name: 'synonym-edit',
-                component: () => import('@/views/synonym/Edit'),
+                component: () => import('@/views/nlu/synonym/Edit'),
                 meta: { title: 'menu.synonym.edit', keepAlive: true, permission: [ 'synonym' ] }
               }
             ]
           },
           {
-            path: '/platform/lookup',
+            path: '/nlu/lookup',
             name: 'lookup',
-            redirect: '/platform/lookup/list',
+            redirect: '/nlu/lookup/list',
             component: RouteView,
             meta: { title: 'menu.lookup', keepAlive: true, permission: [ 'lookup' ] },
             hideChildrenInMenu: true,
             children: [
               {
-                path: '/platform/lookup/list',
+                path: '/nlu/lookup/list',
                 name: 'lookup-list',
-                component: () => import('@/views/lookup/List'),
+                component: () => import('@/views/nlu/lookup/List'),
                 meta: { title: 'menu.intent.list', keepAlive: true, permission: [ 'lookup' ] }
               },
               {
-                path: '/platform/lookup/edit',
+                path: '/nlu/lookup/edit',
                 name: 'lookup-edit',
-                component: () => import('@/views/lookup/Edit'),
+                component: () => import('@/views/nlu/lookup/Edit'),
                 meta: { title: 'menu.intent.edit', keepAlive: true, permission: [ 'lookup' ] }
               }
             ]

@@ -21,6 +21,7 @@ const locale = {
   'menu.dashboard.monitor': '监控页',
   'menu.dashboard.workplace': '工作台',
 
+  'menu.nlu': '自然语言理解',
   'menu.project': '项目',
   'menu.project.list': '项目列表',
   'menu.project.edit': '项目编辑',

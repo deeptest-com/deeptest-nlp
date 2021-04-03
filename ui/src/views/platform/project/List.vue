@@ -115,8 +115,8 @@ import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
 import { listProject } from '@/api/manage'
 
-import StepByStepModal from '../list/modules/StepByStepModal'
-import CreateForm from '../list/modules/CreateForm'
+import StepByStepModal from '../../list/modules/StepByStepModal'
+import CreateForm from '../../list/modules/CreateForm'
 
 const columns = [
   {
@@ -160,7 +160,7 @@ const statusMap = {
 }
 
 export default {
-  name: 'SynonymList',
+  name: 'ProjectList',
   components: {
     STable,
     Ellipsis,
@@ -213,14 +213,10 @@ export default {
     handleAdd () {
       this.mdl = null
       this.visible = true
-
-      this.$router.push('/platform/synonym/edit')
     },
     handleEdit (record) {
       this.visible = true
       this.mdl = { ...record }
-
-      this.$router.push('/platform/synonym/edit')
     },
     handleOk () {
       // const form = this.$refs.createModal.form

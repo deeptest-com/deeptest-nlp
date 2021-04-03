@@ -16,6 +16,7 @@ const locale = {
   'menu.sys.admin': 'System',
   'menu.sys.settings': 'Global Settings',
 
+  'menu.nlu': 'Natural Language Understanding',
   'menu.project': 'Project',
   'menu.project.list': 'Project List',
   'menu.project.edit': 'Project Edit',
