@@ -1,6 +1,8 @@
 package model
 
 type NluSynonym struct {
+	BaseModel
+
 	Name  string           `yaml:"name"`
 	Items []NluSynonymItem `yaml:"items"`
 }

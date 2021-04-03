@@ -1,6 +1,8 @@
 package model
 
 type NluLookup struct {
+	BaseModel
+
 	Name  string          `yaml:"name"`
 	Items []NluLookupItem `yaml:"items"`
 }

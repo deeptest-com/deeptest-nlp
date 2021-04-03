@@ -34,6 +34,7 @@ type Router struct {
 
 	RpcCtrl *handler.RpcCtrl `inject:""`
 
+	ProjectCtrl        *handler.ProjectCtrl    `inject:""`
 	NluIntentCtrl      *handler.NluIntentCtrl  `inject:""`
 	NluLookupCtrlCtrl  *handler.NluLookupCtrl  `inject:""`
 	NluSynonymCtrlCtrl *handler.NluSynonymCtrl `inject:""`
@@ -79,6 +80,15 @@ func (r *Router) App() {
 				admin.Post("/logout", r.AccountCtrl.UserLogout).Name = "退出"
 				admin.Get("/expire", r.AccountCtrl.UserExpire).Name = "刷新Token"
 				admin.Get("/profile", r.UserCtrl.GetProfile).Name = "个人信息"
+
+				admin.PartyFunc("/projects", func(party iris.Party) {
+					party.Get("/", r.ProjectCtrl.List).Name = "项目列表"
+					party.Get("/{id:uint}", r.ProjectCtrl.Get).Name = "项目详情"
+					party.Post("/", r.ProjectCtrl.Create).Name = "创建项目"
+					party.Put("/{id:uint}", r.ProjectCtrl.Update).Name = "更新项目"
+					party.Put("/{id:uint}/setDefault", r.ProjectCtrl.SetDefault).Name = "设置当前项目"
+					party.Delete("/{id:uint}", r.ProjectCtrl.Delete).Name = "删除项目"
+				})
 
 				admin.PartyFunc("/intents", func(party iris.Party) {
 					party.Get("/", r.NluIntentCtrl.List).Name = "项目列表"

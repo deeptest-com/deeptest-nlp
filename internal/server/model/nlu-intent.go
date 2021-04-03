@@ -1,8 +1,10 @@
 package model
 
 type NluIntent struct {
-	Version string    `yaml:"version,default:0"`
-	Sents   []NluSent `yaml:"sents"`
+	BaseModel
+
+	Name  string    `yaml:"name"`
+	Sents []NluSent `yaml:"sents"`
 }
 
 type NluSent struct {
