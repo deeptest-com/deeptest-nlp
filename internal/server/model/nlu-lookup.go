@@ -2,7 +2,7 @@ package model
 
 type NluLookup struct {
 	Name  string          `yaml:"name"`
-	Items []NluLookupItem `yaml:"items" gorm:"foreignKey:LookupId"`
+	Items []NluLookupItem `yaml:"items"`
 }
 type NluLookupItem struct {
 	Content string `yaml:"content"`

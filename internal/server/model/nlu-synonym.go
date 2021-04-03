@@ -2,7 +2,7 @@ package model
 
 type NluSynonym struct {
 	Name  string           `yaml:"name"`
-	Items []NluSynonymItem `yaml:"items" gorm:"foreignKey:SynonymId"`
+	Items []NluSynonymItem `yaml:"items"`
 }
 type NluSynonymItem struct {
 	Content string `yaml:"content"`

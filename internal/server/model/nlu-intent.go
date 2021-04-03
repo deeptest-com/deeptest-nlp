@@ -2,14 +2,14 @@ package model
 
 type NluIntent struct {
 	Version string    `yaml:"version,default:0"`
-	Sents   []NluSent `yaml:"sents" gorm:"foreignKey:IntentId"`
+	Sents   []NluSent `yaml:"sents"`
 }
 
 type NluSent struct {
 	BaseModel
 
 	Content string    `json:"content"`
-	Slots   []NluSlot `yaml:"slots" gorm:"foreignKey:SentId"`
+	Slots   []NluSlot `yaml:"slots"`
 
 	IntentId uint `json:"intentId"`
 }
