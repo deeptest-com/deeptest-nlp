@@ -13,11 +13,12 @@ const locale = {
 
   'menu.platform': 'Platform',
   'menu.platform.dashboard': 'Dashboard',
-  'menu.platform.project': 'Project',
-  'menu.project.list': 'Project List',
   'menu.sys.admin': 'System',
   'menu.sys.settings': 'Global Settings',
 
+  'menu.project': 'Project',
+  'menu.project.list': 'Project List',
+  'menu.project.edit': 'Project Edit',
   'menu.intent': 'Intent',
   'menu.intent.list': 'Intent List',
   'menu.intent.edit': 'Intent Edit',

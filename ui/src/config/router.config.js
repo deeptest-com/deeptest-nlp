@@ -31,6 +31,28 @@ export const asyncRouterMap = [
             meta: { title: 'menu.platform.dashboard', keepAlive: true, permission: [ 'platform' ] }
           },
           {
+            path: '/platform/project',
+            name: 'project',
+            redirect: '/platform/project/list',
+            component: RouteView,
+            meta: { title: 'menu.project', keepAlive: true, permission: [ 'project' ] },
+            hideChildrenInMenu: true,
+            children: [
+              {
+                path: '/platform/project/list',
+                name: 'project-list',
+                component: () => import('@/views/project/List'),
+                meta: { title: 'menu.project.list', keepAlive: true, permission: [ 'project' ] }
+              },
+              {
+                path: '/platform/project/edit',
+                name: 'project-edit',
+                component: () => import('@/views/project/Edit'),
+                meta: { title: 'menu.project.edit', keepAlive: true, permission: [ 'project' ] }
+              }
+            ]
+          },
+          {
             path: '/platform/intent',
             name: 'intent',
             redirect: '/platform/intent/list',

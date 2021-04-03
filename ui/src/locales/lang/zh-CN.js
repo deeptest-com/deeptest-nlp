@@ -13,8 +13,6 @@ const locale = {
 
   'menu.platform': '智能平台',
   'menu.platform.dashboard': '仪表盘',
-  'menu.platform.project': '项目管理',
-  'menu.project.list': '项目列表',
   'menu.sys.admin': '系统管理',
   'menu.sys.settings': '全局设置',
 
@@ -23,6 +21,9 @@ const locale = {
   'menu.dashboard.monitor': '监控页',
   'menu.dashboard.workplace': '工作台',
 
+  'menu.project': '项目',
+  'menu.project.list': '项目列表',
+  'menu.project.edit': '项目编辑',
   'menu.intent': '意图',
   'menu.intent.list': '意图列表',
   'menu.intent.edit': '意图编辑',
