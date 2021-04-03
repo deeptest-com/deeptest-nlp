@@ -1,8 +1,10 @@
 package model
 
 type Project struct {
-	Name string    `yaml:"name"`
-	Desc []NluSent `yaml:"desc"`
+	BaseModel
+
+	Name string `yaml:"name"`
+	Desc string `yaml:"desc"`
 }
 
 func (Project) TableName() string {

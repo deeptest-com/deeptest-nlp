@@ -214,13 +214,13 @@ export default {
       this.mdl = null
       this.visible = true
 
-      this.$router.push('/platform/intent/edit')
+      this.$router.push('/nlu/intent/edit')
     },
     handleEdit (record) {
       this.visible = true
       this.mdl = { ...record }
 
-      this.$router.push('/platform/intent/edit')
+      this.$router.push('/nlu/intent/edit')
     },
     handleOk () {
       // const form = this.$refs.createModal.form

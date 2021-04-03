@@ -4,7 +4,7 @@ type NluSynonym struct {
 	BaseModel
 
 	Name  string           `yaml:"name"`
-	Items []NluSynonymItem `yaml:"items"`
+	Items []NluSynonymItem `yaml:"items" gorm:"-"`
 }
 type NluSynonymItem struct {
 	Content string `yaml:"content"`

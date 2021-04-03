@@ -27,3 +27,7 @@ type Token struct {
 	Token      string `json:"token"`
 	RememberMe bool   `json:"rememberMe"`
 }
+
+func (User) TableName() string {
+	return "biz_user"
+}

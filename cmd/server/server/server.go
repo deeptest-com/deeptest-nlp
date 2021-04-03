@@ -92,6 +92,11 @@ func injectObj(router *router.Router) {
 		&inject.Object{Value: db.GetInst().DB()},
 
 		// repo
+		&inject.Object{Value: repo.NewProjectRepo()},
+		&inject.Object{Value: repo.NewNluIntentRepo()},
+		&inject.Object{Value: repo.NewNluLookupRepo()},
+		&inject.Object{Value: repo.NewNluSynonymRepo()},
+
 		&inject.Object{Value: repo.NewCommonRepo()},
 		&inject.Object{Value: repo.NewPermRepo()},
 		&inject.Object{Value: repo.NewRoleRepo()},
@@ -105,22 +110,28 @@ func injectObj(router *router.Router) {
 		&inject.Object{Value: middleware.NewCasbinService()},
 
 		// service
-		&inject.Object{Value: serverCron.NewServerCron()},
+		&inject.Object{Value: service.NewProjectService()},
+		&inject.Object{Value: service.NewNluIntentService()},
+		&inject.Object{Value: service.NewNluLookupService()},
+		&inject.Object{Value: service.NewNluSynonymService()},
 
+		&inject.Object{Value: serverCron.NewServerCron()},
 		&inject.Object{Value: service.NewCommonService()},
 
 		&inject.Object{Value: service.NewPermService()},
 		&inject.Object{Value: service.NewRoleService()},
 		&inject.Object{Value: service.NewSeeder()},
 		&inject.Object{Value: service.NewUserService()},
-
 		&inject.Object{Value: service.NewRpcService()},
 
 		// controller
+		&inject.Object{Value: handler.NewProjectCtrl()},
+		&inject.Object{Value: handler.NewNluIntentCtrl()},
+		&inject.Object{Value: handler.NewNluLookupCtrl()},
+		&inject.Object{Value: handler.NewNluSynonymCtrl()},
 
 		&inject.Object{Value: handler.NewAccountCtrl()},
 		&inject.Object{Value: handler.NewFileCtrl()},
-
 		&inject.Object{Value: handler.NewInitCtrl()},
 		&inject.Object{Value: handler.NewPermCtrl()},
 		&inject.Object{Value: handler.NewUserCtrl()},

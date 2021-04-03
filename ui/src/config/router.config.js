@@ -14,12 +14,11 @@ export const asyncRouterMap = [
     name: 'index',
     component: BasicLayout,
     meta: { title: 'menu.home' },
-    redirect: '/nlu/intent/list',
+    redirect: '/platform/project/list',
     children: [
       {
         path: '/platform',
         name: 'platform',
-        redirect: '/platform/dashboard',
         component: RouteView,
         meta: { title: 'menu.platform', keepAlive: true, icon: bxAnaalyse, permission: ['nlu'] },
         hideChildrenInMenu: false,
@@ -57,7 +56,6 @@ export const asyncRouterMap = [
       {
         path: '/nlu',
         name: 'nlu',
-        redirect: '/nlu/intent/list',
         component: RouteView,
         meta: { title: 'menu.nlu', keepAlive: true, icon: bxAnaalyse, permission: [ 'nlu' ] },
         hideChildrenInMenu: false,

@@ -8,3 +8,7 @@ type Permission struct {
 	Description string `gorm:"type:varchar(256)" json:"description" comment:"描述"`
 	Act         string `gorm:"type:varchar(256)" json:"act" comment:"动作"`
 }
+
+func (Permission) TableName() string {
+	return "biz_permission"
+}

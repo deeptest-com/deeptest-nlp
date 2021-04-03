@@ -1,11 +1,11 @@
 package model
 
-import (
-	"time"
-)
+import "time"
 
 type BaseModel struct {
-	ID        uint       `gorm:"primaryKey" json:"id"`
+	//gorm.Model
+
+	ID        uint       `gorm:"primary_key" sql:"type:INT(10) UNSIGNED NOT NULL" json:"id"`
 	CreatedAt time.Time  `json:"createdAt"`
 	UpdatedAt time.Time  `json:"updatedAt"`
 	DeletedAt *time.Time `sql:"index" json:"deletedAt"`
@@ -13,13 +13,12 @@ type BaseModel struct {
 
 var (
 	Models = []interface{}{
+		&Project{},
 		&NluIntent{},
 		&NluSent{},
 		&NluSlot{},
-
 		&NluSynonym{},
 		&NluSynonymItem{},
-
 		&NluLookup{},
 		&NluLookupItem{},
 

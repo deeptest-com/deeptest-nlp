@@ -8,3 +8,7 @@ type Role struct {
 	Description string `gorm:"type:varchar(256)" json:"description" comment:"描述"`
 	PermIds     []uint `gorm:"-" json:"perm_ids" comment:"权限id"`
 }
+
+func (Role) TableName() string {
+	return "biz_role"
+}

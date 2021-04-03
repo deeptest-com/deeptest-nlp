@@ -113,7 +113,7 @@ func (t *Transform) transformerPtr() {
 				}
 			}
 			if into.Name == "BaseModel" { // BaseModel for beego orm
-				if otf.Name == "Id" {
+				if otf.Name == "ID" {
 					of.SetInt(inf.FieldByName("ID").Interface().(int64))
 					continue
 				} else if otf.Name == "CreatedAt" {
@@ -124,7 +124,7 @@ func (t *Transform) transformerPtr() {
 					continue
 				}
 			} else if into.Name == "Model" { //Model for gorm
-				if otf.Name == "Id" {
+				if otf.Name == "ID" {
 					of.SetInt(int64(inf.FieldByName("ID").Interface().(uint)))
 					continue
 				} else if otf.Name == "CreatedAt" {

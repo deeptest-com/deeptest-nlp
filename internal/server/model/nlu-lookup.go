@@ -4,7 +4,7 @@ type NluLookup struct {
 	BaseModel
 
 	Name  string          `yaml:"name"`
-	Items []NluLookupItem `yaml:"items"`
+	Items []NluLookupItem `yaml:"items" gorm:"-"`
 }
 type NluLookupItem struct {
 	Content string `yaml:"content"`

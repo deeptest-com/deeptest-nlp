@@ -213,10 +213,14 @@ export default {
     handleAdd () {
       this.mdl = null
       this.visible = true
+
+      this.$router.push('/platform/project/edit')
     },
     handleEdit (record) {
       this.visible = true
       this.mdl = { ...record }
+
+      this.$router.push('/platform/project/edit')
     },
     handleOk () {
       // const form = this.$refs.createModal.form

@@ -30,10 +30,10 @@ func (c *ProjectCtrl) List(ctx iris.Context) {
 		pageSize = serverConst.PageSize
 	}
 
-	plans, total := c.ProjectService.List(keywords, pageNo, pageSize)
+	projects, total := c.ProjectService.List(keywords, pageNo, pageSize)
 
 	_, _ = ctx.JSON(_utils.ApiResPage(200, "请求成功",
-		plans, pageNo, pageSize, total))
+		projects, pageNo, pageSize, total))
 }
 
 func (c *ProjectCtrl) Get(ctx iris.Context) {

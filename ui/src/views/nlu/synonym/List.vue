@@ -214,13 +214,13 @@ export default {
       this.mdl = null
       this.visible = true
 
-      this.$router.push('/platform/synonym/edit')
+      this.$router.push('/nlu/synonym/edit')
     },
     handleEdit (record) {
       this.visible = true
       this.mdl = { ...record }
 
-      this.$router.push('/platform/synonym/edit')
+      this.$router.push('/nlu/synonym/edit')
     },
     handleOk () {
       // const form = this.$refs.createModal.form

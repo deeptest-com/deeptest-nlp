@@ -91,27 +91,27 @@ func (r *Router) App() {
 				})
 
 				admin.PartyFunc("/intents", func(party iris.Party) {
-					party.Get("/", r.NluIntentCtrl.List).Name = "项目列表"
-					party.Get("/{id:uint}", r.NluIntentCtrl.Get).Name = "项目详情"
-					party.Post("/", r.NluIntentCtrl.Create).Name = "创建项目"
-					party.Put("/{id:uint}", r.NluIntentCtrl.Update).Name = "更新项目"
-					party.Delete("/{id:uint}", r.NluIntentCtrl.Delete).Name = "删除项目"
+					party.Get("/", r.NluIntentCtrl.List).Name = "意图列表"
+					party.Get("/{id:uint}", r.NluIntentCtrl.Get).Name = "意图详情"
+					party.Post("/", r.NluIntentCtrl.Create).Name = "创建意图"
+					party.Put("/{id:uint}", r.NluIntentCtrl.Update).Name = "更新意图"
+					party.Delete("/{id:uint}", r.NluIntentCtrl.Delete).Name = "删除意图"
 				})
 
 				admin.PartyFunc("/lookups", func(party iris.Party) {
-					party.Get("/", r.NluLookupCtrlCtrl.List).Name = "项目列表"
-					party.Get("/{id:uint}", r.NluLookupCtrlCtrl.Get).Name = "项目详情"
-					party.Post("/", r.NluLookupCtrlCtrl.Create).Name = "创建项目"
-					party.Put("/{id:uint}", r.NluLookupCtrlCtrl.Update).Name = "更新项目"
-					party.Delete("/{id:uint}", r.NluLookupCtrlCtrl.Delete).Name = "删除项目"
+					party.Get("/", r.NluLookupCtrlCtrl.List).Name = "词表列表"
+					party.Get("/{id:uint}", r.NluLookupCtrlCtrl.Get).Name = "词表详情"
+					party.Post("/", r.NluLookupCtrlCtrl.Create).Name = "创建词表"
+					party.Put("/{id:uint}", r.NluLookupCtrlCtrl.Update).Name = "更新词表"
+					party.Delete("/{id:uint}", r.NluLookupCtrlCtrl.Delete).Name = "删除词表"
 				})
 
 				admin.PartyFunc("/synonyms", func(party iris.Party) {
-					party.Get("/", r.NluSynonymCtrlCtrl.List).Name = "项目列表"
-					party.Get("/{id:uint}", r.NluSynonymCtrlCtrl.Get).Name = "项目详情"
-					party.Post("/", r.NluSynonymCtrlCtrl.Create).Name = "创建项目"
-					party.Put("/{id:uint}", r.NluSynonymCtrlCtrl.Update).Name = "更新项目"
-					party.Delete("/{id:uint}", r.NluSynonymCtrlCtrl.Delete).Name = "删除项目"
+					party.Get("/", r.NluSynonymCtrlCtrl.List).Name = "同义词列表"
+					party.Get("/{id:uint}", r.NluSynonymCtrlCtrl.Get).Name = "同义词详情"
+					party.Post("/", r.NluSynonymCtrlCtrl.Create).Name = "创建同义词"
+					party.Put("/{id:uint}", r.NluSynonymCtrlCtrl.Update).Name = "更新同义词"
+					party.Delete("/{id:uint}", r.NluSynonymCtrlCtrl.Delete).Name = "删除同义词"
 				})
 
 				admin.PartyFunc("/users", func(party iris.Party) {
