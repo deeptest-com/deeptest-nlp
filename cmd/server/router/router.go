@@ -34,7 +34,9 @@ type Router struct {
 
 	RpcCtrl *handler.RpcCtrl `inject:""`
 
-	PlanCtrl *handler.ProjectCtrl `inject:""`
+	NluIntentCtrl      *handler.NluIntentCtrl  `inject:""`
+	NluLookupCtrlCtrl  *handler.NluLookupCtrl  `inject:""`
+	NluSynonymCtrlCtrl *handler.NluSynonymCtrl `inject:""`
 
 	WsCtrl *handler.WsCtrl `inject:""`
 
@@ -78,12 +80,28 @@ func (r *Router) App() {
 				admin.Get("/expire", r.AccountCtrl.UserExpire).Name = "刷新Token"
 				admin.Get("/profile", r.UserCtrl.GetProfile).Name = "个人信息"
 
-				admin.PartyFunc("/projects", func(party iris.Party) {
-					party.Get("/", r.PlanCtrl.List).Name = "项目列表"
-					party.Get("/{id:uint}", r.PlanCtrl.Get).Name = "项目详情"
-					party.Post("/", r.PlanCtrl.Create).Name = "创建项目"
-					party.Put("/{id:uint}", r.PlanCtrl.Update).Name = "更新项目"
-					party.Delete("/{id:uint}", r.PlanCtrl.Delete).Name = "删除项目"
+				admin.PartyFunc("/intents", func(party iris.Party) {
+					party.Get("/", r.NluIntentCtrl.List).Name = "项目列表"
+					party.Get("/{id:uint}", r.NluIntentCtrl.Get).Name = "项目详情"
+					party.Post("/", r.NluIntentCtrl.Create).Name = "创建项目"
+					party.Put("/{id:uint}", r.NluIntentCtrl.Update).Name = "更新项目"
+					party.Delete("/{id:uint}", r.NluIntentCtrl.Delete).Name = "删除项目"
+				})
+
+				admin.PartyFunc("/lookups", func(party iris.Party) {
+					party.Get("/", r.NluLookupCtrlCtrl.List).Name = "项目列表"
+					party.Get("/{id:uint}", r.NluLookupCtrlCtrl.Get).Name = "项目详情"
+					party.Post("/", r.NluLookupCtrlCtrl.Create).Name = "创建项目"
+					party.Put("/{id:uint}", r.NluLookupCtrlCtrl.Update).Name = "更新项目"
+					party.Delete("/{id:uint}", r.NluLookupCtrlCtrl.Delete).Name = "删除项目"
+				})
+
+				admin.PartyFunc("/synonyms", func(party iris.Party) {
+					party.Get("/", r.NluSynonymCtrlCtrl.List).Name = "项目列表"
+					party.Get("/{id:uint}", r.NluSynonymCtrlCtrl.Get).Name = "项目详情"
+					party.Post("/", r.NluSynonymCtrlCtrl.Create).Name = "创建项目"
+					party.Put("/{id:uint}", r.NluSynonymCtrlCtrl.Update).Name = "更新项目"
+					party.Delete("/{id:uint}", r.NluSynonymCtrlCtrl.Delete).Name = "删除项目"
 				})
 
 				admin.PartyFunc("/users", func(party iris.Party) {

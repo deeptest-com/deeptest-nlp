@@ -13,7 +13,15 @@ type BaseModel struct {
 
 var (
 	Models = []interface{}{
-		&Project{},
+		&NluIntent{},
+		&NluSent{},
+		&NluSlot{},
+
+		&NluSynonym{},
+		&NluSynonymItem{},
+
+		&NluLookup{},
+		&NluLookupItem{},
 
 		&User{},
 		&Role{},

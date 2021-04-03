@@ -55,3 +55,5 @@ pip install spacy-transformers
 pip install spacy-lookups-data
 python -m spacy download zh_core_web_md
 python -m spacy download zh_core_web_lg
+
+deactivate

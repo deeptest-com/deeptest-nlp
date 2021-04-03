@@ -9,17 +9,17 @@ import (
 	"strconv"
 )
 
-type ProjectCtrl struct {
+type NluLookupCtrl struct {
 	BaseCtrl
 
-	ProjectService *service.ProjectService `inject:""`
+	NluLookupService *service.NluLookupService `inject:""`
 }
 
-func NewProjectCtrl() *ProjectCtrl {
-	return &ProjectCtrl{}
+func NewNluLookupCtrl() *NluLookupCtrl {
+	return &NluLookupCtrl{}
 }
 
-func (c *ProjectCtrl) List(ctx iris.Context) {
+func (c *NluLookupCtrl) List(ctx iris.Context) {
 	keywords := ctx.FormValue("keywords")
 	pageNoStr := ctx.FormValue("pageNo")
 	pageSizeStr := ctx.FormValue("pageSize")
@@ -30,19 +30,19 @@ func (c *ProjectCtrl) List(ctx iris.Context) {
 		pageSize = serverConst.PageSize
 	}
 
-	plans, total := c.ProjectService.List(keywords, pageNo, pageSize)
+	plans, total := c.NluLookupService.List(keywords, pageNo, pageSize)
 
 	_, _ = ctx.JSON(_utils.ApiResPage(200, "请求成功",
 		plans, pageNo, pageSize, total))
 }
 
-func (c *ProjectCtrl) Get(ctx iris.Context) {
+func (c *NluLookupCtrl) Get(ctx iris.Context) {
 
 }
 
-func (c *ProjectCtrl) Create(ctx iris.Context) {
+func (c *NluLookupCtrl) Create(ctx iris.Context) {
 	ctx.StatusCode(iris.StatusOK)
-	plan := new(model.Project)
+	plan := new(model.NluLookup)
 	if err := ctx.ReadJSON(plan); err != nil {
 		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
 		return
@@ -52,7 +52,7 @@ func (c *ProjectCtrl) Create(ctx iris.Context) {
 		return
 	}
 
-	err := c.ProjectService.Save(plan)
+	err := c.NluLookupService.Save(plan)
 	if err != nil {
 		_, _ = ctx.JSON(_utils.ApiRes(400, "操作失败", nil))
 		return
@@ -62,10 +62,10 @@ func (c *ProjectCtrl) Create(ctx iris.Context) {
 	return
 }
 
-func (c *ProjectCtrl) Update(ctx iris.Context) {
+func (c *NluLookupCtrl) Update(ctx iris.Context) {
 
 }
 
-func (c *ProjectCtrl) Delete(ctx iris.Context) {
+func (c *NluLookupCtrl) Delete(ctx iris.Context) {
 
 }
