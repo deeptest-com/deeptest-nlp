@@ -3,13 +3,13 @@ package model
 type NluSynonym struct {
 	BaseModel
 
-	Name  string           `yaml:"name"`
-	Items []NluSynonymItem `yaml:"items" gorm:"-"`
+	Name  string           `json:"name"`
+	Items []NluSynonymItem `json:"items" gorm:"-"`
 }
 type NluSynonymItem struct {
-	Content string `yaml:"content"`
+	Content string `json:"content"`
 
-	SynonymId uint `yaml:"synonymId"`
+	SynonymId uint `json:"synonymId"`
 }
 
 func (NluSynonym) TableName() string {

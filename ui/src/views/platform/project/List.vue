@@ -5,48 +5,20 @@
         <a-form layout="inline">
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
-              <a-form-item label="规则编号">
-                <a-input v-model="queryParam.id" placeholder=""/>
+              <a-form-item label="名称">
+                <a-input v-model="queryParam.keywords" placeholder=""/>
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
-              <a-form-item label="使用状态">
+              <a-form-item label="状态">
                 <a-select v-model="queryParam.status" placeholder="请选择" default-value="0">
-                  <a-select-option value="0">全部</a-select-option>
-                  <a-select-option value="1">关闭</a-select-option>
-                  <a-select-option value="2">运行中</a-select-option>
+                  <a-select-option value="">全部</a-select-option>
+                  <a-select-option value="true">启用</a-select-option>
+                  <a-select-option value="false">禁用</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
             <template v-if="advanced">
-              <a-col :md="8" :sm="24">
-                <a-form-item label="调用次数">
-                  <a-input-number v-model="queryParam.callNo" style="width: 100%"/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="更新日期">
-                  <a-date-picker v-model="queryParam.date" style="width: 100%" placeholder="请输入更新日期"/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="使用状态">
-                  <a-select v-model="queryParam.useStatus" placeholder="请选择" default-value="0">
-                    <a-select-option value="0">全部</a-select-option>
-                    <a-select-option value="1">关闭</a-select-option>
-                    <a-select-option value="2">运行中</a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="使用状态">
-                  <a-select placeholder="请选择" default-value="0">
-                    <a-select-option value="0">全部</a-select-option>
-                    <a-select-option value="1">关闭</a-select-option>
-                    <a-select-option value="2">运行中</a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
             </template>
             <a-col :md="!advanced && 8 || 24" :sm="24">
               <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
@@ -63,7 +35,7 @@
       </div>
 
       <div class="table-operator">
-        <a-button type="primary" icon="plus" @click="handleAdd">新建</a-button>
+        <a-button type="primary" icon="plus" @click="create">新建</a-button>
         <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
           <a-menu slot="overlay">
             <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item>
@@ -100,9 +72,11 @@
 
         <span slot="action" slot-scope="text, record">
           <template>
-            <a @click="handleEdit(record)">配置</a>
+            <a @click="edit(record)">编辑</a>
             <a-divider type="vertical" />
-            <a @click="handleSub(record)">订阅报警</a>
+            <a @click="disable(record)">禁用</a>
+            <a-divider type="vertical" />
+            <a @click="remove(record)">删除</a>
           </template>
         </span>
       </s-table>
@@ -210,74 +184,29 @@ export default {
     }
   },
   methods: {
-    handleAdd () {
+    create () {
       this.mdl = null
       this.visible = true
 
-      this.$router.push('/platform/project/edit')
+      this.$router.push('/platform/project/0/edit')
     },
-    handleEdit (record) {
+    edit (record) {
       this.visible = true
       this.mdl = { ...record }
 
-      this.$router.push('/platform/project/edit')
+      this.$router.push('/platform/project/' + record.id + '/edit')
     },
-    handleOk () {
-      // const form = this.$refs.createModal.form
-      this.confirmLoading = true
-      // form.validateFields((errors, values) => {
-      //   if (!errors) {
-      //     console.log('values', values)
-      //     if (values.id > 0) {
-      //       // 修改 e.g.
-      //       new Promise((resolve, reject) => {
-      //         setTimeout(() => {
-      //           resolve()
-      //         }, 1000)
-      //       }).then(res => {
-      //         this.visible = false
-      //         this.confirmLoading = false
-      //         // 重置表单数据
-      //         form.resetFields()
-      //         // 刷新表格
-      //         this.$refs.table.refresh()
-      //
-      //         this.$message.info('修改成功')
-      //       })
-      //     } else {
-      //       // 新增
-      //       new Promise((resolve, reject) => {
-      //         setTimeout(() => {
-      //           resolve()
-      //         }, 1000)
-      //       }).then(res => {
-      //         this.visible = false
-      //         this.confirmLoading = false
-      //         // 重置表单数据
-      //         form.resetFields()
-      //         // 刷新表格
-      //         this.$refs.table.refresh()
-      //
-      //         this.$message.info('新增成功')
-      //       })
-      //     }
-      //   } else {
-      //     this.confirmLoading = false
-      //   }
-      // })
-    },
-    handleCancel () {
-      this.visible = false
+    disable (record) {
+      this.visible = true
+      this.mdl = { ...record }
 
-      const form = this.$refs.createModal.form
-      form.resetFields() // 清理表单数据（可不做）
+      this.$router.push('/platform/project/' + record.id + '/edit')
     },
-    handleSub (record) {
-      if (record.status !== 0) {
-        this.$message.info(`${record.no} 订阅成功`)
-      } else {
-        this.$message.error(`${record.no} 订阅失败，规则已关闭`)
-      }
+    remove (record) {
+      this.visible = true
+      this.mdl = { ...record }
+
+      this.$router.push('/platform/project/' + record.id + '/edit')
     },
     onSelectChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys

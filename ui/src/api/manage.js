@@ -16,6 +16,10 @@ const api = {
 
 export const WsApi = 'ws://127.0.0.1:8085/api/v1/ws'
 
+export function requestSuccess (code) {
+  return code === 200
+}
+
 export function getProfile (parameter) {
   return request({
     url: api.profile,
@@ -24,11 +28,26 @@ export function getProfile (parameter) {
   })
 }
 
-export function listProject () {
+export function listProject (params) {
   return request({
     url: api.projects,
     method: 'get',
+    params: params
+  })
+}
+export function getProject (id) {
+  return request({
+    url: api.projects + '/' + id,
+    method: 'get',
     params: {}
+  })
+}
+export function saveProject (model) {
+  console.log('---', model.id)
+  return request({
+    url: api.projects,
+    method: !model.id ? 'post' : 'put',
+    data: model
   })
 }
 
@@ -64,14 +83,6 @@ export function getPermissions (parameter) {
   })
 }
 
-export function getOrgTree (parameter) {
-  return request({
-    url: api.orgTree,
-    method: 'get',
-    params: parameter
-  })
-}
-
 // id == 0 add     post
 // id != 0 update  put
 export function saveService (parameter) {
@@ -79,13 +90,5 @@ export function saveService (parameter) {
     url: api.service,
     method: parameter.id === 0 ? 'post' : 'put',
     data: parameter
-  })
-}
-
-export function saveSub (sub) {
-  return request({
-    url: '/sub',
-    method: sub.id === 0 ? 'post' : 'put',
-    data: sub
   })
 }

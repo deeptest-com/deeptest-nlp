@@ -3,13 +3,13 @@ package model
 type NluLookup struct {
 	BaseModel
 
-	Name  string          `yaml:"name"`
-	Items []NluLookupItem `yaml:"items" gorm:"-"`
+	Name  string          `json:"name"`
+	Items []NluLookupItem `json:"items" gorm:"-"`
 }
 type NluLookupItem struct {
-	Content string `yaml:"content"`
+	Content string `json:"content"`
 
-	LookupId uint `yaml:"lookupId"`
+	LookupId uint `json:"lookupId"`
 }
 
 func (NluLookup) TableName() string {

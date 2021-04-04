@@ -15,13 +15,19 @@ func NewProjectRepo() *ProjectRepo {
 	return &ProjectRepo{}
 }
 
-func (r *ProjectRepo) Query(keywords string, pageNo int, pageSize int) (pos []model.Project, total int64) {
+func (r *ProjectRepo) Query(keywords, status string, pageNo int, pageSize int) (pos []model.Project, total int64) {
 	query := r.DB.Select("*").Order("id ASC")
+	if status == "true" {
+		query = query.Where("deleted_at IS NULL")
+	} else if status == "false" {
+		query = query.Where("deleted_at IS NOT NULL")
+	}
+
 	if keywords != "" {
 		query = query.Where("name LIKE ?", "%"+keywords+"%")
 	}
 	if pageNo > 0 {
-		query = query.Offset((pageNo) * pageSize).Limit(pageSize)
+		query = query.Offset((pageNo - 1) * pageSize).Limit(pageSize)
 	}
 
 	err := query.Find(&pos).Error

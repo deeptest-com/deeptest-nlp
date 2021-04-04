@@ -13,8 +13,8 @@ func NewProjectService() *ProjectService {
 	return &ProjectService{}
 }
 
-func (s *ProjectService) List(keywords string, pageNo int, pageSize int) (pos []model.Project, total int64) {
-	pos, total = s.ProjectRepo.Query(keywords, pageNo, pageSize)
+func (s *ProjectService) List(keywords, status string, pageNo int, pageSize int) (pos []model.Project, total int64) {
+	pos, total = s.ProjectRepo.Query(keywords, status, pageNo, pageSize)
 	return
 }
 

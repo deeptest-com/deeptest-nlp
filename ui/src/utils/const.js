@@ -1,6 +1,8 @@
 
-const labelCol = { lg: { span: 6 }, sm: { span: 6 } }
-const wrapperCol = { lg: { span: 10 }, sm: { span: 10 } }
+const labelCol = { lg: { span: 7 }, sm: { span: 7 } }
+const wrapperCol = { lg: { span: 10 }, sm: { span: 17 } }
+const wrapperFull = { span: 24 }
+
 const labelColLarge = { lg: { span: 6 }, sm: { span: 6 } }
 const wrapperColLarge = { lg: { span: 14 }, sm: { span: 14 } }
 
@@ -15,6 +17,6 @@ const wrapperColHalf = { lg: { span: 12 }, sm: { span: 12 } }
 
 const noLabel = { offset: 4 }
 
-export { labelCol, wrapperCol, labelColLarge, wrapperColLarge,
+export { labelCol, wrapperCol, wrapperFull, labelColLarge, wrapperColLarge,
     colsFull, colsHalf, labelColFull, wrapperColFull, labelColHalf, labelColHalf2, wrapperColHalf,
     noLabel }

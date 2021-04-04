@@ -21,6 +21,7 @@ func NewProjectCtrl() *ProjectCtrl {
 
 func (c *ProjectCtrl) List(ctx iris.Context) {
 	keywords := ctx.FormValue("keywords")
+	status := ctx.FormValue("status")
 	pageNoStr := ctx.FormValue("pageNo")
 	pageSizeStr := ctx.FormValue("pageSize")
 
@@ -30,7 +31,7 @@ func (c *ProjectCtrl) List(ctx iris.Context) {
 		pageSize = serverConst.PageSize
 	}
 
-	projects, total := c.ProjectService.List(keywords, pageNo, pageSize)
+	projects, total := c.ProjectService.List(keywords, status, pageNo, pageSize)
 
 	_, _ = ctx.JSON(_utils.ApiResPage(200, "请求成功",
 		projects, pageNo, pageSize, total))
@@ -42,23 +43,23 @@ func (c *ProjectCtrl) Get(ctx iris.Context) {
 
 func (c *ProjectCtrl) Create(ctx iris.Context) {
 	ctx.StatusCode(iris.StatusOK)
-	plan := new(model.Project)
-	if err := ctx.ReadJSON(plan); err != nil {
+	model := new(model.Project)
+	if err := ctx.ReadJSON(model); err != nil {
 		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
-	if c.Validate(*plan, ctx) {
+	if c.Validate(*model, ctx) {
 		return
 	}
 
-	err := c.ProjectService.Save(plan)
+	err := c.ProjectService.Save(model)
 	if err != nil {
 		_, _ = ctx.JSON(_utils.ApiRes(400, "操作失败", nil))
 		return
 	}
 
-	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", plan))
+	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", model))
 	return
 }
 

@@ -3,15 +3,15 @@ package model
 type NluIntent struct {
 	BaseModel
 
-	Name  string    `yaml:"name"`
-	Sents []NluSent `yaml:"sents" gorm:"-"`
+	Name  string    `json:"name"`
+	Sents []NluSent `json:"sents" gorm:"-"`
 }
 
 type NluSent struct {
 	BaseModel
 
 	Content string    `json:"content"`
-	Slots   []NluSlot `yaml:"slots" gorm:"-"`
+	Slots   []NluSlot `json:"slots" gorm:"-"`
 
 	IntentId uint `json:"intentId"`
 }

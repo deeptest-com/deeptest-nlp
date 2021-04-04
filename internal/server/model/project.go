@@ -3,8 +3,8 @@ package model
 type Project struct {
 	BaseModel
 
-	Name string `yaml:"name"`
-	Desc string `yaml:"desc"`
+	Name string `json:"name"`
+	Desc string `json:"desc"`
 }
 
 func (Project) TableName() string {
