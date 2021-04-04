@@ -18,16 +18,17 @@
                 </a-select>
               </a-form-item>
             </a-col>
-            <template v-if="advanced">
-            </template>
+            <!-- <template v-if="advanced">
+            </template> -->
             <a-col :md="!advanced && 8 || 24" :sm="24">
               <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
                 <a-button type="primary" @click="$refs.table.refresh(true)">{{ $t('form.search') }}</a-button>
                 <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">{{ $t('form.reset') }}</a-button>
-                <a @click="toggleAdvanced" style="margin-left: 8px">
+
+                <!-- <a @click="toggleAdvanced" style="margin-left: 8px">
                   {{ advanced ? $t('form.collapse') : $t('form.expand') }}
                   <a-icon :type="advanced ? 'up' : 'down'"/>
-                </a>
+                </a> -->
               </span>
             </a-col>
           </a-row>
