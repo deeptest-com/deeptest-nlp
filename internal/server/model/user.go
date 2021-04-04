@@ -28,6 +28,6 @@ type Token struct {
 	RememberMe bool   `json:"rememberMe"`
 }
 
-func (User) TableName() string {
-	return "biz_user"
-}
+//func (User) TableName() string {
+//	return "biz_user"
+//}

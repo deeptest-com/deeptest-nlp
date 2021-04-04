@@ -42,6 +42,11 @@ func (r *ProjectRepo) Query(keywords, status string, pageNo int, pageSize int) (
 	return
 }
 
+func (r *ProjectRepo) Get(id uint) (po model.Project) {
+	r.DB.Where("id = ?", id).First(&po)
+	return
+}
+
 func (r *ProjectRepo) Save(po *model.Project) (err error) {
 	err = r.DB.Model(&po).Omit("").Create(&po).Error
 	return

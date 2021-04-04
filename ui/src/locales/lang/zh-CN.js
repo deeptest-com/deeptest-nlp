@@ -37,12 +37,23 @@ const locale = {
 
   'common.notify': '通知',
 
-  'action.create': '创建',
-  'action.edit': '编辑',
-  'action.back': '返回',
+  'form.create': '新建',
+  'form.edit': '编辑',
+  'form.remove': '删除',
+  'form.disable': '禁用',
+  'form.enable': '启用',
+  'form.back': '返回',
   'form.save': '保存',
+  'form.submit': '提交',
   'form.reset': '重置',
-  'form.cancel': '取消'
+  'form.cancel': '取消',
+  'form.search': '查询',
+  'form.collapse': '收缩',
+  'form.expand': '展开',
+
+  'form.all': '所有',
+  'form.name': '名称',
+  'form.status': '状态'
 }
 
 export default {

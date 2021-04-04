@@ -60,12 +60,23 @@ const locale = {
 
   'common.notify': 'Notification',
 
-  'action.create': 'Create',
-  'action.edit': 'Edit',
-  'action.back': 'Back',
+  'form.create': 'Create',
+  'form.edit': 'Edit',
+  'form.remove': 'Delete',
+  'form.disable': 'Disable',
+  'form.enable': 'Enable',
+  'form.back': 'Back',
   'form.save': 'Save',
+  'form.submit': 'Submit',
   'form.reset': 'Reset',
-  'form.cancel': 'Cancel'
+  'form.cancel': 'Cancel',
+  'form.search': 'Search',
+  'form.collapse': 'Collapse',
+  'form.expand': 'Expand',
+
+  'form.all': 'All',
+  'form.name': 'Name',
+  'form.status': 'Status'
 }
 
 export default {

@@ -86,8 +86,10 @@ func (r *Router) App() {
 					party.Get("/{id:uint}", r.ProjectCtrl.Get).Name = "项目详情"
 					party.Post("/", r.ProjectCtrl.Create).Name = "创建项目"
 					party.Put("/{id:uint}", r.ProjectCtrl.Update).Name = "更新项目"
-					party.Put("/{id:uint}/setDefault", r.ProjectCtrl.SetDefault).Name = "设置当前项目"
 					party.Delete("/{id:uint}", r.ProjectCtrl.Delete).Name = "删除项目"
+
+					party.Post("/{id:uint}/setDefault", r.ProjectCtrl.SetDefault).Name = "设置当前项目"
+					party.Post("/{id:uint}/disable", r.ProjectCtrl.Disable).Name = "禁用/启动项目"
 				})
 
 				admin.PartyFunc("/intents", func(party iris.Party) {

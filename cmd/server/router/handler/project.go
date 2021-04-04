@@ -1,7 +1,9 @@
 package handler
 
 import (
+	"fmt"
 	"github.com/kataras/iris/v12"
+	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
 	"github.com/utlai/utl/internal/pkg/utils"
 	"github.com/utlai/utl/internal/server/model"
 	"github.com/utlai/utl/internal/server/service"
@@ -38,7 +40,15 @@ func (c *ProjectCtrl) List(ctx iris.Context) {
 }
 
 func (c *ProjectCtrl) Get(ctx iris.Context) {
+	id, err := ctx.Params().GetInt("id")
+	if err != nil {
+		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
+		return
+	}
 
+	model := c.ProjectService.Get(uint(id))
+	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", model))
+	return
 }
 
 func (c *ProjectCtrl) Create(ctx iris.Context) {
@@ -64,13 +74,27 @@ func (c *ProjectCtrl) Create(ctx iris.Context) {
 }
 
 func (c *ProjectCtrl) Update(ctx iris.Context) {
+	id := ctx.FormValue("id")
+	_logUtils.Info(fmt.Sprintf("%s", id))
 
+	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", ""))
 }
 
 func (c *ProjectCtrl) SetDefault(ctx iris.Context) {
+	id := ctx.FormValue("id")
+	_logUtils.Info(fmt.Sprintf("%s", id))
 
+	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", ""))
+}
+
+func (c *ProjectCtrl) Disable(ctx iris.Context) {
+	id := ctx.FormValue("id")
+	_logUtils.Info(fmt.Sprintf("%s", id))
+
+	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", ""))
 }
 
 func (c *ProjectCtrl) Delete(ctx iris.Context) {
-
+	id := ctx.FormValue("id")
+	_logUtils.Info(fmt.Sprintf("%s", id))
 }

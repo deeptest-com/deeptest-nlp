@@ -45,9 +45,30 @@ export function getProject (id) {
 export function saveProject (model) {
   console.log('---', model.id)
   return request({
-    url: api.projects,
+    url: !model.id ? api.projects : api.projects + '/' + model.id,
     method: !model.id ? 'post' : 'put',
     data: model
+  })
+}
+export function setDefaultProject (model) {
+  return request({
+    url: api.projects + '/' + model.id + '/setDefault',
+    method: 'post',
+    params: {}
+  })
+}
+export function disableProject (model) {
+  return request({
+    url: api.projects + '/' + model.id + '/disable',
+    method: 'post',
+    params: {}
+  })
+}
+export function removeProject (model) {
+  return request({
+    url: api.projects + '/' + model.id,
+    method: 'delete',
+    params: {}
   })
 }
 

@@ -18,6 +18,11 @@ func (s *ProjectService) List(keywords, status string, pageNo int, pageSize int)
 	return
 }
 
+func (s *ProjectService) Get(id uint) (po model.Project) {
+	po = s.ProjectRepo.Get(id)
+	return
+}
+
 func (s *ProjectService) Save(pos *model.Project) (err error) {
 	err = s.ProjectRepo.Save(pos)
 
