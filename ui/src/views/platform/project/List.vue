@@ -76,7 +76,7 @@
             <a-divider type="vertical" />
             <a-popconfirm
               v-if="!record.isDefault"
-              :title="$t('form.confirmToRemove')"
+              :title="$t('form.confirm.to.remove')"
               :okText="$t('form.ok')"
               :cancelText="$t('form.cancel')"
               @confirm="confirmRemove(record)"
@@ -138,25 +138,25 @@ export default {
   created () {
     this.columns = [
       {
-        title: this.$t('common.no'),
+        title: this.$t('form.no'),
         scopedSlots: { customRender: 'serial' }
       },
       {
-        title: this.$t('common.name'),
+        title: this.$t('form.name'),
         dataIndex: 'name'
       },
       {
-        title: this.$t('common.status'),
+        title: this.$t('form.status'),
         dataIndex: 'status',
         scopedSlots: { customRender: 'status' }
       },
       {
-        title: this.$t('common.isDefault'),
+        title: this.$t('form.is.default'),
         dataIndex: 'default',
         scopedSlots: { customRender: 'default' }
       },
       {
-        title: this.$t('common.opt'),
+        title: this.$t('form.opt'),
         dataIndex: 'action',
         width: '180px',
         scopedSlots: { customRender: 'action' }

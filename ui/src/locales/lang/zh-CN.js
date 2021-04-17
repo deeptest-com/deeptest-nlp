@@ -38,8 +38,6 @@ const locale = {
   'menu.lookup.create.item': '创建词表项',
   'menu.lookup.edit.item': '编辑词表项',
 
-  'common.notify': '通知',
-
   'form.create': '新建',
   'form.edit': '编辑',
   'form.maintain': '维护',
@@ -55,24 +53,25 @@ const locale = {
   'form.collapse': '收缩',
   'form.expand': '展开',
   'form.ok': '确认',
-  'form.confirmToRemove': '确认删除？',
+  'form.confirm.to.remove': '确认删除？',
 
   'form.all': '所有',
+  'form.no': '编号',
   'form.name': '名称',
   'form.status': '状态',
+  'form.desc': '描述',
+  'form.is.default': '是否默认',
+  'form.opt': '操作',
 
   'status.enable': '启用',
   'status.disable': '禁用',
 
-  'msg.warn': '提醒',
-  'msg.canNotDisableDefaultProject': '不能禁用默认的项目。',
-  'msg.canNotDeleteDefaultProject': '不能删除默认的项目。',
+  'valid.input.name': '请输入名称',
 
-  'common.no': '编号',
-  'common.name': '名称',
-  'common.status': '状态',
-  'common.isDefault': '是否默认',
-  'common.opt': '操作'
+  'msg.warn': '提醒',
+
+  'common.notify': '通知',
+  'common.back': '返回'
 }
 
 export default {

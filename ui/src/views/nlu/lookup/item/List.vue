@@ -6,7 +6,7 @@
           <a-form layout="inline">
             <a-row :gutter="48">
               <a-col :md="8" :sm="24">
-                <a-form-item :label="$t('form.name')">
+                <a-form-item :label="$t('.name')">
                   <a-input v-model="queryParam.keywords" placeholder=""/>
                 </a-form-item>
               </a-col>
@@ -74,7 +74,7 @@
               <a-divider type="vertical" />
               <a-popconfirm
                 v-if="!record.isDefault"
-                :title="$t('form.confirmToRemove')"
+                :title="$t('form.confirm.to.remove')"
                 :okText="$t('form.ok')"
                 :cancelText="$t('form.cancel')"
                 @confirm="confirmRemove(record)"
@@ -109,9 +109,9 @@ import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
 import { listLookupItem, disableLookupItem, removeLookupItem, batchRemoveLookupItem } from '@/api/manage'
 
-import StepByStepModal from '../../list/modules/StepByStepModal'
-import CreateForm from '../../list/modules/CreateForm'
-import LookupItemEdit from './EditItem'
+import StepByStepModal from '../../../list/modules/StepByStepModal'
+import CreateForm from '../../../list/modules/CreateForm'
+import LookupItemEdit from './Edit'
 
 export default {
   name: 'LookupMaintain',
@@ -155,20 +155,20 @@ export default {
   created () {
     this.columns = [
       {
-        title: this.$t('common.no'),
+        title: this.$t('form.no'),
         scopedSlots: { customRender: 'serial' }
       },
       {
-        title: this.$t('common.name'),
+        title: this.$t('form.name'),
         dataIndex: 'name'
       },
       {
-        title: this.$t('common.status'),
+        title: this.$t('form.status'),
         dataIndex: 'status',
         scopedSlots: { customRender: 'status' }
       },
       {
-        title: this.$t('common.opt'),
+        title: this.$t('form.opt'),
         dataIndex: 'action',
         width: '180px',
         scopedSlots: { customRender: 'action' }

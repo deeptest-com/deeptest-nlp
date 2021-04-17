@@ -61,8 +61,6 @@ const locale = {
   'app.setting.copyinfo': 'copy success，please replace defaultSettings in src/models/setting.js',
   'app.setting.production.hint': 'Setting panel shows in development environment only, please manually modify',
 
-  'common.notify': 'Notification',
-
   'form.create': 'Create',
   'form.edit': 'Edit',
   'form.maintain': 'Maintain',
@@ -79,24 +77,23 @@ const locale = {
   'form.expand': 'Expand',
 
   'form.ok': 'Ok',
-  'form.confirmToRemove': 'Confirm to delete?',
+  'form.confirm.to.remove': 'Confirm to delete?',
 
   'form.all': 'All',
+  'form.no': 'NO',
   'form.name': 'Name',
   'form.status': 'Status',
+  'form.is.default': 'Is Default',
+  'form.opt': 'Operation',
 
   'status.enable': 'Enable',
   'status.disable': 'Disable',
 
-  'msg.warn': 'Warning',
-  'msg.canNotDisableDefaultProject': 'Can not disable default project.',
-  'msg.canNotDeleteDefaultProject': 'Can not delete default project.',
+  'valid.input.name': 'Please input name',
 
-  'common.no': '编号',
-  'common.name': 'Name',
-  'common.status': 'Status',
-  'common.isDefault': 'Is Default',
-  'common.opt': 'Operation'
+  'msg.warn': 'Warning',
+  'common.notify': 'Notification',
+  'common.back': 'Back'
 }
 
 export default {

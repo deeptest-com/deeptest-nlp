@@ -1,32 +1,39 @@
 <template>
-  <!-- hidden PageHeaderWrapper title demo -->
-  <page-header-wrapper content="">
-    <a-card :body-style="{padding: '24px 32px'}" :bordered="false">
-      <a-form-model ref="form" :model="model" :rules="rules">
-        <a-form-model-item
-          :label="'名称'"
-          prop="name"
-          :labelCol="labelCol"
-          :wrapperCol="wrapperCol">
-          <a-input v-model="model.name" />
-        </a-form-model-item>
-        <a-form-model-item
-            :label="'描述'"
+  <div>
+    <page-header-wrapper content="">
+      <div class="toolbar-edit">
+        <div class="left"></div>
+        <div class="right">
+          <a-button @click="back()" type="primary">{{$t('common.back')}}</a-button>
+        </div>
+      </div>
+      <a-card :body-style="{padding: '24px 32px'}" :bordered="false">
+        <a-form-model ref="form" :model="model" :rules="rules">
+          <a-form-model-item
+            :label="$t('form.name')"
+            prop="name"
+            :labelCol="labelCol"
+            :wrapperCol="wrapperCol">
+            <a-input v-model="model.name" />
+          </a-form-model-item>
+          <a-form-model-item
+            :label="$t('form.desc')"
             prop="desc"
             :labelCol="labelCol"
             :wrapperCol="wrapperCol">
-          <a-input v-model="model.desc" />
-        </a-form-model-item>
-        <a-form-item
-          :wrapperCol="wrapperFull"
-          style="text-align: center"
-        >
-          <a-button @click="save()" htmlType="submit" type="primary">提交</a-button>
-          <a-button @click="reset()" style="margin-left: 8px">重置</a-button>
-        </a-form-item>
-      </a-form-model>
-    </a-card>
-  </page-header-wrapper>
+            <a-input v-model="model.desc" />
+          </a-form-model-item>
+          <a-form-item
+            :wrapperCol="wrapperFull"
+            style="text-align: center"
+          >
+            <a-button @click="save()" htmlType="submit" type="primary">{{$t('form.submit')}}</a-button>
+            <a-button @click="reset()" style="margin-left: 8px">{{$t('form.reset')}}</a-button>
+          </a-form-item>
+        </a-form-model>
+      </a-card>
+    </page-header-wrapper>
+  </div>
 </template>
 
 <script>
@@ -50,7 +57,7 @@ export default {
       wrapperFull: wrapperFull,
       model: {},
       rules: {
-        name: [{ required: true, message: '请输入名称', trigger: 'blur' }]
+        name: [{ required: true, message: this.$t('valid.input.name'), trigger: 'blur' }]
       }
     }
   },
@@ -98,6 +105,9 @@ export default {
     reset () {
       this.model = {}
       this.$refs.form.resetFields()
+    },
+    back () {
+      this.$router.push('/platform/project/list')
     }
   }
 }

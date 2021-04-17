@@ -125,9 +125,9 @@ export const asyncRouterMap = [
                 meta: { title: 'menu.lookup.edit', keepAlive: true, permission: [ 'lookup' ] }
               },
               {
-                path: '/nlu/lookup/:id/maintain',
+                path: '/nlu/lookup/:id/items',
                 name: 'lookup-detail',
-                component: () => import('@/views/nlu/lookup/Maintain'),
+                component: () => import('@/views/nlu/lookup/item/List'),
                 meta: { title: 'menu.lookup.maintain', keepAlive: true, permission: [ 'lookup' ] }
               }
             ]

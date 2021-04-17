@@ -74,7 +74,7 @@
             <a-divider type="vertical" />
             <a-popconfirm
               v-if="!record.isDefault"
-              :title="$t('form.confirmToRemove')"
+              :title="$t('form.confirm.to.remove')"
               :okText="$t('form.ok')"
               :cancelText="$t('form.cancel')"
               @confirm="confirmRemove(record)"
@@ -136,20 +136,20 @@ export default {
   created () {
     this.columns = [
       {
-        title: this.$t('common.no'),
+        title: this.$t('form.no'),
         scopedSlots: { customRender: 'serial' }
       },
       {
-        title: this.$t('common.name'),
+        title: this.$t('form.name'),
         dataIndex: 'name'
       },
       {
-        title: this.$t('common.status'),
+        title: this.$t('form.status'),
         dataIndex: 'status',
         scopedSlots: { customRender: 'status' }
       },
       {
-        title: this.$t('common.opt'),
+        title: this.$t('form.opt'),
         dataIndex: 'action',
         width: '220px',
         scopedSlots: { customRender: 'action' }
@@ -186,7 +186,7 @@ export default {
       this.visible = true
       this.mdl = { ...record }
 
-      this.$router.push('/nlu/lookup/' + record.id + '/maintain')
+      this.$router.push('/nlu/lookup/' + record.id + '/items')
     },
     disable (record) {
       disableLookup(record).then(json => {
