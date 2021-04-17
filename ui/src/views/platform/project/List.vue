@@ -105,33 +105,6 @@ import { listProject, setDefaultProject, disableProject, removeProject } from '@
 import StepByStepModal from '../../list/modules/StepByStepModal'
 import CreateForm from '../../list/modules/CreateForm'
 
-const columns = [
-  {
-    title: '#',
-    scopedSlots: { customRender: 'serial' }
-  },
-  {
-    title: '名称',
-    dataIndex: 'name'
-  },
-  {
-    title: '状态',
-    dataIndex: 'status',
-    scopedSlots: { customRender: 'status' }
-  },
-  {
-    title: '是否默认',
-    dataIndex: 'default',
-    scopedSlots: { customRender: 'default' }
-  },
-  {
-    title: '操作',
-    dataIndex: 'action',
-    width: '180px',
-    scopedSlots: { customRender: 'action' }
-  }
-]
-
 export default {
   name: 'ProjectList',
   components: {
@@ -140,19 +113,15 @@ export default {
     CreateForm,
     StepByStepModal
   },
+  columns: [],
   statusMap: {},
   data () {
-    this.columns = columns
     return {
-      // create model
       visible: false,
       confirmLoading: false,
       mdl: null,
-      // 高级搜索,展开/关闭
       advanced: false,
-      // 查询参数
       queryParam: {},
-      // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         const requestParameters = Object.assign({}, parameter, this.queryParam)
         return listProject(requestParameters)
@@ -173,6 +142,33 @@ export default {
     }
   },
   created () {
+    this.columns = [
+      {
+        title: this.$t('common.no'),
+        scopedSlots: { customRender: 'serial' }
+      },
+      {
+        title: this.$t('common.name'),
+        dataIndex: 'name'
+      },
+      {
+        title: this.$t('common.status'),
+        dataIndex: 'status',
+        scopedSlots: { customRender: 'status' }
+      },
+      {
+        title: this.$t('common.isDefault'),
+        dataIndex: 'default',
+        scopedSlots: { customRender: 'default' }
+      },
+      {
+        title: this.$t('common.opt'),
+        dataIndex: 'action',
+        width: '180px',
+        scopedSlots: { customRender: 'action' }
+      }
+    ]
+
     this.statusMap = {
       true: {
         type: 'processing',

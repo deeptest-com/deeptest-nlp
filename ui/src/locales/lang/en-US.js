@@ -86,7 +86,13 @@ const locale = {
 
   'msg.warn': 'Warning',
   'msg.canNotDisableDefaultProject': 'Can not disable default project.',
-  'msg.canNotDeleteDefaultProject': 'Can not delete default project.'
+  'msg.canNotDeleteDefaultProject': 'Can not delete default project.',
+
+  'common.no': '编号',
+  'common.name': 'Name',
+  'common.status': 'Status',
+  'common.isDefault': 'Is Default',
+  'common.opt': 'Operation'
 }
 
 export default {

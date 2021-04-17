@@ -62,7 +62,13 @@ const locale = {
 
   'msg.warn': '提醒',
   'msg.canNotDisableDefaultProject': '不能禁用默认的项目。',
-  'msg.canNotDeleteDefaultProject': '不能删除默认的项目。'
+  'msg.canNotDeleteDefaultProject': '不能删除默认的项目。',
+
+  'common.no': '编号',
+  'common.name': '名称',
+  'common.status': '状态',
+  'common.isDefault': '是否默认',
+  'common.opt': '操作'
 }
 
 export default {
