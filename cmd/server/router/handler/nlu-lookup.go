@@ -12,7 +12,7 @@ import (
 type NluLookupCtrl struct {
 	BaseCtrl
 
-	NluLookupService *service.NluLookupService `inject:""`
+	LookupService *service.NluLookupService `inject:""`
 }
 
 func NewNluLookupCtrl() *NluLookupCtrl {
@@ -21,6 +21,7 @@ func NewNluLookupCtrl() *NluLookupCtrl {
 
 func (c *NluLookupCtrl) List(ctx iris.Context) {
 	keywords := ctx.FormValue("keywords")
+	status := ctx.FormValue("status")
 	pageNoStr := ctx.FormValue("pageNo")
 	pageSizeStr := ctx.FormValue("pageSize")
 
@@ -30,42 +31,92 @@ func (c *NluLookupCtrl) List(ctx iris.Context) {
 		pageSize = serverConst.PageSize
 	}
 
-	plans, total := c.NluLookupService.List(keywords, pageNo, pageSize)
+	lookups, total := c.LookupService.List(keywords, status, pageNo, pageSize)
 
 	_, _ = ctx.JSON(_utils.ApiResPage(200, "请求成功",
-		plans, pageNo, pageSize, total))
+		lookups, pageNo, pageSize, total))
 }
 
 func (c *NluLookupCtrl) Get(ctx iris.Context) {
-
-}
-
-func (c *NluLookupCtrl) Create(ctx iris.Context) {
-	ctx.StatusCode(iris.StatusOK)
-	plan := new(model.NluLookup)
-	if err := ctx.ReadJSON(plan); err != nil {
+	id, err := ctx.Params().GetInt("id")
+	if err != nil {
 		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
-	if c.Validate(*plan, ctx) {
+	model := c.LookupService.Get(uint(id))
+	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", model))
+	return
+}
+
+func (c *NluLookupCtrl) Create(ctx iris.Context) {
+	ctx.StatusCode(iris.StatusOK)
+
+	model := model.NluLookup{}
+	if err := ctx.ReadJSON(&model); err != nil {
+		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
-	err := c.NluLookupService.Save(plan)
+	if c.Validate(model, ctx) {
+		return
+	}
+
+	err := c.LookupService.Save(&model)
 	if err != nil {
 		_, _ = ctx.JSON(_utils.ApiRes(400, "操作失败", nil))
 		return
 	}
 
-	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", plan))
+	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", model))
 	return
 }
 
 func (c *NluLookupCtrl) Update(ctx iris.Context) {
+	model := model.NluLookup{}
+	if err := ctx.ReadJSON(&model); err != nil {
+		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
+		return
+	}
 
+	err := c.LookupService.Update(&model)
+	if err != nil {
+		_, _ = ctx.JSON(_utils.ApiRes(400, "操作失败", nil))
+		return
+	}
+
+	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", model))
+}
+
+func (c *NluLookupCtrl) SetDefault(ctx iris.Context) {
+	id, err := ctx.Params().GetInt("id")
+	if err != nil {
+		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
+		return
+	}
+
+	c.LookupService.SetDefault(uint(id))
+	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", ""))
+}
+
+func (c *NluLookupCtrl) Disable(ctx iris.Context) {
+	id, err := ctx.Params().GetInt("id")
+	if err != nil {
+		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
+		return
+	}
+
+	c.LookupService.Disable(uint(id))
+	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", ""))
 }
 
 func (c *NluLookupCtrl) Delete(ctx iris.Context) {
+	id, err := ctx.Params().GetInt("id")
+	if err != nil {
+		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
+		return
+	}
 
+	c.LookupService.Delete(uint(id))
+	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", ""))
 }

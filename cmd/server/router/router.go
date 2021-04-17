@@ -106,6 +106,7 @@ func (r *Router) App() {
 					party.Post("/", r.NluLookupCtrlCtrl.Create).Name = "创建词表"
 					party.Put("/{id:uint}", r.NluLookupCtrlCtrl.Update).Name = "更新词表"
 					party.Delete("/{id:uint}", r.NluLookupCtrlCtrl.Delete).Name = "删除词表"
+					party.Post("/{id:uint}/disable", r.NluLookupCtrlCtrl.Disable).Name = "禁用/启动词表"
 				})
 
 				admin.PartyFunc("/synonyms", func(party iris.Party) {
@@ -114,6 +115,7 @@ func (r *Router) App() {
 					party.Post("/", r.NluSynonymCtrlCtrl.Create).Name = "创建同义词"
 					party.Put("/{id:uint}", r.NluSynonymCtrlCtrl.Update).Name = "更新同义词"
 					party.Delete("/{id:uint}", r.NluSynonymCtrlCtrl.Delete).Name = "删除同义词"
+					party.Post("/{id:uint}/disable", r.NluLookupCtrlCtrl.Disable).Name = "禁用/启动同义词"
 				})
 
 				admin.PartyFunc("/users", func(party iris.Party) {

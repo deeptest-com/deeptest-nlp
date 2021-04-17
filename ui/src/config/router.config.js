@@ -75,7 +75,7 @@ export const asyncRouterMap = [
                 meta: { title: 'menu.intent.list', keepAlive: true, permission: [ 'intent' ] }
               },
               {
-                path: '/nlu/intent/edit',
+                path: '/nlu/intent/:id/edit',
                 name: 'intent-edit',
                 component: () => import('@/views/nlu/intent/Edit'),
                 meta: { title: 'menu.intent.edit', keepAlive: true, permission: [ 'intent' ] }
@@ -97,7 +97,7 @@ export const asyncRouterMap = [
                 meta: { title: 'menu.synonym.list', keepAlive: true, permission: [ 'synonym' ] }
               },
               {
-                path: '/nlu/synonym/edit',
+                path: '/nlu/synonym/:id/edit',
                 name: 'synonym-edit',
                 component: () => import('@/views/nlu/synonym/Edit'),
                 meta: { title: 'menu.synonym.edit', keepAlive: true, permission: [ 'synonym' ] }
@@ -116,13 +116,13 @@ export const asyncRouterMap = [
                 path: '/nlu/lookup/list',
                 name: 'lookup-list',
                 component: () => import('@/views/nlu/lookup/List'),
-                meta: { title: 'menu.intent.list', keepAlive: true, permission: [ 'lookup' ] }
+                meta: { title: 'menu.lookup.list', keepAlive: true, permission: [ 'lookup' ] }
               },
               {
-                path: '/nlu/lookup/edit',
+                path: '/nlu/lookup/:id/edit',
                 name: 'lookup-edit',
                 component: () => import('@/views/nlu/lookup/Edit'),
-                meta: { title: 'menu.intent.edit', keepAlive: true, permission: [ 'lookup' ] }
+                meta: { title: 'menu.lookup.edit', keepAlive: true, permission: [ 'lookup' ] }
               }
             ]
           }

@@ -7,9 +7,10 @@ type NluLookup struct {
 	Items []NluLookupItem `json:"items" gorm:"-"`
 }
 type NluLookupItem struct {
-	Content string `json:"content"`
+	BaseModel
 
-	LookupId uint `json:"lookupId"`
+	Content  string `json:"content"`
+	LookupId uint   `json:"lookupId"`
 }
 
 func (NluLookup) TableName() string {

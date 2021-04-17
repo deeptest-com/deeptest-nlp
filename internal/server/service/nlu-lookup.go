@@ -13,13 +13,42 @@ func NewNluLookupService() *NluLookupService {
 	return &NluLookupService{}
 }
 
-func (s *NluLookupService) List(keywords string, pageNo int, pageSize int) (pos []model.NluLookup, total int64) {
-	pos, total = s.NluLookupRepo.Query(keywords, pageNo, pageSize)
+func (s *NluLookupService) List(keywords, status string, pageNo int, pageSize int) (pos []model.NluLookup, total int64) {
+	pos, total = s.NluLookupRepo.Query(keywords, status, pageNo, pageSize)
+	return
+}
+
+func (s *NluLookupService) Get(id uint) (po model.NluLookup) {
+	po = s.NluLookupRepo.Get(id)
 	return
 }
 
 func (s *NluLookupService) Save(po *model.NluLookup) (err error) {
 	err = s.NluLookupRepo.Save(po)
+
+	return
+}
+
+func (s *NluLookupService) Update(po *model.NluLookup) (err error) {
+	err = s.NluLookupRepo.Update(po)
+
+	return
+}
+
+func (s *NluLookupService) SetDefault(id uint) (err error) {
+	err = s.NluLookupRepo.SetDefault(id)
+
+	return
+}
+
+func (s *NluLookupService) Disable(id uint) (err error) {
+	err = s.NluLookupRepo.Disable(id)
+
+	return
+}
+
+func (s *NluLookupService) Delete(id uint) (err error) {
+	err = s.NluLookupRepo.Delete(id)
 
 	return
 }

@@ -5,6 +5,8 @@ const prefix = '/v1/admin'
 const api = {
   profile: `${prefix}/profile`,
   projects: `${prefix}/projects`,
+  lookups: `${prefix}/lookups`,
+  synonyms: `${prefix}/synonyms`,
 
   user: `${prefix}/user`,
   role: `${prefix}/role`,
@@ -66,6 +68,42 @@ export function disableProject (model) {
 export function removeProject (model) {
   return request({
     url: api.projects + '/' + model.id,
+    method: 'delete',
+    params: {}
+  })
+}
+
+export function listLookup (params) {
+  return request({
+    url: api.lookups,
+    method: 'get',
+    params: params
+  })
+}
+export function getLookup (id) {
+  return request({
+    url: api.lookups + '/' + id,
+    method: 'get',
+    params: {}
+  })
+}
+export function saveLookup (model) {
+  return request({
+    url: !model.id ? api.lookups : api.lookups + '/' + model.id,
+    method: !model.id ? 'post' : 'put',
+    data: model
+  })
+}
+export function disableLookup (model) {
+  return request({
+    url: api.lookups + '/' + model.id + '/disable',
+    method: 'post',
+    params: {}
+  })
+}
+export function removeLookup (model) {
+  return request({
+    url: api.lookups + '/' + model.id,
     method: 'delete',
     params: {}
   })

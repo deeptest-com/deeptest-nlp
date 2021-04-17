@@ -5,57 +5,30 @@
         <a-form layout="inline">
           <a-row :gutter="48">
             <a-col :md="8" :sm="24">
-              <a-form-item label="规则编号">
-                <a-input v-model="queryParam.id" placeholder=""/>
+              <a-form-item :label="$t('form.name')">
+                <a-input v-model="queryParam.keywords" placeholder=""/>
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
-              <a-form-item label="使用状态">
+              <a-form-item :label="$t('form.status')">
                 <a-select v-model="queryParam.status" placeholder="请选择" default-value="0">
-                  <a-select-option value="0">全部</a-select-option>
-                  <a-select-option value="1">关闭</a-select-option>
-                  <a-select-option value="2">运行中</a-select-option>
+                  <a-select-option value="">{{ $t('form.all') }}</a-select-option>
+                  <a-select-option value="true">{{ $t('form.enable') }}</a-select-option>
+                  <a-select-option value="false">{{ $t('form.disable') }}</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
-            <template v-if="advanced">
-              <a-col :md="8" :sm="24">
-                <a-form-item label="调用次数">
-                  <a-input-number v-model="queryParam.callNo" style="width: 100%"/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="更新日期">
-                  <a-date-picker v-model="queryParam.date" style="width: 100%" placeholder="请输入更新日期"/>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="使用状态">
-                  <a-select v-model="queryParam.useStatus" placeholder="请选择" default-value="0">
-                    <a-select-option value="0">全部</a-select-option>
-                    <a-select-option value="1">关闭</a-select-option>
-                    <a-select-option value="2">运行中</a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="使用状态">
-                  <a-select placeholder="请选择" default-value="0">
-                    <a-select-option value="0">全部</a-select-option>
-                    <a-select-option value="1">关闭</a-select-option>
-                    <a-select-option value="2">运行中</a-select-option>
-                  </a-select>
-                </a-form-item>
-              </a-col>
-            </template>
+            <!-- <template v-if="advanced">
+            </template> -->
             <a-col :md="!advanced && 8 || 24" :sm="24">
               <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
-                <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
-                <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">重置</a-button>
-                <a @click="toggleAdvanced" style="margin-left: 8px">
-                  {{ advanced ? '收起' : '展开' }}
+                <a-button type="primary" @click="$refs.table.refresh(true)">{{ $t('form.search') }}</a-button>
+                <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">{{ $t('form.reset') }}</a-button>
+
+                <!-- <a @click="toggleAdvanced" style="margin-left: 8px">
+                  {{ advanced ? $t('form.collapse') : $t('form.expand') }}
                   <a-icon :type="advanced ? 'up' : 'down'"/>
-                </a>
+                </a> -->
               </span>
             </a-col>
           </a-row>
@@ -63,16 +36,11 @@
       </div>
 
       <div class="table-operator">
-        <a-button type="primary" icon="plus" @click="handleAdd">新建</a-button>
+        <a-button type="primary" icon="plus" @click="create">{{ $t('form.create') }}</a-button>
         <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
           <a-menu slot="overlay">
-            <a-menu-item key="1"><a-icon type="delete" />删除</a-menu-item>
-            <!-- lock | unlock -->
-            <a-menu-item key="2"><a-icon type="lock" />锁定</a-menu-item>
+            <a-menu-item key="1"><a-icon type="delete" />{{ $t('form.remove') }}<</a-menu-item>
           </a-menu>
-          <a-button style="margin-left: 8px">
-            批量操作 <a-icon type="down" />
-          </a-button>
         </a-dropdown>
       </div>
 
@@ -94,15 +62,27 @@
           <ellipsis :length="4" tooltip>{{ text }}</ellipsis>
         </span>
 
-        <span slot="status" slot-scope="text">
-          <a-badge :status="text | statusTypeFilter" :text="text | statusFilter" />
+        <span slot="status" slot-scope="text, record">
+          <a-badge :status="!record.disabled | statusTypeFilter(statusMap)" :text="!record.disabled | statusFilter(statusMap)" />
         </span>
 
         <span slot="action" slot-scope="text, record">
           <template>
-            <a @click="handleEdit(record)">配置</a>
+            <a @click="edit(record)">{{ $t('form.edit') }}</a>
             <a-divider type="vertical" />
-            <a @click="handleSub(record)">订阅报警</a>
+            <a v-if="!record.disabled" @click="disable(record)">{{ $t('form.disable') }}</a>
+            <a v-if="record.disabled" @click="disable(record)">{{ $t('form.enable') }}</a>
+            <a-divider type="vertical" />
+            <a-popconfirm
+              v-if="!record.isDefault"
+              :title="$t('form.confirmToRemove')"
+              :okText="$t('form.ok')"
+              :cancelText="$t('form.cancel')"
+              @confirm="confirmRemove(record)"
+              @cancel="cancelRemove"
+            >
+              <a href="#">{{ $t('form.remove') }}</a>
+            </a-popconfirm>
           </template>
         </span>
       </s-table>
@@ -113,51 +93,10 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { listProject } from '@/api/manage'
+import { listLookup, disableLookup, removeLookup } from '@/api/manage'
 
 import StepByStepModal from '../../list/modules/StepByStepModal'
 import CreateForm from '../../list/modules/CreateForm'
-
-const columns = [
-  {
-    title: '#',
-    scopedSlots: { customRender: 'serial' }
-  },
-  {
-    title: '名称',
-    dataIndex: 'name'
-  },
-  {
-    title: '状态',
-    dataIndex: 'status',
-    scopedSlots: { customRender: 'status' }
-  },
-  {
-    title: '操作',
-    dataIndex: 'action',
-    width: '150px',
-    scopedSlots: { customRender: 'action' }
-  }
-]
-
-const statusMap = {
-  0: {
-    status: 'default',
-    text: '关闭'
-  },
-  1: {
-    status: 'processing',
-    text: '运行中'
-  },
-  2: {
-    status: 'success',
-    text: '已上线'
-  },
-  3: {
-    status: 'error',
-    text: '异常'
-  }
-}
 
 export default {
   name: 'LookupList',
@@ -167,22 +106,18 @@ export default {
     CreateForm,
     StepByStepModal
   },
+  columns: [],
+  statusMap: {},
   data () {
-    this.columns = columns
     return {
-      // create model
       visible: false,
       confirmLoading: false,
       mdl: null,
-      // 高级搜索 展开/关闭
       advanced: false,
-      // 查询参数
       queryParam: {},
-      // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         const requestParameters = Object.assign({}, parameter, this.queryParam)
-        console.log('loadData request parameters:', requestParameters)
-        return listProject(requestParameters)
+        return listLookup(requestParameters)
           .then(res => {
             return res
           })
@@ -192,14 +127,46 @@ export default {
     }
   },
   filters: {
-    statusFilter (type) {
-      return statusMap[1].text
+    statusFilter (status, statusMap) {
+      return statusMap[status].text
     },
-    statusTypeFilter (type) {
-      return statusMap[1].status
+    statusTypeFilter (status, statusMap) {
+      return statusMap[status].type
     }
   },
   created () {
+    this.columns = [
+      {
+        title: this.$t('common.no'),
+        scopedSlots: { customRender: 'serial' }
+      },
+      {
+        title: this.$t('common.name'),
+        dataIndex: 'name'
+      },
+      {
+        title: this.$t('common.status'),
+        dataIndex: 'status',
+        scopedSlots: { customRender: 'status' }
+      },
+      {
+        title: this.$t('common.opt'),
+        dataIndex: 'action',
+        width: '180px',
+        scopedSlots: { customRender: 'action' }
+      }
+    ]
+
+    this.statusMap = {
+      true: {
+        type: 'processing',
+        text: this.$t('status.enable')
+      },
+      false: {
+        type: 'default',
+        text: this.$t('status.disable')
+      }
+    }
   },
   computed: {
     rowSelection () {
@@ -210,74 +177,32 @@ export default {
     }
   },
   methods: {
-    handleAdd () {
+    create () {
       this.mdl = null
       this.visible = true
 
-      this.$router.push('/nlu/lookup/edit')
+      this.$router.push('/nlu/lookup/0/edit')
     },
-    handleEdit (record) {
+    edit (record) {
       this.visible = true
       this.mdl = { ...record }
 
-      this.$router.push('/nlu/lookup/edit')
+      this.$router.push('/nlu/lookup/' + record.id + '/edit')
     },
-    handleOk () {
-      // const form = this.$refs.createModal.form
-      this.confirmLoading = true
-      // form.validateFields((errors, values) => {
-      //   if (!errors) {
-      //     console.log('values', values)
-      //     if (values.id > 0) {
-      //       // 修改 e.g.
-      //       new Promise((resolve, reject) => {
-      //         setTimeout(() => {
-      //           resolve()
-      //         }, 1000)
-      //       }).then(res => {
-      //         this.visible = false
-      //         this.confirmLoading = false
-      //         // 重置表单数据
-      //         form.resetFields()
-      //         // 刷新表格
-      //         this.$refs.table.refresh()
-      //
-      //         this.$message.info('修改成功')
-      //       })
-      //     } else {
-      //       // 新增
-      //       new Promise((resolve, reject) => {
-      //         setTimeout(() => {
-      //           resolve()
-      //         }, 1000)
-      //       }).then(res => {
-      //         this.visible = false
-      //         this.confirmLoading = false
-      //         // 重置表单数据
-      //         form.resetFields()
-      //         // 刷新表格
-      //         this.$refs.table.refresh()
-      //
-      //         this.$message.info('新增成功')
-      //       })
-      //     }
-      //   } else {
-      //     this.confirmLoading = false
-      //   }
-      // })
+    disable (record) {
+      disableLookup(record).then(json => {
+        console.log('disableLookup', json)
+        this.$refs.table.refresh(false)
+      })
     },
-    handleCancel () {
-      this.visible = false
-
-      const form = this.$refs.createModal.form
-      form.resetFields() // 清理表单数据（可不做）
+    confirmRemove (record) {
+      removeLookup(record).then(json => {
+        console.log('removeLookup', json)
+        this.$refs.table.refresh(false)
+      })
     },
-    handleSub (record) {
-      if (record.status !== 0) {
-        this.$message.info(`${record.no} 订阅成功`)
-      } else {
-        this.$message.error(`${record.no} 订阅失败，规则已关闭`)
-      }
+    cancelRemove (e) {
+      console.log(e)
     },
     onSelectChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
