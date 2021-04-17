@@ -2,7 +2,7 @@ import spacy
 
 parser = spacy.load('zh_core_web_trf')
 
-doc = parser('小明在上海虹口足球场观看足球比赛。')
+doc = parser('打印错误测试。')
 for token in doc[:17]:
     print("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}\t{11}\n".format(
         token.text,   # 文本

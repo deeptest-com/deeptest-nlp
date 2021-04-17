@@ -50,10 +50,19 @@ const locale = {
   'form.search': '查询',
   'form.collapse': '收缩',
   'form.expand': '展开',
+  'form.ok': '确认',
+  'form.confirmToRemove': '确认删除？',
 
   'form.all': '所有',
   'form.name': '名称',
-  'form.status': '状态'
+  'form.status': '状态',
+
+  'status.enable': '启用',
+  'status.disable': '禁用',
+
+  'msg.warn': '提醒',
+  'msg.canNotDisableDefaultProject': '不能禁用默认的项目。',
+  'msg.canNotDeleteDefaultProject': '不能删除默认的项目。'
 }
 
 export default {

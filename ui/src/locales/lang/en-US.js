@@ -74,9 +74,19 @@ const locale = {
   'form.collapse': 'Collapse',
   'form.expand': 'Expand',
 
+  'form.ok': 'Ok',
+  'form.confirmToRemove': 'Confirm to delete?',
+
   'form.all': 'All',
   'form.name': 'Name',
-  'form.status': 'Status'
+  'form.status': 'Status',
+
+  'status.enable': 'Enable',
+  'status.disable': 'Disable',
+
+  'msg.warn': 'Warning',
+  'msg.canNotDisableDefaultProject': 'Can not disable default project.',
+  'msg.canNotDeleteDefaultProject': 'Can not delete default project.'
 }
 
 export default {

@@ -57,7 +57,8 @@ func InitDB() {
 	}
 
 	DB, err := gorm.Open(dialector, &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
+		SkipDefaultTransaction: false,
+		Logger:                 logger.Default.LogMode(logger.Info),
 		NamingStrategy: schema.NamingStrategy{
 			TablePrefix:   serverConf.Config.DB.Prefix, // 表名前缀，`User` 的表名应该是 `t_users`
 			SingularTable: false,                       // 使用单数表名，启用该选项，此时，`User` 的表名应该是 `t_user`

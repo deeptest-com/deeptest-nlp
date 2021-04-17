@@ -43,7 +43,6 @@ export function getProject (id) {
   })
 }
 export function saveProject (model) {
-  console.log('---', model.id)
   return request({
     url: !model.id ? api.projects : api.projects + '/' + model.id,
     method: !model.id ? 'post' : 'put',

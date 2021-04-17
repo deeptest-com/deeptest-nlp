@@ -3,10 +3,10 @@ package repo
 import (
 	"errors"
 	"fmt"
+	"github.com/fatih/color"
 	"github.com/utlai/utl/internal/server/biz/domain"
 	"github.com/utlai/utl/internal/server/cfg"
 	"github.com/utlai/utl/internal/server/db"
-	"github.com/fatih/color"
 	"gorm.io/gorm"
 	"strings"
 )
@@ -60,10 +60,10 @@ func (r *CommonRepo) IsNotFound(err error) bool {
 	return false
 }
 
-// Update 更新
-func (r *CommonRepo) Update(v, d interface{}, id uint) error {
+// UpdateObj 更新
+func (r *CommonRepo) UpdateObj(v, d interface{}, id uint) error {
 	if err := db.GetInst().DB().Model(v).Where("id = ?", id).Updates(d).Error; err != nil {
-		color.Red(fmt.Sprintf("Update %+v to %+v\n", v, d))
+		color.Red(fmt.Sprintf("UpdateObj %+v to %+v\n", v, d))
 		return err
 	}
 	return nil

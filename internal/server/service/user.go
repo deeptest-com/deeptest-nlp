@@ -2,6 +2,10 @@ package service
 
 import (
 	"fmt"
+	"github.com/fatih/color"
+	"github.com/iris-contrib/middleware/jwt"
+	"github.com/jameskeane/bcrypt"
+	"github.com/kataras/iris/v12"
 	"github.com/utlai/utl/internal/pkg/utils"
 	"github.com/utlai/utl/internal/server/biz/domain"
 	"github.com/utlai/utl/internal/server/biz/middleware"
@@ -10,10 +14,6 @@ import (
 	"github.com/utlai/utl/internal/server/cfg"
 	"github.com/utlai/utl/internal/server/model"
 	"github.com/utlai/utl/internal/server/repo"
-	"github.com/fatih/color"
-	"github.com/iris-contrib/middleware/jwt"
-	"github.com/jameskeane/bcrypt"
-	"github.com/kataras/iris/v12"
 	"strconv"
 	"time"
 )
@@ -93,7 +93,7 @@ func (s *UserService) UpdateUserById(id uint, nu *model.User) error {
 	if len(nu.Password) > 0 {
 		nu.Password = _utils.HashPassword(nu.Password)
 	}
-	if err := s.UserRepo.Update(&model.User{}, nu, id); err != nil {
+	if err := s.UserRepo.UpdateObj(&model.User{}, nu, id); err != nil {
 		return err
 	}
 

@@ -23,14 +23,32 @@ func (s *ProjectService) Get(id uint) (po model.Project) {
 	return
 }
 
-func (s *ProjectService) Save(pos *model.Project) (err error) {
-	err = s.ProjectRepo.Save(pos)
+func (s *ProjectService) Save(po *model.Project) (err error) {
+	err = s.ProjectRepo.Save(po)
+
+	return
+}
+
+func (s *ProjectService) Update(po *model.Project) (err error) {
+	err = s.ProjectRepo.Update(po)
 
 	return
 }
 
 func (s *ProjectService) SetDefault(id uint) (err error) {
 	err = s.ProjectRepo.SetDefault(id)
+
+	return
+}
+
+func (s *ProjectService) Disable(id uint) (err error) {
+	err = s.ProjectRepo.Disable(id)
+
+	return
+}
+
+func (s *ProjectService) Delete(id uint) (err error) {
+	err = s.ProjectRepo.Delete(id)
 
 	return
 }

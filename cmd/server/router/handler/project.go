@@ -1,9 +1,7 @@
 package handler
 
 import (
-	"fmt"
 	"github.com/kataras/iris/v12"
-	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
 	"github.com/utlai/utl/internal/pkg/utils"
 	"github.com/utlai/utl/internal/server/model"
 	"github.com/utlai/utl/internal/server/service"
@@ -53,17 +51,18 @@ func (c *ProjectCtrl) Get(ctx iris.Context) {
 
 func (c *ProjectCtrl) Create(ctx iris.Context) {
 	ctx.StatusCode(iris.StatusOK)
-	model := new(model.Project)
-	if err := ctx.ReadJSON(model); err != nil {
+
+	model := model.Project{}
+	if err := ctx.ReadJSON(&model); err != nil {
 		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
-	if c.Validate(*model, ctx) {
+	if c.Validate(model, ctx) {
 		return
 	}
 
-	err := c.ProjectService.Save(model)
+	err := c.ProjectService.Save(&model)
 	if err != nil {
 		_, _ = ctx.JSON(_utils.ApiRes(400, "操作失败", nil))
 		return
@@ -74,27 +73,50 @@ func (c *ProjectCtrl) Create(ctx iris.Context) {
 }
 
 func (c *ProjectCtrl) Update(ctx iris.Context) {
-	id := ctx.FormValue("id")
-	_logUtils.Info(fmt.Sprintf("%s", id))
+	model := model.Project{}
+	if err := ctx.ReadJSON(&model); err != nil {
+		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
+		return
+	}
 
-	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", ""))
+	err := c.ProjectService.Update(&model)
+	if err != nil {
+		_, _ = ctx.JSON(_utils.ApiRes(400, "操作失败", nil))
+		return
+	}
+
+	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", model))
 }
 
 func (c *ProjectCtrl) SetDefault(ctx iris.Context) {
-	id := ctx.FormValue("id")
-	_logUtils.Info(fmt.Sprintf("%s", id))
+	id, err := ctx.Params().GetInt("id")
+	if err != nil {
+		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
+		return
+	}
 
+	c.ProjectService.SetDefault(uint(id))
 	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", ""))
 }
 
 func (c *ProjectCtrl) Disable(ctx iris.Context) {
-	id := ctx.FormValue("id")
-	_logUtils.Info(fmt.Sprintf("%s", id))
+	id, err := ctx.Params().GetInt("id")
+	if err != nil {
+		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
+		return
+	}
 
+	c.ProjectService.Disable(uint(id))
 	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", ""))
 }
 
 func (c *ProjectCtrl) Delete(ctx iris.Context) {
-	id := ctx.FormValue("id")
-	_logUtils.Info(fmt.Sprintf("%s", id))
+	id, err := ctx.Params().GetInt("id")
+	if err != nil {
+		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
+		return
+	}
+
+	c.ProjectService.Delete(uint(id))
+	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", ""))
 }

@@ -2,10 +2,10 @@ package repo
 
 import (
 	"fmt"
+	gf "github.com/snowlyg/gotransformer"
 	"github.com/utlai/utl/internal/server/biz/domain"
 	"github.com/utlai/utl/internal/server/biz/transformer"
 	"github.com/utlai/utl/internal/server/model"
-	gf "github.com/snowlyg/gotransformer"
 	"time"
 
 	"github.com/fatih/color"
@@ -77,7 +77,7 @@ func (r *PermRepo) CreatePermission(perm *model.Permission) error {
 
 // UpdatePermission update permission
 func (r *PermRepo) UpdatePermission(id uint, pj *model.Permission) error {
-	if err := r.Update(&model.Permission{}, pj, id); err != nil {
+	if err := r.UpdateObj(&model.Permission{}, pj, id); err != nil {
 		return err
 	}
 	return nil

@@ -62,12 +62,12 @@
           <ellipsis :length="4" tooltip>{{ text }}</ellipsis>
         </span>
 
-        <span slot="status" slot-scope="text">
-          <a-badge :status="text | statusTypeFilter" :text="text | statusFilter" />
+        <span slot="status" slot-scope="text, record">
+          <a-badge :status="!record.disabled | statusTypeFilter(statusMap)" :text="!record.disabled | statusFilter(statusMap)" />
         </span>
 
         <span slot="default" slot-scope="text, record">
-          <template>={{record.isDefault}}=
+          <template>
             <a-checkbox :checked="record.isDefault==true" @click="setDefault(record)">
             </a-checkbox>
           </template>
@@ -77,10 +77,19 @@
           <template>
             <a @click="edit(record)">{{ $t('form.edit') }}</a>
             <a-divider type="vertical" />
-            <a v-if="!record.disabledAt" @click="disable(record)">{{ $t('form.disable') }}</a>
-            <a v-if="record.disabledAt" @click="disable(record)">{{ $t('form.enable') }}</a>
+            <a v-if="!record.disabled && !record.isDefault" @click="disable(record)">{{ $t('form.disable') }}</a>
+            <a v-if="record.disabled" @click="disable(record)">{{ $t('form.enable') }}</a>
             <a-divider type="vertical" />
-            <a @click="remove(record)">{{ $t('form.remove') }}</a>
+            <a-popconfirm
+              v-if="!record.isDefault"
+              :title="$t('form.confirmToRemove')"
+              :okText="$t('form.ok')"
+              :cancelText="$t('form.cancel')"
+              @confirm="confirmRemove(record)"
+              @cancel="cancelRemove"
+            >
+              <a href="#">{{ $t('form.remove') }}</a>
+            </a-popconfirm>
           </template>
         </span>
       </s-table>
@@ -118,29 +127,10 @@ const columns = [
   {
     title: '操作',
     dataIndex: 'action',
-    width: '150px',
+    width: '180px',
     scopedSlots: { customRender: 'action' }
   }
 ]
-
-const statusMap = {
-  0: {
-    status: 'default',
-    text: '关闭'
-  },
-  1: {
-    status: 'processing',
-    text: '运行中'
-  },
-  2: {
-    status: 'success',
-    text: '已上线'
-  },
-  3: {
-    status: 'error',
-    text: '异常'
-  }
-}
 
 export default {
   name: 'ProjectList',
@@ -150,6 +140,7 @@ export default {
     CreateForm,
     StepByStepModal
   },
+  statusMap: {},
   data () {
     this.columns = columns
     return {
@@ -157,14 +148,13 @@ export default {
       visible: false,
       confirmLoading: false,
       mdl: null,
-      // 高级搜索 展开/关闭
+      // 高级搜索,展开/关闭
       advanced: false,
       // 查询参数
       queryParam: {},
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         const requestParameters = Object.assign({}, parameter, this.queryParam)
-        // console.log('loadData request parameters:', requestParameters)
         return listProject(requestParameters)
           .then(res => {
             return res
@@ -175,14 +165,24 @@ export default {
     }
   },
   filters: {
-    statusFilter (type) {
-      return statusMap[1].text
+    statusFilter (status, statusMap) {
+      return statusMap[status].text
     },
-    statusTypeFilter (type) {
-      return statusMap[1].status
+    statusTypeFilter (status, statusMap) {
+      return statusMap[status].type
     }
   },
   created () {
+    this.statusMap = {
+      true: {
+        type: 'processing',
+        text: this.$t('status.enable')
+      },
+      false: {
+        type: 'default',
+        text: this.$t('status.disable')
+      }
+    }
   },
   computed: {
     rowSelection () {
@@ -206,26 +206,25 @@ export default {
       this.$router.push('/platform/project/' + record.id + '/edit')
     },
     setDefault (record) {
-      console.log('===', record)
-      this.visible = true
       setDefaultProject(record).then(json => {
         console.log('setDefaultProject', json)
-        this.loadData()
+        this.$refs.table.refresh(false)
       })
     },
     disable (record) {
-      this.visible = true
       disableProject(record).then(json => {
         console.log('disableProject', json)
-        this.loadData()
+        this.$refs.table.refresh(false)
       })
     },
-    remove (record) {
-      this.visible = true
+    confirmRemove (record) {
       removeProject(record).then(json => {
         console.log('removeProject', json)
-        this.loadData()
+        this.$refs.table.refresh(false)
       })
+    },
+    cancelRemove (e) {
+      console.log(e)
     },
     onSelectChange (selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
