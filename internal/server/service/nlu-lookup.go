@@ -52,3 +52,9 @@ func (s *NluLookupService) Delete(id uint) (err error) {
 
 	return
 }
+
+func (s *NluLookupService) BatchDelete(ids []int) (err error) {
+	err = s.NluLookupRepo.BatchDelete(ids)
+
+	return
+}

@@ -89,3 +89,10 @@ func (r *NluLookupRepo) Delete(id uint) (err error) {
 
 	return
 }
+
+func (r *NluLookupRepo) BatchDelete(ids []int) (err error) {
+	err = r.DB.Model(&model.NluLookup{}).Where("id IN (?)", ids).
+		Updates(map[string]interface{}{"deleted_at": time.Now()}).Error
+
+	return
+}

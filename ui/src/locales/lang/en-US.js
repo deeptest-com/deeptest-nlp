@@ -29,6 +29,9 @@ const locale = {
   'menu.lookup': 'Lookup',
   'menu.lookup.list': 'Lookup List',
   'menu.lookup.edit': 'Lookup Edit',
+  'menu.lookup.maintain': 'Lookup Item Maintain',
+  'menu.lookup.create.item': 'Crete Lookup Item',
+  'menu.lookup.edit.item': 'Crete Lookup Item',
 
   'menu.dashboard': 'Dashboard',
   'menu.dashboard.analysis': 'Analysis',
@@ -62,6 +65,7 @@ const locale = {
 
   'form.create': 'Create',
   'form.edit': 'Edit',
+  'form.maintain': 'Maintain',
   'form.remove': 'Delete',
   'form.disable': 'Disable',
   'form.enable': 'Enable',

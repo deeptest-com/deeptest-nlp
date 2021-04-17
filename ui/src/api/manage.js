@@ -6,6 +6,7 @@ const api = {
   profile: `${prefix}/profile`,
   projects: `${prefix}/projects`,
   lookups: `${prefix}/lookups`,
+  lookupItems: `${prefix}/lookupItems`,
   synonyms: `${prefix}/synonyms`,
 
   user: `${prefix}/user`,
@@ -106,6 +107,49 @@ export function removeLookup (model) {
     url: api.lookups + '/' + model.id,
     method: 'delete',
     params: {}
+  })
+}
+
+export function listLookupItem (params) {
+  return request({
+    url: api.lookupItems,
+    method: 'get',
+    params: params
+  })
+}
+export function getLookupItem (id) {
+  return request({
+    url: api.lookupItems + '/' + id,
+    method: 'get',
+    params: {}
+  })
+}
+export function saveLookupItem (model) {
+  return request({
+    url: !model.id ? api.lookupItems : api.lookupItems + '/' + model.id,
+    method: !model.id ? 'post' : 'put',
+    data: model
+  })
+}
+export function disableLookupItem (model) {
+  return request({
+    url: api.lookupItems + '/' + model.id + '/disable',
+    method: 'post',
+    params: {}
+  })
+}
+export function removeLookupItem (model) {
+  return request({
+    url: api.lookupItems + '/' + model.id,
+    method: 'delete',
+    params: {}
+  })
+}
+export function batchRemoveLookupItem (data) {
+  return request({
+    url: api.lookupItems + '/batchRemove',
+    method: 'post',
+    data: data
   })
 }
 

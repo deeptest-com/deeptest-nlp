@@ -123,6 +123,12 @@ export const asyncRouterMap = [
                 name: 'lookup-edit',
                 component: () => import('@/views/nlu/lookup/Edit'),
                 meta: { title: 'menu.lookup.edit', keepAlive: true, permission: [ 'lookup' ] }
+              },
+              {
+                path: '/nlu/lookup/:id/maintain',
+                name: 'lookup-detail',
+                component: () => import('@/views/nlu/lookup/Maintain'),
+                meta: { title: 'menu.lookup.maintain', keepAlive: true, permission: [ 'lookup' ] }
               }
             ]
           }

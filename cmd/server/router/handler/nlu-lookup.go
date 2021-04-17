@@ -120,3 +120,19 @@ func (c *NluLookupCtrl) Delete(ctx iris.Context) {
 	c.LookupService.Delete(uint(id))
 	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", ""))
 }
+
+func (c *NluLookupCtrl) BatchRemove(ctx iris.Context) {
+	ids := make([]int, 0)
+	if err := ctx.ReadJSON(&ids); err != nil {
+		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
+		return
+	}
+
+	err := c.LookupService.BatchDelete(ids)
+	if err != nil {
+		_, _ = ctx.JSON(_utils.ApiRes(400, "操作失败", nil))
+		return
+	}
+
+	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", nil))
+}

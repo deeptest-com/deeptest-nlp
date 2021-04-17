@@ -37,11 +37,6 @@
 
       <div class="table-operator">
         <a-button type="primary" icon="plus" @click="create">{{ $t('form.create') }}</a-button>
-        <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
-          <a-menu slot="overlay">
-            <a-menu-item key="1"><a-icon type="delete" />{{ $t('form.remove') }}<</a-menu-item>
-          </a-menu>
-        </a-dropdown>
       </div>
 
       <s-table
@@ -51,7 +46,6 @@
         :columns="columns"
         :data="loadData"
         :alert="true"
-        :rowSelection="rowSelection"
         showPagination="auto"
       >
         <span slot="serial" slot-scope="text, record, index">
@@ -69,9 +63,14 @@
         <span slot="action" slot-scope="text, record">
           <template>
             <a @click="edit(record)">{{ $t('form.edit') }}</a>
+
+            <a-divider type="vertical" />
+            <a @click="detail(record)">{{ $t('form.maintain') }}</a>
+
             <a-divider type="vertical" />
             <a v-if="!record.disabled" @click="disable(record)">{{ $t('form.disable') }}</a>
             <a v-if="record.disabled" @click="disable(record)">{{ $t('form.enable') }}</a>
+
             <a-divider type="vertical" />
             <a-popconfirm
               v-if="!record.isDefault"
@@ -152,7 +151,7 @@ export default {
       {
         title: this.$t('common.opt'),
         dataIndex: 'action',
-        width: '180px',
+        width: '220px',
         scopedSlots: { customRender: 'action' }
       }
     ]
@@ -169,12 +168,6 @@ export default {
     }
   },
   computed: {
-    rowSelection () {
-      return {
-        selectedRowKeys: this.selectedRowKeys,
-        onChange: this.onSelectChange
-      }
-    }
   },
   methods: {
     create () {
@@ -188,6 +181,12 @@ export default {
       this.mdl = { ...record }
 
       this.$router.push('/nlu/lookup/' + record.id + '/edit')
+    },
+    detail (record) {
+      this.visible = true
+      this.mdl = { ...record }
+
+      this.$router.push('/nlu/lookup/' + record.id + '/maintain')
     },
     disable (record) {
       disableLookup(record).then(json => {

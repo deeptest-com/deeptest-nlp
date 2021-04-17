@@ -37,11 +37,6 @@
 
       <div class="table-operator">
         <a-button type="primary" icon="plus" @click="create">{{ $t('form.create') }}</a-button>
-        <a-dropdown v-action:edit v-if="selectedRowKeys.length > 0">
-          <a-menu slot="overlay">
-            <a-menu-item key="1"><a-icon type="delete" />{{ $t('form.remove') }}<</a-menu-item>
-          </a-menu>
-        </a-dropdown>
       </div>
 
       <s-table
@@ -51,7 +46,6 @@
         :columns="columns"
         :data="loadData"
         :alert="true"
-        :rowSelection="rowSelection"
         showPagination="auto"
       >
         <span slot="serial" slot-scope="text, record, index">
@@ -181,12 +175,7 @@ export default {
     }
   },
   computed: {
-    rowSelection () {
-      return {
-        selectedRowKeys: this.selectedRowKeys,
-        onChange: this.onSelectChange
-      }
-    }
+
   },
   methods: {
     create () {

@@ -107,6 +107,17 @@ func (r *Router) App() {
 					party.Put("/{id:uint}", r.NluLookupCtrlCtrl.Update).Name = "更新词表"
 					party.Delete("/{id:uint}", r.NluLookupCtrlCtrl.Delete).Name = "删除词表"
 					party.Post("/{id:uint}/disable", r.NluLookupCtrlCtrl.Disable).Name = "禁用/启动词表"
+
+					party.Post("/batchRemoveItem", r.NluLookupCtrlCtrl.BatchRemove).Name = "批量删除词表项"
+				})
+				admin.PartyFunc("/lookupItems", func(party iris.Party) {
+					party.Get("/", r.NluLookupCtrlCtrl.List).Name = "词表项列表"
+					party.Get("/{id:uint}", r.NluLookupCtrlCtrl.Get).Name = "词表项详情"
+					party.Post("/", r.NluLookupCtrlCtrl.Create).Name = "创建项词表"
+					party.Put("/{id:uint}", r.NluLookupCtrlCtrl.Update).Name = "更新词表项"
+					party.Delete("/{id:uint}", r.NluLookupCtrlCtrl.Delete).Name = "删除词表项"
+					party.Post("/{id:uint}/disable", r.NluLookupCtrlCtrl.Disable).Name = "禁用/启动词表项"
+					party.Post("/batchRemove", r.NluLookupCtrlCtrl.BatchRemove).Name = "批量删除词表项"
 				})
 
 				admin.PartyFunc("/synonyms", func(party iris.Party) {

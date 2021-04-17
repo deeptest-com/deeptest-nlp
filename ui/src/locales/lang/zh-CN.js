@@ -34,11 +34,15 @@ const locale = {
   'menu.lookup': '词表',
   'menu.lookup.list': '词表列表',
   'menu.lookup.edit': '词表编辑',
+  'menu.lookup.maintain': '词表项维护',
+  'menu.lookup.create.item': '创建词表项',
+  'menu.lookup.edit.item': '编辑词表项',
 
   'common.notify': '通知',
 
   'form.create': '新建',
   'form.edit': '编辑',
+  'form.maintain': '维护',
   'form.remove': '删除',
   'form.disable': '禁用',
   'form.enable': '启用',
