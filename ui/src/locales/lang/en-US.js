@@ -29,7 +29,6 @@ const locale = {
   'menu.lookup': 'Lookup',
   'menu.lookup.list': 'Lookup List',
   'menu.lookup.edit': 'Lookup Edit',
-  'menu.lookup.maintain': 'Lookup Item Maintain',
   'menu.lookup.create.item': 'Crete Lookup Item',
   'menu.lookup.edit.item': 'Crete Lookup Item',
 

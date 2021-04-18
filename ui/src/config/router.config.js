@@ -83,28 +83,6 @@ export const asyncRouterMap = [
             ]
           },
           {
-            path: '/nlu/synonym',
-            name: 'synonym',
-            redirect: '/nlu/synonym/list',
-            component: RouteView,
-            meta: { title: 'menu.synonym', keepAlive: true, permission: [ 'synonym' ] },
-            hideChildrenInMenu: true,
-            children: [
-              {
-                path: '/nlu/synonym/list',
-                name: 'synonym-list',
-                component: () => import('@/views/nlu/synonym/List'),
-                meta: { title: 'menu.synonym.list', keepAlive: true, permission: [ 'synonym' ] }
-              },
-              {
-                path: '/nlu/synonym/:id/edit',
-                name: 'synonym-edit',
-                component: () => import('@/views/nlu/synonym/Edit'),
-                meta: { title: 'menu.synonym.edit', keepAlive: true, permission: [ 'synonym' ] }
-              }
-            ]
-          },
-          {
             path: '/nlu/lookup',
             name: 'lookup',
             redirect: '/nlu/lookup/list',
@@ -126,9 +104,37 @@ export const asyncRouterMap = [
               },
               {
                 path: '/nlu/lookup/:id/items',
-                name: 'lookup-detail',
+                name: 'lookup-maintain',
                 component: () => import('@/views/nlu/lookup/item/List'),
-                meta: { title: 'menu.lookup.maintain', keepAlive: true, permission: [ 'lookup' ] }
+                meta: { title: 'menu.lookup.items', keepAlive: true, permission: [ 'lookup' ] }
+              }
+            ]
+          },
+          {
+            path: '/nlu/synonym',
+            name: 'synonym',
+            redirect: '/nlu/synonym/list',
+            component: RouteView,
+            meta: { title: 'menu.synonym', keepAlive: true, permission: [ 'synonym' ] },
+            hideChildrenInMenu: true,
+            children: [
+              {
+                path: '/nlu/synonym/list',
+                name: 'synonym-list',
+                component: () => import('@/views/nlu/synonym/List'),
+                meta: { title: 'menu.synonym.list', keepAlive: true, permission: [ 'synonym' ] }
+              },
+              {
+                path: '/nlu/synonym/:id/edit',
+                name: 'synonym-edit',
+                component: () => import('@/views/nlu/synonym/Edit'),
+                meta: { title: 'menu.synonym.edit', keepAlive: true, permission: [ 'synonym' ] }
+              },
+              {
+                path: '/nlu/synonym/:id/items',
+                name: 'synonym-maintain',
+                component: () => import('@/views/nlu/synonym/item/List'),
+                meta: { title: 'menu.synonym.items', keepAlive: true, permission: [ 'synonym' ] }
               }
             ]
           }

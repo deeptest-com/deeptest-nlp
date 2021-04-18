@@ -8,6 +8,7 @@ const api = {
   lookups: `${prefix}/lookups`,
   lookupItems: `${prefix}/lookupItems`,
   synonyms: `${prefix}/synonyms`,
+  synonymItems: `${prefix}/synonymItems`,
 
   user: `${prefix}/user`,
   role: `${prefix}/role`,
@@ -148,6 +149,86 @@ export function removeLookupItem (model) {
 export function batchRemoveLookupItem (data) {
   return request({
     url: api.lookupItems + '/batchRemove',
+    method: 'post',
+    data: data
+  })
+}
+
+//
+export function listSynonym (params) {
+  return request({
+    url: api.synonyms,
+    method: 'get',
+    params: params
+  })
+}
+export function getSynonym (id) {
+  return request({
+    url: api.synonyms + '/' + id,
+    method: 'get',
+    params: {}
+  })
+}
+export function saveSynonym (model) {
+  return request({
+    url: !model.id ? api.synonyms : api.synonyms + '/' + model.id,
+    method: !model.id ? 'post' : 'put',
+    data: model
+  })
+}
+export function disableSynonym (model) {
+  return request({
+    url: api.synonyms + '/' + model.id + '/disable',
+    method: 'post',
+    params: {}
+  })
+}
+export function removeSynonym (model) {
+  return request({
+    url: api.synonyms + '/' + model.id,
+    method: 'delete',
+    params: {}
+  })
+}
+
+export function listSynonymItem (params) {
+  return request({
+    url: api.synonymItems,
+    method: 'get',
+    params: params
+  })
+}
+export function getSynonymItem (id) {
+  return request({
+    url: api.synonymItems + '/' + id,
+    method: 'get',
+    params: {}
+  })
+}
+export function saveSynonymItem (model) {
+  return request({
+    url: !model.id ? api.synonymItems : api.synonymItems + '/' + model.id,
+    method: !model.id ? 'post' : 'put',
+    data: model
+  })
+}
+export function disableSynonymItem (model) {
+  return request({
+    url: api.synonymItems + '/' + model.id + '/disable',
+    method: 'post',
+    params: {}
+  })
+}
+export function removeSynonymItem (model) {
+  return request({
+    url: api.synonymItems + '/' + model.id,
+    method: 'delete',
+    params: {}
+  })
+}
+export function batchRemoveSynonymItem (data) {
+  return request({
+    url: api.synonymItems + '/batchRemove',
     method: 'post',
     data: data
   })

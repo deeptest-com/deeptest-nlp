@@ -28,10 +28,10 @@
 
 <script>
 import { labelCol, wrapperCol, wrapperFull } from '@/utils/const'
-import { requestSuccess, getLookupItem, saveLookupItem } from '@/api/manage'
+import { requestSuccess, getSynonymItem, saveSynonymItem } from '@/api/manage'
 
 export default {
-  name: 'LookupItemEdit',
+  name: 'SynonymItemEdit',
   props: {
     id: {
       type: Number,
@@ -70,7 +70,7 @@ export default {
       }
     },
     getModel () {
-      return getLookupItem(this.id)
+      return getSynonymItem(this.id)
     },
     save (e) {
       console.log(this.model)
@@ -80,8 +80,8 @@ export default {
           return false
         }
 
-        saveLookupItem(this.model).then(json => {
-          console.log('saveLookupItem', json)
+        saveSynonymItem(this.model).then(json => {
+          console.log('saveSynonymItem', json)
           if (requestSuccess(json.code)) {
             if (this.afterSave) {
               this.afterSave(json)

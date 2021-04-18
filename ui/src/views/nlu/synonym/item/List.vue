@@ -89,13 +89,13 @@
     </page-header-wrapper>
     <a-modal
       :visible="editVisible"
-      :title="modelId > 0 ? $t('menu.lookup.edit.item') : $t('menu.lookup.create.item')"
+      :title="modelId > 0 ? $t('menu.synonym.edit.item') : $t('menu.synonym.create.item')"
       :footer="false"
       :centered="true"
       :width="700"
       @cancel="cancelEdit"
     >
-      <LookupItemEdit
+      <SynonymItemEdit
         :v-if="editVisible"
         :id="modelId"
         :afterSave="saveModel"
@@ -107,20 +107,20 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { listLookupItem, disableLookupItem, removeLookupItem, batchRemoveLookupItem } from '@/api/manage'
+import { listSynonymItem, disableSynonymItem, removeSynonymItem, batchRemoveSynonymItem } from '@/api/manage'
 
 import StepByStepModal from '../../../list/modules/StepByStepModal'
 import CreateForm from '../../../list/modules/CreateForm'
-import LookupItemEdit from './Edit'
+import SynonymItemEdit from './Edit'
 
 export default {
-  name: 'LookupItems',
+  name: 'SynonymItems',
   components: {
     STable,
     Ellipsis,
     CreateForm,
     StepByStepModal,
-    LookupItemEdit
+    SynonymItemEdit
   },
   columns: [],
   statusMap: {},
@@ -133,7 +133,7 @@ export default {
       queryParam: {},
       loadData: parameter => {
         const requestParameters = Object.assign({}, parameter, this.queryParam)
-        return listLookupItem(requestParameters)
+        return listSynonymItem(requestParameters)
           .then(res => {
             return res
           })
@@ -211,14 +211,14 @@ export default {
       this.$refs.table.refresh(false)
     },
     disable (record) {
-      disableLookupItem(record).then(json => {
-        console.log('disableLookupItem', json)
+      disableSynonymItem(record).then(json => {
+        console.log('disableSynonymItem', json)
         this.$refs.table.refresh(false)
       })
     },
     confirmRemove (record) {
-      removeLookupItem(record).then(json => {
-        console.log('removeLookupItem', json)
+      removeSynonymItem(record).then(json => {
+        console.log('removeSynonymItem', json)
         this.$refs.table.refresh(false)
       })
     },
@@ -227,8 +227,8 @@ export default {
     },
     multiOpt ({ key }) {
       console.log(`${key}`)
-      batchRemoveLookupItem(this.selectedRowKeys).then(json => {
-        console.log('batchRemoveLookupItem', json)
+      batchRemoveSynonymItem(this.selectedRowKeys).then(json => {
+        console.log('batchRemoveSynonymItem', json)
         this.$refs.table.refresh(false)
       })
     },
