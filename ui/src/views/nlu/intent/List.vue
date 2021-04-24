@@ -179,7 +179,7 @@ export default {
       this.visible = true
       this.mdl = { ...record }
 
-      this.$router.push('/nlu/' + record.id + '/sent/list')
+      this.$router.push('/nlu/intent/' + record.id + '/sent/list')
     },
     disable (record) {
       disableIntent(record).then(json => {

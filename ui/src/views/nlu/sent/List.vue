@@ -51,7 +51,7 @@
           {{ index + 1 }}
         </span>
 
-        <span slot="name" slot-scope="text">
+        <span slot="content" slot-scope="text">
           <ellipsis :length="4" tooltip>{{ text }}</ellipsis>
         </span>
 
@@ -62,9 +62,6 @@
         <span slot="action" slot-scope="text, record">
           <template>
             <a @click="edit(record)">{{ $t('form.edit') }}</a>
-
-            <a-divider type="vertical" />
-            <a @click="maintain(record)">{{ $t('menu.sent') }}</a>
 
             <a-divider type="vertical" />
             <a v-if="!record.disabled" @click="disable(record)">{{ $t('form.disable') }}</a>
@@ -98,6 +95,14 @@ import CreateForm from '../../list/modules/CreateForm'
 
 export default {
   name: 'SentList',
+  props: {
+    intentId: {
+      type: Number,
+      default: function () {
+        return parseInt(this.$route.params.intentId)
+      }
+    }
+  },
   components: {
     STable,
     Ellipsis,
@@ -114,6 +119,7 @@ export default {
       advanced: false,
       queryParam: {},
       loadData: parameter => {
+        console.log('intentId', this.intentId)
         const requestParameters = Object.assign({}, parameter, this.queryParam)
         return listSent(requestParameters)
           .then(res => {
@@ -122,6 +128,11 @@ export default {
       },
       selectedRowKeys: [],
       selectedRows: []
+    }
+  },
+  watch: {
+    intentId: function () {
+      console.log('watch intentId', this.intentId)
     }
   },
   filters: {
@@ -139,8 +150,8 @@ export default {
         scopedSlots: { customRender: 'serial' }
       },
       {
-        title: this.$t('form.name'),
-        dataIndex: 'name'
+        title: this.$t('form.content'),
+        dataIndex: 'content'
       },
       {
         title: this.$t('form.status'),
@@ -179,13 +190,7 @@ export default {
       this.visible = true
       this.mdl = { ...record }
 
-      this.$router.push('/nlu/sent/' + record.id + '/edit')
-    },
-    maintain (record) {
-      this.visible = true
-      this.mdl = { ...record }
-
-      this.$router.push('/nlu/sent/' + record.id + '/sents')
+      this.$router.push('/nlu/intent/' + this.intentId + '/sent/' + record.id + '/edit')
     },
     disable (record) {
       disableSent(record).then(json => {

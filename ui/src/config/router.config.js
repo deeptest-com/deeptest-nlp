@@ -85,20 +85,19 @@ export const asyncRouterMap = [
           {
             path: '/nlu/sent',
             name: 'sent',
-            redirect: '/nlu/sent/list',
             component: RouteView,
             meta: { title: 'menu.sent', keepAlive: true, permission: [ 'sent' ] },
             hidden: true,
             hideChildrenInMenu: true,
             children: [
               {
-                path: '/nlu/:intentId/sent/list',
+                path: '/nlu/intent/:intentId/sent/list',
                 name: 'sent-list',
                 component: () => import('@/views/nlu/sent/List'),
                 meta: { title: 'menu.sent.list', keepAlive: true, permission: [ 'sent' ] }
               },
               {
-                path: '/nlu/sent/:id/edit',
+                path: '/nlu/intent/:intentId/sent/:id/edit',
                 name: 'sent-edit',
                 component: () => import('@/views/nlu/sent/Edit'),
                 meta: { title: 'menu.sent.edit', keepAlive: true, permission: [ 'sent' ] }

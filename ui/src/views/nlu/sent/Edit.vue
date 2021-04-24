@@ -10,11 +10,11 @@
     <a-card :body-style="{padding: '24px 32px'}" :bordered="false">
       <a-form-model ref="form" :model="model" :rules="rules">
         <a-form-model-item
-          :label="$t('form.name')"
-          prop="name"
+          :label="$t('form.content')"
+          prop="content"
           :labelCol="labelCol"
           :wrapperCol="wrapperCol">
-          <a-input v-model="model.name" />
+          <a-input v-model="model.content" />
         </a-form-model-item>
         <a-form-model-item
           :label="$t('form.desc')"
@@ -42,6 +42,12 @@ import { requestSuccess, getSent, saveSent } from '@/api/manage'
 export default {
   name: 'SentEdit',
   props: {
+    intentId: {
+      type: Number,
+      default: function () {
+        return parseInt(this.$route.params.intentId)
+      }
+    },
     id: {
       type: Number,
       default: function () {
@@ -56,11 +62,14 @@ export default {
       wrapperFull: wrapperFull,
       model: {},
       rules: {
-        name: [{ required: true, message: this.$t('valid.input.name'), trigger: 'blur' }]
+        content: [{ required: true, message: this.$t('valid.input.content'), trigger: 'blur' }]
       }
     }
   },
   watch: {
+    intentId: function () {
+      console.log('watch intentId', this.intentId)
+    },
     id: function () {
       console.log('watch id', this.id)
       this.loadData()
@@ -96,7 +105,7 @@ export default {
         saveSent(this.model).then(json => {
           console.log('saveSent', json)
           if (requestSuccess(json.code)) {
-            this.$router.push('/nlu/sent/list')
+            this.$router.push('/nlu/' + this.intentId + '/sent/list')
           }
         })
       })
@@ -106,7 +115,7 @@ export default {
       this.$refs.form.resetFields()
     },
     back () {
-      this.$router.push('/nlu/sent/list')
+      this.$router.push('/nlu/' + this.intentId + '/sent/list')
     }
   }
 }

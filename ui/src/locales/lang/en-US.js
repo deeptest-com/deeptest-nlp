@@ -87,6 +87,7 @@ const locale = {
   'form.all': 'All',
   'form.no': 'NO',
   'form.name': 'Name',
+  'form.content': 'Content',
   'form.status': 'Status',
   'form.is.default': 'Is Default',
   'form.opt': 'Operation',
@@ -95,6 +96,7 @@ const locale = {
   'status.disable': 'Disable',
 
   'valid.input.name': 'Please input name',
+  'valid.input.content': 'Please input content',
 
   'msg.warn': 'Warning',
   'common.notify': 'Notification',

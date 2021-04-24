@@ -67,6 +67,7 @@ const locale = {
   'form.all': '所有',
   'form.no': '编号',
   'form.name': '名称',
+  'form.content': '内容',
   'form.status': '状态',
   'form.desc': '描述',
   'form.is.default': '是否默认',
@@ -76,6 +77,7 @@ const locale = {
   'status.disable': '禁用',
 
   'valid.input.name': '请输入名称',
+  'valid.input.content': '请输入内容',
 
   'msg.warn': '提醒',
 
