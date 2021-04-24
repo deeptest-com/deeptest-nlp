@@ -105,7 +105,7 @@ export default {
         saveSent(this.model).then(json => {
           console.log('saveSent', json)
           if (requestSuccess(json.code)) {
-            this.$router.push('/nlu/' + this.intentId + '/sent/list')
+            this.$router.push('/nlu/intent/' + this.intentId + '/sent/list')
           }
         })
       })
@@ -115,7 +115,7 @@ export default {
       this.$refs.form.resetFields()
     },
     back () {
-      this.$router.push('/nlu/' + this.intentId + '/sent/list')
+      this.$router.push('/nlu/intent/' + this.intentId + '/sent/list')
     }
   }
 }
