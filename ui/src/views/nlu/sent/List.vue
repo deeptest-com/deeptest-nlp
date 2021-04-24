@@ -1,5 +1,11 @@
 <template>
   <page-header-wrapper>
+    <div class="toolbar-edit">
+      <div class="left"></div>
+      <div class="right">
+        <a-button @click="back()" type="primary">{{$t('common.back')}}</a-button>
+      </div>
+    </div>
     <a-card :bordered="false">
       <div class="table-page-search-wrapper">
         <a-form layout="inline">
@@ -85,13 +91,13 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { listIntent, disableIntent, removeIntent } from '@/api/manage'
+import { listSent, disableSent, removeSent } from '@/api/manage'
 
 import StepByStepModal from '../../list/modules/StepByStepModal'
 import CreateForm from '../../list/modules/CreateForm'
 
 export default {
-  name: 'IntentList',
+  name: 'SentList',
   components: {
     STable,
     Ellipsis,
@@ -109,7 +115,7 @@ export default {
       queryParam: {},
       loadData: parameter => {
         const requestParameters = Object.assign({}, parameter, this.queryParam)
-        return listIntent(requestParameters)
+        return listSent(requestParameters)
           .then(res => {
             return res
           })
@@ -167,29 +173,29 @@ export default {
       this.mdl = null
       this.visible = true
 
-      this.$router.push('/nlu/intent/0/edit')
+      this.$router.push('/nlu/sent/0/edit')
     },
     edit (record) {
       this.visible = true
       this.mdl = { ...record }
 
-      this.$router.push('/nlu/intent/' + record.id + '/edit')
+      this.$router.push('/nlu/sent/' + record.id + '/edit')
     },
     maintain (record) {
       this.visible = true
       this.mdl = { ...record }
 
-      this.$router.push('/nlu/' + record.id + '/sent/list')
+      this.$router.push('/nlu/sent/' + record.id + '/sents')
     },
     disable (record) {
-      disableIntent(record).then(json => {
-        console.log('disableIntent', json)
+      disableSent(record).then(json => {
+        console.log('disableSent', json)
         this.$refs.table.refresh(false)
       })
     },
     confirmRemove (record) {
-      removeIntent(record).then(json => {
-        console.log('removeIntent', json)
+      removeSent(record).then(json => {
+        console.log('removeSent', json)
         this.$refs.table.refresh(false)
       })
     },
@@ -207,6 +213,9 @@ export default {
       this.queryParam = {
         date: moment(new Date())
       }
+    },
+    back () {
+      this.$router.push('/nlu/intent/list')
     }
   }
 }
