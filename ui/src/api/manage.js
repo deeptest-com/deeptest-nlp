@@ -5,6 +5,9 @@ const prefix = '/v1/admin'
 const api = {
   profile: `${prefix}/profile`,
   projects: `${prefix}/projects`,
+  intents: `${prefix}/intents`,
+  sents: `${prefix}/sents`,
+  slots: `${prefix}/slots`,
   lookups: `${prefix}/lookups`,
   lookupItems: `${prefix}/lookupItems`,
   synonyms: `${prefix}/synonyms`,
@@ -151,6 +154,115 @@ export function batchRemoveLookupItem (data) {
     url: api.lookupItems + '/batchRemove',
     method: 'post',
     data: data
+  })
+}
+
+//
+export function listIntent (params) {
+  return request({
+    url: api.intents,
+    method: 'get',
+    params: params
+  })
+}
+export function getIntent (id) {
+  return request({
+    url: api.intents + '/' + id,
+    method: 'get',
+    params: {}
+  })
+}
+export function saveIntent (model) {
+  return request({
+    url: !model.id ? api.intents : api.intents + '/' + model.id,
+    method: !model.id ? 'post' : 'put',
+    data: model
+  })
+}
+export function disableIntent (model) {
+  return request({
+    url: api.intents + '/' + model.id + '/disable',
+    method: 'post',
+    params: {}
+  })
+}
+export function removeIntent (model) {
+  return request({
+    url: api.intents + '/' + model.id,
+    method: 'delete',
+    params: {}
+  })
+}
+
+export function listSent (params) {
+  return request({
+    url: api.sents,
+    method: 'get',
+    params: params
+  })
+}
+export function getSent (id) {
+  return request({
+    url: api.sents + '/' + id,
+    method: 'get',
+    params: {}
+  })
+}
+export function saveSent (model) {
+  return request({
+    url: !model.id ? api.sents : api.sents + '/' + model.id,
+    method: !model.id ? 'post' : 'put',
+    data: model
+  })
+}
+export function disableSent (model) {
+  return request({
+    url: api.sents + '/' + model.id + '/disable',
+    method: 'post',
+    params: {}
+  })
+}
+export function removeSent (model) {
+  return request({
+    url: api.sents + '/' + model.id,
+    method: 'delete',
+    params: {}
+  })
+}
+
+export function listSlot (params) {
+  return request({
+    url: api.slots,
+    method: 'get',
+    params: params
+  })
+}
+export function getSlot (id) {
+  return request({
+    url: api.slots + '/' + id,
+    method: 'get',
+    params: {}
+  })
+}
+export function saveSlot (model) {
+  return request({
+    url: !model.id ? api.slots : api.slots + '/' + model.id,
+    method: !model.id ? 'post' : 'put',
+    data: model
+  })
+}
+export function disableSlot (model) {
+  return request({
+    url: api.slots + '/' + model.id + '/disable',
+    method: 'post',
+    params: {}
+  })
+}
+export function removeSlot (model) {
+  return request({
+    url: api.slots + '/' + model.id,
+    method: 'delete',
+    params: {}
   })
 }
 

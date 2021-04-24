@@ -96,7 +96,7 @@ export default {
         saveSynonym(this.model).then(json => {
           console.log('saveSynonym', json)
           if (requestSuccess(json.code)) {
-            this.$router.push('/nlu/synonym/list')
+            this.$router.push('/nlu/intent/list')
           }
         })
       })
@@ -106,7 +106,7 @@ export default {
       this.$refs.form.resetFields()
     },
     back () {
-      this.$router.push('/nlu/synonym/list')
+      this.$router.push('/nlu/intent/list')
     }
   }
 }

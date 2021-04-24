@@ -7,16 +7,16 @@ import (
 	"time"
 )
 
-type NluIntentRepo struct {
+type NluSentRepo struct {
 	CommonRepo
 	DB *gorm.DB `inject:""`
 }
 
-func NewNluIntentRepo() *NluIntentRepo {
-	return &NluIntentRepo{}
+func NewNluSentRepo() *NluSentRepo {
+	return &NluSentRepo{}
 }
 
-func (r *NluIntentRepo) Query(keywords, status string, pageNo int, pageSize int) (pos []model.NluIntent, total int64) {
+func (r *NluSentRepo) Query(keywords, status string, pageNo int, pageSize int) (pos []model.NluSent, total int64) {
 	query := r.DB.Select("*").Order("id ASC")
 	if status == "true" {
 		query = query.Where("NOT disabled")
@@ -36,7 +36,7 @@ func (r *NluIntentRepo) Query(keywords, status string, pageNo int, pageSize int)
 	if err != nil {
 		_logUtils.Errorf("sql error %s", err.Error())
 	}
-	err = r.DB.Model(&model.NluIntent{}).Count(&total).Error
+	err = r.DB.Model(&model.NluSent{}).Count(&total).Error
 	if err != nil {
 		_logUtils.Errorf("sql error %s", err.Error())
 	}
@@ -44,30 +44,30 @@ func (r *NluIntentRepo) Query(keywords, status string, pageNo int, pageSize int)
 	return
 }
 
-func (r *NluIntentRepo) Get(id uint) (po model.NluIntent) {
+func (r *NluSentRepo) Get(id uint) (po model.NluSent) {
 	r.DB.Where("id = ?", id).First(&po)
 	return
 }
 
-func (r *NluIntentRepo) Save(po *model.NluIntent) (err error) {
+func (r *NluSentRepo) Save(po *model.NluSent) (err error) {
 	err = r.DB.Model(&po).Omit("").Create(&po).Error
 	return
 }
 
-func (r *NluIntentRepo) Update(po *model.NluIntent) (err error) {
+func (r *NluSentRepo) Update(po *model.NluSent) (err error) {
 	err = r.DB.Omit("").Save(&po).Error
 	return
 }
 
-func (r *NluIntentRepo) SetDefault(id uint) (err error) {
+func (r *NluSentRepo) SetDefault(id uint) (err error) {
 	r.DB.Transaction(func(tx *gorm.DB) error {
-		err = r.DB.Model(&model.NluIntent{}).Where("id = ?", id).
+		err = r.DB.Model(&model.NluSent{}).Where("id = ?", id).
 			Updates(map[string]interface{}{"is_default": true}).Error
 		if err != nil {
 			return err
 		}
 
-		err = r.DB.Model(&model.NluIntent{}).Where("id != ?", id).
+		err = r.DB.Model(&model.NluSent{}).Where("id != ?", id).
 			Updates(map[string]interface{}{"is_default": false}).Error
 
 		return nil
@@ -76,22 +76,22 @@ func (r *NluIntentRepo) SetDefault(id uint) (err error) {
 	return
 }
 
-func (r *NluIntentRepo) Disable(id uint) (err error) {
-	err = r.DB.Model(&model.NluIntent{}).Where("id = ?", id).
+func (r *NluSentRepo) Disable(id uint) (err error) {
+	err = r.DB.Model(&model.NluSent{}).Where("id = ?", id).
 		Updates(map[string]interface{}{"disabled": gorm.Expr("NOT disabled")}).Error
 
 	return
 }
 
-func (r *NluIntentRepo) Delete(id uint) (err error) {
-	err = r.DB.Model(&model.NluIntent{}).Where("id = ?", id).
+func (r *NluSentRepo) Delete(id uint) (err error) {
+	err = r.DB.Model(&model.NluSent{}).Where("id = ?", id).
 		Updates(map[string]interface{}{"deleted_at": time.Now()}).Error
 
 	return
 }
 
-func (r *NluIntentRepo) BatchDelete(ids []int) (err error) {
-	err = r.DB.Model(&model.NluIntent{}).Where("id IN (?)", ids).
+func (r *NluSentRepo) BatchDelete(ids []int) (err error) {
+	err = r.DB.Model(&model.NluSent{}).Where("id IN (?)", ids).
 		Updates(map[string]interface{}{"deleted_at": time.Now()}).Error
 
 	return

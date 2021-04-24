@@ -36,6 +36,8 @@ type Router struct {
 
 	ProjectCtrl        *handler.ProjectCtrl    `inject:""`
 	NluIntentCtrl      *handler.NluIntentCtrl  `inject:""`
+	NluSentCtrl        *handler.NluSentCtrl    `inject:""`
+	NluSlotCtrl        *handler.NluSlotCtrl    `inject:""`
 	NluLookupCtrlCtrl  *handler.NluLookupCtrl  `inject:""`
 	NluSynonymCtrlCtrl *handler.NluSynonymCtrl `inject:""`
 
@@ -98,6 +100,23 @@ func (r *Router) App() {
 					party.Post("/", r.NluIntentCtrl.Create).Name = "创建意图"
 					party.Put("/{id:uint}", r.NluIntentCtrl.Update).Name = "更新意图"
 					party.Delete("/{id:uint}", r.NluIntentCtrl.Delete).Name = "删除意图"
+					party.Post("/{id:uint}/disable", r.NluIntentCtrl.Disable).Name = "禁用/启动项目"
+				})
+				admin.PartyFunc("/sents", func(party iris.Party) {
+					party.Get("/", r.NluSentCtrl.List).Name = "句子列表"
+					party.Get("/{id:uint}", r.NluSentCtrl.Get).Name = "句子详情"
+					party.Post("/", r.NluSentCtrl.Create).Name = "创建句子"
+					party.Put("/{id:uint}", r.NluSentCtrl.Update).Name = "更新句子"
+					party.Delete("/{id:uint}", r.NluSentCtrl.Delete).Name = "删除句子"
+					party.Post("/{id:uint}/disable", r.NluSentCtrl.Disable).Name = "禁用/启动句子"
+				})
+				admin.PartyFunc("/slots", func(party iris.Party) {
+					party.Get("/", r.NluSlotCtrl.List).Name = "语义槽列表"
+					party.Get("/{id:uint}", r.NluSlotCtrl.Get).Name = "语义槽详情"
+					party.Post("/", r.NluSlotCtrl.Create).Name = "创建语义槽"
+					party.Put("/{id:uint}", r.NluSlotCtrl.Update).Name = "更新语义槽"
+					party.Delete("/{id:uint}", r.NluSlotCtrl.Delete).Name = "删除语义槽"
+					party.Post("/{id:uint}/disable", r.NluSlotCtrl.Disable).Name = "禁用/启动语义槽"
 				})
 
 				admin.PartyFunc("/lookups", func(party iris.Party) {

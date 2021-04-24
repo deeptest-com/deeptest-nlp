@@ -9,17 +9,17 @@ import (
 	"strconv"
 )
 
-type NluIntentCtrl struct {
+type NluSlotCtrl struct {
 	BaseCtrl
 
-	IntentService *service.NluIntentService `inject:""`
+	SlotService *service.NluSlotService `inject:""`
 }
 
-func NewNluIntentCtrl() *NluIntentCtrl {
-	return &NluIntentCtrl{}
+func NewNluSlotCtrl() *NluSlotCtrl {
+	return &NluSlotCtrl{}
 }
 
-func (c *NluIntentCtrl) List(ctx iris.Context) {
+func (c *NluSlotCtrl) List(ctx iris.Context) {
 	keywords := ctx.FormValue("keywords")
 	status := ctx.FormValue("status")
 	pageNoStr := ctx.FormValue("pageNo")
@@ -31,28 +31,28 @@ func (c *NluIntentCtrl) List(ctx iris.Context) {
 		pageSize = serverConst.PageSize
 	}
 
-	intents, total := c.IntentService.List(keywords, status, pageNo, pageSize)
+	slots, total := c.SlotService.List(keywords, status, pageNo, pageSize)
 
 	_, _ = ctx.JSON(_utils.ApiResPage(200, "请求成功",
-		intents, pageNo, pageSize, total))
+		slots, pageNo, pageSize, total))
 }
 
-func (c *NluIntentCtrl) Get(ctx iris.Context) {
+func (c *NluSlotCtrl) Get(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
 	if err != nil {
 		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
-	model := c.IntentService.Get(uint(id))
+	model := c.SlotService.Get(uint(id))
 	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", model))
 	return
 }
 
-func (c *NluIntentCtrl) Create(ctx iris.Context) {
+func (c *NluSlotCtrl) Create(ctx iris.Context) {
 	ctx.StatusCode(iris.StatusOK)
 
-	model := model.NluIntent{}
+	model := model.NluSlot{}
 	if err := ctx.ReadJSON(&model); err != nil {
 		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
 		return
@@ -62,7 +62,7 @@ func (c *NluIntentCtrl) Create(ctx iris.Context) {
 		return
 	}
 
-	err := c.IntentService.Save(&model)
+	err := c.SlotService.Save(&model)
 	if err != nil {
 		_, _ = ctx.JSON(_utils.ApiRes(400, "操作失败", nil))
 		return
@@ -72,14 +72,14 @@ func (c *NluIntentCtrl) Create(ctx iris.Context) {
 	return
 }
 
-func (c *NluIntentCtrl) Update(ctx iris.Context) {
-	model := model.NluIntent{}
+func (c *NluSlotCtrl) Update(ctx iris.Context) {
+	model := model.NluSlot{}
 	if err := ctx.ReadJSON(&model); err != nil {
 		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
-	err := c.IntentService.Update(&model)
+	err := c.SlotService.Update(&model)
 	if err != nil {
 		_, _ = ctx.JSON(_utils.ApiRes(400, "操作失败", nil))
 		return
@@ -88,47 +88,47 @@ func (c *NluIntentCtrl) Update(ctx iris.Context) {
 	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", model))
 }
 
-func (c *NluIntentCtrl) SetDefault(ctx iris.Context) {
+func (c *NluSlotCtrl) SetDefault(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
 	if err != nil {
 		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
-	c.IntentService.SetDefault(uint(id))
+	c.SlotService.SetDefault(uint(id))
 	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", ""))
 }
 
-func (c *NluIntentCtrl) Disable(ctx iris.Context) {
+func (c *NluSlotCtrl) Disable(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
 	if err != nil {
 		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
-	c.IntentService.Disable(uint(id))
+	c.SlotService.Disable(uint(id))
 	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", ""))
 }
 
-func (c *NluIntentCtrl) Delete(ctx iris.Context) {
+func (c *NluSlotCtrl) Delete(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
 	if err != nil {
 		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
-	c.IntentService.Delete(uint(id))
+	c.SlotService.Delete(uint(id))
 	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", ""))
 }
 
-func (c *NluIntentCtrl) BatchRemove(ctx iris.Context) {
+func (c *NluSlotCtrl) BatchRemove(ctx iris.Context) {
 	ids := make([]int, 0)
 	if err := ctx.ReadJSON(&ids); err != nil {
 		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
-	err := c.IntentService.BatchDelete(ids)
+	err := c.SlotService.BatchDelete(ids)
 	if err != nil {
 		_, _ = ctx.JSON(_utils.ApiRes(400, "操作失败", nil))
 		return
