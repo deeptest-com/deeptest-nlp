@@ -4,5 +4,10 @@ nlu:
 
 - intent: opt_log
   examples: |
-    - [打印]{"entity":"print", "value":"syn_print"}[消息]{"entity":"loglevel", "value":"lkp_loglevel"}[内容](message)
-    - [打印]{"entity":"print", "value":"syn_print"}[消息]{"entity":"loglevel", "value":"lkp_loglevel"}日志[内容](message)
+    - [打印]{"entity":"print", "value":"syn_print"}[消息]{"entity":"loglevel", "value":"lkp_loglevel"}[测试](message)
+    - [打印]{"entity":"print", "value":"syn_print"}[警告]{"entity":"loglevel", "value":"lkp_loglevel"}日志[内容](message)
+    - [输出]{"entity":"print", "value":"syn_print"}[错误]{"entity":"loglevel", "value":"lkp_loglevel"}[句子](message)
+    - [记录]{"entity":"print", "value":"syn_print"}[消息]{"entity":"loglevel", "value":"lkp_loglevel"}日志[一些内容](message)
+    - [输出]{"entity":"print", "value":"syn_print"}[警告]{"entity":"loglevel", "value":"lkp_loglevel"}[说些什么](message)
+    - [记录]{"entity":"print", "value":"syn_print"}[错误]{"entity":"loglevel", "value":"lkp_loglevel"}日志[说明](message)
+    - [打印]{"entity":"print", "value":"syn_print"}[说明](message)的[错误]{"entity":"loglevel", "value":"lkp_loglevel"}
