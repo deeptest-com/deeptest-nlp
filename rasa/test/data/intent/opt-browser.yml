@@ -20,6 +20,7 @@ nlu:
     - [执行]{"entity":"parent", "value":"syn_exec"}脚本[#](script)
     - [运行]{"entity":"parent", "value":"syn_exec"}脚本[#](script)
     - 刷新
+    - 重载
     - 前进
     - 后退
     - 返回

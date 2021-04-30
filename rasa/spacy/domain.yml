@@ -8,6 +8,7 @@ entities:
   - print
   - loglevel
   - message
+  - xpath
 
 slots:
   print:
@@ -17,6 +18,9 @@ slots:
     type: text
     influence_conversation: false
   message:
+    type: text
+    influence_conversation: false
+  xpath:
     type: text
     influence_conversation: false
 

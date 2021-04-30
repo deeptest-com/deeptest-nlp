@@ -10,12 +10,13 @@ pipeline:
     analyzer: "char_wb"
     min_ngram: 1
     max_ngram: 4
-  - name: DIETClassifier              #意图分类
-    epochs: 100
   - name: EntitySynonymMapper   #同义实体
+  - name: RegexFeaturizer
   - name: RegexEntityExtractor
     case_sensitive: True
     use_word_boundaries: False
+  - name: DIETClassifier              #意图分类
+    epochs: 100
   - name: ResponseSelector
     epochs: 100
 
