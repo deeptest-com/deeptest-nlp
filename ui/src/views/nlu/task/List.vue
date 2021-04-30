@@ -85,13 +85,13 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { listIntent, disableIntent, removeIntent } from '@/api/manage'
+import { listTask, disableTask, removeTask } from '@/api/manage'
 
 import StepByStepModal from '../../list/modules/StepByStepModal'
 import CreateForm from '../../list/modules/CreateForm'
 
 export default {
-  name: 'IntentList',
+  name: 'TaskList',
   components: {
     STable,
     Ellipsis,
@@ -109,7 +109,7 @@ export default {
       queryParam: {},
       loadData: parameter => {
         const requestParameters = Object.assign({}, parameter, this.queryParam)
-        return listIntent(requestParameters)
+        return listTask(requestParameters)
           .then(res => {
             return res
           })
@@ -167,29 +167,29 @@ export default {
       this.mdl = null
       this.visible = true
 
-      this.$router.push('/nlu/intent/0/edit')
+      this.$router.push('/nlu/task/0/edit')
     },
     edit (record) {
       this.visible = true
       this.mdl = { ...record }
 
-      this.$router.push('/nlu/intent/' + record.id + '/edit')
+      this.$router.push('/nlu/task/' + record.id + '/edit')
     },
     maintain (record) {
       this.visible = true
       this.mdl = { ...record }
 
-      this.$router.push('/nlu/intent/' + record.id + '/sent/list')
+      this.$router.push('/nlu/task/' + record.id + '/sent/list')
     },
     disable (record) {
-      disableIntent(record).then(json => {
-        console.log('disableIntent', json)
+      disableTask(record).then(json => {
+        console.log('disableTask', json)
         this.$refs.table.refresh(false)
       })
     },
     confirmRemove (record) {
-      removeIntent(record).then(json => {
-        console.log('removeIntent', json)
+      removeTask(record).then(json => {
+        console.log('removeTask', json)
         this.$refs.table.refresh(false)
       })
     },

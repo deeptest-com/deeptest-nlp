@@ -21,10 +21,14 @@ const locale = {
   'menu.dashboard.monitor': '监控页',
   'menu.dashboard.workplace': '工作台',
 
-  'menu.nlu': '自然语言理解',
+  'menu.nlu.full': '自然语言理解',
+  'menu.nlu': 'NLU',
   'menu.project': '项目',
   'menu.project.list': '项目列表',
   'menu.project.edit': '项目编辑',
+  'menu.task': '任务',
+  'menu.task.list': '任务列表',
+  'menu.task.edit': '任务编辑',
   'menu.intent': '意图',
   'menu.intent.list': '意图列表',
   'menu.intent.edit': '意图编辑',
@@ -79,10 +83,37 @@ const locale = {
   'valid.input.name': '请输入名称',
   'valid.input.content': '请输入内容',
 
-  'msg.warn': '提醒',
-
+  'common.info': '消息',
+  'common.tips': '提示',
+  'common.confirm': '确认',
   'common.notify': '通知',
-  'common.back': '返回'
+  'common.back': '返回',
+
+  'msg.warn': '提醒',
+  'msg.confirm.to.logout': '确认退出？',
+  'msg.forbidden': '确认退出？',
+  'msg.unauthorized': '未授权的',
+  'msg.auth.fail': '授权失败',
+
+  'app.setting.pagestyle': '页面演示设置',
+  'app.setting.pagestyle.light': '淡色',
+  'app.setting.pagestyle.dark': '深色',
+  'app.setting.pagestyle.realdark': '深黑',
+  'app.setting.themecolor': '主题色彩',
+  'app.setting.navigationmode': '导航模式',
+  'app.setting.content-width': '内容宽度',
+  'app.setting.fixedheader': '固定头部',
+  'app.setting.fixedsidebar': '固定菜单栏',
+  'app.setting.sidemenu': '左侧菜单栏布局',
+  'app.setting.topmenu': '顶部菜单布局',
+  'app.setting.content-width.fixed': '固定',
+  'app.setting.content-width.fluid': '流式',
+  'app.setting.othersettings': '其他设置',
+  'app.setting.weakmode': '弱模式',
+  'app.setting.copy': '复制设置',
+  'app.setting.loading': '加载主题',
+  'app.setting.copyinfo': '拷贝成功，请替换src/models/setting.js里的默认设置。',
+  'app.setting.production.hint': '设置面板仅显示在开发模式中，请手工进行编辑。'
 }
 
 export default {

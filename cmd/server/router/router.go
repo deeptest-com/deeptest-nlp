@@ -35,6 +35,7 @@ type Router struct {
 	RpcCtrl *handler.RpcCtrl `inject:""`
 
 	ProjectCtrl        *handler.ProjectCtrl    `inject:""`
+	NluTaskCtrl        *handler.NluTaskCtrl    `inject:""`
 	NluIntentCtrl      *handler.NluIntentCtrl  `inject:""`
 	NluSentCtrl        *handler.NluSentCtrl    `inject:""`
 	NluSlotCtrl        *handler.NluSlotCtrl    `inject:""`
@@ -92,6 +93,15 @@ func (r *Router) App() {
 
 					party.Post("/{id:uint}/setDefault", r.ProjectCtrl.SetDefault).Name = "设置当前项目"
 					party.Post("/{id:uint}/disable", r.ProjectCtrl.Disable).Name = "禁用/启动项目"
+				})
+
+				admin.PartyFunc("/tasks", func(party iris.Party) {
+					party.Get("/", r.NluTaskCtrl.List).Name = "任务列表"
+					party.Get("/{id:uint}", r.NluTaskCtrl.Get).Name = "任务详情"
+					party.Post("/", r.NluTaskCtrl.Create).Name = "创建任务"
+					party.Put("/{id:uint}", r.NluTaskCtrl.Update).Name = "更新任务"
+					party.Delete("/{id:uint}", r.NluTaskCtrl.Delete).Name = "删除任务"
+					party.Post("/{id:uint}/disable", r.NluTaskCtrl.Disable).Name = "禁用/启动任务"
 				})
 
 				admin.PartyFunc("/intents", func(party iris.Party) {

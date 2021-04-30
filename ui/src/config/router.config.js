@@ -14,7 +14,7 @@ export const asyncRouterMap = [
     name: 'index',
     component: BasicLayout,
     meta: { title: 'menu.home' },
-    redirect: '/nlu/intent/list',
+    redirect: '/nlu/task/list',
     children: [
       {
         path: '/platform',
@@ -61,46 +61,24 @@ export const asyncRouterMap = [
         hideChildrenInMenu: false,
         children: [
           {
-            path: '/nlu/intent',
-            name: 'intent',
-            redirect: '/nlu/intent/list',
+            path: '/nlu/task',
+            name: 'task',
+            redirect: '/nlu/task/list',
             component: RouteView,
-            meta: { title: 'menu.intent', keepAlive: true, permission: [ 'intent' ] },
+            meta: { title: 'menu.task', keepAlive: true, permission: [ 'task' ] },
             hideChildrenInMenu: true,
             children: [
               {
-                path: '/nlu/intent/list',
-                name: 'intent-list',
-                component: () => import('@/views/nlu/intent/List'),
-                meta: { title: 'menu.intent.list', keepAlive: true, permission: [ 'intent' ] }
+                path: '/nlu/task/list',
+                name: 'task-list',
+                component: () => import('@/views/nlu/task/List'),
+                meta: { title: 'menu.task.list', keepAlive: true, permission: [ 'task' ] }
               },
               {
-                path: '/nlu/intent/:id/edit',
-                name: 'intent-edit',
-                component: () => import('@/views/nlu/intent/Edit'),
-                meta: { title: 'menu.intent.edit', keepAlive: true, permission: [ 'intent' ] }
-              }
-            ]
-          },
-          {
-            path: '/nlu/sent',
-            name: 'sent',
-            component: RouteView,
-            meta: { title: 'menu.sent', keepAlive: true, permission: [ 'sent' ] },
-            hidden: true,
-            hideChildrenInMenu: true,
-            children: [
-              {
-                path: '/nlu/intent/:intentId/sent/list',
-                name: 'sent-list',
-                component: () => import('@/views/nlu/sent/List'),
-                meta: { title: 'menu.sent.list', keepAlive: true, permission: [ 'sent' ] }
-              },
-              {
-                path: '/nlu/intent/:intentId/sent/:id/edit',
-                name: 'sent-edit',
-                component: () => import('@/views/nlu/sent/Edit'),
-                meta: { title: 'menu.sent.edit', keepAlive: true, permission: [ 'sent' ] }
+                path: '/nlu/task/:id/edit',
+                name: 'task-edit',
+                component: () => import('@/views/nlu/task/Edit'),
+                meta: { title: 'menu.task.edit', keepAlive: true, permission: [ 'task' ] }
               }
             ]
           },

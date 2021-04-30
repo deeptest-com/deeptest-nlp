@@ -5,6 +5,7 @@ const prefix = '/v1/admin'
 const api = {
   profile: `${prefix}/profile`,
   projects: `${prefix}/projects`,
+  tasks: `${prefix}/tasks`,
   intents: `${prefix}/intents`,
   sents: `${prefix}/sents`,
   slots: `${prefix}/slots`,
@@ -35,6 +36,7 @@ export function getProfile (parameter) {
   })
 }
 
+// 项目
 export function listProject (params) {
   return request({
     url: api.projects,
@@ -78,6 +80,7 @@ export function removeProject (model) {
   })
 }
 
+// 词表
 export function listLookup (params) {
   return request({
     url: api.lookups,
@@ -114,6 +117,7 @@ export function removeLookup (model) {
   })
 }
 
+// 词表项
 export function listLookupItem (params) {
   return request({
     url: api.lookupItems,
@@ -157,7 +161,44 @@ export function batchRemoveLookupItem (data) {
   })
 }
 
-//
+// 任务
+export function listTask (params) {
+  return request({
+    url: api.tasks,
+    method: 'get',
+    params: params
+  })
+}
+export function getTask (id) {
+  return request({
+    url: api.tasks + '/' + id,
+    method: 'get',
+    params: {}
+  })
+}
+export function saveTask (model) {
+  return request({
+    url: !model.id ? api.tasks : api.tasks + '/' + model.id,
+    method: !model.id ? 'post' : 'put',
+    data: model
+  })
+}
+export function disableTask (model) {
+  return request({
+    url: api.tasks + '/' + model.id + '/disable',
+    method: 'post',
+    params: {}
+  })
+}
+export function removeTask (model) {
+  return request({
+    url: api.tasks + '/' + model.id,
+    method: 'delete',
+    params: {}
+  })
+}
+
+// 意图
 export function listIntent (params) {
   return request({
     url: api.intents,

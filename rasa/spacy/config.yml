@@ -14,6 +14,8 @@ pipeline:
     epochs: 100
   - name: EntitySynonymMapper   #同义实体
   - name: RegexEntityExtractor
+    case_sensitive: True
+    use_word_boundaries: False
   - name: ResponseSelector
     epochs: 100
 

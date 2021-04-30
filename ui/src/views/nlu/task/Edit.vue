@@ -37,10 +37,10 @@
 
 <script>
 import { labelCol, wrapperCol, wrapperFull } from '@/utils/const'
-import { requestSuccess, getIntent, saveIntent } from '@/api/manage'
+import { requestSuccess, getTask, saveTask } from '@/api/manage'
 
 export default {
-  name: 'IntentEdit',
+  name: 'TaskEdit',
   props: {
     id: {
       type: Number,
@@ -83,7 +83,7 @@ export default {
       }
     },
     getModel () {
-      return getIntent(this.id)
+      return getTask(this.id)
     },
     save (e) {
       console.log(this.model)
@@ -93,10 +93,10 @@ export default {
           return false
         }
 
-        saveIntent(this.model).then(json => {
-          console.log('saveIntent', json)
+        saveTask(this.model).then(json => {
+          console.log('saveTask', json)
           if (requestSuccess(json.code)) {
-            this.$router.push('/nlu/intent/list')
+            this.$router.push('/nlu/task/list')
           }
         })
       })
@@ -106,7 +106,7 @@ export default {
       this.$refs.form.resetFields()
     },
     back () {
-      this.$router.push('/nlu/intent/list')
+      this.$router.push('/nlu/task/list')
     }
   }
 }

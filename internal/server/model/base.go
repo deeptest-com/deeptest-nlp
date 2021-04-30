@@ -15,6 +15,7 @@ type BaseModel struct {
 var (
 	Models = []interface{}{
 		&Project{},
+		&NluTask{},
 		&NluIntent{},
 		&NluSent{},
 		&NluSlot{},
