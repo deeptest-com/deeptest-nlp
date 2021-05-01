@@ -29,14 +29,14 @@ func (r *NluTaskRepo) Query(keywords, status string, pageNo int, pageSize int) (
 	}
 
 	if keywords != "" {
-		sql += " AND t.name LIKE %" + keywords + "%"
+		sql += " AND t.name LIKE '%" + keywords + "%'"
 	}
+	sql += " ORDER BY t.id ASC"
 	if pageNo > 0 {
 		sql += fmt.Sprintf(" LIMIT %d OFFSET %d", pageSize, (pageNo-1)*pageSize)
 	}
 
-	sql += " ORDER BY t.id ASC"
-	err := r.DB.Raw(sql).Scan(&pos).Error
+	err := r.DB.Raw(sql).Find(&pos).Error
 	if err != nil {
 		_logUtils.Errorf("sql error %s", err.Error())
 	}

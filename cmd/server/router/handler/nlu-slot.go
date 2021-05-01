@@ -6,7 +6,6 @@ import (
 	"github.com/utlai/utl/internal/server/model"
 	"github.com/utlai/utl/internal/server/service"
 	serverConst "github.com/utlai/utl/internal/server/utils/const"
-	"strconv"
 )
 
 type NluSlotCtrl struct {
@@ -20,13 +19,10 @@ func NewNluSlotCtrl() *NluSlotCtrl {
 }
 
 func (c *NluSlotCtrl) List(ctx iris.Context) {
-	keywords := ctx.FormValue("keywords")
-	status := ctx.FormValue("status")
-	pageNoStr := ctx.FormValue("pageNo")
-	pageSizeStr := ctx.FormValue("pageSize")
-
-	pageNo, _ := strconv.Atoi(pageNoStr)
-	pageSize, _ := strconv.Atoi(pageSizeStr)
+	keywords := ctx.URLParam("keywords")
+	status := ctx.URLParam("status")
+	pageNo, _ := ctx.URLParamInt("pageNo")
+	pageSize, _ := ctx.URLParamInt("pageSize")
 	if pageSize == 0 {
 		pageSize = serverConst.PageSize
 	}

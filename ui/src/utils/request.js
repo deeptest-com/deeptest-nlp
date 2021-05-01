@@ -48,11 +48,8 @@ request.interceptors.request.use(config => {
   if (config.params) {
     if (method === 'get') {
       let queryParams = ''
-      let i = 0
       for (const key in config.params) {
-        queryParams += key + '=' + config.params[key]
-        if (i < config.params - 1) queryParams += '&'
-        i++
+        queryParams += key + '=' + config.params[key] + '&'
       }
       console.log(queryParams)
       if (config.url.indexOf('?') < 0) {
