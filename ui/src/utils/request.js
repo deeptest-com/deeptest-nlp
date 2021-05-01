@@ -60,6 +60,8 @@ request.interceptors.request.use(config => {
       } else {
         config.url += '&' + queryParams
       }
+
+      config.params = {}
     } else {
       for (const key in config.params) {
         config.params[key] = '' + config.params[key]
