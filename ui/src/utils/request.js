@@ -47,10 +47,11 @@ request.interceptors.request.use(config => {
   const method = ('' + config.method).toLowerCase()
   if (config.params) {
     if (method === 'get') {
-      let queryParams = ''
+      const arr = []
       for (const key in config.params) {
-        queryParams += key + '=' + config.params[key] + '&'
+        arr.push(key + '=' + config.params[key])
       }
+      const queryParams = arr.join('&')
       console.log(queryParams)
       if (config.url.indexOf('?') < 0) {
         config.url += '?' + queryParams
