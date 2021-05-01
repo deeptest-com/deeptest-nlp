@@ -17,10 +17,10 @@
           <a-input v-model="model.name" />
         </a-form-model-item>
         <a-form-model-item
-            :label="$t('form.desc')"
-            prop="desc"
-            :labelCol="labelCol"
-            :wrapperCol="wrapperCol">
+          :label="$t('form.desc')"
+          prop="desc"
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol">
           <a-input v-model="model.desc" />
         </a-form-model-item>
         <a-form-item

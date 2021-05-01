@@ -29,6 +29,7 @@ const locale = {
   'menu.task': 'Task',
   'menu.task.list': 'Task List',
   'menu.task.edit': 'Task Edit',
+  'menu.task.design': 'Task Design',
   'menu.intent': 'Intent',
   'menu.intent.list': 'Intent List',
   'menu.intent.edit': 'Intent Edit',
@@ -49,6 +50,7 @@ const locale = {
 
   'form.create': 'Create',
   'form.edit': 'Edit',
+  'form.design': 'Design',
   'form.maintain': 'Maintain',
   'form.remove': 'Delete',
   'form.disable': 'Disable',

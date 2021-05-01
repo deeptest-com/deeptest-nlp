@@ -169,11 +169,11 @@ export function listTask (params) {
     params: params
   })
 }
-export function getTask (id) {
+export function getTask (id, withIntents) {
   return request({
     url: api.tasks + '/' + id,
     method: 'get',
-    params: {}
+    params: { withIntents: withIntents }
   })
 }
 export function saveTask (model) {

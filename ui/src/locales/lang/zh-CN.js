@@ -29,6 +29,7 @@ const locale = {
   'menu.task': '任务',
   'menu.task.list': '任务列表',
   'menu.task.edit': '任务编辑',
+  'menu.task.design': '任务设计',
   'menu.intent': '意图',
   'menu.intent.list': '意图列表',
   'menu.intent.edit': '意图编辑',
@@ -53,6 +54,7 @@ const locale = {
 
   'form.create': '新建',
   'form.edit': '编辑',
+  'form.design': '设计',
   'form.maintain': '维护',
   'form.remove': '删除',
   'form.disable': '禁用',

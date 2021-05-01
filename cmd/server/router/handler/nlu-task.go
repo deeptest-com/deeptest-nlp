@@ -39,12 +39,13 @@ func (c *NluTaskCtrl) List(ctx iris.Context) {
 
 func (c *NluTaskCtrl) Get(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
+	withIntents, _ := ctx.URLParamBool("withIntents")
 	if err != nil {
 		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
-	model := c.NluTaskService.Get(uint(id))
+	model := c.NluTaskService.Get(uint(id), withIntents)
 	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", model))
 	return
 }

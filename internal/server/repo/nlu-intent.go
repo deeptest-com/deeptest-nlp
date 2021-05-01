@@ -44,6 +44,20 @@ func (r *NluIntentRepo) Query(keywords, status string, pageNo int, pageSize int)
 	return
 }
 
+func (r *NluIntentRepo) ListByTaskId(taskId uint) (pos []model.NluIntent) {
+	query := r.DB.Select("*").
+		Where("deleted_at IS NULL").
+		Where("task_id = ?", taskId).
+		Order("id ASC")
+
+	err := query.Find(&pos).Error
+	if err != nil {
+		_logUtils.Errorf("sql error %s", err.Error())
+	}
+
+	return
+}
+
 func (r *NluIntentRepo) Get(id uint) (po model.NluIntent) {
 	r.DB.Where("id = ?", id).First(&po)
 	return

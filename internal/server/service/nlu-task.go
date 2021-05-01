@@ -6,7 +6,8 @@ import (
 )
 
 type NluTaskService struct {
-	NluTaskRepo *repo.NluTaskRepo `inject:""`
+	NluTaskRepo   *repo.NluTaskRepo   `inject:""`
+	NluIntentRepo *repo.NluIntentRepo `inject:""`
 }
 
 func NewNluTaskService() *NluTaskService {
@@ -18,8 +19,14 @@ func (s *NluTaskService) List(keywords, status string, pageNo int, pageSize int)
 	return
 }
 
-func (s *NluTaskService) Get(id uint) (po model.NluTask) {
+func (s *NluTaskService) Get(id uint, withIntents bool) (po model.NluTask) {
 	po = s.NluTaskRepo.Get(id)
+
+	if withIntents {
+		intents := s.NluIntentRepo.ListByTaskId(id)
+		po.Intents = intents
+	}
+
 	return
 }
 

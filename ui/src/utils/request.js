@@ -44,9 +44,26 @@ const errorHandler = (error) => {
 
 // request interceptor
 request.interceptors.request.use(config => {
+  const method = ('' + config.method).toLowerCase()
   if (config.params) {
-    for (const key in config.params) {
-      config.params[key] = '' + config.params[key]
+    if (method === 'get') {
+      let queryParams = ''
+      let i = 0
+      for (const key in config.params) {
+        queryParams += key + '=' + config.params[key]
+        if (i < config.params - 1) queryParams += '&'
+        i++
+      }
+      console.log(queryParams)
+      if (config.url.indexOf('?') < 0) {
+        config.url += '?' + queryParams
+      } else {
+        config.url += '&' + queryParams
+      }
+    } else {
+      for (const key in config.params) {
+        config.params[key] = '' + config.params[key]
+      }
     }
   }
   console.log('===Request===', config)

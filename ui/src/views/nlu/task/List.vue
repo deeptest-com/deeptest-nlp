@@ -1,64 +1,65 @@
 <template>
-  <page-header-wrapper>
-    <a-card :bordered="false">
-      <div class="table-page-search-wrapper">
-        <a-form layout="inline">
-          <a-row :gutter="48">
-            <a-col :md="8" :sm="24">
-              <a-form-item :label="$t('form.name')">
-                <a-input v-model="queryParam.keywords" placeholder=""/>
-              </a-form-item>
-            </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item :label="$t('form.status')">
-                <a-select v-model="queryParam.status" placeholder="请选择" default-value="0">
-                  <a-select-option value="">{{ $t('form.all') }}</a-select-option>
-                  <a-select-option value="true">{{ $t('form.enable') }}</a-select-option>
-                  <a-select-option value="false">{{ $t('form.disable') }}</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-            <a-col :md="!advanced && 8 || 24" :sm="24">
+  <div>
+    <page-header-wrapper>
+      <a-card :bordered="false">
+        <div class="table-page-search-wrapper">
+          <a-form layout="inline">
+            <a-row :gutter="48">
+              <a-col :md="8" :sm="24">
+                <a-form-item :label="$t('form.name')">
+                  <a-input v-model="queryParam.keywords" placeholder=""/>
+                </a-form-item>
+              </a-col>
+              <a-col :md="8" :sm="24">
+                <a-form-item :label="$t('form.status')">
+                  <a-select v-model="queryParam.status" placeholder="请选择" default-value="0">
+                    <a-select-option value="">{{ $t('form.all') }}</a-select-option>
+                    <a-select-option value="true">{{ $t('form.enable') }}</a-select-option>
+                    <a-select-option value="false">{{ $t('form.disable') }}</a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col :md="!advanced && 8 || 24" :sm="24">
               <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
                 <a-button type="primary" @click="$refs.table.refresh(true)">{{ $t('form.search') }}</a-button>
                 <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">{{ $t('form.reset') }}</a-button>
               </span>
-            </a-col>
-          </a-row>
-        </a-form>
-      </div>
+              </a-col>
+            </a-row>
+          </a-form>
+        </div>
 
-      <div class="table-operator">
-        <a-button type="primary" icon="plus" @click="create">{{ $t('form.create') }}</a-button>
-      </div>
+        <div class="table-operator">
+          <a-button type="primary" icon="plus" @click="create">{{ $t('form.create') }}</a-button>
+        </div>
 
-      <s-table
-        ref="table"
-        size="default"
-        rowKey="id"
-        :columns="columns"
-        :data="loadData"
-        :alert="true"
-        showPagination="auto"
-      >
+        <s-table
+          ref="table"
+          size="default"
+          rowKey="id"
+          :columns="columns"
+          :data="loadData"
+          :alert="true"
+          showPagination="auto"
+        >
         <span slot="serial" slot-scope="text, record, index">
           {{ index + 1 }}
         </span>
 
-        <span slot="name" slot-scope="text">
+          <span slot="name" slot-scope="text">
           <ellipsis :length="4" tooltip>{{ text }}</ellipsis>
         </span>
 
-        <span slot="status" slot-scope="text, record">
+          <span slot="status" slot-scope="text, record">
           <a-badge :status="!record.disabled | statusTypeFilter(statusMap)" :text="!record.disabled | statusFilter(statusMap)" />
         </span>
 
-        <span slot="action" slot-scope="text, record">
+          <span slot="action" slot-scope="text, record">
           <template>
             <a @click="edit(record)">{{ $t('form.edit') }}</a>
 
             <a-divider type="vertical" />
-            <a @click="maintain(record)">{{ $t('menu.sent') }}</a>
+            <a @click="design(record)">{{ $t('form.design') }}</a>
 
             <a-divider type="vertical" />
             <a v-if="!record.disabled" @click="disable(record)">{{ $t('form.disable') }}</a>
@@ -77,9 +78,21 @@
             </a-popconfirm>
           </template>
         </span>
-      </s-table>
-    </a-card>
-  </page-header-wrapper>
+        </s-table>
+      </a-card>
+    </page-header-wrapper>
+
+    <div class="full-screen-modal">
+      <task-design
+        ref="designPage"
+        :visible="designVisible"
+        :modelProp="designModel"
+        :time="time"
+        @ok="handleDesignOk"
+        @cancel="handleDesignCancel" >
+      </task-design>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -89,6 +102,7 @@ import { listTask, disableTask, removeTask } from '@/api/manage'
 
 import StepByStepModal from '../../list/modules/StepByStepModal'
 import CreateForm from '../../list/modules/CreateForm'
+import TaskDesign from './Design'
 
 export default {
   name: 'TaskList',
@@ -96,15 +110,17 @@ export default {
     STable,
     Ellipsis,
     CreateForm,
-    StepByStepModal
+    StepByStepModal,
+    TaskDesign
   },
   columns: [],
   statusMap: {},
   data () {
     return {
-      visible: false,
+      designVisible: false,
+      designModel: {},
       confirmLoading: false,
-      mdl: null,
+      time: 0,
       advanced: false,
       queryParam: {},
       loadData: parameter => {
@@ -164,22 +180,22 @@ export default {
   },
   methods: {
     create () {
-      this.mdl = null
-      this.visible = true
-
       this.$router.push('/nlu/task/0/edit')
     },
     edit (record) {
-      this.visible = true
-      this.mdl = { ...record }
-
       this.$router.push('/nlu/task/' + record.id + '/edit')
     },
-    maintain (record) {
-      this.visible = true
-      this.mdl = { ...record }
-
-      this.$router.push('/nlu/task/' + record.id + '/sent/list')
+    design (record) {
+      this.time = Date.now() // trigger data refresh
+      this.designModel = record
+      this.designVisible = true
+    },
+    handleDesignOk () {
+      this.designVisible = false
+    },
+    handleDesignCancel () {
+      this.designVisible = false
+      this.designModel = {}
     },
     disable (record) {
       disableTask(record).then(json => {

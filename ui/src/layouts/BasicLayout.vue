@@ -174,4 +174,5 @@ export default {
 
 <style lang="less">
 @import "./BasicLayout.less";
+@import "./Global.less";
 </style>
