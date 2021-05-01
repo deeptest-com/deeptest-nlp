@@ -16,6 +16,19 @@
           :wrapperCol="wrapperCol">
           <a-input v-model="model.name" />
         </a-form-model-item>
+
+        <a-form-model-item
+          :label="$t('menu.project')"
+          prop="projectId"
+          :labelCol="labelCol"
+          :wrapperCol="wrapperCol">
+          <a-select v-model="model.projectId">
+            <a-select-option v-for="(item, index) in projects" :value="item.id" :key="index">
+              {{item.name}}
+            </a-select-option>
+          </a-select>
+        </a-form-model-item>
+
         <a-form-model-item
           :label="$t('form.desc')"
           prop="desc"
@@ -37,7 +50,7 @@
 
 <script>
 import { labelCol, wrapperCol, wrapperFull } from '@/utils/const'
-import { requestSuccess, getTask, saveTask } from '@/api/manage'
+import { requestSuccess, getTask, saveTask, listProject } from '@/api/manage'
 
 export default {
   name: 'TaskEdit',
@@ -55,6 +68,7 @@ export default {
       wrapperCol: wrapperCol,
       wrapperFull: wrapperFull,
       model: {},
+      projects: [],
       rules: {
         name: [{ required: true, message: this.$t('valid.input.name'), trigger: 'blur' }]
       }
@@ -75,15 +89,15 @@ export default {
         return
       }
       if (this.id) {
-        this.getModel().then(json => {
+        getTask(this.id).then(json => {
           this.model = json.data
+        })
+        listProject().then(json => {
+          this.projects = json.data
         })
       } else {
         this.reset()
       }
-    },
-    getModel () {
-      return getTask(this.id)
     },
     save (e) {
       console.log(this.model)

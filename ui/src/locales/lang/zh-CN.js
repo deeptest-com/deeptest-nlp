@@ -11,7 +11,7 @@ const locale = {
   'message': '-',
   'menu.home': '主页',
 
-  'menu.platform': '智能平台',
+  'menu.platform': '平台',
   'menu.platform.dashboard': '仪表盘',
   'menu.sys.admin': '系统管理',
   'menu.sys.settings': '全局设置',

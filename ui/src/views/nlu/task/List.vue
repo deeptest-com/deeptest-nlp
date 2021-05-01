@@ -42,42 +42,44 @@
           :alert="true"
           showPagination="auto"
         >
-        <span slot="serial" slot-scope="text, record, index">
-          {{ index + 1 }}
-        </span>
+          <span slot="serial" slot-scope="text, record, index">
+            {{ index + 1 }}
+          </span>
 
           <span slot="name" slot-scope="text">
-          <ellipsis :length="4" tooltip>{{ text }}</ellipsis>
-        </span>
+            <ellipsis :length="4" tooltip>{{ text }}</ellipsis>
+          </span>
 
           <span slot="status" slot-scope="text, record">
-          <a-badge :status="!record.disabled | statusTypeFilter(statusMap)" :text="!record.disabled | statusFilter(statusMap)" />
-        </span>
+            <a-badge :status="!record.disabled | statusTypeFilter(statusMap)" :text="!record.disabled | statusFilter(statusMap)" />
+          </span>
+
+          <span slot="project" slot-scope="text">
+            <span>{{ text }}</span>
+          </span>
 
           <span slot="action" slot-scope="text, record">
-          <template>
-            <a @click="edit(record)">{{ $t('form.edit') }}</a>
+            <template>
+              <a @click="edit(record)">{{ $t('form.edit') }}</a>
+              <a-divider type="vertical" />
+              <a @click="design(record)">{{ $t('form.design') }}</a>
 
-            <a-divider type="vertical" />
-            <a @click="design(record)">{{ $t('form.design') }}</a>
+              <a-divider type="vertical" />
+              <a v-if="!record.disabled" @click="disable(record)">{{ $t('form.disable') }}</a>
+              <a v-if="record.disabled" @click="disable(record)">{{ $t('form.enable') }}</a>
 
-            <a-divider type="vertical" />
-            <a v-if="!record.disabled" @click="disable(record)">{{ $t('form.disable') }}</a>
-            <a v-if="record.disabled" @click="disable(record)">{{ $t('form.enable') }}</a>
-
-            <a-divider type="vertical" />
-            <a-popconfirm
-              v-if="!record.isDefault"
-              :title="$t('form.confirm.to.remove')"
-              :okText="$t('form.ok')"
-              :cancelText="$t('form.cancel')"
-              @confirm="confirmRemove(record)"
-              @cancel="cancelRemove"
-            >
-              <a href="#">{{ $t('form.remove') }}</a>
-            </a-popconfirm>
-          </template>
-        </span>
+              <a-divider type="vertical" />
+              <a-popconfirm
+                v-if="!record.isDefault"
+                :title="$t('form.confirm.to.remove')"
+                :okText="$t('form.ok')"
+                :cancelText="$t('form.cancel')"
+                @confirm="confirmRemove(record)"
+                @cancel="cancelRemove">
+                <a href="#">{{ $t('form.remove') }}</a>
+              </a-popconfirm>
+            </template>
+          </span>
         </s-table>
       </a-card>
     </page-header-wrapper>
@@ -156,6 +158,10 @@ export default {
         title: this.$t('form.status'),
         dataIndex: 'status',
         scopedSlots: { customRender: 'status' }
+      },
+      {
+        title: this.$t('menu.project'),
+        dataIndex: 'projectName'
       },
       {
         title: this.$t('form.opt'),

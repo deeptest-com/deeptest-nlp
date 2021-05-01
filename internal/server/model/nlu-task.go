@@ -6,8 +6,8 @@ type NluTask struct {
 	Name    string      `json:"name"`
 	Intents []NluIntent `json:"intents" gorm:"-"`
 
-	ProjectId   uint `json:"projectId"`
-	ProjectName uint `json:"projectName" gorm:"-"s`
+	ProjectId   uint   `json:"projectId"`
+	ProjectName string `json:"projectName"`
 }
 
 func (NluTask) TableName() string {

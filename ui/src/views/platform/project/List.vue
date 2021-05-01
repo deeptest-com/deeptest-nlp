@@ -60,12 +60,12 @@
           <a-badge :status="!record.disabled | statusTypeFilter(statusMap)" :text="!record.disabled | statusFilter(statusMap)" />
         </span>
 
-        <span slot="default" slot-scope="text, record">
+<!--        <span slot="default" slot-scope="text, record">
           <template>
             <a-checkbox :checked="record.isDefault==true" @click="setDefault(record)">
             </a-checkbox>
           </template>
-        </span>
+        </span>-->
 
         <span slot="action" slot-scope="text, record">
           <template>
@@ -150,11 +150,11 @@ export default {
         dataIndex: 'status',
         scopedSlots: { customRender: 'status' }
       },
-      {
-        title: this.$t('form.is.default'),
-        dataIndex: 'default',
-        scopedSlots: { customRender: 'default' }
-      },
+      // {
+      //   title: this.$t('form.is.default'),
+      //   dataIndex: 'default',
+      //   scopedSlots: { customRender: 'default' }
+      // },
       {
         title: this.$t('form.opt'),
         dataIndex: 'action',
