@@ -13,13 +13,14 @@
         <div class="left" :style="styl">
           <intent-list
             ref="intentList"
-            :models="this.model.intents">
+            :models="model.intents"
+            @selected="select">
           </intent-list>
         </div>
         <div class="right" :style="styl">
           <intent-edit
             ref="intentEdit"
-            :modelProp="intent"
+            :modelId="intentId"
             :visible="intentEditVisible">
           </intent-edit>
         </div>
@@ -56,7 +57,7 @@ export default {
     const styl = 'height: ' + (document.documentElement.clientHeight - 56) + 'px;'
     return {
       model: {},
-      intent: {},
+      intentId: 0,
       intentEditVisible: false,
       styl: styl
     }
@@ -80,7 +81,9 @@ export default {
   },
   methods: {
     getModel () {
-      this.model = getTask(this.modelProp.id, true)
+      getTask(this.modelProp.id, true).then(json => {
+        this.model = json.data
+      })
     },
     cancel () {
       console.log('cancel')
@@ -88,6 +91,11 @@ export default {
     },
     clearMenu () {
       console.log('clear context menu')
+    },
+    select (intentId) {
+      console.log('select', intentId)
+      this.intentId = intentId
+      this.intentEditVisible = true
     }
   }
 }

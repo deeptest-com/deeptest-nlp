@@ -1,23 +1,17 @@
 <template>
   <div>
-    INTENT EDIT
+    {{ model.name }}
   </div>
 </template>
 
 <script>
 
+import { getIntent } from '@/api/manage'
+
 export default {
   name: 'IntentEdit',
   props: {
-    visible: {
-      type: Boolean,
-      required: true
-    },
-    modelProp: {
-      type: Object,
-      default: () => null
-    },
-    time: {
+    modelId: {
       type: Number,
       default: () => 0
     }
@@ -28,14 +22,20 @@ export default {
     }
   },
   watch: {
-    time: function () {
-      console.log('watch time', this.modelProp, this.time)
+    modelId: function () {
+      console.log('watch modelId', this.modelId)
       this.getModel()
     }
   },
   methods: {
     getModel () {
       console.log('getModel')
+      getIntent(this.modelId).then(json => {
+        console.log(json)
+        if (json.code === 200) {
+          this.model = json.data
+        }
+      })
     },
     save (e) {
       console.log('save')
