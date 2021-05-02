@@ -137,7 +137,7 @@ export default {
       queryParam: { projectId: '0', status: '' },
       projects: [],
 
-      isInit: true,
+      isInit: true, // first time, use projectId in session to query
       loadData: parameter => {
         const requestParameters = Object.assign({ isInit: this.isInit }, parameter, this.queryParam)
         return listTask(requestParameters)
