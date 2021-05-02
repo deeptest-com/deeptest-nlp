@@ -8,7 +8,7 @@ import { ACCESS_TOKEN } from '@/store/mutation-types'
 
 const request = axios.create({
   baseURL: process.env.VUE_APP_API_BASE_URL,
-  timeout: 5000
+  timeout: 600000
 })
 
 const errorHandler = (error) => {

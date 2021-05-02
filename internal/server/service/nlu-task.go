@@ -14,8 +14,8 @@ func NewNluTaskService() *NluTaskService {
 	return &NluTaskService{}
 }
 
-func (s *NluTaskService) List(keywords, status string, pageNo int, pageSize int) (pos []model.NluTask, total int64) {
-	pos, total = s.NluTaskRepo.Query(keywords, status, pageNo, pageSize)
+func (s *NluTaskService) List(projectId int, keywords, status string, pageNo int, pageSize int) (pos []model.NluTask, total int64) {
+	pos, total = s.NluTaskRepo.Query(projectId, keywords, status, pageNo, pageSize)
 	return
 }
 

@@ -17,7 +17,7 @@
             </a-col>
             <a-col :md="8" :sm="24">
               <a-form-item :label="$t('form.status')">
-                <a-select v-model="queryParam.status" placeholder="请选择" default-value="0">
+                <a-select v-model="queryParam.status">
                   <a-select-option value="">{{ $t('form.all') }}</a-select-option>
                   <a-select-option value="true">{{ $t('form.enable') }}</a-select-option>
                   <a-select-option value="false">{{ $t('form.disable') }}</a-select-option>
@@ -117,7 +117,7 @@ export default {
       confirmLoading: false,
       mdl: null,
       advanced: false,
-      queryParam: {},
+      queryParam: { status: '' },
       loadData: parameter => {
         console.log('intentId', this.intentId)
         const requestParameters = Object.assign({}, parameter, this.queryParam)

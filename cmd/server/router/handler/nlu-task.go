@@ -3,6 +3,7 @@ package handler
 import (
 	"github.com/kataras/iris/v12"
 	"github.com/utlai/utl/internal/pkg/utils"
+	sessionUtils "github.com/utlai/utl/internal/server/biz/session"
 	"github.com/utlai/utl/internal/server/model"
 	"github.com/utlai/utl/internal/server/service"
 	serverConst "github.com/utlai/utl/internal/server/utils/const"
@@ -12,6 +13,7 @@ type NluTaskCtrl struct {
 	BaseCtrl
 
 	NluTaskService *service.NluTaskService `inject:""`
+	UserService    *service.UserService    `inject:""`
 }
 
 func NewNluTaskCtrl() *NluTaskCtrl {
@@ -19,16 +21,32 @@ func NewNluTaskCtrl() *NluTaskCtrl {
 }
 
 func (c *NluTaskCtrl) List(ctx iris.Context) {
+	isInit, _ := ctx.URLParamBool("isInit")
+	projectId, _ := ctx.URLParamInt("projectId")
 	keywords := ctx.URLParam("keywords")
 	status := ctx.URLParam("status")
 	pageNo, _ := ctx.URLParamInt("pageNo")
 	pageSize, _ := ctx.URLParamInt("pageSize")
 
+	projectIdInSession := sessionUtils.Get(ctx, "projectId")
+	if isInit && projectIdInSession != nil {
+		projectId = projectIdInSession.(int)
+	} else {
+		if projectIdInSession == nil || projectId != projectIdInSession.(int) {
+			cred := sessionUtils.GetCredentials(ctx)
+			c.UserService.UpdateUserDefaultProject(cred.UserId, projectId)
+
+			sessionUtils.Set(ctx, "projectId", projectId)
+		} else if projectId == 0 && projectIdInSession != nil && projectIdInSession.(int) > 0 {
+			projectId = projectIdInSession.(int)
+		}
+	}
+
 	if pageSize == 0 {
 		pageSize = serverConst.PageSize
 	}
 
-	tasks, total := c.NluTaskService.List(keywords, status, pageNo, pageSize)
+	tasks, total := c.NluTaskService.List(projectId, keywords, status, pageNo, pageSize)
 
 	_, _ = ctx.JSON(_utils.ApiResPage(200, "请求成功",
 		tasks, pageNo, pageSize, total))

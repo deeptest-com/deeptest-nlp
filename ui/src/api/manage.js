@@ -44,6 +44,13 @@ export function listProject (params) {
     params: params
   })
 }
+export function listForSelect (params) {
+  return request({
+    url: api.projects + '/listForSelect',
+    method: 'get',
+    params: params
+  })
+}
 export function getProject (id) {
   return request({
     url: api.projects + '/' + id,

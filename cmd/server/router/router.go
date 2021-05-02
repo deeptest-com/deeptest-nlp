@@ -93,6 +93,8 @@ func (r *Router) App() {
 
 					party.Post("/{id:uint}/setDefault", r.ProjectCtrl.SetDefault).Name = "设置当前项目"
 					party.Post("/{id:uint}/disable", r.ProjectCtrl.Disable).Name = "禁用/启动项目"
+
+					party.Get("/listForSelect", r.ProjectCtrl.ListForSelect).Name = "查询下拉框用项目列表"
 				})
 
 				admin.PartyFunc("/tasks", func(party iris.Party) {

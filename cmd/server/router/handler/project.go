@@ -3,6 +3,7 @@ package handler
 import (
 	"github.com/kataras/iris/v12"
 	"github.com/utlai/utl/internal/pkg/utils"
+	sessionUtils "github.com/utlai/utl/internal/server/biz/session"
 	"github.com/utlai/utl/internal/server/model"
 	"github.com/utlai/utl/internal/server/service"
 	serverConst "github.com/utlai/utl/internal/server/utils/const"
@@ -32,6 +33,19 @@ func (c *ProjectCtrl) List(ctx iris.Context) {
 
 	_, _ = ctx.JSON(_utils.ApiResPage(200, "请求成功",
 		projects, pageNo, pageSize, total))
+}
+
+func (c *ProjectCtrl) ListForSelect(ctx iris.Context) {
+	projects, _ := c.ProjectService.List("", "", 0, 0)
+
+	data := map[string]interface{}{}
+	data["projects"] = projects
+
+	projectId := sessionUtils.Get(ctx, "projectId")
+	data["projects"] = projects
+	data["projectId"] = projectId
+
+	_, _ = ctx.JSON(_utils.ApiRes(200, "请求成功", data))
 }
 
 func (c *ProjectCtrl) Get(ctx iris.Context) {

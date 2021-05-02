@@ -3,9 +3,9 @@ package repo
 import (
 	"errors"
 	"fmt"
+	"github.com/fatih/color"
 	"github.com/utlai/utl/internal/server/biz/domain"
 	"github.com/utlai/utl/internal/server/model"
-	"github.com/fatih/color"
 	"gorm.io/gorm"
 	"time"
 )
@@ -85,4 +85,10 @@ func (r *UserRepo) GetByToken(token string) (model.User, error) {
 	user := model.User{}
 	err := r.DB.Model(&user).Where("token", token).First(&user).Error
 	return user, err
+}
+
+func (r *UserRepo) UpdateUserDefaultProject(userId string, projectId int) {
+	r.DB.Model(&model.User{}).
+		Where("id=?", userId).
+		Updates(map[string]interface{}{"project_id": projectId})
 }

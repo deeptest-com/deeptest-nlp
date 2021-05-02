@@ -17,10 +17,14 @@ func NewNluTaskRepo() *NluTaskRepo {
 	return &NluTaskRepo{}
 }
 
-func (r *NluTaskRepo) Query(keywords, status string, pageNo int, pageSize int) (pos []model.NluTask, total int64) {
+func (r *NluTaskRepo) Query(projectId int, keywords, status string, pageNo int, pageSize int) (pos []model.NluTask, total int64) {
 	sql := "SELECT t.*, p.name project_name FROM nlu_task t" +
 		" LEFT JOIN biz_project p ON t.project_id = p.id" +
 		" WHERE t.deleted_at IS NULL"
+
+	if projectId > 0 {
+		sql += fmt.Sprintf(" AND t.project_id = %d", projectId)
+	}
 
 	if status == "true" {
 		sql += " AND NOT t.disabled"

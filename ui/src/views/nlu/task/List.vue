@@ -5,25 +5,35 @@
         <div class="table-page-search-wrapper">
           <a-form layout="inline">
             <a-row :gutter="48">
-              <a-col :md="8" :sm="24">
+              <a-col :md="6" :sm="24">
+                <a-form-item :label="$t('menu.project')">
+                  <a-select v-model="queryParam.projectId">
+                    <a-select-option value="0">{{ $t('form.all') }}</a-select-option>
+                    <a-select-option v-for="(item, index) in projects" :value="item.id" :key="index">
+                      {{item.name}}
+                    </a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" :sm="24">
                 <a-form-item :label="$t('form.name')">
                   <a-input v-model="queryParam.keywords" placeholder=""/>
                 </a-form-item>
               </a-col>
-              <a-col :md="8" :sm="24">
+              <a-col :md="6" :sm="24">
                 <a-form-item :label="$t('form.status')">
-                  <a-select v-model="queryParam.status" placeholder="请选择" default-value="0">
+                  <a-select v-model="queryParam.status">
                     <a-select-option value="">{{ $t('form.all') }}</a-select-option>
                     <a-select-option value="true">{{ $t('form.enable') }}</a-select-option>
                     <a-select-option value="false">{{ $t('form.disable') }}</a-select-option>
                   </a-select>
                 </a-form-item>
               </a-col>
-              <a-col :md="!advanced && 8 || 24" :sm="24">
-              <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
-                <a-button type="primary" @click="$refs.table.refresh(true)">{{ $t('form.search') }}</a-button>
-                <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">{{ $t('form.reset') }}</a-button>
-              </span>
+              <a-col :md="!advanced && 6 || 24" :sm="24">
+                <span class="table-page-search-submitButtons" :style="advanced && { float: 'right', overflow: 'hidden' } || {} ">
+                  <a-button type="primary" @click="$refs.table.refresh(true)">{{ $t('form.search') }}</a-button>
+                  <a-button style="margin-left: 8px" @click="() => this.queryParam = {}">{{ $t('form.reset') }}</a-button>
+                </span>
               </a-col>
             </a-row>
           </a-form>
@@ -100,7 +110,7 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { listTask, disableTask, removeTask } from '@/api/manage'
+import { listTask, disableTask, removeTask, listForSelect } from '@/api/manage'
 
 import StepByStepModal from '../../list/modules/StepByStepModal'
 import CreateForm from '../../list/modules/CreateForm'
@@ -124,11 +134,15 @@ export default {
       confirmLoading: false,
       time: 0,
       advanced: false,
-      queryParam: {},
+      queryParam: { projectId: '0', status: '' },
+      projects: [],
+
+      isInit: true,
       loadData: parameter => {
-        const requestParameters = Object.assign({}, parameter, this.queryParam)
+        const requestParameters = Object.assign({ isInit: this.isInit }, parameter, this.queryParam)
         return listTask(requestParameters)
           .then(res => {
+            this.isInit = false
             return res
           })
       },
@@ -145,6 +159,11 @@ export default {
     }
   },
   created () {
+    listForSelect().then(json => {
+      this.projects = json.data.projects
+      this.queryParam['projectId'] = json.data.projectId ? json.data.projectId : '0'
+    })
+
     this.columns = [
       {
         title: this.$t('form.no'),
