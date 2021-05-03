@@ -59,7 +59,18 @@ export default {
   mounted () {
     document.addEventListener('mouseup', event => {
       if (event.target === this.$refs.editor || event.target.contains(this.$refs.editor)) {
-        console.log(window.getSelection().toString())
+        const slt = window.getSelection()
+        console.log('anchorNode', slt.anchorNode)
+        console.log('anchorOffset', slt.anchorOffset)
+
+        console.log('focusNode', slt.focusNode)
+        console.log('focusOffset', slt.focusOffset)
+
+        const range = window.getSelection().getRangeAt(0)
+        console.log('range', range)
+        const startContainer = range.startContainer
+        const endContainer = range.endContainer
+        console.log('same', startContainer === endContainer)
       }
     })
   },
@@ -84,6 +95,7 @@ export default {
         if (json.code === 200) {
           this.model = json.data
           this.sents = this.model.sents
+          this.$refs.editor.innerHTML = 'aaa<span>111</span>bbb'
         }
       })
     },
