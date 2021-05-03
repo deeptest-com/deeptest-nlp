@@ -19,9 +19,9 @@
         </div>
         <div class="right" :style="styl">
           <intent-edit
+            v-if="intentEditVisible"
             ref="intentEdit"
-            :modelId="intentId"
-            :visible="intentEditVisible">
+            :modelId="intentId">
           </intent-edit>
         </div>
       </div>
@@ -68,9 +68,14 @@ export default {
       this.getModel()
     },
     visible: function () {
+      console.log('watch visible', this.visible)
+
       if (this.visible) {
+        this.intentEditVisible = true
         document.addEventListener('click', this.clearMenu)
       } else {
+        this.intentEditVisible = false
+        this.intentId = 0
         document.removeEventListener('click', this.clearMenu)
       }
     }
@@ -93,9 +98,8 @@ export default {
       console.log('clear context menu')
     },
     select (intentId) {
-      console.log('select', intentId)
+      console.log('select', intentId, this.intentEditVisible)
       this.intentId = intentId
-      this.intentEditVisible = true
     }
   }
 }

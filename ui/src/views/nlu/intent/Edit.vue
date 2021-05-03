@@ -57,13 +57,99 @@ export default {
     }
   },
   mounted () {
-    document.addEventListener('mouseup', event => {
-      console.log(event.target)
-      const target = this.getParentSpanNodeIfNeeded(event.target)
+    document.addEventListener('mouseup', this.textSelected)
+  },
+  destroyed () {
+    document.removeEventListener('mouseup', this.textSelected)
+  },
+  data () {
+    return {
+      model: {},
+      sents: [],
+      sent: { content: '' }
+    }
+  },
+  watch: {
+    modelId: function () {
+      if (this.modelId <= 0) return
+      console.log('watch modelId', this.modelId)
+      this.getModel()
+    }
+  },
+  methods: {
+    getModel () {
+      console.log('getModel')
+      getIntent(this.modelId).then(json => {
+        console.log(json)
+        if (json.code === 200) {
+          this.model = json.data
+          this.sents = this.model.sents
+
+          setTimeout(() => {
+            this.$refs.editor.innerHTML = '<span id="1">aaa</span><span id="2">123</span><span id="3">bbb</span>'
+          }, 500)
+        }
+      })
+    },
+    useRegex () {
+      console.log('useRegex')
+    },
+    useSynonym () {
+      console.log('useSynonym')
+    },
+    useLookup () {
+      console.log('useLookup')
+    },
+
+    add () {
+      console.log('add')
+      let index = -1
+      for (let i = 0; i < this.sents.length; i++) {
+        if (this.sents[i].id === this.sent.id) {
+          index = i
+          break
+        }
+      }
+
+      const content = this.$refs.sent.innerHTML
+      if (index > -1) {
+        const item = this.sents[index]
+        item.content = content
+        this.sents.splice(index, 1, item)
+      } else {
+        const item = { content: content }
+        this.sents.push(item)
+      }
+      this.$refs.sent.innerHTML = '<span></span>'
+      this.sent = {}
+    },
+    edit (item) {
+      console.log('edit')
+      this.sent = item
+      this.$refs.sent.innerHTML = this.sent.content
+    },
+    save (e) {
+      console.log('save')
+    },
+    reset () {
+      this.model = {}
+    },
+    back () {
+      this.$router.push('/nlu/task/list')
+    },
+    getParentSpanNodeIfNeeded (target) {
+      if (target.parentNode && target.parentNode.nodeName.toLowerCase() === 'span') {
+        target = target.parentNode
+      }
+      return target
+    },
+    textSelected (event) {
+      let target = event.target
       console.log(target)
+      target = this.getParentSpanNodeIfNeeded(target)
 
       if (target === this.$refs.editor || target.contains(this.$refs.editor) ||
-          target.parentNode === this.$refs.editor || target.parentNode.contains(this.$refs.editor)) {
+        target.parentNode === this.$refs.editor || target.parentNode.contains(this.$refs.editor)) {
         const slt = window.getSelection()
         console.log('anchorNode', slt.anchorNode)
         console.log('anchorOffset', slt.anchorOffset)
@@ -147,87 +233,6 @@ export default {
         //   }
         // })
       }
-    })
-  },
-  data () {
-    return {
-      model: {},
-      sents: [],
-      sent: { content: '' }
-    }
-  },
-  watch: {
-    modelId: function () {
-      console.log('watch modelId', this.modelId)
-      this.getModel()
-    }
-  },
-  methods: {
-    getModel () {
-      console.log('getModel')
-      getIntent(this.modelId).then(json => {
-        console.log(json)
-        if (json.code === 200) {
-          this.model = json.data
-          this.sents = this.model.sents
-
-          setTimeout(() => {
-            this.$refs.editor.innerHTML = '<span id="1">aaa</span><span id="2">123</span><span id="3">bbb</span>'
-          }, 500)
-        }
-      })
-    },
-    useRegex () {
-      console.log('useRegex')
-    },
-    useSynonym () {
-      console.log('useSynonym')
-    },
-    useLookup () {
-      console.log('useLookup')
-    },
-
-    add () {
-      console.log('add')
-      let index = -1
-      for (let i = 0; i < this.sents.length; i++) {
-        if (this.sents[i].id === this.sent.id) {
-          index = i
-          break
-        }
-      }
-
-      const content = this.$refs.sent.innerHTML
-      if (index > -1) {
-        const item = this.sents[index]
-        item.content = content
-        this.sents.splice(index, 1, item)
-      } else {
-        const item = { content: content }
-        this.sents.push(item)
-      }
-      this.$refs.sent.innerHTML = '<span></span>'
-      this.sent = {}
-    },
-    edit (item) {
-      console.log('edit')
-      this.sent = item
-      this.$refs.sent.innerHTML = this.sent.content
-    },
-    save (e) {
-      console.log('save')
-    },
-    reset () {
-      this.model = {}
-    },
-    back () {
-      this.$router.push('/nlu/task/list')
-    },
-    getParentSpanNodeIfNeeded (target) {
-      if (target.parentNode.nodeName.toLowerCase() === 'span') {
-        target = target.parentNode
-      }
-      return target
     }
   }
 }
