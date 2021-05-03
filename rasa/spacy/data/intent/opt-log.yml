@@ -12,4 +12,6 @@ nlu:
     - [记录]{"entity":"print", "value":"syn_print"}[错误]{"entity":"loglevel", "value":"lkp_loglevel"}日志[说明]{"entity":"xpath", "value":"rgx_xpath"}
     - [打印]{"entity":"print", "value":"syn_print"}[一个很长的句子在这里]{"entity":"xpath", "value":"rgx_xpath"}[错误]{"entity":"loglevel", "value":"lkp_loglevel"}
 
-    - [记录]{"entity":"print", "value":"syn_print"}[消息]{"entity":"loglevel", "value":"lkp_loglevel"}[123]{"entity":"xpath", "value":"rgx_xpath"}
+    - [打印]{"entity":"print", "value":"syn_print"}[123]{"entity":"xpath", "value":"rgx_xpath"}[消息]{"entity":"loglevel", "value":"lkp_loglevel"}
+    - [记录]{"entity":"print", "value":"syn_print"}[345]{"entity":"xpath", "value":"rgx_xpath"}[警告]{"entity":"loglevel", "value":"lkp_loglevel"}
+    - [输出]{"entity":"print", "value":"syn_print"}[123]{"entity":"xpath", "value":"rgx_xpath"}[消息]{"entity":"loglevel", "value":"lkp_loglevel"}
