@@ -19,7 +19,7 @@
       </div>
       <div class="edit-inputs">
         <div class="left">
-          <div contenteditable="true" class="editor" ref="sent"></div>
+          <div contenteditable="true" class="editor" ref="editor"></div>
         </div>
         <div class="right">
           <a-button @click="add()">{{$t('form.save')}}</a-button>
@@ -55,6 +55,13 @@ export default {
       type: Number,
       default: () => 0
     }
+  },
+  mounted () {
+    document.addEventListener('mouseup', event => {
+      if (event.target === this.$refs.editor || event.target.contains(this.$refs.editor)) {
+        console.log(window.getSelection().toString())
+      }
+    })
   },
   data () {
     return {
@@ -99,15 +106,18 @@ export default {
           break
         }
       }
+
+      const content = this.$refs.sent.innerHTML
       if (index > -1) {
-        const content = this.$refs.sent.innerHTML
         const item = this.sents[index]
         item.content = content
         this.sents.splice(index, 1, item)
-
-        this.$refs.sent.innerHTML = ''
-        this.sent = {}
+      } else {
+        const item = { content: content }
+        this.sents.push(item)
       }
+      this.$refs.sent.innerHTML = '<span></span>'
+      this.sent = {}
     },
     edit (item) {
       console.log('edit')
