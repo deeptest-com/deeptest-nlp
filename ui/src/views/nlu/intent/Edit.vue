@@ -19,7 +19,7 @@
       </div>
       <div class="edit-inputs">
         <div class="left">
-          <div contenteditable="true" class="editor" ref="editor"></div>
+          <div contenteditable="true" class="editor" ref="editor" spellcheck="false"></div>
         </div>
         <div class="right">
           <a-button @click="add()">{{ $t('form.save') }}</a-button>
@@ -267,14 +267,19 @@ export default {
     .left {
       flex: 1;
       .editor {
-        padding: 4px 6px;
-        height: 32px;
+        padding: 0px 6px;
+        height: 40px;
+        line-height: 38px;
+        font-size: 22px;
         border: 1px solid #e9f2fb;
         outline: none;
       }
     }
     .right {
       width: 160px;
+      button {
+        height: 40px;
+      }
     }
     .icon {
       cursor: pointer;
