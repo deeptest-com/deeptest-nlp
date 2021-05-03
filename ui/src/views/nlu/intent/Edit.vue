@@ -1,5 +1,5 @@
 <template>
-  <div v-if="model.id">
+  <div v-show="model.id">
     <div class="header">
       <div class="title">{{ model.name }}</div>
       <div class="buttons">
@@ -19,7 +19,7 @@
       </div>
       <div class="edit-inputs">
         <div class="left">
-          <div contenteditable="true" class="editor" ref="editor" spellcheck="false"></div>
+          <div contenteditable="true" id="editor" class="editor" ref="editor" spellcheck="false"></div>
         </div>
         <div class="right">
           <a-button @click="add()">{{ $t('form.save') }}</a-button>
@@ -57,6 +57,7 @@ export default {
     }
   },
   mounted () {
+    console.log('mounted')
     document.addEventListener('mouseup', this.textSelected)
   },
   destroyed () {
@@ -86,7 +87,7 @@ export default {
           this.sents = this.model.sents
 
           setTimeout(() => {
-            this.$refs.editor.innerHTML = '<span id="1">aaa</span><span id="2">123</span><span id="3">bbb</span>'
+            this.$refs.editor.innerHTML = '<span id="1">abc</span>123<span id="3">xyz</span>'
           }, 500)
         }
       })
@@ -137,12 +138,7 @@ export default {
     back () {
       this.$router.push('/nlu/task/list')
     },
-    getParentSpanNodeIfNeeded (target) {
-      if (target.parentNode && target.parentNode.nodeName.toLowerCase() === 'span') {
-        target = target.parentNode
-      }
-      return target
-    },
+
     textSelected (event) {
       let target = event.target
       console.log(target)
@@ -158,11 +154,11 @@ export default {
         console.log('focusOffset', slt.focusOffset)
 
         const range = window.getSelection().getRangeAt(0)
-        console.log('range', range)
+        console.log('range', range, range.toString())
         const startContainer = this.getParentSpanNodeIfNeeded(range.startContainer)
         const endContainer = this.getParentSpanNodeIfNeeded(range.endContainer)
-        console.log('startContainer', startContainer)
-        console.log('endContainer', endContainer)
+        console.log('startContainer', startContainer, range.startOffset)
+        console.log('endContainer', endContainer, range.endOffset)
         console.log('is same', startContainer === endContainer)
 
         const items = []
@@ -173,18 +169,17 @@ export default {
           let tp = item.nodeName.toLowerCase()
           tp = tp.replace('#', '')
           let html = ''
+          let text = ''
           if (tp === 'span') {
             html = item.outerHTML
+            text = item.innerText
           } else {
             html = item.wholeText
+            text = item.wholeText
           }
 
           console.log(tp, html)
-          items.push({ type: tp, content: html })
-
-          if (item.id === endContainer.id) {
-            break
-          }
+          items.push({ type: tp, html: html, text: text })
 
           if (item.nextSibling) {
             item = item.nextSibling
@@ -212,27 +207,33 @@ export default {
         items[0].selected = startText.substr(startLeft, startRight - startLeft)
         console.log('start', items[0].selected, startLeft, startRight - startLeft)
 
-        items[items.length - 1].selected = endText.substr(endLeft, endRight - endLeft)
-        console.log('end', items[items.length - 1].selected, endLeft, endRight - endLeft)
-
         console.log(items)
 
-        // const commonAncestorContainer = range.commonAncestorContainer
-        // const firstChild = commonAncestorContainer.firstChild
-        // const nodes = commonAncestorContainer.childNodes
-        // let foundFirst = false
-        // nodes.forEach((item, index) => {
-        //   if (item === firstChild) foundFirst = true
-        //
-        //   const tp = item.nodeName.toLowerCase()
-        //   let html = ''
-        //   if (tp === 'span') html = item.outerHTML
-        //   else html = item.wholeText
-        //   if (foundFirst) {
-        //     console.log(index, tp, html)
-        //   }
-        // })
+        const selectedSize = range.toString().length
+        let totalSize = 0
+        const temp = []
+        for (let i = 0; i < items.length; i++) {
+          const item = items[i]
+          temp.push(item)
+          const selected = item.selected ? item.selected : item.text
+
+          totalSize += selected.length
+          if (totalSize >= selectedSize) {
+            break
+          }
+        }
+
+        temp[temp.length - 1].selected = endText.substr(endLeft, endRight - endLeft)
+        console.log('end', temp[temp.length - 1].selected, endLeft, endRight - endLeft)
+
+        console.log(temp)
       }
+    },
+    getParentSpanNodeIfNeeded (target) {
+      if (target.parentNode && target.parentNode.nodeName.toLowerCase() === 'span') {
+        target = target.parentNode
+      }
+      return target
     }
   }
 }
