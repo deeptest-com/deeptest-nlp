@@ -114,7 +114,7 @@ export default {
         const endText = endContainer.textContent
 
         const startLeft = slt.anchorOffset
-        let startRight = startText.length - 1
+        let startRight = startText.length
         let endLeft = 0
         const endRight = slt.focusOffset
 
@@ -123,11 +123,11 @@ export default {
           endLeft = startLeft
         }
 
-        items[0].selected = startText.substr(startLeft, startRight - 1)
-        console.log('start', items[0].selected, startLeft, startRight - 1)
+        items[0].selected = startText.substr(startLeft, startRight - startLeft)
+        console.log('start', items[0].selected, startLeft, startRight - startLeft)
 
-        items[items.length - 1].selected = endText.substr(endLeft, endRight - 1)
-        console.log('end', items[items.length - 1].selected, endLeft, endRight - 1)
+        items[items.length - 1].selected = endText.substr(endLeft, endRight - endLeft)
+        console.log('end', items[items.length - 1].selected, endLeft, endRight - endLeft)
 
         console.log(items)
 
