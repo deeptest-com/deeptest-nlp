@@ -79,6 +79,12 @@ const locale = {
   'form.is.default': '是否默认',
   'form.opt': '操作',
 
+  'form.sent.edit': '编辑说法',
+  'form.sent.list': '说法列表',
+  'form.use.regex': '使用正则表达式',
+  'form.use.synonym': '使用同义词',
+  'form.use.lookup': '使用词表',
+
   'status.enable': '启用',
   'status.disable': '禁用',
 
@@ -90,6 +96,8 @@ const locale = {
   'common.confirm': '确认',
   'common.notify': '通知',
   'common.back': '返回',
+  'common.train': '训练',
+  'common.test': '测试',
 
   'msg.warn': '提醒',
   'msg.confirm.to.logout': '确认退出？',

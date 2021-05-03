@@ -7,6 +7,7 @@ import (
 
 type NluIntentService struct {
 	NluIntentRepo *repo.NluIntentRepo `inject:""`
+	NluSentRepo   *repo.NluSentRepo   `inject:""`
 }
 
 func NewNluIntentService() *NluIntentService {
@@ -20,6 +21,10 @@ func (s *NluIntentService) List(keywords, status string, pageNo int, pageSize in
 
 func (s *NluIntentService) Get(id uint) (po model.NluIntent) {
 	po = s.NluIntentRepo.Get(id)
+
+	sents := s.NluSentRepo.ListByIntent(id)
+	po.Sents = sents
+
 	return
 }
 

@@ -96,3 +96,9 @@ func (r *NluSentRepo) BatchDelete(ids []int) (err error) {
 
 	return
 }
+
+func (r *NluSentRepo) ListByIntent(intentId uint) (pos []model.NluSent) {
+	r.DB.Where("intent_id = ?", intentId).Find(&pos)
+
+	return
+}

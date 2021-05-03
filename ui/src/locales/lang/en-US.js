@@ -75,6 +75,12 @@ const locale = {
   'form.is.default': 'Is Default',
   'form.opt': 'Operation',
 
+  'form.sent.edit': 'Edit Sentence',
+  'form.sent.list': 'List Sentence',
+  'form.use.regex': 'Use Regular Expression',
+  'form.use.synonym': 'Use Synonym',
+  'form.use.lookup': 'Use Lookup',
+
   'status.enable': 'Enable',
   'status.disable': 'Disable',
 
@@ -86,6 +92,8 @@ const locale = {
   'common.confirm': 'Confirmation',
   'common.notify': 'Notification',
   'common.back': 'Back',
+  'common.train': 'Training',
+  'common.test': 'Test',
 
   'msg.warn': 'Warning',
   'msg.confirm.to.logout': 'Do you really log-out.',

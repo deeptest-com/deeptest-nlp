@@ -112,7 +112,7 @@ export default {
   }
   .right {
     flex: 1;
-    padding: 8px;
+    padding: 8px 15px;
     height: 100%;
   }
 }
