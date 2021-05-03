@@ -56,7 +56,7 @@ export default {
   data () {
     const styl = 'height: ' + (document.documentElement.clientHeight - 56) + 'px;'
     return {
-      model: {},
+      model: { intents: [] },
       intentId: 0,
       intentEditVisible: false,
       styl: styl

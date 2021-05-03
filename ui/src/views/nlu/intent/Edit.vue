@@ -22,7 +22,7 @@
           <div contenteditable="true" class="editor" ref="editor"></div>
         </div>
         <div class="right">
-          <a-button @click="add()">{{$t('form.save')}}</a-button>
+          <a-button @click="add()">{{ $t('form.save') }}</a-button>
         </div>
       </div>
     </div>
@@ -58,7 +58,12 @@ export default {
   },
   mounted () {
     document.addEventListener('mouseup', event => {
-      if (event.target === this.$refs.editor || event.target.contains(this.$refs.editor)) {
+      console.log(event.target)
+      const target = this.getParentSpanNodeIfNeeded(event.target)
+      console.log(target)
+
+      if (target === this.$refs.editor || target.contains(this.$refs.editor) ||
+          target.parentNode === this.$refs.editor || target.parentNode.contains(this.$refs.editor)) {
         const slt = window.getSelection()
         console.log('anchorNode', slt.anchorNode)
         console.log('anchorOffset', slt.anchorOffset)
@@ -68,9 +73,79 @@ export default {
 
         const range = window.getSelection().getRangeAt(0)
         console.log('range', range)
-        const startContainer = range.startContainer
-        const endContainer = range.endContainer
-        console.log('same', startContainer === endContainer)
+        const startContainer = this.getParentSpanNodeIfNeeded(range.startContainer)
+        const endContainer = this.getParentSpanNodeIfNeeded(range.endContainer)
+        console.log('startContainer', startContainer)
+        console.log('endContainer', endContainer)
+        console.log('is same', startContainer === endContainer)
+
+        const items = []
+        let item = startContainer
+        while (true) {
+          item = this.getParentSpanNodeIfNeeded(item)
+
+          let tp = item.nodeName.toLowerCase()
+          tp = tp.replace('#', '')
+          let html = ''
+          if (tp === 'span') {
+            html = item.outerHTML
+          } else {
+            html = item.wholeText
+          }
+
+          console.log(tp, html)
+          items.push({ type: tp, content: html })
+
+          if (item.id === endContainer.id) {
+            break
+          }
+
+          if (item.nextSibling) {
+            item = item.nextSibling
+          } else {
+            item = item.parentNode.nextSibling
+          }
+          if (!item) {
+            break
+          }
+        }
+
+        const startText = startContainer.textContent
+        const endText = endContainer.textContent
+
+        const startLeft = slt.anchorOffset
+        let startRight = startText.length - 1
+        let endLeft = 0
+        const endRight = slt.focusOffset
+
+        if (startContainer === endContainer) {
+          startRight = endRight
+          endLeft = startLeft
+        }
+
+        items[0].selected = startText.substr(startLeft, startRight - 1)
+        console.log('start', items[0].selected, startLeft, startRight - 1)
+
+        items[items.length - 1].selected = endText.substr(endLeft, endRight - 1)
+        console.log('end', items[items.length - 1].selected, endLeft, endRight - 1)
+
+        console.log(items)
+
+        // const commonAncestorContainer = range.commonAncestorContainer
+        // const firstChild = commonAncestorContainer.firstChild
+        // const nodes = commonAncestorContainer.childNodes
+        // let foundFirst = false
+        // nodes.forEach((item, index) => {
+        //   if (item === firstChild) foundFirst = true
+        //
+        //   const tp = item.nodeName.toLowerCase()
+        //   let html = ''
+        //   if (tp === 'span') html = item.outerHTML
+        //   else html = item.wholeText
+        //   if (foundFirst) {
+        //     console.log(index, tp, html)
+        //   }
+        // })
       }
     })
   },
@@ -95,7 +170,10 @@ export default {
         if (json.code === 200) {
           this.model = json.data
           this.sents = this.model.sents
-          this.$refs.editor.innerHTML = 'aaa<span>111</span>bbb'
+
+          setTimeout(() => {
+            this.$refs.editor.innerHTML = '<span id="1">aaa</span><span id="2">123</span><span id="3">bbb</span>'
+          }, 500)
         }
       })
     },
@@ -144,6 +222,12 @@ export default {
     },
     back () {
       this.$router.push('/nlu/task/list')
+    },
+    getParentSpanNodeIfNeeded (target) {
+      if (target.parentNode.nodeName.toLowerCase() === 'span') {
+        target = target.parentNode
+      }
+      return target
     }
   }
 }
