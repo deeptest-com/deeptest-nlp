@@ -19,7 +19,18 @@
       </div>
       <div class="edit-inputs">
         <div class="left">
-          <div contenteditable="true" id="editor" class="editor" ref="editor" spellcheck="false"></div>
+          <div
+            id="editor"
+            contenteditable="true"
+            @mouseup="textSelected"
+            class="editor"
+            ref="editor"
+            spellcheck="false">
+          </div>
+          <div class="tips">
+            <a-icon type="info-circle" class="icon"/>
+            <span>{{ $t('form.select.to.mark') }}</span>
+          </div>
         </div>
         <div class="right">
           <a-button @click="add()">{{ $t('form.save') }}</a-button>
@@ -41,12 +52,63 @@
       </div>
     </div>
 
+    <a-modal
+      :title="$t('form.mark')"
+      dialogClass="mark-dialog"
+      :visible="markVisible"
+      @cancel="() => cancelMark()"
+      @ok="() => saveMark()"
+    >
+      <a-form-model :model="slot" :label-col="labelCol" :wrapper-col="wrapperCol">
+        <a-form-model-item :label="$t('form.slot.type')">
+          <a-radio-group v-model="slot.type" @change="slotTypeChanged">
+            <a-radio value="regex">{{ $t('form.regex') }}</a-radio>
+            <a-radio value="synonym">{{ $t('form.synonym') }}</a-radio>
+            <a-radio value="lookup">{{ $t('form.lookup') }}</a-radio>
+          </a-radio-group>
+        </a-form-model-item>
+
+        <a-form-model-item v-if="slot.type === 'regex'" :label="$t('form.regex')">
+          <a-select v-model="slot.value">
+            <a-select-option value="shanghai">
+              Zone one
+            </a-select-option>
+            <a-select-option value="beijing">
+              Zone two
+            </a-select-option>
+          </a-select>
+        </a-form-model-item>
+
+        <a-form-model-item v-if="slot.type === 'synonym'" :label="$t('form.synonym')">
+          <a-select v-model="slot.value">
+            <a-select-option value="shanghai">
+              Zone one
+            </a-select-option>
+            <a-select-option value="beijing">
+              Zone two
+            </a-select-option>
+          </a-select>
+        </a-form-model-item>
+
+        <a-form-model-item v-if="slot.type === 'lookup'" :label="$t('form.lookup')">
+          <a-select v-model="slot.value">
+            <a-select-option value="shanghai">
+              Zone one
+            </a-select-option>
+            <a-select-option value="beijing">
+              Zone two
+            </a-select-option>
+          </a-select>
+        </a-form-model-item>
+      </a-form-model>
+    </a-modal>
   </div>
 </template>
 
 <script>
 
-import { getIntent } from '@/api/manage'
+import { selectForMark } from '@/utils/markUtil'
+import { getIntent, loadDicts } from '@/api/manage'
 
 export default {
   name: 'IntentEdit',
@@ -58,16 +120,22 @@ export default {
   },
   mounted () {
     console.log('mounted')
-    document.addEventListener('mouseup', this.textSelected)
+    // document.getElementById('editor').addEventListener('mouseup', this.textSelected)
   },
   destroyed () {
-    document.removeEventListener('mouseup', this.textSelected)
+    console.log('destroyed')
+    // document.getElementById('editor').removeEventListener('mouseup', this.textSelected)
   },
   data () {
     return {
       model: {},
       sents: [],
-      sent: { content: '' }
+      sent: { content: '' },
+      markVisible: false,
+
+      labelCol: { span: 5 },
+      wrapperCol: { span: 15 },
+      slot: {}
     }
   },
   watch: {
@@ -140,100 +208,26 @@ export default {
     },
 
     textSelected (event) {
-      let target = event.target
-      console.log(target)
-      target = this.getParentSpanNodeIfNeeded(target)
+      const target = event.target
+      const items = selectForMark(target)
+      console.log('===', items)
 
-      if (target === this.$refs.editor || target.contains(this.$refs.editor) ||
-        target.parentNode === this.$refs.editor || target.parentNode.contains(this.$refs.editor)) {
-        const slt = window.getSelection()
-        console.log('anchorNode', slt.anchorNode)
-        console.log('anchorOffset', slt.anchorOffset)
-
-        console.log('focusNode', slt.focusNode)
-        console.log('focusOffset', slt.focusOffset)
-
-        const range = window.getSelection().getRangeAt(0)
-        console.log('range', range, range.toString())
-        const startContainer = this.getParentSpanNodeIfNeeded(range.startContainer)
-        const endContainer = this.getParentSpanNodeIfNeeded(range.endContainer)
-        console.log('startContainer', startContainer, range.startOffset)
-        console.log('endContainer', endContainer, range.endOffset)
-        console.log('is same', startContainer === endContainer)
-
-        const items = []
-        let item = startContainer
-        while (true) {
-          item = this.getParentSpanNodeIfNeeded(item)
-
-          let tp = item.nodeName.toLowerCase()
-          tp = tp.replace('#', '')
-          let html = ''
-          let text = ''
-          if (tp === 'span') {
-            html = item.outerHTML
-            text = item.innerText
-          } else {
-            html = item.wholeText
-            text = item.wholeText
-          }
-
-          console.log(tp, html)
-          items.push({ type: tp, html: html, text: text })
-
-          if (item.nextSibling) {
-            item = item.nextSibling
-          } else {
-            item = item.parentNode.nextSibling
-          }
-          if (!item) {
-            break
-          }
-        }
-
-        const startText = startContainer.textContent
-        const endText = endContainer.textContent
-
-        const startLeft = slt.anchorOffset
-        let startRight = startText.length
-        let endLeft = 0
-        const endRight = slt.focusOffset
-
-        if (startContainer === endContainer) {
-          startRight = endRight
-          endLeft = startLeft
-        }
-
-        items[0].selected = startText.substr(startLeft, startRight - startLeft)
-        console.log('start', items[0].selected, startLeft, startRight - startLeft)
-
-        console.log(items)
-
-        const selectedSize = range.toString().length
-        let totalSize = 0
-        const temp = []
-        for (let i = 0; i < items.length; i++) {
-          const item = items[i]
-          temp.push(item)
-          const selected = item.selected ? item.selected : item.text
-
-          totalSize += selected.length
-          if (totalSize >= selectedSize) {
-            break
-          }
-        }
-
-        temp[temp.length - 1].selected = endText.substr(endLeft, endRight - endLeft)
-        console.log('end', temp[temp.length - 1].selected, endLeft, endRight - endLeft)
-
-        console.log(temp)
+      if (items.length > 0) {
+        this.markVisible = true
       }
     },
-    getParentSpanNodeIfNeeded (target) {
-      if (target.parentNode && target.parentNode.nodeName.toLowerCase() === 'span') {
-        target = target.parentNode
-      }
-      return target
+    slotTypeChanged () {
+      loadDicts(this.slot.type)
+    },
+    saveMark () {
+      console.log('saveMark', this.slot)
+      this.markVisible = false
+      window.getSelection().removeAllRanges()
+    },
+    cancelMark () {
+      console.log('cancelMark')
+      this.markVisible = false
+      window.getSelection().removeAllRanges()
     }
   }
 }
@@ -280,6 +274,14 @@ export default {
         border: 1px solid #e9f2fb;
         outline: none;
       }
+      .tips {
+        padding: 2px 6px;
+        color: #52c41a;
+        .icon {
+          display: inline-block;
+          padding-right: 5px;
+        }
+      }
     }
     .right {
       width: 160px;
@@ -318,6 +320,22 @@ export default {
           cursor: pointer;
         }
       }
+    }
+  }
+}
+
+</style>
+
+<style lang="less">
+.mark-dialog {
+  top: 230px;
+  .ant-modal-header {
+    padding: 10px 24px !important;
+  }
+  .ant-modal-footer {
+    border-top: 0 !important;
+    .ant-btn {
+      margin-bottom: 0px;
     }
   }
 }

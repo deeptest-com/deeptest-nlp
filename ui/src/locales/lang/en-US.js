@@ -77,9 +77,15 @@ const locale = {
 
   'form.sent.edit': 'Edit Sentence',
   'form.sent.list': 'List Sentence',
+  'form.slot.type': 'Slot Type',
+  'form.regex': 'Regular Expression',
+  'form.synonym': 'Synonym',
+  'form.lookup': 'Lookup',
   'form.use.regex': 'Use Regular Expression',
   'form.use.synonym': 'Use Synonym',
   'form.use.lookup': 'Use Lookup',
+  'form.mark': 'Mark',
+  'form.select.to.mark': 'Select text to mark.',
 
   'status.enable': 'Enable',
   'status.disable': 'Disable',

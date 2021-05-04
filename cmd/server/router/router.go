@@ -34,13 +34,15 @@ type Router struct {
 
 	RpcCtrl *handler.RpcCtrl `inject:""`
 
-	ProjectCtrl        *handler.ProjectCtrl    `inject:""`
-	NluTaskCtrl        *handler.NluTaskCtrl    `inject:""`
-	NluIntentCtrl      *handler.NluIntentCtrl  `inject:""`
-	NluSentCtrl        *handler.NluSentCtrl    `inject:""`
-	NluSlotCtrl        *handler.NluSlotCtrl    `inject:""`
-	NluLookupCtrlCtrl  *handler.NluLookupCtrl  `inject:""`
-	NluSynonymCtrlCtrl *handler.NluSynonymCtrl `inject:""`
+	ProjectCtrl    *handler.ProjectCtrl    `inject:""`
+	NluTaskCtrl    *handler.NluTaskCtrl    `inject:""`
+	NluIntentCtrl  *handler.NluIntentCtrl  `inject:""`
+	NluSentCtrl    *handler.NluSentCtrl    `inject:""`
+	NluSlotCtrl    *handler.NluSlotCtrl    `inject:""`
+	NluLookupCtrl  *handler.NluLookupCtrl  `inject:""`
+	NluSynonymCtrl *handler.NluSynonymCtrl `inject:""`
+	NluRegexCtrl   *handler.NluRegexCtrl   `inject:""`
+	NluDictCtrl    *handler.NluDictCtrl    `inject:""`
 
 	WsCtrl *handler.WsCtrl `inject:""`
 
@@ -132,39 +134,43 @@ func (r *Router) App() {
 				})
 
 				admin.PartyFunc("/lookups", func(party iris.Party) {
-					party.Get("/", r.NluLookupCtrlCtrl.List).Name = "词表列表"
-					party.Get("/{id:uint}", r.NluLookupCtrlCtrl.Get).Name = "词表详情"
-					party.Post("/", r.NluLookupCtrlCtrl.Create).Name = "创建词表"
-					party.Put("/{id:uint}", r.NluLookupCtrlCtrl.Update).Name = "更新词表"
-					party.Delete("/{id:uint}", r.NluLookupCtrlCtrl.Delete).Name = "删除词表"
-					party.Post("/{id:uint}/disable", r.NluLookupCtrlCtrl.Disable).Name = "禁用/启动词表"
+					party.Get("/", r.NluLookupCtrl.List).Name = "词表列表"
+					party.Get("/{id:uint}", r.NluLookupCtrl.Get).Name = "词表详情"
+					party.Post("/", r.NluLookupCtrl.Create).Name = "创建词表"
+					party.Put("/{id:uint}", r.NluLookupCtrl.Update).Name = "更新词表"
+					party.Delete("/{id:uint}", r.NluLookupCtrl.Delete).Name = "删除词表"
+					party.Post("/{id:uint}/disable", r.NluLookupCtrl.Disable).Name = "禁用/启动词表"
 				})
 				admin.PartyFunc("/lookupItems", func(party iris.Party) {
-					party.Get("/", r.NluLookupCtrlCtrl.List).Name = "词表项列表"
-					party.Get("/{id:uint}", r.NluLookupCtrlCtrl.Get).Name = "词表项详情"
-					party.Post("/", r.NluLookupCtrlCtrl.Create).Name = "创建项词表"
-					party.Put("/{id:uint}", r.NluLookupCtrlCtrl.Update).Name = "更新词表项"
-					party.Delete("/{id:uint}", r.NluLookupCtrlCtrl.Delete).Name = "删除词表项"
-					party.Post("/{id:uint}/disable", r.NluLookupCtrlCtrl.Disable).Name = "禁用/启动词表项"
-					party.Post("/batchRemove", r.NluLookupCtrlCtrl.BatchRemove).Name = "批量删除词表项"
+					party.Get("/", r.NluLookupCtrl.List).Name = "词表项列表"
+					party.Get("/{id:uint}", r.NluLookupCtrl.Get).Name = "词表项详情"
+					party.Post("/", r.NluLookupCtrl.Create).Name = "创建项词表"
+					party.Put("/{id:uint}", r.NluLookupCtrl.Update).Name = "更新词表项"
+					party.Delete("/{id:uint}", r.NluLookupCtrl.Delete).Name = "删除词表项"
+					party.Post("/{id:uint}/disable", r.NluLookupCtrl.Disable).Name = "禁用/启动词表项"
+					party.Post("/batchRemove", r.NluLookupCtrl.BatchRemove).Name = "批量删除词表项"
 				})
 
 				admin.PartyFunc("/synonyms", func(party iris.Party) {
-					party.Get("/", r.NluSynonymCtrlCtrl.List).Name = "同义词列表"
-					party.Get("/{id:uint}", r.NluSynonymCtrlCtrl.Get).Name = "同义词详情"
-					party.Post("/", r.NluSynonymCtrlCtrl.Create).Name = "创建同义词"
-					party.Put("/{id:uint}", r.NluSynonymCtrlCtrl.Update).Name = "更新同义词"
-					party.Delete("/{id:uint}", r.NluSynonymCtrlCtrl.Delete).Name = "删除同义词"
-					party.Post("/{id:uint}/disable", r.NluSynonymCtrlCtrl.Disable).Name = "禁用/启动同义词"
+					party.Get("/", r.NluSynonymCtrl.List).Name = "同义词列表"
+					party.Get("/{id:uint}", r.NluSynonymCtrl.Get).Name = "同义词详情"
+					party.Post("/", r.NluSynonymCtrl.Create).Name = "创建同义词"
+					party.Put("/{id:uint}", r.NluSynonymCtrl.Update).Name = "更新同义词"
+					party.Delete("/{id:uint}", r.NluSynonymCtrl.Delete).Name = "删除同义词"
+					party.Post("/{id:uint}/disable", r.NluSynonymCtrl.Disable).Name = "禁用/启动同义词"
 				})
 				admin.PartyFunc("/synonymItems", func(party iris.Party) {
-					party.Get("/", r.NluSynonymCtrlCtrl.List).Name = "词表项列表"
-					party.Get("/{id:uint}", r.NluSynonymCtrlCtrl.Get).Name = "词表项详情"
-					party.Post("/", r.NluSynonymCtrlCtrl.Create).Name = "创建项词表"
-					party.Put("/{id:uint}", r.NluSynonymCtrlCtrl.Update).Name = "更新词表项"
-					party.Delete("/{id:uint}", r.NluSynonymCtrlCtrl.Delete).Name = "删除词表项"
-					party.Post("/{id:uint}/disable", r.NluSynonymCtrlCtrl.Disable).Name = "禁用/启动词表项"
-					party.Post("/batchRemove", r.NluSynonymCtrlCtrl.BatchRemove).Name = "批量删除词表项"
+					party.Get("/", r.NluSynonymCtrl.List).Name = "词表项列表"
+					party.Get("/{id:uint}", r.NluSynonymCtrl.Get).Name = "词表项详情"
+					party.Post("/", r.NluSynonymCtrl.Create).Name = "创建项词表"
+					party.Put("/{id:uint}", r.NluSynonymCtrl.Update).Name = "更新词表项"
+					party.Delete("/{id:uint}", r.NluSynonymCtrl.Delete).Name = "删除词表项"
+					party.Post("/{id:uint}/disable", r.NluSynonymCtrl.Disable).Name = "禁用/启动词表项"
+					party.Post("/batchRemove", r.NluSynonymCtrl.BatchRemove).Name = "批量删除词表项"
+				})
+
+				admin.PartyFunc("/dicts", func(party iris.Party) {
+					party.Get("/", r.NluDictCtrl.List).Name = "词典列表"
 				})
 
 				admin.PartyFunc("/users", func(party iris.Party) {

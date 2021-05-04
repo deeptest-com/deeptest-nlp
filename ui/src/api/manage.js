@@ -13,6 +13,7 @@ const api = {
   lookupItems: `${prefix}/lookupItems`,
   synonyms: `${prefix}/synonyms`,
   synonymItems: `${prefix}/synonymItems`,
+  dicts: `${prefix}/dicts`,
 
   user: `${prefix}/user`,
   role: `${prefix}/role`,
@@ -391,6 +392,14 @@ export function batchRemoveSynonymItem (data) {
     url: api.synonymItems + '/batchRemove',
     method: 'post',
     data: data
+  })
+}
+
+export function loadDicts (type) {
+  return request({
+    url: api.dicts,
+    method: 'get',
+    params: { type: type }
   })
 }
 

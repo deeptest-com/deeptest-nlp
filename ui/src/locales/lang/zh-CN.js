@@ -81,9 +81,15 @@ const locale = {
 
   'form.sent.edit': '编辑说法',
   'form.sent.list': '说法列表',
+  'form.slot.type': '插槽类型',
+  'form.regex': '正则表达式',
+  'form.synonym': '同义词',
+  'form.lookup': '词表',
   'form.use.regex': '使用正则表达式',
   'form.use.synonym': '使用同义词',
   'form.use.lookup': '使用词表',
+  'form.mark': '标记',
+  'form.select.to.mark': '选择文本进行标记。',
 
   'status.enable': '启用',
   'status.disable': '禁用',
