@@ -13,9 +13,9 @@
         {{ $t('form.sent.edit') }}
       </div>
       <div class="edit-links">
-        <a-tag @click="useRegex" class="tag">{{ $t('form.use.regex') }} </a-tag>
-        <a-tag @click="useSynonym" class="tag">{{ $t('form.use.synonym') }}</a-tag>
-        <a-tag @click="useLookup" class="tag">{{ $t('form.use.lookup') }}</a-tag>
+        <a-tag @click="useSynonym" class="tag synonym">{{ $t('form.use.synonym') }}</a-tag>
+        <a-tag @click="useLookup" class="tag lookup">{{ $t('form.use.lookup') }}</a-tag>
+        <a-tag @click="useRegex" class="tag regex">{{ $t('form.use.regex') }} </a-tag>
       </div>
       <div class="edit-inputs">
         <div class="left">
@@ -128,6 +128,7 @@ export default {
 
       allSlots: [],
       selectedSlot: {},
+      selectedIndex: -1,
       slot: {},
 
       dicts: [],
@@ -153,7 +154,7 @@ export default {
           this.sents = this.model.sents
 
           setTimeout(() => {
-            this.$refs.editor.innerHTML = '<span id="1" data-type="lookup" data-value="1">abc</span>123<span id="3">xyz</span>'
+            this.$refs.editor.innerHTML = '<span id="1" class="synonym" data-type="synonym" data-value="1">abc</span>123<span id="3">xyz</span>'
           }, 500)
         }
       })
@@ -213,11 +214,14 @@ export default {
       })
 
       this.allSlots = mp.allSlots
-      this.selectedSlot = this.allSlots[mp.selectedIndex]
+      this.selectedIndex = mp.selectedIndex
+      this.selectedSlot = this.allSlots[this.selectedIndex]
       console.log('=2=', this.selectedSlot)
 
       this.slot = { slotType: this.selectedSlot.getAttribute('data-type'), value: this.selectedSlot.getAttribute('data-value') }
       this.slotEditVisible = true
+
+      this.slotTypeChanged()
     },
     slotTypeChanged () {
       loadDicts(this.slot.slotType).then(json => {
@@ -234,8 +238,9 @@ export default {
           return false
         }
 
-        const sentContent = genSent(this.allItems, this.selectedItems, this.slot)
+        const sentContent = genSent(this.allSlots, this.selectedIndex, this.slot)
         console.log('saveSlot', sentContent)
+        this.$refs.editor.innerHTML = sentContent
 
         this.slotEditVisible = false
         window.getSelection().removeAllRanges()
@@ -293,7 +298,7 @@ export default {
       }
       .tips {
         padding: 2px 6px;
-        color: #52c41a;
+        color: rgba(0, 0, 0, 0.45);
         .icon {
           display: inline-block;
           padding-right: 5px;
@@ -341,19 +346,4 @@ export default {
   }
 }
 
-</style>
-
-<style lang="less">
-.mark-dialog {
-  top: 230px;
-  .ant-modal-header {
-    padding: 10px 24px !important;
-  }
-  .ant-modal-footer {
-    border-top: 0 !important;
-    .ant-btn {
-      margin-bottom: 0px;
-    }
-  }
-}
 </style>

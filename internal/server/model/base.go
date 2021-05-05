@@ -23,6 +23,7 @@ var (
 		&NluSynonymItem{},
 		&NluLookup{},
 		&NluLookupItem{},
+		&NluRegex{},
 
 		&User{},
 		&Role{},
