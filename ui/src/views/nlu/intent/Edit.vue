@@ -25,6 +25,7 @@
             @mouseup="textSelected"
             class="editor"
             ref="editor"
+            oncontextmenu="return false;"
             spellcheck="false">
           </div>
           <div class="tips">
