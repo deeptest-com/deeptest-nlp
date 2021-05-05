@@ -219,7 +219,9 @@ export default {
       this.selectedSlot = this.allSlots[this.selectedIndex]
       console.log('=2=', this.selectedSlot)
 
-      this.slot = { slotType: this.selectedSlot.getAttribute('data-type'), value: this.selectedSlot.getAttribute('data-value') }
+      let id = this.selectedSlot.getAttribute('data-value')
+      id = id ? parseInt(id) : ''
+      this.slot = { slotType: this.selectedSlot.getAttribute('data-type'), value: id }
       this.slotEditVisible = true
 
       this.slotTypeChanged()

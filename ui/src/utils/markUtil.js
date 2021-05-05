@@ -117,21 +117,21 @@ export const genSent = function (allSlots, selectedIndex, slot) {
 
   allSlots.forEach((item, index) => {
     const section = document.createElement('span')
-    let dtaType = item.getAttribute('data-type')
-    let dtaValue = item.getAttribute('data-value')
+    let dataType = item.getAttribute('data-type')
+    let dataValue = item.getAttribute('data-value')
 
     if (index === selectedIndex) {
-      dtaType = slot.slotType
-      dtaValue = slot.value
+      dataType = slot.slotType
+      dataValue = slot.value
     }
 
     section.setAttribute('id', index)
-    if (dtaType) {
-      section.setAttribute('data-type', dtaType)
-      addCls(section, dtaType)
+    if (dataType) {
+      section.setAttribute('data-type', dataType)
+      addCls(section, dataType)
     }
 
-    if (dtaValue) section.setAttribute('data-value', dtaValue)
+    if (dataValue) section.setAttribute('data-value', dataValue.toString())
     else section.setAttribute('data-value', '')
     section.innerText = item.innerText
 
