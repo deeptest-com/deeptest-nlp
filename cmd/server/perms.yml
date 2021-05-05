@@ -253,6 +253,11 @@ perms:
     description: ""
     act: "POST"
 
+  - name: "/api/v1/admin/dicts"
+    displayname: "词典列表"
+    description: ""
+    act: "GET"
+
   - name: "/api/v1/admin/expire"
     displayname: "刷新token"
     description: "刷新token"

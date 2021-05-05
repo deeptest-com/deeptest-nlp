@@ -7,13 +7,21 @@ import (
 type NluDictService struct {
 	NluSynonymRepo *repo.NluSynonymRepo `inject:""`
 	NluLookupRepo  *repo.NluLookupRepo  `inject:""`
+	NluRegexRepo   *repo.NluRegexRepo   `inject:""`
 }
 
 func NewNluDictService() *NluDictService {
 	return &NluDictService{}
 }
 
-func (s *NluDictService) List(keywords, status string, pageNo int, pageSize int) (pos []interface{}, total int64) {
-	//pos, total = s.NluDictRepo.Query(keywords, status, pageNo, pageSize)
+func (s *NluDictService) List(tp string) (pos []map[string]interface{}) {
+	if tp == "synonym" {
+		pos = s.NluSynonymRepo.List()
+	} else if tp == "lookup" {
+		pos = s.NluLookupRepo.List()
+	} else if tp == "regex" {
+		pos = s.NluRegexRepo.List()
+	}
+
 	return
 }

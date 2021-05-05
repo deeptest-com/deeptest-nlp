@@ -92,6 +92,7 @@ const locale = {
 
   'valid.input.name': 'Please input name',
   'valid.input.content': 'Please input content',
+  'valid.select.dict': 'Please select dictionary.',
 
   'common.info': 'Info',
   'common.tips': 'Tips',

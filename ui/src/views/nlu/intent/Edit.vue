@@ -55,51 +55,43 @@
     <a-modal
       :title="$t('form.mark')"
       dialogClass="mark-dialog"
-      :visible="markVisible"
-      @cancel="() => cancelMark()"
-      @ok="() => saveMark()"
+      :visible="slotEditVisible"
+      @cancel="() => cancelSlot()"
+      @ok="() => saveSlot()"
     >
-      <a-form-model :model="slot" :label-col="labelCol" :wrapper-col="wrapperCol">
-        <a-form-model-item :label="$t('form.slot.type')">
-          <a-radio-group v-model="slot.type" @change="slotTypeChanged">
-            <a-radio value="regex">{{ $t('form.regex') }}</a-radio>
+      <a-form-model ref="form" :model="selectedSlot" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
+        <a-form-model-item prop="slotType" :label="$t('form.slot.type')">
+          <a-radio-group v-model="selectedSlot.slotType" @change="slotTypeChanged">
             <a-radio value="synonym">{{ $t('form.synonym') }}</a-radio>
             <a-radio value="lookup">{{ $t('form.lookup') }}</a-radio>
+            <a-radio value="regex">{{ $t('form.regex') }}</a-radio>
           </a-radio-group>
         </a-form-model-item>
 
-        <a-form-model-item v-if="slot.type === 'regex'" :label="$t('form.regex')">
-          <a-select v-model="slot.value">
-            <a-select-option value="shanghai">
-              Zone one
-            </a-select-option>
-            <a-select-option value="beijing">
-              Zone two
+        <a-form-model-item prop="value" v-if="selectedSlot.slotType === 'synonym'" :label="$t('form.synonym')">
+          <a-select v-model="selectedSlot.value">
+            <a-select-option v-for="(item, index) in dicts" :key="index" :value="item.id">
+              {{ item.name }}
             </a-select-option>
           </a-select>
         </a-form-model-item>
 
-        <a-form-model-item v-if="slot.type === 'synonym'" :label="$t('form.synonym')">
-          <a-select v-model="slot.value">
-            <a-select-option value="shanghai">
-              Zone one
-            </a-select-option>
-            <a-select-option value="beijing">
-              Zone two
+        <a-form-model-item prop="value" v-if="selectedSlot.slotType === 'lookup'" :label="$t('form.lookup')">
+          <a-select v-model="selectedSlot.value">
+            <a-select-option v-for="(item, index) in dicts" :key="index" :value="item.id">
+              {{ item.name }}
             </a-select-option>
           </a-select>
         </a-form-model-item>
 
-        <a-form-model-item v-if="slot.type === 'lookup'" :label="$t('form.lookup')">
-          <a-select v-model="slot.value">
-            <a-select-option value="shanghai">
-              Zone one
-            </a-select-option>
-            <a-select-option value="beijing">
-              Zone two
+        <a-form-model-item prop="value" v-if="selectedSlot.slotType === 'regex'" :label="$t('form.regex')">
+          <a-select v-model="selectedSlot.value">
+            <a-select-option v-for="(item, index) in dicts" :key="index" :value="item.id">
+              {{ item.name }}
             </a-select-option>
           </a-select>
         </a-form-model-item>
+
       </a-form-model>
     </a-modal>
   </div>
@@ -107,7 +99,7 @@
 
 <script>
 
-import { selectForMark } from '@/utils/markUtil'
+import { convertSelectedToSlots, genSent } from '@/utils/markUtil'
 import { getIntent, loadDicts } from '@/api/manage'
 
 export default {
@@ -120,22 +112,27 @@ export default {
   },
   mounted () {
     console.log('mounted')
-    // document.getElementById('editor').addEventListener('mouseup', this.textSelected)
   },
   destroyed () {
     console.log('destroyed')
-    // document.getElementById('editor').removeEventListener('mouseup', this.textSelected)
   },
   data () {
     return {
       model: {},
       sents: [],
       sent: { content: '' },
-      markVisible: false,
+      slotEditVisible: false,
 
       labelCol: { span: 5 },
       wrapperCol: { span: 15 },
-      slot: {}
+
+      allSlots: [],
+      selectedSlot: {},
+
+      dicts: [],
+      rules: {
+        value: [{ required: true, message: this.$t('valid.select.dict'), trigger: 'change' }]
+      }
     }
   },
   watch: {
@@ -208,25 +205,40 @@ export default {
     },
 
     textSelected (event) {
-      const target = event.target
-      const items = selectForMark(target)
-      console.log('===', items)
+      const mp = convertSelectedToSlots(event.target, document.getElementById('editor'))
+      this.allSlots = mp.all
+      this.selectedSlot = mp.selected
+      console.log('=1=', this.allSlots, this.selectedSlot)
 
-      if (items.length > 0) {
-        this.markVisible = true
-      }
+      if (!this.selectedSlot) return
+
+      this.slotEditVisible = true
     },
     slotTypeChanged () {
-      loadDicts(this.slot.type)
+      loadDicts(this.slot.slotType).then(json => {
+        console.log(json)
+        this.dicts = json.data
+      })
     },
-    saveMark () {
-      console.log('saveMark', this.slot)
-      this.markVisible = false
-      window.getSelection().removeAllRanges()
+    saveSlot () {
+      console.log('saveSlot', this.slot)
+
+      this.$refs.form.validate(valid => {
+        if (!valid) {
+          console.log('validate', valid)
+          return false
+        }
+
+        const sentContent = genSent(this.allItems, this.selectedItems, this.slot)
+        console.log('saveSlot', sentContent)
+
+        this.slotEditVisible = false
+        window.getSelection().removeAllRanges()
+      })
     },
-    cancelMark () {
-      console.log('cancelMark')
-      this.markVisible = false
+    cancelSlot () {
+      console.log('cancelSlot')
+      this.slotEditVisible = false
       window.getSelection().removeAllRanges()
     }
   }

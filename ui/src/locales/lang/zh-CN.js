@@ -96,6 +96,7 @@ const locale = {
 
   'valid.input.name': '请输入名称',
   'valid.input.content': '请输入内容',
+  'valid.select.dict': '请选择词典。',
 
   'common.info': '消息',
   'common.tips': '提示',

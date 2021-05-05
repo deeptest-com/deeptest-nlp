@@ -96,3 +96,16 @@ func (r *NluLookupRepo) BatchDelete(ids []int) (err error) {
 
 	return
 }
+
+func (r *NluLookupRepo) List() (pos []map[string]interface{}) {
+	err := r.DB.Model(&model.NluLookup{}).
+		Where("deleted_at IS NULL").
+		Order("id ASC").
+		Find(&pos).
+		Error
+	if err != nil {
+		_logUtils.Errorf("sql error %s", err.Error())
+	}
+
+	return
+}
