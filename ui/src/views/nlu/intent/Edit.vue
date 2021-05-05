@@ -59,33 +59,33 @@
       @cancel="() => cancelSlot()"
       @ok="() => saveSlot()"
     >
-      <a-form-model ref="form" :model="selectedSlot" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
+      <a-form-model ref="form" :model="slot" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
         <a-form-model-item prop="slotType" :label="$t('form.slot.type')">
-          <a-radio-group v-model="selectedSlot.slotType" @change="slotTypeChanged">
+          <a-radio-group v-model="slot.slotType" @change="slotTypeChanged">
             <a-radio value="synonym">{{ $t('form.synonym') }}</a-radio>
             <a-radio value="lookup">{{ $t('form.lookup') }}</a-radio>
             <a-radio value="regex">{{ $t('form.regex') }}</a-radio>
           </a-radio-group>
         </a-form-model-item>
 
-        <a-form-model-item prop="value" v-if="selectedSlot.slotType === 'synonym'" :label="$t('form.synonym')">
-          <a-select v-model="selectedSlot.value">
+        <a-form-model-item prop="value" v-if="slot.slotType === 'synonym'" :label="$t('form.synonym')">
+          <a-select v-model="slot.value">
             <a-select-option v-for="(item, index) in dicts" :key="index" :value="item.id">
               {{ item.name }}
             </a-select-option>
           </a-select>
         </a-form-model-item>
 
-        <a-form-model-item prop="value" v-if="selectedSlot.slotType === 'lookup'" :label="$t('form.lookup')">
-          <a-select v-model="selectedSlot.value">
+        <a-form-model-item prop="value" v-if="slot.slotType === 'lookup'" :label="$t('form.lookup')">
+          <a-select v-model="slot.value">
             <a-select-option v-for="(item, index) in dicts" :key="index" :value="item.id">
               {{ item.name }}
             </a-select-option>
           </a-select>
         </a-form-model-item>
 
-        <a-form-model-item prop="value" v-if="selectedSlot.slotType === 'regex'" :label="$t('form.regex')">
-          <a-select v-model="selectedSlot.value">
+        <a-form-model-item prop="value" v-if="slot.slotType === 'regex'" :label="$t('form.regex')">
+          <a-select v-model="slot.value">
             <a-select-option v-for="(item, index) in dicts" :key="index" :value="item.id">
               {{ item.name }}
             </a-select-option>
@@ -128,6 +128,7 @@ export default {
 
       allSlots: [],
       selectedSlot: {},
+      slot: {},
 
       dicts: [],
       rules: {
@@ -152,7 +153,7 @@ export default {
           this.sents = this.model.sents
 
           setTimeout(() => {
-            this.$refs.editor.innerHTML = '<span id="1">abc</span>123<span id="3">xyz</span>'
+            this.$refs.editor.innerHTML = '<span id="1" data-type="lookup" data-value="1">abc</span>123<span id="3">xyz</span>'
           }, 500)
         }
       })
@@ -206,12 +207,16 @@ export default {
 
     textSelected (event) {
       const mp = convertSelectedToSlots(event.target, document.getElementById('editor'))
-      this.allSlots = mp.all
-      this.selectedSlot = mp.selected
-      console.log('=1=', this.allSlots, this.selectedSlot)
+      if (!mp.selectedIndex) return
+      mp.allSlots.forEach((item, index) => {
+        console.log('=1=', index, item)
+      })
 
-      if (!this.selectedSlot) return
+      this.allSlots = mp.allSlots
+      this.selectedSlot = this.allSlots[mp.selectedIndex]
+      console.log('=2=', this.selectedSlot)
 
+      this.slot = { slotType: this.selectedSlot.getAttribute('data-type'), value: this.selectedSlot.getAttribute('data-value') }
       this.slotEditVisible = true
     },
     slotTypeChanged () {
