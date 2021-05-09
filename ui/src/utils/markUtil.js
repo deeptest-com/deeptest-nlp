@@ -112,7 +112,6 @@ export const convertSelectedToSlots = function (target, editor) {
 
 export const genSent = function (allSlots, selectedIndex, slot) {
   const arr = []
-
   console.log('---', selectedIndex)
 
   allSlots.forEach((item, index) => {
@@ -138,8 +137,24 @@ export const genSent = function (allSlots, selectedIndex, slot) {
     arr.push(section.outerHTML)
   })
 
-  const html = arr.join('')
-  return html
+  return arr.join('')
+}
+
+export const genSentSlots = function (editor) {
+  const slots = []
+  editor.childNodes.forEach((item, index) => {
+    const slotObj = {}
+
+    slotObj.seq = index
+    slotObj.id = item.id
+    slotObj.type = item.getAttribute('data-type')
+    slotObj.value = item.getAttribute('data-value')
+    slotObj.text = item.innerText
+
+    slots.push(slotObj)
+  })
+
+  return slots
 }
 
 export const getParentSpanNodeIfNeeded = function (target) {

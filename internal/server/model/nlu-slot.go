@@ -3,11 +3,13 @@ package model
 type NluSlot struct {
 	BaseModel
 
-	Name   string `json:"name"`
-	Entity string `json:"entity"`
-	Value  string `json:"value"`
+	Name  string `json:"name"`
+	Seq   int    `json:"seq"`
+	Type  string `json:"type"`
+	Value string `json:"value"`
+	Text  string `json:"text"`
 
-	SentId uint `json:"sentId"`
+	SentRefer uint `json:"sentRefer"`
 }
 
 func (NluSlot) TableName() string {

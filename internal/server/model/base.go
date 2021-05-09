@@ -24,6 +24,7 @@ var (
 		&NluLookup{},
 		&NluLookupItem{},
 		&NluRegex{},
+		&NluRegexItem{},
 
 		&User{},
 		&Role{},

@@ -7,9 +7,10 @@ type NluSynonym struct {
 	Items []NluSynonymItem `json:"items" gorm:"-"`
 }
 type NluSynonymItem struct {
-	Content string `json:"content"`
+	BaseModel
 
-	SynonymId uint `json:"synonymId"`
+	Content   string `json:"content"`
+	SynonymId uint   `json:"synonymId"`
 }
 
 func (NluSynonym) TableName() string {

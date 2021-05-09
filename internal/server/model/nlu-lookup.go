@@ -7,6 +7,8 @@ type NluLookup struct {
 	Items []NluLookupItem `json:"items" gorm:"-"`
 }
 type NluLookupItem struct {
+	BaseModel
+
 	Content  string `json:"content"`
 	LookupId uint   `json:"lookupId"`
 }

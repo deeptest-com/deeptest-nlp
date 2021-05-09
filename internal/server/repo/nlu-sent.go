@@ -49,13 +49,18 @@ func (r *NluSentRepo) Get(id uint) (po model.NluSent) {
 	return
 }
 
+func (r *NluSentRepo) GetWithSlots(id uint) (po model.NluSent) {
+	r.DB.Preload("Slots").Where("id = ?", id).First(&po)
+	return
+}
+
 func (r *NluSentRepo) Save(po *model.NluSent) (err error) {
-	err = r.DB.Model(&po).Omit("").Create(&po).Error
+	err = r.DB.Session(&gorm.Session{FullSaveAssociations: true}).Create(&po).Error
 	return
 }
 
 func (r *NluSentRepo) Update(po *model.NluSent) (err error) {
-	err = r.DB.Omit("").Save(&po).Error
+	err = r.DB.Session(&gorm.Session{FullSaveAssociations: true}).Save(&po).Error
 	return
 }
 

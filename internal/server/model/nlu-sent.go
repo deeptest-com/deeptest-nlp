@@ -3,10 +3,11 @@ package model
 type NluSent struct {
 	BaseModel
 
-	Content string    `json:"content"`
-	Slots   []NluSlot `json:"slots" gorm:"-"`
+	Html string `json:"html"`
+	Text string `json:"text"`
 
-	IntentId uint `json:"intentId"`
+	IntentId uint      `json:"intentId"`
+	Slots    []NluSlot `json:"slots" gorm:"foreignKey:SentRefer"`
 }
 
 func (NluSent) TableName() string {

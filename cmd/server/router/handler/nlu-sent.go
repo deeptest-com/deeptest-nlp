@@ -41,6 +41,7 @@ func (c *NluSentCtrl) Get(ctx iris.Context) {
 	}
 
 	model := c.SentService.Get(uint(id))
+
 	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", model))
 	return
 }
@@ -64,7 +65,8 @@ func (c *NluSentCtrl) Create(ctx iris.Context) {
 		return
 	}
 
-	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", model))
+	sents := c.SentService.ListByIntent(model.IntentId)
+	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", sents))
 	return
 }
 
@@ -81,7 +83,8 @@ func (c *NluSentCtrl) Update(ctx iris.Context) {
 		return
 	}
 
-	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", model))
+	sents := c.SentService.ListByIntent(model.IntentId)
+	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", sents))
 }
 
 func (c *NluSentCtrl) SetDefault(ctx iris.Context) {

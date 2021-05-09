@@ -34,7 +34,7 @@
           </div>
         </div>
         <div class="right">
-          <a-button @click="add()">{{ $t('form.save') }}</a-button>
+          <a-button @click="save()">{{ $t('form.save') }}</a-button>
         </div>
       </div>
     </div>
@@ -45,9 +45,9 @@
       </div>
       <div class="sent-items">
         <div v-for="item in sents" :key="item.id" ref="sentList" class="sent-item">
-          <div class="left">{{ item.content }}</div>
+          <div class="left">{{ item.text }}</div>
           <div class="right">
-            <a-icon @click="edit(item)" type="edit" class="icon"/>
+            <a-icon @click="editSent(item)" type="edit" class="icon"/>
           </div>
         </div>
       </div>
@@ -100,8 +100,8 @@
 
 <script>
 
-import { convertSelectedToSlots, genSent } from '@/utils/markUtil'
-import { getIntent, loadDicts } from '@/api/manage'
+import { convertSelectedToSlots, genSent, genSentSlots } from '@/utils/markUtil'
+import { getIntent, loadDicts, getSent, saveSent } from '@/api/manage'
 
 export default {
   name: 'IntentEdit',
@@ -153,10 +153,6 @@ export default {
         if (json.code === 200) {
           this.model = json.data
           this.sents = this.model.sents
-
-          setTimeout(() => {
-            this.$refs.editor.innerHTML = '<span id="1" class="synonym" data-type="synonym" data-value="1">abc</span>123<span id="3">xyz</span>'
-          }, 500)
         }
       })
     },
@@ -169,36 +165,22 @@ export default {
     useLookup () {
       console.log('useLookup')
     },
-
-    add () {
-      console.log('add')
-      let index = -1
-      for (let i = 0; i < this.sents.length; i++) {
-        if (this.sents[i].id === this.sent.id) {
-          index = i
-          break
-        }
-      }
-
-      const content = this.$refs.sent.innerHTML
-      if (index > -1) {
-        const item = this.sents[index]
-        item.content = content
-        this.sents.splice(index, 1, item)
-      } else {
-        const item = { content: content }
-        this.sents.push(item)
-      }
-      this.$refs.sent.innerHTML = '<span></span>'
-      this.sent = {}
+    editSent (item) {
+      console.log('editSent')
+      getSent(item.id).then(json => {
+        this.sent = json.data
+        this.$refs.editor.innerHTML = this.sent.html
+      })
     },
-    edit (item) {
-      console.log('edit')
-      this.sent = item
-      this.$refs.sent.innerHTML = this.sent.content
-    },
-    save (e) {
+    save () {
       console.log('save')
+      this.sent.html = this.$refs.editor.innerHTML
+      this.sent.text = this.$refs.editor.innerText.replace(/\s+/g, '')
+      this.sent.slots = genSentSlots(document.getElementById('editor'))
+
+      saveSent(this.sent).then(json => {
+        this.sents = json.data
+      })
     },
     reset () {
       this.model = {}
@@ -244,6 +226,7 @@ export default {
         const sentContent = genSent(this.allSlots, this.selectedIndex, this.slot)
         console.log('saveSlot', sentContent)
         this.$refs.editor.innerHTML = sentContent
+        this.sent.html = sentContent
 
         this.slotEditVisible = false
         window.getSelection().removeAllRanges()

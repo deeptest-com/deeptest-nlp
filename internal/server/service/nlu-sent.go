@@ -17,9 +17,19 @@ func (s *NluSentService) List(keywords, status string, pageNo int, pageSize int)
 	pos, total = s.NluSentRepo.Query(keywords, status, pageNo, pageSize)
 	return
 }
+func (s *NluSentService) ListByIntent(intentId uint) (pos []model.NluSent) {
+	pos = s.NluSentRepo.ListByIntent(intentId)
+	return
+}
 
 func (s *NluSentService) Get(id uint) (po model.NluSent) {
 	po = s.NluSentRepo.Get(id)
+	return
+}
+
+func (s *NluSentService) GetWithSlots(id uint) (po model.NluSent) {
+	po = s.NluSentRepo.GetWithSlots(id)
+
 	return
 }
 
