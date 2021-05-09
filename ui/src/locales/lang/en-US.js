@@ -85,7 +85,7 @@ const locale = {
   'form.use.synonym': 'Use Synonym',
   'form.use.lookup': 'Use Lookup',
   'form.mark': 'Mark',
-  'form.select.to.mark': 'Select text to mark.',
+  'form.select.to.mark': 'Please select text to mark, the original slots in selected area will be removed.',
 
   'status.enable': 'Enable',
   'status.disable': 'Disable',

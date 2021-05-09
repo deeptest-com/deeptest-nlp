@@ -89,7 +89,7 @@ const locale = {
   'form.use.synonym': '使用同义词',
   'form.use.lookup': '使用词表',
   'form.mark': '标记',
-  'form.select.to.mark': '选择文本进行标记。',
+  'form.select.to.mark': '请选择文本进行标记，选中内容中包括的原有语义槽将被移除。',
 
   'status.enable': '启用',
   'status.disable': '禁用',
