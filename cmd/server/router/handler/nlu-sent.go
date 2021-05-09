@@ -100,24 +100,28 @@ func (c *NluSentCtrl) SetDefault(ctx iris.Context) {
 
 func (c *NluSentCtrl) Disable(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
+	intentId, err := ctx.URLParamInt("intentId")
 	if err != nil {
 		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
 	c.SentService.Disable(uint(id))
-	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", ""))
+	sents := c.SentService.ListByIntent(uint(intentId))
+	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", sents))
 }
 
 func (c *NluSentCtrl) Delete(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
+	intentId, err := ctx.URLParamInt("intentId")
 	if err != nil {
 		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
 	c.SentService.Delete(uint(id))
-	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", ""))
+	sents := c.SentService.ListByIntent(uint(intentId))
+	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", sents))
 }
 
 func (c *NluSentCtrl) BatchRemove(ctx iris.Context) {

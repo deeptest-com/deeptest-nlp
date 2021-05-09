@@ -268,14 +268,14 @@ export function disableSent (model) {
   return request({
     url: api.sents + '/' + model.id + '/disable',
     method: 'post',
-    params: {}
+    params: { intentId: model.intentId }
   })
 }
 export function removeSent (model) {
   return request({
     url: api.sents + '/' + model.id,
     method: 'delete',
-    params: {}
+    params: { intentId: model.intentId }
   })
 }
 

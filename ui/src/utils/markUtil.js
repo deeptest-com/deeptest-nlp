@@ -27,13 +27,13 @@ export const convertSelectedToSlots = function (target, editor) {
   let start = -1
   let end = -1
   for (let i = 0; i < editor.childNodes.length; i++) {
-    const item = getParentSpanNodeIfNeeded(editor.childNodes[i])
+    const item1 = getParentSpanNodeIfNeeded(editor.childNodes[i])
 
-    if (item === startContainer) {
+    if (item1 === startContainer) {
       console.log('start')
       start = i
     }
-    if (item === endContainer) {
+    if (item1 === endContainer) {
       console.log('end')
       end = i
     }
@@ -43,14 +43,12 @@ export const convertSelectedToSlots = function (target, editor) {
   const endText = endContainer.textContent
 
   let selectedText = ''
-  let k = 0
   for (let j = 0; j < editor.childNodes.length; j++) {
-    const item = getParentSpanNodeIfNeeded(editor.childNodes[j])
+    const item2 = getParentSpanNodeIfNeeded(editor.childNodes[j])
 
     if (j < start || j > end) {
-      const span = textToSpan(item)
-      span.setAttribute('id', (k++).toString())
-      allSlots.push(span)
+      const span1 = textToSpan(item2)
+      allSlots.push(span1)
     } else if (j === start) {
       const startLeft1 = slt.anchorOffset
       const startRight1 = isSame ? slt.focusOffset : startContainer.textContent.length
@@ -59,49 +57,42 @@ export const convertSelectedToSlots = function (target, editor) {
 
       // create part1 as span
       if (leftSection1.length > 0) {
-        const span = genSpan(leftSection1, item)
-        span.setAttribute('id', (k++).toString())
-        allSlots.push(span)
+        const span2 = genSpan(leftSection1, item2)
+        allSlots.push(span2)
       }
       // put part2 to cache
       if (isSame) {
-        selectedIndex = k
         selectedText += startText.substr(startLeft1, startRight1 - startLeft1)
-        const span1 = genSpan(selectedText, item)
-        span1.setAttribute('id', (k++).toString())
-        allSlots.push(span1)
+        const span3 = genSpan(selectedText, item2)
+        allSlots.push(span3)
 
-        const span2 = genSpan(startText.substr(startRight1), item)
-        span2.setAttribute('id', (k++).toString())
-        allSlots.push(span2)
+        const span4 = genSpan(startText.substr(startRight1), item2)
+        allSlots.push(span4)
       } else {
         selectedText += rightSection1
       }
     } else if (j > start && j < end) {
       // put to cache
-      selectedText += item.textContent
+      selectedText += item2.textContent
     } else if (j === end && !isSame) { // already be done if selection in single node
-      const endLeft2 = 0
+      // const endLeft2 = 0
       const endRight2 = slt.focusOffset
-      const leftSection2 = endText.substr(0, endLeft2 + 1)
-      const rightSection2 = endText.substr(endLeft2 + 1, endRight2 - endLeft2 - 1)
+      const leftSection2 = endText.substr(0, endRight2)
+      const rightSection2 = endText.substr(endRight2)
 
       // put part1 to cache
       selectedText += leftSection2
+
+      // create cache as span
+      const span6 = genSpan(selectedText, item2)
+      allSlots.push(span6)
+      selectedIndex = allSlots.length - 1
+
       // create part2 as span
       if (rightSection2.length > 0) {
-        const span = genSpan(rightSection2, item)
-        span.setAttribute('id', (k++).toString())
-        allSlots.push(span)
+        const span5 = genSpan(rightSection2, item2)
+        allSlots.push(span5)
       }
-    }
-
-    if (j === end && !isSame) {
-      selectedIndex = k
-
-      const span = genSpan(selectedText, item)
-      span.setAttribute('id', (k++).toString())
-      allSlots.push(span)
     }
   }
 
@@ -114,25 +105,25 @@ export const genSent = function (allSlots, selectedIndex, slot) {
   const arr = []
   console.log('---', selectedIndex)
 
-  allSlots.forEach((item, index) => {
+  allSlots.forEach((item3, index) => {
     const section = document.createElement('span')
-    let dataType = item.getAttribute('data-type')
-    let dataValue = item.getAttribute('data-value')
+    let dataType = item3.getAttribute('data-type')
+    let dataValue = item3.getAttribute('data-value')
 
     if (index === selectedIndex) {
       dataType = slot.slotType
       dataValue = slot.value
     }
 
-    section.setAttribute('id', index)
-    if (dataType) {
+    // section.setAttribute('id', index)
+    if (dataType && dataType != null) {
       section.setAttribute('data-type', dataType)
       addCls(section, dataType)
     }
 
     if (dataValue) section.setAttribute('data-value', dataValue.toString())
     else section.setAttribute('data-value', '')
-    section.innerText = item.innerText
+    section.innerText = item3.innerText
 
     arr.push(section.outerHTML)
   })
@@ -142,14 +133,18 @@ export const genSent = function (allSlots, selectedIndex, slot) {
 
 export const genSentSlots = function (editor) {
   const slots = []
-  editor.childNodes.forEach((item, index) => {
+  editor.childNodes.forEach((item4, index) => {
     const slotObj = {}
 
-    slotObj.seq = index
-    slotObj.id = item.id
-    slotObj.type = item.getAttribute('data-type')
-    slotObj.value = item.getAttribute('data-value')
-    slotObj.text = item.innerText
+    slotObj.seq = index + 1
+
+    slotObj.id = item4.id
+    slotObj.text = item4.innerText
+
+    if (item4.getAttribute) {
+      slotObj.type = item4.getAttribute('data-type')
+      slotObj.value = item4.getAttribute('data-value')
+    }
 
     slots.push(slotObj)
   })
@@ -157,32 +152,34 @@ export const genSentSlots = function (editor) {
   return slots
 }
 
-export const getParentSpanNodeIfNeeded = function (target) {
-  if (target.parentNode && target.parentNode.nodeName.toLowerCase() === 'span') {
-    target = target.parentNode
+export const getParentSpanNodeIfNeeded = function (elem) {
+  console.log('getParentSpanNodeIfNeeded', elem)
+  if (elem.parentNode && elem.parentNode.nodeName.toLowerCase() === 'span') {
+    return elem.parentNode
   }
-  return target
+  return elem
 }
 
 export const genSpan = function (text, node) {
-  const span = document.createElement('span')
-  span.innerText = text
+  console.log('genSpan')
+  const span7 = document.createElement('span')
+  span7.innerText = text
 
   if (node.getAttribute) {
-    span.setAttribute('data-type', node.getAttribute('data-type'))
-    span.setAttribute('data-value', node.getAttribute('data-value'))
+    span7.setAttribute('data-type', node.getAttribute('data-type'))
+    span7.setAttribute('data-value', node.getAttribute('data-value'))
   } else {
-    // span.setAttribute('data-type', 'synonym')
+    alert('node.getAttribute')
   }
 
-  return span
+  return span7
 }
 
 export const textToSpan = function (node) {
   if (node.nodeName === '#text') {
-    const span = document.createElement('span')
-    span.innerText = node.nodeValue
-    return span
+    const span8 = document.createElement('span')
+    span8.innerText = node.nodeValue
+    return span8
   } else {
     return node
   }

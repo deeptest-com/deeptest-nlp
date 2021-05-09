@@ -55,12 +55,27 @@ func (r *NluSentRepo) GetWithSlots(id uint) (po model.NluSent) {
 }
 
 func (r *NluSentRepo) Save(po *model.NluSent) (err error) {
-	err = r.DB.Session(&gorm.Session{FullSaveAssociations: true}).Create(&po).Error
+	err = r.DB.Omit("Slots").Create(&po).Error
+
+	for i := 0; i < len(po.Slots); i++ {
+		po.Slots[i].ID = 0
+		po.Slots[i].SentRefer = po.ID
+	}
+	err = r.DB.CreateInBatches(po.Slots, len(po.Slots)).Error
 	return
 }
 
 func (r *NluSentRepo) Update(po *model.NluSent) (err error) {
-	err = r.DB.Session(&gorm.Session{FullSaveAssociations: true}).Save(&po).Error
+	err = r.DB.Omit("Slots").Updates(&po).Error
+
+	for i := 0; i < len(po.Slots); i++ {
+		po.Slots[i].ID = 0
+		po.Slots[i].SentRefer = po.ID
+	}
+
+	err = r.DB.Where("sent_refer = ?", po.ID).Delete(&model.NluSlot{}).Error
+	err = r.DB.CreateInBatches(po.Slots, len(po.Slots)).Error
+
 	return
 }
 
@@ -103,7 +118,10 @@ func (r *NluSentRepo) BatchDelete(ids []int) (err error) {
 }
 
 func (r *NluSentRepo) ListByIntent(intentId uint) (pos []model.NluSent) {
-	r.DB.Where("intent_id = ?", intentId).Find(&pos)
+	r.DB.Where("intent_id = ?", intentId).
+		Where("deleted_at IS NULL").
+		//Where("NOT disabled").
+		Find(&pos)
 
 	return
 }

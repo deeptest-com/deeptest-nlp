@@ -45,9 +45,13 @@
       </div>
       <div class="sent-items">
         <div v-for="item in sents" :key="item.id" ref="sentList" class="sent-item">
-          <div class="left">{{ item.text }}</div>
+          <div class="left" :class="{'disabled':item.disabled}">{{ item.text }}</div>
           <div class="right">
-            <a-icon @click="editSent(item)" type="edit" class="icon"/>
+            <a-icon @click="editSent(item)" type="edit" class="icon"/> &nbsp;
+            <a-icon v-if="!item.disabled" @click="toDisableSent(item)" type="minus" class="icon"/>
+            <a-icon v-if="item.disabled" @click="toDisableSent(item)" type="plus" class="icon"/>
+            &nbsp;
+            <a-icon @click="toDeleteSent(item)" type="delete" class="icon"/>
           </div>
         </div>
       </div>
@@ -101,7 +105,7 @@
 <script>
 
 import { convertSelectedToSlots, genSent, genSentSlots } from '@/utils/markUtil'
-import { getIntent, loadDicts, getSent, saveSent } from '@/api/manage'
+import { getIntent, loadDicts, getSent, saveSent, removeSent, disableSent } from '@/api/manage'
 
 export default {
   name: 'IntentEdit',
@@ -150,6 +154,9 @@ export default {
       console.log('getModel')
       getIntent(this.modelId).then(json => {
         console.log(json)
+        this.sent = {}
+        this.$refs.editor.innerHTML = ''
+
         if (json.code === 200) {
           this.model = json.data
           this.sents = this.model.sents
@@ -174,14 +181,36 @@ export default {
     },
     save () {
       console.log('save')
+      this.sent.intentId = this.model.id
       this.sent.html = this.$refs.editor.innerHTML
       this.sent.text = this.$refs.editor.innerText.replace(/\s+/g, '')
       this.sent.slots = genSentSlots(document.getElementById('editor'))
 
       saveSent(this.sent).then(json => {
         this.sents = json.data
+        this.sent = {}
+        this.$refs.editor.innerHTML = ''
       })
     },
+    toDeleteSent (item) {
+      console.log('toDeleteSent')
+
+      removeSent(item).then(json => {
+        this.sents = json.data
+        this.sent = {}
+        this.$refs.editor.innerHTML = ''
+      })
+    },
+    toDisableSent (item) {
+      console.log('toDisableSent')
+
+      disableSent(item).then(json => {
+        this.sents = json.data
+        this.sent = {}
+        this.$refs.editor.innerHTML = ''
+      })
+    },
+
     reset () {
       this.model = {}
     },
@@ -193,13 +222,13 @@ export default {
       const mp = convertSelectedToSlots(event.target, document.getElementById('editor'))
       if (!mp.selectedIndex) return
       mp.allSlots.forEach((item, index) => {
-        console.log('=1=', index, item)
+        console.log('=' + index + '=', index, item)
       })
 
       this.allSlots = mp.allSlots
       this.selectedIndex = mp.selectedIndex
       this.selectedSlot = this.allSlots[this.selectedIndex]
-      console.log('=2=', this.selectedSlot)
+      console.log('=curr=', this.selectedSlot)
 
       let id = this.selectedSlot.getAttribute('data-value')
       id = id ? parseInt(id) : ''
