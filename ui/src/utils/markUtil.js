@@ -65,6 +65,7 @@ export const convertSelectedToSlots = function (target, editor) {
         selectedText += startText.substr(startLeft1, startRight1 - startLeft1)
         const span3 = genSpan(selectedText, item2)
         allSlots.push(span3)
+        selectedIndex = allSlots.length - 1
 
         const span4 = genSpan(startText.substr(startRight1), item2)
         allSlots.push(span4)
@@ -168,8 +169,6 @@ export const genSpan = function (text, node) {
   if (node.getAttribute) {
     span7.setAttribute('data-type', node.getAttribute('data-type'))
     span7.setAttribute('data-value', node.getAttribute('data-value'))
-  } else {
-    alert('node.getAttribute')
   }
 
   return span7

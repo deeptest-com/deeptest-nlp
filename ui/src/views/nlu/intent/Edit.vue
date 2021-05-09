@@ -308,7 +308,7 @@ export default {
         height: 40px;
         line-height: 38px;
         font-size: 22px;
-        border: 1px solid #e9f2fb;
+        border: 1px solid #d9d9d9;
         outline: none;
       }
       .tips {
