@@ -5,6 +5,7 @@ const prefix = '/v1/admin'
 const api = {
   profile: `${prefix}/profile`,
   projects: `${prefix}/projects`,
+  convert: `${prefix}/convert`,
   tasks: `${prefix}/tasks`,
   intents: `${prefix}/intents`,
   sents: `${prefix}/sents`,
@@ -14,6 +15,7 @@ const api = {
   synonyms: `${prefix}/synonyms`,
   synonymItems: `${prefix}/synonymItems`,
   dicts: `${prefix}/dicts`,
+  valid: `${prefix}/valid`,
 
   user: `${prefix}/user`,
   role: `${prefix}/role`,
@@ -85,6 +87,13 @@ export function removeProject (model) {
     url: api.projects + '/' + model.id,
     method: 'delete',
     params: {}
+  })
+}
+export function convert (model) {
+  return request({
+    url: api.convert + '/' + model.id,
+    method: 'post',
+    params: { }
   })
 }
 
@@ -400,6 +409,13 @@ export function loadDicts (type) {
     url: api.dicts,
     method: 'get',
     params: { type: type }
+  })
+}
+export function validPath (value) {
+  return request({
+    url: api.valid,
+    method: 'post',
+    data: { method: 'validPath', value: value }
   })
 }
 

@@ -5,7 +5,7 @@
       width="100%"
       dialogClass="full-screen-modal"
       :visible="visible"
-      :closable=true
+      :closable="true"
       :footer="null"
       @cancel="cancel"
     >

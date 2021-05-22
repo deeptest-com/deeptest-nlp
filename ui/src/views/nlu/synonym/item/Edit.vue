@@ -3,10 +3,10 @@
     <a-form-model ref="form" :model="model" :rules="rules">
       <a-form-model-item
         :label="$t('form.name')"
-        prop="name"
+        prop="content"
         :labelCol="labelCol"
         :wrapperCol="wrapperCol">
-        <a-input v-model="model.name" />
+        <a-input v-model="model.content" />
       </a-form-model-item>
       <a-form-model-item
         :label="$t('form.desc')"
@@ -19,8 +19,8 @@
         :wrapperCol="wrapperFull"
         style="text-align: center"
       >
-        <a-button @click="save()" htmlType="submit" type="primary">{{$t('form.submit')}}</a-button>
-        <a-button @click="reset()" style="margin-left: 8px">{{$t('form.reset')}}</a-button>
+        <a-button @click="save()" htmlType="submit" type="primary">{{ $t('form.save') }}</a-button>
+        <a-button @click="reset()" style="margin-left: 8px">{{ $t('form.reset') }}</a-button>
       </a-form-item>
     </a-form-model>
   </a-card>
@@ -37,7 +37,10 @@ export default {
       type: Number,
       default: 0
     },
-    afterSave: Function
+    afterSave: {
+      type: Function,
+      default: null
+    }
   },
   data () {
     return {
@@ -46,7 +49,7 @@ export default {
       wrapperFull: wrapperFull,
       model: {},
       rules: {
-        name: [{ required: true, message: this.$t('valid.input.name'), trigger: 'blur' }]
+        content: [{ required: true, message: this.$t('valid.required.name'), trigger: 'blur' }]
       }
     }
   },

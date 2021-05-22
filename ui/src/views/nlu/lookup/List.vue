@@ -94,16 +94,11 @@ import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
 import { listLookup, disableLookup, removeLookup } from '@/api/manage'
 
-import StepByStepModal from '../../list/modules/StepByStepModal'
-import CreateForm from '../../list/modules/CreateForm'
-
 export default {
   name: 'LookupList',
   components: {
     STable,
-    Ellipsis,
-    CreateForm,
-    StepByStepModal
+    Ellipsis
   },
   columns: [],
   statusMap: {},

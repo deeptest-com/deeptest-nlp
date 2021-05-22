@@ -6,6 +6,12 @@
  * 自定义图标加载表
  * 所有图标均从这里加载，方便管理
  */
-import bxAnaalyse from '@/assets/icons/bx-analyse.svg?inline' // path to your '*.svg?inline' file.
 
-export { bxAnaalyse }
+import dashboard from '@/assets/icons/dashboard.svg?inline'
+import project from '@/assets/icons/project.svg?inline'
+import task from '@/assets/icons/task.svg?inline'
+import lookup from '@/assets/icons/lookup.svg?inline'
+import synonym from '@/assets/icons/synonym.svg?inline'
+import setting from '@/assets/icons/setting.svg?inline'
+
+export { dashboard, project, task, lookup, synonym, setting }

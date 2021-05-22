@@ -10,7 +10,7 @@
                   <a-select v-model="queryParam.projectId">
                     <a-select-option value="0">{{ $t('form.all') }}</a-select-option>
                     <a-select-option v-for="(item, index) in projects" :value="item.id" :key="index">
-                      {{item.name}}
+                      {{ item.name }}
                     </a-select-option>
                   </a-select>
                 </a-form-item>
@@ -112,8 +112,6 @@ import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
 import { listTask, disableTask, removeTask, listForSelect } from '@/api/manage'
 
-import StepByStepModal from '../../list/modules/StepByStepModal'
-import CreateForm from '../../list/modules/CreateForm'
 import TaskDesign from './Design'
 
 export default {
@@ -121,8 +119,6 @@ export default {
   components: {
     STable,
     Ellipsis,
-    CreateForm,
-    StepByStepModal,
     TaskDesign
   },
   columns: [],

@@ -42,6 +42,11 @@ perms:
     displayname: "项目禁用"
     description: ""
     act: "POST"
+  - name: "/api/v1/admin/convert/{id:uint}"
+    displayname: "转换NLU定义"
+    description: ""
+    act: "POST"
+
   # 任务
   - name: "/api/v1/admin/tasks"
     displayname: "任务列表"
@@ -257,6 +262,10 @@ perms:
     displayname: "词典列表"
     description: ""
     act: "GET"
+  - name: "/api/v1/admin/valid"
+    displayname: "表单验证"
+    description: ""
+    act: "POST"
 
   - name: "/api/v1/admin/expire"
     displayname: "刷新token"

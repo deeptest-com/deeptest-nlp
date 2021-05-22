@@ -7,17 +7,18 @@ import (
 	"time"
 )
 
-type NluLookupRepo struct {
+type NluLookupItemRepo struct {
 	CommonRepo
 	DB *gorm.DB `inject:""`
 }
 
-func NewNluLookupRepo() *NluLookupRepo {
-	return &NluLookupRepo{}
+func NewNluLookupItemRepo() *NluLookupItemRepo {
+	return &NluLookupItemRepo{}
 }
 
-func (r *NluLookupRepo) Query(keywords, status string, pageNo int, pageSize int) (pos []model.NluLookup, total int64) {
+func (r *NluLookupItemRepo) Query(lookupId int, keywords, status string, pageNo int, pageSize int) (pos []model.NluLookupItem, total int64) {
 	query := r.DB.Select("*").Order("id ASC")
+	query = query.Where("lookup_id = ?", lookupId)
 
 	if status == "true" {
 		query = query.Where("NOT disabled")
@@ -37,7 +38,7 @@ func (r *NluLookupRepo) Query(keywords, status string, pageNo int, pageSize int)
 	if err != nil {
 		_logUtils.Errorf("sql error %s", err.Error())
 	}
-	err = r.DB.Model(&model.NluLookup{}).Count(&total).Error
+	err = r.DB.Model(&model.NluLookupItem{}).Count(&total).Error
 	if err != nil {
 		_logUtils.Errorf("sql error %s", err.Error())
 	}
@@ -45,30 +46,30 @@ func (r *NluLookupRepo) Query(keywords, status string, pageNo int, pageSize int)
 	return
 }
 
-func (r *NluLookupRepo) Get(id uint) (po model.NluLookup) {
+func (r *NluLookupItemRepo) Get(id uint) (po model.NluLookupItem) {
 	r.DB.Where("id = ?", id).First(&po)
 	return
 }
 
-func (r *NluLookupRepo) Save(po *model.NluLookup) (err error) {
+func (r *NluLookupItemRepo) Save(po *model.NluLookupItem) (err error) {
 	err = r.DB.Model(&po).Omit("").Create(&po).Error
 	return
 }
 
-func (r *NluLookupRepo) Update(po *model.NluLookup) (err error) {
+func (r *NluLookupItemRepo) Update(po *model.NluLookupItem) (err error) {
 	err = r.DB.Omit("").Save(&po).Error
 	return
 }
 
-func (r *NluLookupRepo) SetDefault(id uint) (err error) {
+func (r *NluLookupItemRepo) SetDefault(id uint) (err error) {
 	r.DB.Transaction(func(tx *gorm.DB) error {
-		err = r.DB.Model(&model.NluLookup{}).Where("id = ?", id).
+		err = r.DB.Model(&model.NluLookupItem{}).Where("id = ?", id).
 			Updates(map[string]interface{}{"is_default": true}).Error
 		if err != nil {
 			return err
 		}
 
-		err = r.DB.Model(&model.NluLookup{}).Where("id != ?", id).
+		err = r.DB.Model(&model.NluLookupItem{}).Where("id != ?", id).
 			Updates(map[string]interface{}{"is_default": false}).Error
 
 		return nil
@@ -77,29 +78,29 @@ func (r *NluLookupRepo) SetDefault(id uint) (err error) {
 	return
 }
 
-func (r *NluLookupRepo) Disable(id uint) (err error) {
-	err = r.DB.Model(&model.NluLookup{}).Where("id = ?", id).
+func (r *NluLookupItemRepo) Disable(id uint) (err error) {
+	err = r.DB.Model(&model.NluLookupItem{}).Where("id = ?", id).
 		Updates(map[string]interface{}{"disabled": gorm.Expr("NOT disabled")}).Error
 
 	return
 }
 
-func (r *NluLookupRepo) Delete(id uint) (err error) {
-	err = r.DB.Model(&model.NluLookup{}).Where("id = ?", id).
+func (r *NluLookupItemRepo) Delete(id uint) (err error) {
+	err = r.DB.Model(&model.NluLookupItem{}).Where("id = ?", id).
 		Updates(map[string]interface{}{"deleted_at": time.Now()}).Error
 
 	return
 }
 
-func (r *NluLookupRepo) BatchDelete(ids []int) (err error) {
-	err = r.DB.Model(&model.NluLookup{}).Where("id IN (?)", ids).
+func (r *NluLookupItemRepo) BatchDelete(ids []int) (err error) {
+	err = r.DB.Model(&model.NluLookupItem{}).Where("id IN (?)", ids).
 		Updates(map[string]interface{}{"deleted_at": time.Now()}).Error
 
 	return
 }
 
-func (r *NluLookupRepo) List() (pos []map[string]interface{}) {
-	err := r.DB.Model(&model.NluLookup{}).
+func (r *NluLookupItemRepo) List() (pos []map[string]interface{}) {
+	err := r.DB.Model(&model.NluLookupItem{}).
 		Where("deleted_at IS NULL").
 		Order("id ASC").
 		Find(&pos).

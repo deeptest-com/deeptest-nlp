@@ -4,7 +4,7 @@
       <div class="toolbar-edit">
         <div class="left"></div>
         <div class="right">
-          <a-button @click="back()" type="primary">{{$t('common.back')}}</a-button>
+          <a-button @click="back()" type="primary">{{ $t('common.back') }}</a-button>
         </div>
       </div>
       <a-card :body-style="{padding: '24px 32px'}" :bordered="false">
@@ -17,6 +17,13 @@
             <a-input v-model="model.name" />
           </a-form-model-item>
           <a-form-model-item
+            :label="$t('form.path')"
+            prop="path"
+            :labelCol="labelCol"
+            :wrapperCol="wrapperCol">
+            <a-input v-model="model.path" />
+          </a-form-model-item>
+          <a-form-model-item
             :label="$t('form.desc')"
             prop="desc"
             :labelCol="labelCol"
@@ -27,8 +34,8 @@
             :wrapperCol="wrapperFull"
             style="text-align: center"
           >
-            <a-button @click="save()" htmlType="submit" type="primary">{{$t('form.submit')}}</a-button>
-            <a-button @click="reset()" style="margin-left: 8px">{{$t('form.reset')}}</a-button>
+            <a-button @click="save()" htmlType="submit" type="primary">{{ $t('form.save') }}</a-button>
+            <a-button @click="reset()" style="margin-left: 8px">{{ $t('form.reset') }}</a-button>
           </a-form-item>
         </a-form-model>
       </a-card>
@@ -38,7 +45,7 @@
 
 <script>
 import { labelCol, wrapperCol, wrapperFull } from '@/utils/const'
-import { requestSuccess, getProject, saveProject } from '@/api/manage'
+import { requestSuccess, getProject, saveProject, validPath } from '@/api/manage'
 
 export default {
   name: 'ProjectEdit',
@@ -51,13 +58,30 @@ export default {
     }
   },
   data () {
+    let checkPending
+    const checkPath = (rule, value, callback) => {
+      clearTimeout(checkPending)
+      checkPending = setTimeout(() => {
+        validPath(value).then(json => {
+          console.log('validPath', json)
+          if (requestSuccess(json.code) && json.data.pass) {
+            callback()
+          } else {
+            callback(new Error(this.$t('valid.format.path')))
+          }
+        })
+      }, 500)
+    }
+
     return {
       labelCol: labelCol,
       wrapperCol: wrapperCol,
       wrapperFull: wrapperFull,
       model: {},
       rules: {
-        name: [{ required: true, message: this.$t('valid.input.name'), trigger: 'blur' }]
+        name: [{ required: true, message: this.$t('valid.required.name'), trigger: 'blur' }],
+        path: [{ required: true, message: this.$t('valid.required.path'), trigger: 'blur' },
+               { validator: checkPath, trigger: 'change' }]
       }
     }
   },

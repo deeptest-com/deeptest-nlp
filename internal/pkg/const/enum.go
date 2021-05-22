@@ -149,3 +149,9 @@ const (
 	ResImage     ResType = "image"
 	ResFolder    ResType = "folder"
 )
+
+type ValidMethod string
+
+const (
+	ValidPath ValidMethod = "validPath"
+)

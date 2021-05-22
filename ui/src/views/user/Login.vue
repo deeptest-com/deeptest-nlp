@@ -115,14 +115,12 @@
 
 <script>
 import md5 from 'md5'
-import TwoStepCaptcha from '@/components/tools/TwoStepCaptcha'
 import { mapActions } from 'vuex'
 import { timeFix } from '@/utils/util'
 import { getSmsCaptcha } from '@/api/login'
 
 export default {
   components: {
-    TwoStepCaptcha
   },
   data () {
     return {
@@ -215,7 +213,7 @@ export default {
           const hide = this.$message.loading('验证码发送中..', 0)
           getSmsCaptcha({ mobile: values.mobile }).then(res => {
             setTimeout(hide, 2500)
-            this.$notification['success']({
+              this.$notification['success']({
               message: '提示',
               description: '验证码获取成功，您的验证码为：' + res.result.captcha,
               duration: 8

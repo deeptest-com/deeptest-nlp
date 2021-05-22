@@ -3,7 +3,7 @@
     <div class="toolbar-edit">
       <div class="left"></div>
       <div class="right">
-        <a-button @click="back()" type="primary">{{$t('common.back')}}</a-button>
+        <a-button @click="back()" type="primary">{{ $t('common.back') }}</a-button>
       </div>
     </div>
     <a-card :bordered="false">
@@ -90,9 +90,6 @@ import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
 import { listSent, disableSent, removeSent } from '@/api/manage'
 
-import StepByStepModal from '../../list/modules/StepByStepModal'
-import CreateForm from '../../list/modules/CreateForm'
-
 export default {
   name: 'SentList',
   props: {
@@ -105,9 +102,7 @@ export default {
   },
   components: {
     STable,
-    Ellipsis,
-    CreateForm,
-    StepByStepModal
+    Ellipsis
   },
   columns: [],
   statusMap: {},

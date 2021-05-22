@@ -3,7 +3,7 @@
     <div class="toolbar-edit">
       <div class="left"></div>
       <div class="right">
-        <a-button @click="back()" type="primary">{{$t('common.back')}}</a-button>
+        <a-button @click="back()" type="primary">{{ $t('common.back') }}</a-button>
       </div>
     </div>
 
@@ -24,7 +24,7 @@
           :wrapperCol="wrapperCol">
           <a-select v-model="model.projectId">
             <a-select-option v-for="(item, index) in projects" :value="item.id" :key="index">
-              {{item.name}}
+              {{ item.name }}
             </a-select-option>
           </a-select>
         </a-form-model-item>
@@ -40,8 +40,8 @@
           :wrapperCol="wrapperFull"
           style="text-align: center"
         >
-          <a-button @click="save()" htmlType="submit" type="primary">{{$t('form.submit')}}</a-button>
-          <a-button @click="reset()" style="margin-left: 8px">{{$t('form.reset')}}</a-button>
+          <a-button @click="save()" htmlType="submit" type="primary">{{ $t('form.save') }}</a-button>
+          <a-button @click="reset()" style="margin-left: 8px">{{ $t('form.reset') }}</a-button>
         </a-form-item>
       </a-form-model>
     </a-card>
@@ -70,7 +70,7 @@ export default {
       model: {},
       projects: [],
       rules: {
-        name: [{ required: true, message: this.$t('valid.input.name'), trigger: 'blur' }]
+        name: [{ required: true, message: this.$t('valid.required.name'), trigger: 'blur' }]
       }
     }
   },

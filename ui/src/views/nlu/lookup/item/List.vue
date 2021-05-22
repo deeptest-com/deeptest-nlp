@@ -55,7 +55,7 @@
             {{ index + 1 }}
           </span>
 
-          <span slot="name" slot-scope="text">
+          <span slot="content" slot-scope="text">
             <ellipsis :length="4" tooltip>{{ text }}</ellipsis>
           </span>
 
@@ -109,8 +109,6 @@ import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
 import { listLookupItem, disableLookupItem, removeLookupItem, batchRemoveLookupItem } from '@/api/manage'
 
-import StepByStepModal from '../../../list/modules/StepByStepModal'
-import CreateForm from '../../../list/modules/CreateForm'
 import LookupItemEdit from './Edit'
 
 export default {
@@ -118,9 +116,15 @@ export default {
   components: {
     STable,
     Ellipsis,
-    CreateForm,
-    StepByStepModal,
     LookupItemEdit
+  },
+  props: {
+    lookupId: {
+      type: Number,
+      default: function () {
+        return parseInt(this.$route.params.lookupId)
+      }
+    }
   },
   columns: [],
   statusMap: {},
@@ -132,7 +136,7 @@ export default {
       advanced: false,
       queryParam: {},
       loadData: parameter => {
-        const requestParameters = Object.assign({}, parameter, this.queryParam)
+        const requestParameters = Object.assign({ lookupId: this.lookupId }, parameter, this.queryParam)
         return listLookupItem(requestParameters)
           .then(res => {
             return res
@@ -160,7 +164,7 @@ export default {
       },
       {
         title: this.$t('form.name'),
-        dataIndex: 'name'
+        dataIndex: 'content'
       },
       {
         title: this.$t('form.status'),

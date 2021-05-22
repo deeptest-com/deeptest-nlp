@@ -1,6 +1,6 @@
 <script>
 import Tooltip from 'ant-design-vue/es/tooltip'
-import { cutStrByFullLength, getStrFullLength } from '@/components/_util/util'
+import { cutStrByFullLength, getStrFullLength } from '@/components/common/utils'
 /*
     const isSupportLineClamp = document.body.style.webkitLineClamp !== undefined;
 

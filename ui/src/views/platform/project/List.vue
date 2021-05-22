@@ -56,26 +56,27 @@
           <ellipsis :length="4" tooltip>{{ text }}</ellipsis>
         </span>
 
+        <span slot="path" slot-scope="text">
+          <ellipsis :length="4" tooltip>{{ text }}</ellipsis>
+        </span>
+
         <span slot="status" slot-scope="text, record">
           <a-badge :status="!record.disabled | statusTypeFilter(statusMap)" :text="!record.disabled | statusFilter(statusMap)" />
         </span>
-
-<!--        <span slot="default" slot-scope="text, record">
-          <template>
-            <a-checkbox :checked="record.isDefault==true" @click="setDefault(record)">
-            </a-checkbox>
-          </template>
-        </span>-->
 
         <span slot="action" slot-scope="text, record">
           <template>
             <a @click="edit(record)">{{ $t('form.edit') }}</a>
             <a-divider type="vertical" />
-            <a v-if="!record.disabled && !record.isDefault" @click="disable(record)">{{ $t('form.disable') }}</a>
+
+            <a v-if="!record.disabled" @click="disable(record)">{{ $t('form.disable') }}</a>
             <a v-if="record.disabled" @click="disable(record)">{{ $t('form.enable') }}</a>
             <a-divider type="vertical" />
+
+            <a @click="convert(record)">{{ $t('form.convert') }}</a>
+            <a-divider type="vertical" />
+
             <a-popconfirm
-              v-if="!record.isDefault"
               :title="$t('form.confirm.to.remove')"
               :okText="$t('form.ok')"
               :cancelText="$t('form.cancel')"
@@ -94,18 +95,13 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { listProject, setDefaultProject, disableProject, removeProject } from '@/api/manage'
-
-import StepByStepModal from '../../list/modules/StepByStepModal'
-import CreateForm from '../../list/modules/CreateForm'
+import { listProject, disableProject, removeProject, convert } from '@/api/manage'
 
 export default {
   name: 'ProjectList',
   components: {
     STable,
-    Ellipsis,
-    CreateForm,
-    StepByStepModal
+    Ellipsis
   },
   columns: [],
   statusMap: {},
@@ -146,6 +142,10 @@ export default {
         dataIndex: 'name'
       },
       {
+        title: this.$t('form.path'),
+        dataIndex: 'path'
+      },
+      {
         title: this.$t('form.status'),
         dataIndex: 'status',
         scopedSlots: { customRender: 'status' }
@@ -158,7 +158,7 @@ export default {
       {
         title: this.$t('form.opt'),
         dataIndex: 'action',
-        width: '180px',
+        width: '260px',
         scopedSlots: { customRender: 'action' }
       }
     ]
@@ -190,12 +190,23 @@ export default {
 
       this.$router.push('/platform/project/' + record.id + '/edit')
     },
-    setDefault (record) {
-      setDefaultProject(record).then(json => {
-        console.log('setDefaultProject', json)
-        this.$refs.table.refresh(false)
+    convert (record) {
+      console.log('convert')
+      convert(record).then(json => {
+        console.log('convert', json)
+        this.$notification['success']({
+          message: this.$t('common.tips'),
+          description: this.$t('msg.convert.success'),
+          duration: 8
+        })
       })
     },
+    // setDefault (record) {
+    //   setDefaultProject(record).then(json => {
+    //     console.log('setDefaultProject', json)
+    //     this.$refs.table.refresh(false)
+    //   })
+    // },
     disable (record) {
       disableProject(record).then(json => {
         console.log('disableProject', json)
