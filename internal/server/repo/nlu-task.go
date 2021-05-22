@@ -52,6 +52,20 @@ func (r *NluTaskRepo) Query(projectId int, keywords, status string, pageNo int, 
 	return
 }
 
+func (r *NluTaskRepo) ListByProjectId(projectId uint) (pos []model.NluTask) {
+	query := r.DB.Select("*").
+		Where("deleted_at IS NULL AND NOT disabled").
+		Where("project_id = ?", projectId).
+		Order("id ASC")
+
+	err := query.Find(&pos).Error
+	if err != nil {
+		_logUtils.Errorf("sql error %s", err.Error())
+	}
+
+	return
+}
+
 func (r *NluTaskRepo) Get(id uint) (po model.NluTask) {
 	r.DB.Where("id = ?", id).First(&po)
 	return

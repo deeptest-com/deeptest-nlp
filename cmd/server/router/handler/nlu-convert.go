@@ -23,5 +23,7 @@ func (c *NluConvertCtrl) Convert(ctx iris.Context) {
 		return
 	}
 
-	_, _ = ctx.JSON(_utils.ApiRes(200, "请求成功", id))
+	c.NluConvertService.ConvertProject(uint(id))
+
+	_, _ = ctx.JSON(_utils.ApiRes(200, "请求成功", nil))
 }

@@ -46,7 +46,7 @@ func (r *NluIntentRepo) Query(keywords, status string, pageNo int, pageSize int)
 
 func (r *NluIntentRepo) ListByTaskId(taskId uint) (pos []model.NluIntent) {
 	query := r.DB.Select("*").
-		Where("deleted_at IS NULL").
+		Where("deleted_at IS NULL AND NOT disabled").
 		Where("task_id = ?", taskId).
 		Order("id ASC")
 
