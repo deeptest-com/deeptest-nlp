@@ -101,4 +101,6 @@ func (s *NluConvertService) ConvertIntent(projectId uint, projectDir string) (fi
 			_fileUtils.WriteFile(intentFilePath, string(bytes))
 		}
 	}
+
+	return
 }
