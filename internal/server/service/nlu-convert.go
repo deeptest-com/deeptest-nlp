@@ -43,8 +43,9 @@ func (s *NluConvertService) ConvertProject(id uint) (files []string) {
 }
 
 func (s *NluConvertService) ConvertSynonym(projectId uint, projectDir string, nluDomain *domain.NluDomain) {
-	synonyms := s.NluSynonymRepo.ListByProjectId(projectId)
+	_fileUtils.RmDir(filepath.Join(projectDir, "synonym"))
 
+	synonyms := s.NluSynonymRepo.ListByProjectId(projectId)
 	for _, item := range synonyms {
 		// convert po to domain
 
@@ -56,8 +57,9 @@ func (s *NluConvertService) ConvertSynonym(projectId uint, projectDir string, nl
 	return
 }
 func (s *NluConvertService) ConvertLookup(projectId uint, projectDir string, nluDomain *domain.NluDomain) {
-	lookups := s.NluLookupRepo.ListByProjectId(projectId)
+	_fileUtils.RmDir(filepath.Join(projectDir, "lookup"))
 
+	lookups := s.NluLookupRepo.ListByProjectId(projectId)
 	for _, item := range lookups {
 		// convert po to domain
 
@@ -69,8 +71,9 @@ func (s *NluConvertService) ConvertLookup(projectId uint, projectDir string, nlu
 	return
 }
 func (s *NluConvertService) ConvertRegex(projectId uint, projectDir string, nluDomain *domain.NluDomain) {
-	regexes := s.NluRegexRepo.ListByProjectId(projectId)
+	_fileUtils.RmDir(filepath.Join(projectDir, "regex"))
 
+	regexes := s.NluRegexRepo.ListByProjectId(projectId)
 	for _, item := range regexes {
 		// convert po to domain
 
@@ -83,6 +86,8 @@ func (s *NluConvertService) ConvertRegex(projectId uint, projectDir string, nluD
 }
 
 func (s *NluConvertService) ConvertIntent(projectId uint, projectDir string) (files []string) {
+	_fileUtils.RmDir(filepath.Join(projectDir, "intent"))
+
 	tasks := s.NluTaskRepo.ListByProjectId(projectId)
 	for _, task := range tasks {
 		intents := s.NluIntentRepo.ListByTaskId(task.ID)
@@ -96,7 +101,7 @@ func (s *NluConvertService) ConvertIntent(projectId uint, projectDir string) (fi
 				_logUtils.Info(sent.Text)
 			}
 
-			intentFilePath := filepath.Join(projectDir, "intent", "")
+			intentFilePath := filepath.Join(projectDir, "intent", intent.Name)
 			bytes, _ := yaml.Marshal(&nluIntent)
 			_fileUtils.WriteFile(intentFilePath, string(bytes))
 		}
