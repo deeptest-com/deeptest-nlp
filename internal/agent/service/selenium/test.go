@@ -7,7 +7,7 @@ import (
 	agentConst "github.com/utlai/utl/internal/agent/utils/const"
 	_domain "github.com/utlai/utl/internal/pkg/domain"
 	_commonUtils "github.com/utlai/utl/internal/pkg/libs/common"
-	"path"
+	"path/filepath"
 )
 
 func ExecTest(build *_domain.BuildTo) {
@@ -43,10 +43,10 @@ func parseBuildCommand(build *_domain.BuildTo) {
 	} else {
 		dir = agentConst.ResPathLinux
 	}
-	driverFolder := path.Join(dir, agentConst.BrowserDriverDir, string(build.BrowserType))
+	driverFolder := filepath.Join(dir, agentConst.BrowserDriverDir, string(build.BrowserType))
 	driverFile := fmt.Sprintf("%s-%s", _commonUtils.GetOs(), build.BrowserVer)
 	if _commonUtils.IsWin() {
 		driverFile += ".exe"
 	}
-	build.BuildCommands = build.BuildCommands + " -DdriverPath=" + path.Join(driverFolder, driverFile)
+	build.BuildCommands = build.BuildCommands + " -DdriverPath=" + filepath.Join(driverFolder, driverFile)
 }

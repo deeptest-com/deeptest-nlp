@@ -1,14 +1,14 @@
 package _logUtils
 
 import (
-	_vari "github.com/utlai/utl/internal/pkg/vari"
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
 	"github.com/smallnest/rpcx/log"
+	_vari "github.com/utlai/utl/internal/pkg/vari"
 	"io/ioutil"
 	"os"
 	"os/user"
-	"path"
+	"path/filepath"
 	"strings"
 )
 
@@ -22,8 +22,8 @@ func Init(app string) {
 	usr, _ := user.Current()
 	log.Info("Run as user " + usr.Username)
 
-	_vari.WorkDir = addPathSepIfNeeded(path.Join(usr.HomeDir, "utl"))
-	logDir := addPathSepIfNeeded(path.Join(_vari.WorkDir, "log"))
+	_vari.WorkDir = addPathSepIfNeeded(filepath.Join(usr.HomeDir, "utl"))
+	logDir := addPathSepIfNeeded(filepath.Join(_vari.WorkDir, "log"))
 	MkDirIfNeeded(logDir)
 	log.Info("Log dir is " + logDir)
 

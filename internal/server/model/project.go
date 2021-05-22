@@ -5,6 +5,7 @@ type Project struct {
 
 	Name      string `json:"name"`
 	Desc      string `json:"desc"`
+	Path      string `json:"path"`
 	IsDefault bool   `json:"isDefault"`
 }
 

@@ -9,7 +9,7 @@ import (
 	_httpUtils "github.com/utlai/utl/internal/pkg/libs/http"
 	_i118Utils "github.com/utlai/utl/internal/pkg/libs/i118"
 	"os/user"
-	"path"
+	"path/filepath"
 )
 
 var (
@@ -25,7 +25,7 @@ func Init() {
 	Inst.Port = _const.RpcPort
 
 	usr, _ := user.Current()
-	Inst.WorkDir = _fileUtils.AddPathSepIfNeeded(path.Join(usr.HomeDir, "utl"))
+	Inst.WorkDir = _fileUtils.AddPathSepIfNeeded(filepath.Join(usr.HomeDir, "utl"))
 	Inst.Server = _httpUtils.UpdateUrl(Inst.Server)
 }
 

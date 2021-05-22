@@ -45,6 +45,20 @@ func (r *NluLookupRepo) Query(keywords, status string, pageNo int, pageSize int)
 	return
 }
 
+func (r *NluLookupRepo) ListByProjectId(projectId uint) (pos []model.NluLookup) {
+	query := r.DB.Select("*").
+		Where("deleted_at IS NULL AND NOT disabled").
+		Where("project_id = ?", projectId).
+		Order("id ASC")
+
+	err := query.Find(&pos).Error
+	if err != nil {
+		_logUtils.Errorf("sql error %s", err.Error())
+	}
+
+	return
+}
+
 func (r *NluLookupRepo) Get(id uint) (po model.NluLookup) {
 	r.DB.Where("id = ?", id).First(&po)
 	return

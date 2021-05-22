@@ -7,7 +7,7 @@ import (
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
 	"io/ioutil"
-	"path"
+	"path/filepath"
 )
 
 var I118Prt *message.Printer
@@ -16,7 +16,7 @@ func InitI118(lang string, app string) {
 	//var once sync.Once
 	//once.Do(func() {
 
-	langRes := path.Join("res", app, lang, "messages.json")
+	langRes := filepath.Join("res", app, lang, "messages.json")
 
 	isRelease := _commonUtils.IsRelease()
 	if isRelease {
