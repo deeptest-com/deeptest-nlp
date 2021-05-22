@@ -8,17 +8,18 @@ import (
 	serverConst "github.com/utlai/utl/internal/server/utils/const"
 )
 
-type NluRegexCtrl struct {
+type NluRegexItemCtrl struct {
 	BaseCtrl
 
-	RegexService *service.NluRegexService `inject:""`
+	RegexItemService *service.NluRegexItemService `inject:""`
 }
 
-func NewNluRegexCtrl() *NluRegexCtrl {
-	return &NluRegexCtrl{}
+func NewNluRegexItemCtrl() *NluRegexItemCtrl {
+	return &NluRegexItemCtrl{}
 }
 
-func (c *NluRegexCtrl) List(ctx iris.Context) {
+func (c *NluRegexItemCtrl) List(ctx iris.Context) {
+	regexId, _ := ctx.URLParamInt("regexId")
 	keywords := ctx.URLParam("keywords")
 	status := ctx.URLParam("status")
 	pageNo, _ := ctx.URLParamInt("pageNo")
@@ -27,28 +28,28 @@ func (c *NluRegexCtrl) List(ctx iris.Context) {
 		pageSize = serverConst.PageSize
 	}
 
-	lookups, total := c.RegexService.List(keywords, status, pageNo, pageSize)
+	items, total := c.RegexItemService.List(regexId, keywords, status, pageNo, pageSize)
 
 	_, _ = ctx.JSON(_utils.ApiResPage(200, "请求成功",
-		lookups, pageNo, pageSize, total))
+		items, pageNo, pageSize, total))
 }
 
-func (c *NluRegexCtrl) Get(ctx iris.Context) {
+func (c *NluRegexItemCtrl) Get(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
 	if err != nil {
 		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
-	model := c.RegexService.Get(uint(id))
+	model := c.RegexItemService.Get(uint(id))
 	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", model))
 	return
 }
 
-func (c *NluRegexCtrl) Create(ctx iris.Context) {
+func (c *NluRegexItemCtrl) Create(ctx iris.Context) {
 	ctx.StatusCode(iris.StatusOK)
 
-	model := model.NluRegex{}
+	model := model.NluRegexItem{}
 	if err := ctx.ReadJSON(&model); err != nil {
 		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
 		return
@@ -58,7 +59,7 @@ func (c *NluRegexCtrl) Create(ctx iris.Context) {
 		return
 	}
 
-	err := c.RegexService.Save(&model)
+	err := c.RegexItemService.Save(&model)
 	if err != nil {
 		_, _ = ctx.JSON(_utils.ApiRes(400, "操作失败", nil))
 		return
@@ -68,14 +69,14 @@ func (c *NluRegexCtrl) Create(ctx iris.Context) {
 	return
 }
 
-func (c *NluRegexCtrl) Update(ctx iris.Context) {
-	model := model.NluRegex{}
+func (c *NluRegexItemCtrl) Update(ctx iris.Context) {
+	model := model.NluRegexItem{}
 	if err := ctx.ReadJSON(&model); err != nil {
 		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
-	err := c.RegexService.Update(&model)
+	err := c.RegexItemService.Update(&model)
 	if err != nil {
 		_, _ = ctx.JSON(_utils.ApiRes(400, "操作失败", nil))
 		return
@@ -84,36 +85,47 @@ func (c *NluRegexCtrl) Update(ctx iris.Context) {
 	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", model))
 }
 
-func (c *NluRegexCtrl) Disable(ctx iris.Context) {
+func (c *NluRegexItemCtrl) SetDefault(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
 	if err != nil {
 		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
-	c.RegexService.Disable(uint(id))
+	c.RegexItemService.SetDefault(uint(id))
 	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", ""))
 }
 
-func (c *NluRegexCtrl) Delete(ctx iris.Context) {
+func (c *NluRegexItemCtrl) Disable(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
 	if err != nil {
 		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
-	c.RegexService.Delete(uint(id))
+	c.RegexItemService.Disable(uint(id))
 	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", ""))
 }
 
-func (c *NluRegexCtrl) BatchRemove(ctx iris.Context) {
+func (c *NluRegexItemCtrl) Delete(ctx iris.Context) {
+	id, err := ctx.Params().GetInt("id")
+	if err != nil {
+		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
+		return
+	}
+
+	c.RegexItemService.Delete(uint(id))
+	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", ""))
+}
+
+func (c *NluRegexItemCtrl) BatchRemove(ctx iris.Context) {
 	ids := make([]int, 0)
 	if err := ctx.ReadJSON(&ids); err != nil {
 		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
-	err := c.RegexService.BatchDelete(ids)
+	err := c.RegexItemService.BatchDelete(ids)
 	if err != nil {
 		_, _ = ctx.JSON(_utils.ApiRes(400, "操作失败", nil))
 		return

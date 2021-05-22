@@ -14,6 +14,8 @@ const api = {
   lookupItems: `${prefix}/lookupItems`,
   synonyms: `${prefix}/synonyms`,
   synonymItems: `${prefix}/synonymItems`,
+  regexes: `${prefix}/regexes`,
+  regexItems: `${prefix}/regexItems`,
   dicts: `${prefix}/dicts`,
   valid: `${prefix}/valid`,
 
@@ -94,87 +96,6 @@ export function convert (model) {
     url: api.convert + '/' + model.id,
     method: 'post',
     params: { }
-  })
-}
-
-// 词表
-export function listLookup (params) {
-  return request({
-    url: api.lookups,
-    method: 'get',
-    params: params
-  })
-}
-export function getLookup (id) {
-  return request({
-    url: api.lookups + '/' + id,
-    method: 'get',
-    params: {}
-  })
-}
-export function saveLookup (model) {
-  return request({
-    url: !model.id ? api.lookups : api.lookups + '/' + model.id,
-    method: !model.id ? 'post' : 'put',
-    data: model
-  })
-}
-export function disableLookup (model) {
-  return request({
-    url: api.lookups + '/' + model.id + '/disable',
-    method: 'post',
-    params: {}
-  })
-}
-export function removeLookup (model) {
-  return request({
-    url: api.lookups + '/' + model.id,
-    method: 'delete',
-    params: {}
-  })
-}
-
-// 词表项
-export function listLookupItem (params) {
-  return request({
-    url: api.lookupItems,
-    method: 'get',
-    params: params
-  })
-}
-export function getLookupItem (id) {
-  return request({
-    url: api.lookupItems + '/' + id,
-    method: 'get',
-    params: {}
-  })
-}
-export function saveLookupItem (model) {
-  return request({
-    url: !model.id ? api.lookupItems : api.lookupItems + '/' + model.id,
-    method: !model.id ? 'post' : 'put',
-    data: model
-  })
-}
-export function disableLookupItem (model) {
-  return request({
-    url: api.lookupItems + '/' + model.id + '/disable',
-    method: 'post',
-    params: {}
-  })
-}
-export function removeLookupItem (model) {
-  return request({
-    url: api.lookupItems + '/' + model.id,
-    method: 'delete',
-    params: {}
-  })
-}
-export function batchRemoveLookupItem (data) {
-  return request({
-    url: api.lookupItems + '/batchRemove',
-    method: 'post',
-    data: data
   })
 }
 
@@ -324,7 +245,7 @@ export function removeSlot (model) {
   })
 }
 
-//
+// 同义词表
 export function listSynonym (params) {
   return request({
     url: api.synonyms,
@@ -360,7 +281,7 @@ export function removeSynonym (model) {
     params: {}
   })
 }
-
+// 同义词表项
 export function listSynonymItem (params) {
   return request({
     url: api.synonymItems,
@@ -399,6 +320,167 @@ export function removeSynonymItem (model) {
 export function batchRemoveSynonymItem (data) {
   return request({
     url: api.synonymItems + '/batchRemove',
+    method: 'post',
+    data: data
+  })
+}
+
+// 同类词表
+export function listLookup (params) {
+  return request({
+    url: api.lookups,
+    method: 'get',
+    params: params
+  })
+}
+export function getLookup (id) {
+  return request({
+    url: api.lookups + '/' + id,
+    method: 'get',
+    params: {}
+  })
+}
+export function saveLookup (model) {
+  return request({
+    url: !model.id ? api.lookups : api.lookups + '/' + model.id,
+    method: !model.id ? 'post' : 'put',
+    data: model
+  })
+}
+export function disableLookup (model) {
+  return request({
+    url: api.lookups + '/' + model.id + '/disable',
+    method: 'post',
+    params: {}
+  })
+}
+export function removeLookup (model) {
+  return request({
+    url: api.lookups + '/' + model.id,
+    method: 'delete',
+    params: {}
+  })
+}
+// 同类词表项
+export function listLookupItem (params) {
+  return request({
+    url: api.lookupItems,
+    method: 'get',
+    params: params
+  })
+}
+export function getLookupItem (id) {
+  return request({
+    url: api.lookupItems + '/' + id,
+    method: 'get',
+    params: {}
+  })
+}
+export function saveLookupItem (model) {
+  return request({
+    url: !model.id ? api.lookupItems : api.lookupItems + '/' + model.id,
+    method: !model.id ? 'post' : 'put',
+    data: model
+  })
+}
+export function disableLookupItem (model) {
+  return request({
+    url: api.lookupItems + '/' + model.id + '/disable',
+    method: 'post',
+    params: {}
+  })
+}
+export function removeLookupItem (model) {
+  return request({
+    url: api.lookupItems + '/' + model.id,
+    method: 'delete',
+    params: {}
+  })
+}
+export function batchRemoveLookupItem (data) {
+  return request({
+    url: api.lookupItems + '/batchRemove',
+    method: 'post',
+    data: data
+  })
+}
+
+// 正则表达式
+export function listRegex (params) {
+  return request({
+    url: api.regexes,
+    method: 'get',
+    params: params
+  })
+}
+export function getRegex (id) {
+  return request({
+    url: api.regexes + '/' + id,
+    method: 'get',
+    params: {}
+  })
+}
+export function saveRegex (model) {
+  return request({
+    url: !model.id ? api.regexes : api.regexes + '/' + model.id,
+    method: !model.id ? 'post' : 'put',
+    data: model
+  })
+}
+export function disableRegex (model) {
+  return request({
+    url: api.regexes + '/' + model.id + '/disable',
+    method: 'post',
+    params: {}
+  })
+}
+export function removeRegex (model) {
+  return request({
+    url: api.regexes + '/' + model.id,
+    method: 'delete',
+    params: {}
+  })
+}
+
+// 正则表达式项
+export function listRegexItem (params) {
+  return request({
+    url: api.regexItems,
+    method: 'get',
+    params: params
+  })
+}
+export function getRegexItem (id) {
+  return request({
+    url: api.regexItems + '/' + id,
+    method: 'get',
+    params: {}
+  })
+}
+export function saveRegexItem (model) {
+  return request({
+    url: !model.id ? api.regexItems : api.regexItems + '/' + model.id,
+    method: !model.id ? 'post' : 'put',
+    data: model
+  })
+}
+export function disableRegexItem (model) {
+  return request({
+    url: api.regexItems + '/' + model.id + '/disable',
+    method: 'post',
+    params: {}
+  })
+}
+export function removeRegexItem (model) {
+  return request({
+    url: api.regexItems + '/' + model.id,
+    method: 'delete',
+    params: {}
+  })
+}
+export function batchRemoveRegexItem (data) {
+  return request({
+    url: api.regexItems + '/batchRemove',
     method: 'post',
     data: data
   })

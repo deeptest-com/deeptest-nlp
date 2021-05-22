@@ -35,12 +35,6 @@ func (s *NluRegexService) Update(po *model.NluRegex) (err error) {
 	return
 }
 
-func (s *NluRegexService) SetDefault(id uint) (err error) {
-	err = s.NluRegexRepo.SetDefault(id)
-
-	return
-}
-
 func (s *NluRegexService) Disable(id uint) (err error) {
 	err = s.NluRegexRepo.Disable(id)
 

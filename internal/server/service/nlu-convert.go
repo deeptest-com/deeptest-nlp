@@ -5,14 +5,17 @@ import (
 	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
 	"github.com/utlai/utl/internal/server/domain"
 	"github.com/utlai/utl/internal/server/repo"
+	serverConst "github.com/utlai/utl/internal/server/utils/const"
 	"gopkg.in/yaml.v3"
 	"path/filepath"
 )
 
 type NluConvertService struct {
-	NluSynonymRepo *repo.NluSynonymRepo `inject:""`
-	NluLookupRepo  *repo.NluLookupRepo  `inject:""`
-	NluRegexRepo   *repo.NluRegexRepo   `inject:""`
+	NluSynonymRepo     *repo.NluSynonymRepo     `inject:""`
+	NluSynonymItemRepo *repo.NluSynonymItemRepo `inject:""`
+	NluLookupRepo      *repo.NluLookupRepo      `inject:""`
+	NluLookupItemRepo  *repo.NluLookupItemRepo  `inject:""`
+	NluRegexRepo       *repo.NluRegexRepo       `inject:""`
 
 	ProjectRepo   *repo.ProjectRepo   `inject:""`
 	NluTaskRepo   *repo.NluTaskRepo   `inject:""`
@@ -46,11 +49,18 @@ func (s *NluConvertService) ConvertSynonym(projectId uint, projectDir string, nl
 	_fileUtils.RmDir(filepath.Join(projectDir, "synonym"))
 
 	synonyms := s.NluSynonymRepo.ListByProjectId(projectId)
-	for _, item := range synonyms {
-		// convert po to domain
+	for _, synonym := range synonyms {
+		nluSynonym := domain.NluSynonym{Version: serverConst.NluVersion}
+		synonymDef := domain.NluSynonymDef{Synonym: synonym.Name}
 
-		filePath := filepath.Join(projectDir, "synonym", item.Name)
-		bytes, _ := yaml.Marshal(&item)
+		synonymItems := s.NluSynonymItemRepo.ListBySynonymId(projectId)
+		for _, item := range synonymItems {
+			synonymDef.Examples += item.Content + "\n"
+		}
+		nluSynonym.SynonymDef = append(nluSynonym.SynonymDef, synonymDef)
+
+		filePath := filepath.Join(projectDir, "synonym", synonym.Name+".yml")
+		bytes, _ := yaml.Marshal(&nluSynonym)
 		_fileUtils.WriteFile(string(bytes), filePath)
 	}
 
@@ -60,11 +70,18 @@ func (s *NluConvertService) ConvertLookup(projectId uint, projectDir string, nlu
 	_fileUtils.RmDir(filepath.Join(projectDir, "lookup"))
 
 	lookups := s.NluLookupRepo.ListByProjectId(projectId)
-	for _, item := range lookups {
-		// convert po to domain
+	for _, lookup := range lookups {
+		nluLookup := domain.NluLookup{Version: serverConst.NluVersion}
+		lookupDef := domain.NluLookupDef{Lookup: lookup.Name}
 
-		filePath := filepath.Join(projectDir, "lookup", item.Name)
-		bytes, _ := yaml.Marshal(&item)
+		lookupItems := s.NluSynonymItemRepo.ListBySynonymId(projectId)
+		for _, item := range lookupItems {
+			lookupDef.Examples += item.Content + "\n"
+		}
+		nluLookup.LookupDef = append(nluLookup.LookupDef, lookupDef)
+
+		filePath := filepath.Join(projectDir, "lookup", lookup.Name+".yml")
+		bytes, _ := yaml.Marshal(&nluLookup)
 		_fileUtils.WriteFile(string(bytes), filePath)
 	}
 
@@ -74,11 +91,19 @@ func (s *NluConvertService) ConvertRegex(projectId uint, projectDir string, nluD
 	_fileUtils.RmDir(filepath.Join(projectDir, "regex"))
 
 	regexes := s.NluRegexRepo.ListByProjectId(projectId)
-	for _, item := range regexes {
-		// convert po to domain
+	for _, regex := range regexes {
+		nluRegex := domain.NluRegex{Version: serverConst.NluVersion}
 
-		filePath := filepath.Join(projectDir, "regex", item.Name)
-		bytes, _ := yaml.Marshal(&item)
+		regexDef := domain.NluRegexDef{Regex: regex.Name}
+
+		lookupItems := s.NluSynonymItemRepo.ListBySynonymId(projectId)
+		for _, item := range lookupItems {
+			regexDef.Examples += item.Content + "\n"
+		}
+		nluRegex.RegexDef = append(nluRegex.RegexDef, regexDef)
+
+		filePath := filepath.Join(projectDir, "regex", regex.Name+".yml")
+		bytes, _ := yaml.Marshal(&nluRegex)
 		_fileUtils.WriteFile(string(bytes), filePath)
 	}
 
@@ -101,7 +126,7 @@ func (s *NluConvertService) ConvertIntent(projectId uint, projectDir string) (fi
 				_logUtils.Info(sent.Text)
 			}
 
-			intentFilePath := filepath.Join(projectDir, "intent", intent.Name)
+			intentFilePath := filepath.Join(projectDir, "intent", intent.Name+".yml")
 			bytes, _ := yaml.Marshal(&nluIntent)
 			_fileUtils.WriteFile(intentFilePath, string(bytes))
 		}

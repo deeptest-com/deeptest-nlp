@@ -37,6 +37,10 @@ export default {
       type: Number,
       default: 0
     },
+    parentId: {
+      type: Number,
+      default: 0
+    },
     afterSave: {
       type: Function,
       default: null
@@ -76,7 +80,9 @@ export default {
       return getSynonymItem(this.id)
     },
     save (e) {
+      this.model.synonymId = this.parentId
       console.log(this.model)
+
       this.$refs.form.validate(valid => {
         if (!valid) {
           console.log('validate fail', valid)

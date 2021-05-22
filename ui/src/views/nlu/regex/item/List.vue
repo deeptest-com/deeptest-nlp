@@ -89,16 +89,16 @@
     </page-header-wrapper>
     <a-modal
       :visible="editVisible"
-      :title="modelId > 0 ? $t('menu.lookup.edit.item') : $t('menu.lookup.create.item')"
+      :title="modelId > 0 ? $t('menu.regex.edit.item') : $t('menu.regex.create.item')"
       :footer="false"
       :centered="true"
       :width="700"
       @cancel="cancelEdit"
     >
-      <LookupItemEdit
+      <RegexItemEdit
         :v-if="editVisible"
         :id="modelId"
-        :parentId="lookupId"
+        :parentId="regexId"
         :afterSave="saveModel"
       />
     </a-modal>
@@ -108,22 +108,22 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { listLookupItem, disableLookupItem, removeLookupItem, batchRemoveLookupItem } from '@/api/manage'
+import { listRegexItem, disableRegexItem, removeRegexItem, batchRemoveRegexItem } from '@/api/manage'
 
-import LookupItemEdit from './Edit'
+import RegexItemEdit from './Edit'
 
 export default {
-  name: 'LookupItems',
+  name: 'RegexItems',
   components: {
     STable,
     Ellipsis,
-    LookupItemEdit
+    RegexItemEdit
   },
   props: {
-    lookupId: {
+    regexId: {
       type: Number,
       default: function () {
-        return parseInt(this.$route.params.lookupId)
+        return parseInt(this.$route.params.regexId)
       }
     }
   },
@@ -137,8 +137,8 @@ export default {
       advanced: false,
       queryParam: {},
       loadData: parameter => {
-        const requestParameters = Object.assign({ lookupId: this.lookupId }, parameter, this.queryParam)
-        return listLookupItem(requestParameters)
+        const requestParameters = Object.assign({ regexId: this.regexId }, parameter, this.queryParam)
+        return listRegexItem(requestParameters)
           .then(res => {
             return res
           })
@@ -216,14 +216,14 @@ export default {
       this.$refs.table.refresh(false)
     },
     disable (record) {
-      disableLookupItem(record).then(json => {
-        console.log('disableLookupItem', json)
+      disableRegexItem(record).then(json => {
+        console.log('disableRegexItem', json)
         this.$refs.table.refresh(false)
       })
     },
     confirmRemove (record) {
-      removeLookupItem(record).then(json => {
-        console.log('removeLookupItem', json)
+      removeRegexItem(record).then(json => {
+        console.log('removeRegexItem', json)
         this.$refs.table.refresh(false)
       })
     },
@@ -232,8 +232,8 @@ export default {
     },
     multiOpt ({ key }) {
       console.log(`${key}`)
-      batchRemoveLookupItem(this.selectedRowKeys).then(json => {
-        console.log('batchRemoveLookupItem', json)
+      batchRemoveRegexItem(this.selectedRowKeys).then(json => {
+        console.log('batchRemoveRegexItem', json)
         this.$refs.table.refresh(false)
       })
     },

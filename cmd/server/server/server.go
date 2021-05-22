@@ -94,8 +94,10 @@ func injectObj(router *router.Router) {
 		// repo
 		&inject.Object{Value: repo.NewProjectRepo()},
 		&inject.Object{Value: repo.NewNluIntentRepo()},
-		&inject.Object{Value: repo.NewNluLookupRepo()},
 		&inject.Object{Value: repo.NewNluSynonymRepo()},
+		&inject.Object{Value: repo.NewNluSynonymItemRepo()},
+		&inject.Object{Value: repo.NewNluLookupRepo()},
+		&inject.Object{Value: repo.NewNluLookupItemRepo()},
 		&inject.Object{Value: repo.NewNluRegexRepo()},
 
 		&inject.Object{Value: repo.NewCommonRepo()},
@@ -113,9 +115,12 @@ func injectObj(router *router.Router) {
 		// service
 		&inject.Object{Value: service.NewProjectService()},
 		&inject.Object{Value: service.NewNluIntentService()},
-		&inject.Object{Value: service.NewNluLookupService()},
 		&inject.Object{Value: service.NewNluSynonymService()},
+		&inject.Object{Value: service.NewNluSynonymItemService()},
+		&inject.Object{Value: service.NewNluLookupService()},
+		&inject.Object{Value: service.NewNluLookupItemService()},
 		&inject.Object{Value: service.NewNluRegexService()},
+		&inject.Object{Value: service.NewNluRegexItemService()},
 		&inject.Object{Value: service.NewNluDictService()},
 
 		&inject.Object{Value: serverCron.NewServerCron()},
@@ -130,9 +135,12 @@ func injectObj(router *router.Router) {
 		// controller
 		&inject.Object{Value: handler.NewProjectCtrl()},
 		&inject.Object{Value: handler.NewNluIntentCtrl()},
-		&inject.Object{Value: handler.NewNluLookupCtrl()},
 		&inject.Object{Value: handler.NewNluSynonymCtrl()},
+		&inject.Object{Value: handler.NewNluSynonymItemCtrl()},
+		&inject.Object{Value: handler.NewNluLookupCtrl()},
+		&inject.Object{Value: handler.NewNluLookupItemCtrl()},
 		&inject.Object{Value: handler.NewNluRegexCtrl()},
+		&inject.Object{Value: handler.NewNluRegexItemCtrl()},
 		&inject.Object{Value: handler.NewNluDictCtrl()},
 
 		&inject.Object{Value: handler.NewAccountCtrl()},

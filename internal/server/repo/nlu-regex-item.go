@@ -7,18 +7,18 @@ import (
 	"time"
 )
 
-type NluSynonymItemRepo struct {
+type NluRegexItemRepo struct {
 	CommonRepo
 	DB *gorm.DB `inject:""`
 }
 
-func NewNluSynonymItemRepo() *NluSynonymItemRepo {
-	return &NluSynonymItemRepo{}
+func NewNluRegexItemRepo() *NluRegexItemRepo {
+	return &NluRegexItemRepo{}
 }
 
-func (r *NluSynonymItemRepo) Query(synonymId int, keywords, status string, pageNo int, pageSize int) (pos []model.NluSynonymItem, total int64) {
+func (r *NluRegexItemRepo) Query(regexId int, keywords, status string, pageNo int, pageSize int) (pos []model.NluRegexItem, total int64) {
 	query := r.DB.Select("*").Order("id ASC")
-	query = query.Where("synonym_id = ?", synonymId)
+	query = query.Where("regex_id = ?", regexId)
 
 	if status == "true" {
 		query = query.Where("NOT disabled")
@@ -38,7 +38,7 @@ func (r *NluSynonymItemRepo) Query(synonymId int, keywords, status string, pageN
 	if err != nil {
 		_logUtils.Errorf("sql error %s", err.Error())
 	}
-	err = r.DB.Model(&model.NluSynonymItem{}).Count(&total).Error
+	err = r.DB.Model(&model.NluRegexItem{}).Count(&total).Error
 	if err != nil {
 		_logUtils.Errorf("sql error %s", err.Error())
 	}
@@ -46,10 +46,10 @@ func (r *NluSynonymItemRepo) Query(synonymId int, keywords, status string, pageN
 	return
 }
 
-func (r *NluSynonymItemRepo) ListBySynonymId(synonymId uint) (pos []model.NluSynonymItem) {
+func (r *NluRegexItemRepo) ListByRegexId(regexId uint) (pos []model.NluRegexItem) {
 	query := r.DB.Select("*").
 		Where("deleted_at IS NULL AND NOT disabled").
-		Where("synonym_id = ?", synonymId).
+		Where("regex_id = ?", regexId).
 		Order("id ASC")
 
 	err := query.Find(&pos).Error
@@ -60,30 +60,30 @@ func (r *NluSynonymItemRepo) ListBySynonymId(synonymId uint) (pos []model.NluSyn
 	return
 }
 
-func (r *NluSynonymItemRepo) Get(id uint) (po model.NluSynonymItem) {
+func (r *NluRegexItemRepo) Get(id uint) (po model.NluRegexItem) {
 	r.DB.Where("id = ?", id).First(&po)
 	return
 }
 
-func (r *NluSynonymItemRepo) Save(po *model.NluSynonymItem) (err error) {
+func (r *NluRegexItemRepo) Save(po *model.NluRegexItem) (err error) {
 	err = r.DB.Model(&po).Omit("").Create(&po).Error
 	return
 }
 
-func (r *NluSynonymItemRepo) Update(po *model.NluSynonymItem) (err error) {
+func (r *NluRegexItemRepo) Update(po *model.NluRegexItem) (err error) {
 	err = r.DB.Omit("").Save(&po).Error
 	return
 }
 
-func (r *NluSynonymItemRepo) SetDefault(id uint) (err error) {
+func (r *NluRegexItemRepo) SetDefault(id uint) (err error) {
 	r.DB.Transaction(func(tx *gorm.DB) error {
-		err = r.DB.Model(&model.NluSynonymItem{}).Where("id = ?", id).
+		err = r.DB.Model(&model.NluRegexItem{}).Where("id = ?", id).
 			Updates(map[string]interface{}{"is_default": true}).Error
 		if err != nil {
 			return err
 		}
 
-		err = r.DB.Model(&model.NluSynonymItem{}).Where("id != ?", id).
+		err = r.DB.Model(&model.NluRegexItem{}).Where("id != ?", id).
 			Updates(map[string]interface{}{"is_default": false}).Error
 
 		return nil
@@ -92,29 +92,29 @@ func (r *NluSynonymItemRepo) SetDefault(id uint) (err error) {
 	return
 }
 
-func (r *NluSynonymItemRepo) Disable(id uint) (err error) {
-	err = r.DB.Model(&model.NluSynonymItem{}).Where("id = ?", id).
+func (r *NluRegexItemRepo) Disable(id uint) (err error) {
+	err = r.DB.Model(&model.NluRegexItem{}).Where("id = ?", id).
 		Updates(map[string]interface{}{"disabled": gorm.Expr("NOT disabled")}).Error
 
 	return
 }
 
-func (r *NluSynonymItemRepo) Delete(id uint) (err error) {
-	err = r.DB.Model(&model.NluSynonymItem{}).Where("id = ?", id).
+func (r *NluRegexItemRepo) Delete(id uint) (err error) {
+	err = r.DB.Model(&model.NluRegexItem{}).Where("id = ?", id).
 		Updates(map[string]interface{}{"deleted_at": time.Now()}).Error
 
 	return
 }
 
-func (r *NluSynonymItemRepo) BatchDelete(ids []int) (err error) {
-	err = r.DB.Model(&model.NluSynonymItem{}).Where("id IN (?)", ids).
+func (r *NluRegexItemRepo) BatchDelete(ids []int) (err error) {
+	err = r.DB.Model(&model.NluRegexItem{}).Where("id IN (?)", ids).
 		Updates(map[string]interface{}{"deleted_at": time.Now()}).Error
 
 	return
 }
 
-func (r *NluSynonymItemRepo) List() (pos []map[string]interface{}) {
-	err := r.DB.Model(&model.NluSynonymItem{}).
+func (r *NluRegexItemRepo) List() (pos []map[string]interface{}) {
+	err := r.DB.Model(&model.NluRegexItem{}).
 		Where("deleted_at IS NULL").
 		Order("id ASC").
 		Find(&pos).

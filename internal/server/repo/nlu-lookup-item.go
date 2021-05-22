@@ -46,6 +46,20 @@ func (r *NluLookupItemRepo) Query(lookupId int, keywords, status string, pageNo 
 	return
 }
 
+func (r *NluLookupItemRepo) ListByLookupId(lookupId uint) (pos []model.NluLookupItem) {
+	query := r.DB.Select("*").
+		Where("deleted_at IS NULL AND NOT disabled").
+		Where("lookup_id = ?", lookupId).
+		Order("id ASC")
+
+	err := query.Find(&pos).Error
+	if err != nil {
+		_logUtils.Errorf("sql error %s", err.Error())
+	}
+
+	return
+}
+
 func (r *NluLookupItemRepo) Get(id uint) (po model.NluLookupItem) {
 	r.DB.Where("id = ?", id).First(&po)
 	return

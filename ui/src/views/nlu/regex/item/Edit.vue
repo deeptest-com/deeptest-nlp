@@ -2,7 +2,7 @@
   <a-card :body-style="{padding: '24px 32px'}" :bordered="false">
     <a-form-model ref="form" :model="model" :rules="rules">
       <a-form-model-item
-        :label="$t('form.name')"
+        :label="$t('form.content')"
         prop="content"
         :labelCol="labelCol"
         :wrapperCol="wrapperCol">
@@ -28,10 +28,10 @@
 
 <script>
 import { labelCol, wrapperCol, wrapperFull } from '@/utils/const'
-import { requestSuccess, getLookupItem, saveLookupItem } from '@/api/manage'
+import { requestSuccess, getRegexItem, saveRegexItem } from '@/api/manage'
 
 export default {
-  name: 'LookupItemEdit',
+  name: 'RegexItemEdit',
   props: {
     id: {
       type: Number,
@@ -77,10 +77,10 @@ export default {
       }
     },
     getModel () {
-      return getLookupItem(this.id)
+      return getRegexItem(this.id)
     },
     save (e) {
-      this.model.lookupId = this.parentId
+      this.model.regexId = this.parentId
       console.log(this.model)
 
       this.$refs.form.validate(valid => {
@@ -89,8 +89,8 @@ export default {
           return false
         }
 
-        saveLookupItem(this.model).then(json => {
-          console.log('saveLookupItem', json)
+        saveRegexItem(this.model).then(json => {
+          console.log('saveRegexItem', json)
           if (requestSuccess(json.code)) {
             if (this.afterSave) {
               this.afterSave(json)

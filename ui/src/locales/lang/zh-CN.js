@@ -47,6 +47,12 @@ const locale = {
   'menu.lookup.items': '同类词项',
   'menu.lookup.create.item': '创建同类词项',
   'menu.lookup.edit.item': '编辑同类词项',
+  'menu.regex': '正则表达式',
+  'menu.regex.list': '正则表达式列表',
+  'menu.regex.edit': '编辑正则表达式',
+  'menu.regex.items': '正则表达式项',
+  'menu.regex.create.item': '创建正则表达式项',
+  'menu.regex.edit.item': '编辑正则表达式项',
 
   'common.login': '登录',
   'common.logout': '登出',

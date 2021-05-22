@@ -1,11 +1,11 @@
 package domain
 
 type NluSynonym struct {
-	Version    string       `json:"version"`
-	SynonymDef []SynonymDef `json:"nlu"`
+	Version    string          `json:"version"`
+	SynonymDef []NluSynonymDef `json:"nlu"`
 }
 
-type SynonymDef struct {
+type NluSynonymDef struct {
 	Synonym  string `json:"synonym"`
 	Examples string `json:"examples"`
 }

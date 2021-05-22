@@ -44,6 +44,7 @@ type Router struct {
 	NluSynonymCtrl     *handler.NluSynonymCtrl     `inject:""`
 	NluSynonymItemCtrl *handler.NluSynonymItemCtrl `inject:""`
 	NluRegexCtrl       *handler.NluRegexCtrl       `inject:""`
+	NluRegexItemCtrl   *handler.NluRegexItemCtrl   `inject:""`
 	NluDictCtrl        *handler.NluDictCtrl        `inject:""`
 	NluConvertCtrl     *handler.NluConvertCtrl     `inject:""`
 
@@ -150,13 +151,13 @@ func (r *Router) App() {
 					party.Post("/{id:uint}/disable", r.NluSynonymCtrl.Disable).Name = "禁用/启动同义词"
 				})
 				admin.PartyFunc("/synonymItems", func(party iris.Party) {
-					party.Get("/", r.NluSynonymItemCtrl.List).Name = "词表项列表"
-					party.Get("/{id:uint}", r.NluSynonymItemCtrl.Get).Name = "词表项详情"
-					party.Post("/", r.NluSynonymItemCtrl.Create).Name = "创建项词表"
-					party.Put("/{id:uint}", r.NluSynonymItemCtrl.Update).Name = "更新词表项"
-					party.Delete("/{id:uint}", r.NluSynonymItemCtrl.Delete).Name = "删除词表项"
-					party.Post("/{id:uint}/disable", r.NluSynonymItemCtrl.Disable).Name = "禁用/启动词表项"
-					party.Post("/batchRemove", r.NluSynonymItemCtrl.BatchRemove).Name = "批量删除词表项"
+					party.Get("/", r.NluSynonymItemCtrl.List).Name = "同义词项列表"
+					party.Get("/{id:uint}", r.NluSynonymItemCtrl.Get).Name = "同义词项详情"
+					party.Post("/", r.NluSynonymItemCtrl.Create).Name = "创建同义词项"
+					party.Put("/{id:uint}", r.NluSynonymItemCtrl.Update).Name = "更新同义词项"
+					party.Delete("/{id:uint}", r.NluSynonymItemCtrl.Delete).Name = "删除同义词项"
+					party.Post("/{id:uint}/disable", r.NluSynonymItemCtrl.Disable).Name = "禁用/启动同义词项"
+					party.Post("/batchRemove", r.NluSynonymItemCtrl.BatchRemove).Name = "批量删除同义词项"
 				})
 
 				admin.PartyFunc("/lookups", func(party iris.Party) {
@@ -170,11 +171,29 @@ func (r *Router) App() {
 				admin.PartyFunc("/lookupItems", func(party iris.Party) {
 					party.Get("/", r.NluLookupItemCtrl.List).Name = "同类词项列表"
 					party.Get("/{id:uint}", r.NluLookupItemCtrl.Get).Name = "同类词项详情"
-					party.Post("/", r.NluLookupItemCtrl.Create).Name = "创建项同类词"
+					party.Post("/", r.NluLookupItemCtrl.Create).Name = "创建同类词项"
 					party.Put("/{id:uint}", r.NluLookupItemCtrl.Update).Name = "更新同类词项"
 					party.Delete("/{id:uint}", r.NluLookupItemCtrl.Delete).Name = "删除同类词项"
 					party.Post("/{id:uint}/disable", r.NluLookupItemCtrl.Disable).Name = "禁用/启动同类词项"
 					party.Post("/batchRemove", r.NluLookupItemCtrl.BatchRemove).Name = "批量删除同类词项"
+				})
+
+				admin.PartyFunc("/regexes", func(party iris.Party) {
+					party.Get("/", r.NluRegexCtrl.List).Name = "正则表达式列表"
+					party.Get("/{id:uint}", r.NluRegexCtrl.Get).Name = "正则表达式详情"
+					party.Post("/", r.NluRegexCtrl.Create).Name = "创建正则表达式"
+					party.Put("/{id:uint}", r.NluRegexCtrl.Update).Name = "更新正则表达式"
+					party.Delete("/{id:uint}", r.NluRegexCtrl.Delete).Name = "删除正则表达式"
+					party.Post("/{id:uint}/disable", r.NluRegexCtrl.Disable).Name = "禁用/启动正则表达式"
+				})
+				admin.PartyFunc("/regexItems", func(party iris.Party) {
+					party.Get("/", r.NluRegexItemCtrl.List).Name = "正则表达式项列表"
+					party.Get("/{id:uint}", r.NluRegexItemCtrl.Get).Name = "正则表达式项详情"
+					party.Post("/", r.NluRegexItemCtrl.Create).Name = "创建正则表达式项"
+					party.Put("/{id:uint}", r.NluRegexItemCtrl.Update).Name = "更新正则表达式项"
+					party.Delete("/{id:uint}", r.NluRegexItemCtrl.Delete).Name = "删除正则表达式项"
+					party.Post("/{id:uint}/disable", r.NluRegexItemCtrl.Disable).Name = "禁用/启动正则表达式项"
+					party.Post("/batchRemove", r.NluRegexItemCtrl.BatchRemove).Name = "批量删除正则表达式项"
 				})
 
 				admin.PartyFunc("/dicts", func(party iris.Party) {

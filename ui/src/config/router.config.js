@@ -1,6 +1,6 @@
 // eslint-disable-next-line
 import { UserLayout, BasicLayout } from '@/layouts'
-import { dashboard, project, task, lookup, synonym, setting } from '@/core/icons'
+import { dashboard, project, task, lookup, synonym, regex, setting } from '@/core/icons'
 
 const RouteView = {
   name: 'RouteView',
@@ -119,6 +119,34 @@ export const asyncRouterMap = [
             name: 'lookup-maintain',
             component: () => import('@/views/nlu/lookup/item/List'),
             meta: { title: 'menu.lookup.items', keepAlive: true }
+          }
+        ]
+      },
+      {
+        path: '/nlu/regex',
+        name: 'regex',
+        redirect: '/nlu/regex/list',
+        component: RouteView,
+        meta: { title: 'menu.regex', icon: regex, keepAlive: true },
+        hideChildrenInMenu: true,
+        children: [
+          {
+            path: '/nlu/regex/list',
+            name: 'regex-list',
+            component: () => import('@/views/nlu/regex/List'),
+            meta: { title: 'menu.regex.list', keepAlive: true }
+          },
+          {
+            path: '/nlu/regex/:id/edit',
+            name: 'regex-edit',
+            component: () => import('@/views/nlu/regex/Edit'),
+            meta: { title: 'menu.regex.edit', keepAlive: true }
+          },
+          {
+            path: '/nlu/regex/:regexId/items',
+            name: 'regex-maintain',
+            component: () => import('@/views/nlu/regex/item/List'),
+            meta: { title: 'menu.regex.items', keepAlive: true }
           }
         ]
       },

@@ -47,6 +47,12 @@ const locale = {
   'menu.lookup.items': 'Lookup Items',
   'menu.lookup.create.item': 'Crete Lookup Item',
   'menu.lookup.edit.item': 'Edit Lookup Item',
+  'menu.regex': 'Regex',
+  'menu.regex.list': 'Regex List',
+  'menu.regex.edit': 'Regex Edit',
+  'menu.regex.items': 'Regex Items',
+  'menu.regex.create.item': 'Crete Regex Item',
+  'menu.regex.edit.item': 'Edit Regex Item',
 
   'form.create': 'Create',
   'form.edit': 'Edit',

@@ -98,6 +98,7 @@
       <SynonymItemEdit
         :v-if="editVisible"
         :id="modelId"
+        :parentId="synonymId"
         :afterSave="saveModel"
       />
     </a-modal>
