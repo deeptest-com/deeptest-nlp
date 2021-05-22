@@ -1,11 +1,11 @@
 package domain
 
 type NluIntent struct {
-	Version   string      `json:"version"`
-	IntentDef []IntentDef `json:"nlu"`
+	Version   string      `yaml:"version"`
+	IntentDef []IntentDef `yaml:"nlu,flow"`
 }
 
 type IntentDef struct {
-	Intent   string `json:"intent"`
-	Examples string `json:"examples"`
+	Intent   string `yaml:"intent"`
+	Examples string `yaml:"examples"`
 }

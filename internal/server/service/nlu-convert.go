@@ -40,7 +40,7 @@ func (s *NluConvertService) ConvertProject(id uint) (files []string) {
 
 	domainFilePath := filepath.Join(projectDir, "domain.yml")
 	bytes, _ := yaml.Marshal(&nluDomain)
-	_fileUtils.WriteFile(string(bytes), domainFilePath)
+	_fileUtils.WriteFile(domainFilePath, string(bytes))
 
 	return
 }
@@ -61,7 +61,7 @@ func (s *NluConvertService) ConvertSynonym(projectId uint, projectDir string, nl
 
 		filePath := filepath.Join(projectDir, "synonym", synonym.Name+".yml")
 		bytes, _ := yaml.Marshal(&nluSynonym)
-		_fileUtils.WriteFile(string(bytes), filePath)
+		_fileUtils.WriteFile(filePath, string(bytes))
 	}
 
 	return
@@ -82,7 +82,7 @@ func (s *NluConvertService) ConvertLookup(projectId uint, projectDir string, nlu
 
 		filePath := filepath.Join(projectDir, "lookup", lookup.Name+".yml")
 		bytes, _ := yaml.Marshal(&nluLookup)
-		_fileUtils.WriteFile(string(bytes), filePath)
+		_fileUtils.WriteFile(filePath, string(bytes))
 	}
 
 	return
@@ -104,7 +104,7 @@ func (s *NluConvertService) ConvertRegex(projectId uint, projectDir string, nluD
 
 		filePath := filepath.Join(projectDir, "regex", regex.Name+".yml")
 		bytes, _ := yaml.Marshal(&nluRegex)
-		_fileUtils.WriteFile(string(bytes), filePath)
+		_fileUtils.WriteFile(filePath, string(bytes))
 	}
 
 	return

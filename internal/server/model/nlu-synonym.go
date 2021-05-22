@@ -5,6 +5,8 @@ type NluSynonym struct {
 
 	Name  string           `json:"name"`
 	Items []NluSynonymItem `json:"items" gorm:"-"`
+
+	ProjectId uint `json:"projectId"`
 }
 type NluSynonymItem struct {
 	BaseModel

@@ -1,11 +1,11 @@
 package domain
 
 type NluLookup struct {
-	Version   string         `json:"version"`
-	LookupDef []NluLookupDef `json:"nlu"`
+	Version   string         `yaml:"version"`
+	LookupDef []NluLookupDef `yaml:"nlu,flow"`
 }
 
 type NluLookupDef struct {
-	Lookup   string `json:"lookup"`
-	Examples string `json:"examples"`
+	Lookup   string `yaml:"lookup"`
+	Examples string `yaml:"examples"`
 }

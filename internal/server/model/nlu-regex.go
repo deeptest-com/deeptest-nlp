@@ -5,6 +5,8 @@ type NluRegex struct {
 
 	Name  string         `json:"name"`
 	Items []NluRegexItem `json:"items" gorm:"-"`
+
+	ProjectId uint `json:"projectId"`
 }
 type NluRegexItem struct {
 	BaseModel

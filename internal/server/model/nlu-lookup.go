@@ -5,6 +5,8 @@ type NluLookup struct {
 
 	Name  string          `json:"name"`
 	Items []NluLookupItem `json:"items" gorm:"-"`
+
+	ProjectId uint `json:"projectId"`
 }
 type NluLookupItem struct {
 	BaseModel
