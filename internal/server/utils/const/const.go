@@ -14,4 +14,8 @@ const (
 	Portainer ContainerPlatform = "portainer"
 )
 
+var (
+	SlotTypeAbbrMap = map[string]string{"synonym": "syn", "lookup": "lkp", "regex": "rgx"}
+)
+
 type ContainerPlatform string

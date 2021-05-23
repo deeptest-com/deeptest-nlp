@@ -76,6 +76,7 @@ const locale = {
 
   'form.all': 'All',
   'form.no': 'NO',
+  'form.code': 'Code',
   'form.name': 'Name',
   'form.path': 'Path',
   'form.content': 'Content',
@@ -98,6 +99,8 @@ const locale = {
   'status.enable': 'Enable',
   'status.disable': 'Disable',
 
+  'valid.required.code': 'Please input code',
+  'valid.format.code': 'Code must start with a letter, and contains only letters and numbers.',
   'valid.required.name': 'Please input name',
   'valid.required.content': 'Please input content',
   'valid.required.path': 'Path not exist',

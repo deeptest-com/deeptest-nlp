@@ -105,7 +105,8 @@ func (s *NluConvertService) convertSynonym(projectId uint, projectDir string, nl
 		nluDomain.Entities = append(nluDomain.Entities, synonym.Name)
 
 		nluSynonym := domain.NluSynonym{Version: serverConst.NluVersion}
-		synonymDef := domain.NluSynonymDef{Synonym: synonym.Name}
+		synonymDef := domain.NluSynonymDef{Synonym: fmt.Sprintf("%s_%s",
+			synonym.Code, serverConst.SlotTypeAbbrMap["synonym"])}
 
 		synonymItems := s.NluSynonymItemRepo.ListBySynonymId(synonym.ID)
 		for _, item := range synonymItems {
@@ -114,7 +115,7 @@ func (s *NluConvertService) convertSynonym(projectId uint, projectDir string, nl
 		nluSynonym.SynonymDef = append(nluSynonym.SynonymDef, synonymDef)
 
 		yamlContent := changeArrToFlow(nluSynonym)
-		filePath := filepath.Join(projectDir, "data", "synonym", synonym.Name+".yml")
+		filePath := filepath.Join(projectDir, "data", "synonym", synonym.Code+".yml")
 		_fileUtils.WriteFile(filePath, yamlContent)
 	}
 
@@ -128,16 +129,17 @@ func (s *NluConvertService) convertLookup(projectId uint, projectDir string, nlu
 		nluDomain.Entities = append(nluDomain.Entities, lookup.Name)
 
 		nluLookup := domain.NluLookup{Version: serverConst.NluVersion}
-		lookupDef := domain.NluLookupItem{Lookup: lookup.Name}
+		lookupItem := domain.NluLookupItem{Lookup: fmt.Sprintf("%s_%s",
+			lookup.Code, serverConst.SlotTypeAbbrMap["lookup"])}
 
 		lookupItems := s.NluLookupItemRepo.ListByLookupId(lookup.ID)
 		for _, item := range lookupItems {
-			lookupDef.Examples += item.Content + "\n"
+			lookupItem.Examples += item.Content + "\n"
 		}
-		nluLookup.Items = append(nluLookup.Items, lookupDef)
+		nluLookup.Items = append(nluLookup.Items, lookupItem)
 
 		yamlContent := changeArrToFlow(nluLookup)
-		filePath := filepath.Join(projectDir, "data", "lookup", lookup.Name+".yml")
+		filePath := filepath.Join(projectDir, "data", "lookup", lookup.Code+".yml")
 		_fileUtils.WriteFile(filePath, yamlContent)
 	}
 
@@ -151,73 +153,78 @@ func (s *NluConvertService) convertRegex(projectId uint, projectDir string, nluD
 		nluDomain.Entities = append(nluDomain.Entities, regex.Name)
 
 		nluRegex := domain.NluRegex{Version: serverConst.NluVersion}
-
-		regexDef := domain.NluRegexItem{Regex: regex.Name}
+		regexItem := domain.NluRegexItem{Regex: fmt.Sprintf("%s_%s",
+			regex.Code, serverConst.SlotTypeAbbrMap["regex"])}
 
 		regexItems := s.NluRegexItemRepo.ListByRegexId(regex.ID)
 		for _, item := range regexItems {
-			regexDef.Examples += item.Content + "\n"
+			regexItem.Examples += item.Content + "\n"
 		}
-		nluRegex.Items = append(nluRegex.Items, regexDef)
+		nluRegex.Items = append(nluRegex.Items, regexItem)
 
 		yamlContent := changeArrToFlow(nluRegex)
-		filePath := filepath.Join(projectDir, "data", "regex", regex.Name+".yml")
+		filePath := filepath.Join(projectDir, "data", "regex", regex.Code+".yml")
 		_fileUtils.WriteFile(filePath, yamlContent)
 	}
 
 	return
 }
 
-func (s *NluConvertService) getSlotNameMap(sentId uint) (ret map[string]string) {
-	ret = map[string]string{}
+func (s *NluConvertService) getSlotNameMap(sentId uint) (ret map[string]map[string]string) {
+	ret = map[string]map[string]string{}
 
 	slots := s.NluSlotRepo.ListBySentId(sentId)
 	for _, slot := range slots {
-		slotName := s.getSlotNameByTypeAndId(slot.Type, slot.Value)
-		if slotName == "" {
+		slotMap := s.getSlotTypeAndId(slot.Type, slot.Value)
+		if slotMap["name"] == "" {
 			continue
 		}
 
-		ret[fmt.Sprintf("%s-%s", slot.Type, slot.Value)] = slotName
+		ret[fmt.Sprintf("%s-%s", slot.Type, slot.Value)] = slotMap
 	}
 
 	return
 }
 
-func (s *NluConvertService) getSlotNameByTypeAndId(tp string, idStr string) (ret string) {
+func (s *NluConvertService) getSlotTypeAndId(tp string, idStr string) (ret map[string]string) {
+	ret = map[string]string{}
+
 	id, _ := strconv.Atoi(idStr)
 
 	if tp == string(serverConst.Synonym) {
 		entity := s.NluSynonymRepo.Get(uint(id))
-		ret = entity.Name
+		ret["code"] = entity.Code
+		ret["name"] = entity.Code
 
 	} else if tp == string(serverConst.Lookup) {
 		entity := s.NluLookupRepo.Get(uint(id))
-		ret = entity.Name
+		ret["code"] = entity.Code
+		ret["name"] = entity.Code
 
 	} else if tp == string(serverConst.Regex) {
 		entity := s.NluRegexRepo.Get(uint(id))
-		ret = entity.Name
+		ret["code"] = entity.Code
+		ret["name"] = entity.Code
 	}
 
 	return
 }
 
-func (s *NluConvertService) populateSlots(sentId uint, nameMap map[string]string, nluDomain *domain.NluDomain) {
+func (s *NluConvertService) populateSlots(sentId uint, slotMap map[string]map[string]string, nluDomain *domain.NluDomain) {
 	slots := s.NluSlotRepo.ListBySentId(sentId)
 	for _, slot := range slots {
-		slotName := nameMap[fmt.Sprintf("%s-%s", slot.Type, slot.Value)]
-		if slotName == "" {
+		slotCode := slotMap[fmt.Sprintf("%s-%s", slot.Type, slot.Value)]["code"]
+		if slotCode == "" {
 			continue
 		}
 
 		slotItem := domain.SlotItem{Type: "text", InfluenceConversation: false}
-		mapItem := yaml.MapItem{Key: slotName, Value: slotItem}
+		mapItem := yaml.MapItem{Key: slotCode, Value: slotItem}
 		nluDomain.Slots = append(nluDomain.Slots, mapItem)
 	}
 }
 
-func (s *NluConvertService) genIntentSent(sent model.NluSent, nameMap map[string]string) (ret string) {
+func (s *NluConvertService) genIntentSent(sent model.NluSent, slotMap map[string]map[string]string) (ret string) {
 	if strings.Index(sent.Html, "<span") < 0 {
 		ret = sent.Html
 		return
@@ -245,8 +252,9 @@ func (s *NluConvertService) genIntentSent(sent model.NluSent, nameMap map[string
 				continue
 			}
 
-			slotName := nameMap[fmt.Sprintf("%s-%s", tp, val)]
-			line += fmt.Sprintf(`[%s]{"entity":"%s", "value":"%s"}`, content, slotName, slotName)
+			slotCode := slotMap[fmt.Sprintf("%s-%s", tp, val)]["code"]
+			line += fmt.Sprintf(`[%s]{"entity":"%s", "value":"%s_%s"}`,
+				content, slotCode, slotCode, serverConst.SlotTypeAbbrMap[tp])
 		}
 
 		if line != "" {

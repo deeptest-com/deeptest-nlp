@@ -76,7 +76,8 @@ const locale = {
   'form.confirm.to.remove': '确认删除？',
 
   'form.all': '所有',
-  'form.no': '编号',
+  'form.no': '序号',
+  'form.code': '编码',
   'form.name': '名称',
   'form.path': '路径',
   'form.content': '内容',
@@ -100,6 +101,8 @@ const locale = {
   'status.enable': '启用',
   'status.disable': '禁用',
 
+  'valid.required.code': '请输入编码',
+  'valid.format.code': '编码必须以字母开头，且只可包含字母和数字。',
   'valid.required.name': '请输入名称',
   'valid.required.path': '请输入路径',
   'valid.format.path': '路径不存在',

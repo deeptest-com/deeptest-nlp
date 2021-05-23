@@ -3,6 +3,7 @@ package model
 type NluSynonym struct {
 	BaseModel
 
+	Code  string           `json:"code"`
 	Name  string           `json:"name"`
 	Items []NluSynonymItem `json:"items" gorm:"-"`
 
