@@ -3,6 +3,7 @@ package service
 import (
 	_fileUtils "github.com/utlai/utl/internal/pkg/libs/file"
 	"github.com/utlai/utl/internal/server/domain"
+	"github.com/utlai/utl/internal/server/model"
 	"github.com/utlai/utl/internal/server/repo"
 	serverConst "github.com/utlai/utl/internal/server/utils/const"
 	"gopkg.in/yaml.v2"
@@ -74,19 +75,10 @@ func (s *NluConvertService) convertIntent(projectId uint, projectDir string, nlu
 
 			sents := s.NluSentRepo.ListByIntentId(intent.ID)
 			for _, sent := range sents {
-				intentItem.Examples += sent.Text + "\n" // TODO
+				s.populateSlots(sent.ID, nluDomain)
 
-				slots := s.NluSlotRepo.ListBySentId(sent.ID)
-				for _, slot := range slots {
-					slotName := s.getSlotNameByTypeAndId(slot.Type, slot.Value)
-					if slotName == "" {
-						continue
-					}
-
-					slotItem := domain.SlotItem{Type: "text", InfluenceConversation: false}
-					mapItem := yaml.MapItem{Key: slotName, Value: slotItem}
-					nluDomain.Slots = append(nluDomain.Slots, mapItem)
-				}
+				intentExamples := s.genIntentExamples(sent)
+				intentItem.Examples += intentExamples + "\n"
 			}
 
 			nluIntent.Items = append(nluIntent.Items, intentItem)
@@ -187,6 +179,27 @@ func (s *NluConvertService) getSlotNameByTypeAndId(tp string, idStr string) (ret
 		ret = entity.Name
 	}
 
+	return
+}
+
+func (s *NluConvertService) populateSlots(sentId uint, nluDomain *domain.NluDomain) {
+	slots := s.NluSlotRepo.ListBySentId(sentId)
+	for _, slot := range slots {
+		slotName := s.getSlotNameByTypeAndId(slot.Type, slot.Value)
+		if slotName == "" {
+			continue
+		}
+
+		slotItem := domain.SlotItem{Type: "text", InfluenceConversation: false}
+		mapItem := yaml.MapItem{Key: slotName, Value: slotItem}
+		nluDomain.Slots = append(nluDomain.Slots, mapItem)
+	}
+}
+
+func (s *NluConvertService) genIntentExamples(sent model.NluSent) (ret string) {
+	html := sent.Html
+
+	ret = html
 	return
 }
 
