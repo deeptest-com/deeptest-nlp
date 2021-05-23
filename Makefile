@@ -1,4 +1,4 @@
-VERSION=1.0.0
+VERSION=0.8
 PROJECT=utl-server
 PACKAGE=${PROJECT}-${VERSION}
 BINARY=utl-server
@@ -27,24 +27,26 @@ compile_all: compile_win64 compile_win32 compile_linux compile_mac
 
 compile_win64:
 	@echo 'start compile win64'
-	@CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 go build -x -v -ldflags "-s -w" -o ${BIN_WIN64}utl-server.exe src/main.go
+	@CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++ GOOS=windows GOARCH=amd64 go build -x -v -ldflags "-s -w" -o ${BIN_WIN64}utl-server.exe cmd/server/main.go
 
 compile_win32:
 	@echo 'start compile win32'
-	@CGO_ENABLED=1 CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ GOOS=windows GOARCH=386 go build -x -v -ldflags "-s -w" -o ${BIN_WIN32}utl-server.exe src/main.go
+	@CGO_ENABLED=1 CC=i686-w64-mingw32-gcc CXX=i686-w64-mingw32-g++ GOOS=windows GOARCH=386 go build -x -v -ldflags "-s -w" -o ${BIN_WIN32}utl-server.exe cmd/server/main.go
 
 compile_linux:
 	@echo 'start compile linux'
-	CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-gcc CXX=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-g++ go build -o ${BIN_LINUX}utl-server src/main.go
+	CGO_ENABLED=1 GOOS=linux GOARCH=amd64 CC=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-gcc CXX=/usr/local/gcc-4.8.1-for-linux64/bin/x86_64-pc-linux-g++ go build -o ${BIN_LINUX}utl-server cmd/server/main.go
 
 compile_mac:
 	@echo 'start compile mac'
 	@CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -o ${BIN_MAC}utl-server src/main.go
 
 copy_files:
-	@echo 'start copy files'
+	@echo 'start copy files ${BIN_OUT}'
 	@cp -r {cmd/server/server.yml,cmd/server/perms.yml,cmd/server/rbac_model.conf} bin
-	@for subdir in `ls ${BIN_OUT}`;
+	@gsed -i "s/binData.*/binData: true/" bin/server.yml
+
+	@for subdir in `ls ${BIN_OUT}`; \
 		do cp -r {bin/server.yml,bin/perms.yml,bin/rbac_model.conf} "${BIN_OUT}$${subdir}/utl-server"; done
 
 package:

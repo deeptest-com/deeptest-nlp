@@ -17,6 +17,7 @@ import (
 	"github.com/utlai/utl/internal/server/model"
 	"github.com/utlai/utl/internal/server/repo"
 	"github.com/utlai/utl/internal/server/service"
+	serverRes "github.com/utlai/utl/res/server"
 	"net/http"
 	"strings"
 	"time"
@@ -35,10 +36,12 @@ func Init(version string, printVersion, printRouter *bool) {
 	}
 	irisServer.App.Logger().SetLevel(serverConf.Config.LogLevel)
 
-	//if common.Config.BinData {
-	//	irisServer.App.RegisterView(iris.HTML(irisServer.AssetFile, ".html"))
-	//	irisServer.App.HandleDir("/", irisServer.AssetFile)
-	//}
+	if serverConf.Config.BinData {
+		//	irisServer.App.RegisterView(iris.HTML(irisServer.AssetFile, ".html"))
+		//	irisServer.App.HandleDir("/", irisServer.AssetFile)
+
+		irisServer.App.HandleDir("/", serverRes.AssetDir)
+	}
 
 	router := router.NewRouter(irisServer.App)
 	injectObj(router)

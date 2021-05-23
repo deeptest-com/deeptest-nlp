@@ -16,12 +16,12 @@ import (
 var Config = struct {
 	LogLevel string `yaml:"logLevel" env:"LogLevel" default:"info"`
 	Debug    bool   `yaml:"debug" env:"Debug" default:"false"`
-	BinData  bool   `default:"true" env:"BinData"`
+	BinData  bool   `default:"false" env:"BinData"`
 	Https    bool   `default:"false" env:"Https"`
 	CertPath string `default:"" env:"CertPath"`
 	CertKey  string `default:"" env:"CertKey"`
 	Port     int    `default:"8085" env:"Port"`
-	Host     string `default:"127.0.0.1" env:"HostId"`
+	Host     string `default:"0.0.0.0" env:"HostId"`
 	Adapter  struct {
 		VmPlatform        serverConst.VmPlatform        `yaml:"vmPlatform" env:"VmPlatform" default:"pve"`
 		ContainerPlatform serverConst.ContainerPlatform `yaml:"containerPlatform" env:"ContainerPlatform" default:"portainer"`

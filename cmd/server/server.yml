@@ -1,27 +1,27 @@
-logLevel: info  #日志级别 info debug
-debug: true #调试模式
-binData: false #二进制模式
-https: false #https
-host: 127.0.0.1
-port: 8085 #端口
+logLevel: info
+debug: true
+binData: false
+https: false
+host: 0.0.0.0
+port: 8085
 
-adapter: # 虚拟化类型
+adapter:
   vmPlatform: pve
   containerPlatform: portainer
 
-admin: # 管理员账号信息，用于数据填充
+admin:
   username: admin
   rolename: administrator
   name: admin
   password: P2ssw0rd
 
 db:
-  adapter: mysql # 数据库类型
-  host: localhost # 数据库地址
-  port: 3306 #数据库端口
-  name: utl #数据库名称
-  user: root #数据库用户名
-  password: P2ssw0rd #数据库密码
+  adapter: mysql
+  host: localhost
+  port: 3306
+  name: utl
+  user: root
+  password: P2ssw0rd
 
 redis:
   enable: false
