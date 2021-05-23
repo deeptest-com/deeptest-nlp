@@ -1,7 +1,5 @@
 version: "2.0"
-
 nlu:
-
 - regex: xpath
   examples: |
-    - \d{3}
+    \d{3}

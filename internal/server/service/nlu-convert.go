@@ -16,6 +16,7 @@ type NluConvertService struct {
 	NluLookupRepo      *repo.NluLookupRepo      `inject:""`
 	NluLookupItemRepo  *repo.NluLookupItemRepo  `inject:""`
 	NluRegexRepo       *repo.NluRegexRepo       `inject:""`
+	NluRegexItemRepo   *repo.NluRegexItemRepo   `inject:""`
 
 	ProjectRepo   *repo.ProjectRepo   `inject:""`
 	NluTaskRepo   *repo.NluTaskRepo   `inject:""`
@@ -95,25 +96,6 @@ func (s *NluConvertService) convertIntent(projectId uint, projectDir string, nlu
 	return
 }
 
-func (s *NluConvertService) getSlotNameByTypeAndId(tp string, idStr string) (ret string) {
-	id, _ := strconv.Atoi(idStr)
-
-	if tp == string(serverConst.Synonym) {
-		entity := s.NluSynonymRepo.Get(uint(id))
-		ret = entity.Name
-
-	} else if tp == string(serverConst.Lookup) {
-		entity := s.NluLookupRepo.Get(uint(id))
-		ret = entity.Name
-
-	} else if tp == string(serverConst.Regex) {
-		entity := s.NluRegexRepo.Get(uint(id))
-		ret = entity.Name
-	}
-
-	return
-}
-
 func (s *NluConvertService) convertSynonym(projectId uint, projectDir string, nluDomain *domain.NluDomain) {
 	_fileUtils.RmDir(filepath.Join(projectDir, "synonym"))
 
@@ -124,15 +106,15 @@ func (s *NluConvertService) convertSynonym(projectId uint, projectDir string, nl
 		nluSynonym := domain.NluSynonym{Version: serverConst.NluVersion}
 		synonymDef := domain.NluSynonymDef{Synonym: synonym.Name}
 
-		synonymItems := s.NluSynonymItemRepo.ListBySynonymId(projectId)
+		synonymItems := s.NluSynonymItemRepo.ListBySynonymId(synonym.ID)
 		for _, item := range synonymItems {
 			synonymDef.Examples += item.Content + "\n"
 		}
 		nluSynonym.SynonymDef = append(nluSynonym.SynonymDef, synonymDef)
 
-		filePath := filepath.Join(projectDir, "synonym", synonym.Name+".yml")
-		bytes, _ := yaml.Marshal(&nluSynonym)
-		_fileUtils.WriteFile(filePath, string(bytes))
+		yamlContent := changeArrToFlow(nluSynonym)
+		filePath := filepath.Join(projectDir, "data", "synonym", synonym.Name+".yml")
+		_fileUtils.WriteFile(filePath, yamlContent)
 	}
 
 	return
@@ -147,15 +129,15 @@ func (s *NluConvertService) convertLookup(projectId uint, projectDir string, nlu
 		nluLookup := domain.NluLookup{Version: serverConst.NluVersion}
 		lookupDef := domain.NluLookupDef{Lookup: lookup.Name}
 
-		lookupItems := s.NluSynonymItemRepo.ListBySynonymId(projectId)
+		lookupItems := s.NluLookupItemRepo.ListByLookupId(lookup.ID)
 		for _, item := range lookupItems {
 			lookupDef.Examples += item.Content + "\n"
 		}
 		nluLookup.LookupDef = append(nluLookup.LookupDef, lookupDef)
 
-		filePath := filepath.Join(projectDir, "lookup", lookup.Name+".yml")
-		bytes, _ := yaml.Marshal(&nluLookup)
-		_fileUtils.WriteFile(filePath, string(bytes))
+		yamlContent := changeArrToFlow(nluLookup)
+		filePath := filepath.Join(projectDir, "data", "lookup", lookup.Name+".yml")
+		_fileUtils.WriteFile(filePath, yamlContent)
 	}
 
 	return
@@ -171,15 +153,34 @@ func (s *NluConvertService) convertRegex(projectId uint, projectDir string, nluD
 
 		regexDef := domain.NluRegexDef{Regex: regex.Name}
 
-		lookupItems := s.NluSynonymItemRepo.ListBySynonymId(projectId)
-		for _, item := range lookupItems {
+		regexItems := s.NluRegexItemRepo.ListByRegexId(regex.ID)
+		for _, item := range regexItems {
 			regexDef.Examples += item.Content + "\n"
 		}
 		nluRegex.RegexDef = append(nluRegex.RegexDef, regexDef)
 
-		filePath := filepath.Join(projectDir, "regex", regex.Name+".yml")
-		bytes, _ := yaml.Marshal(&nluRegex)
-		_fileUtils.WriteFile(filePath, string(bytes))
+		yamlContent := changeArrToFlow(nluRegex)
+		filePath := filepath.Join(projectDir, "data", "regex", regex.Name+".yml")
+		_fileUtils.WriteFile(filePath, yamlContent)
+	}
+
+	return
+}
+
+func (s *NluConvertService) getSlotNameByTypeAndId(tp string, idStr string) (ret string) {
+	id, _ := strconv.Atoi(idStr)
+
+	if tp == string(serverConst.Synonym) {
+		entity := s.NluSynonymRepo.Get(uint(id))
+		ret = entity.Name
+
+	} else if tp == string(serverConst.Lookup) {
+		entity := s.NluLookupRepo.Get(uint(id))
+		ret = entity.Name
+
+	} else if tp == string(serverConst.Regex) {
+		entity := s.NluRegexRepo.Get(uint(id))
+		ret = entity.Name
 	}
 
 	return
