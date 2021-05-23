@@ -6,7 +6,7 @@ import (
 	"github.com/utlai/utl/internal/server/domain"
 	"github.com/utlai/utl/internal/server/repo"
 	serverConst "github.com/utlai/utl/internal/server/utils/const"
-	"gopkg.in/yaml.v3"
+	"gopkg.in/yaml.v2"
 	"path/filepath"
 )
 
@@ -28,19 +28,28 @@ func NewNluConvertService() *NluConvertService {
 }
 
 func (s *NluConvertService) ConvertProject(id uint) (files []string) {
-	nluDomain := domain.NluDomain{}
-
 	project := s.ProjectRepo.Get(id)
 	projectDir := project.Path
+
+	nluDomain := s.ParserDomain(projectDir)
 
 	s.ConvertIntent(id, projectDir)
 	s.ConvertSynonym(id, projectDir, &nluDomain)
 	s.ConvertLookup(id, projectDir, &nluDomain)
 	s.ConvertRegex(id, projectDir, &nluDomain)
 
+	yamlStr := changeArrToFlow(nluDomain)
 	domainFilePath := filepath.Join(projectDir, "domain.yml")
-	bytes, _ := yaml.Marshal(&nluDomain)
-	_fileUtils.WriteFile(domainFilePath, string(bytes))
+	_fileUtils.WriteFile(domainFilePath, yamlStr)
+
+	return
+}
+
+func (s *NluConvertService) ParserDomain(projectDir string) (nluDomain domain.NluDomain) {
+	domainFilePath := filepath.Join(projectDir, "domain.yml")
+	content := _fileUtils.ReadFileBuf(domainFilePath)
+
+	yaml.Unmarshal(content, &nluDomain)
 
 	return
 }
@@ -132,5 +141,15 @@ func (s *NluConvertService) ConvertIntent(projectId uint, projectDir string) (fi
 		}
 	}
 
+	return
+}
+
+func changeArrToFlow(obj interface{}) (ret string) {
+	bytes, _ := yaml.Marshal(&obj)
+	m := yaml.MapSlice{}
+	yaml.Unmarshal(bytes, &m)
+
+	d, _ := yaml.Marshal(&m)
+	ret = string(d)
 	return
 }
