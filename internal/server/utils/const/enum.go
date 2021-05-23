@@ -6,5 +6,5 @@ const (
 	Synonym NluSlotType = "synonym"
 	Lookup  NluSlotType = "lookup"
 	Regex   NluSlotType = "regex"
-	text    NluSlotType = "text"
+	Text    NluSlotType = "text"
 )

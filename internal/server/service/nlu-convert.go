@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	_fileUtils "github.com/utlai/utl/internal/pkg/libs/file"
 	"github.com/utlai/utl/internal/server/domain"
 	"github.com/utlai/utl/internal/server/model"
@@ -8,7 +9,9 @@ import (
 	serverConst "github.com/utlai/utl/internal/server/utils/const"
 	"gopkg.in/yaml.v2"
 	"path/filepath"
+	"regexp"
 	"strconv"
+	"strings"
 )
 
 type NluConvertService struct {
@@ -75,9 +78,11 @@ func (s *NluConvertService) convertIntent(projectId uint, projectDir string, nlu
 
 			sents := s.NluSentRepo.ListByIntentId(intent.ID)
 			for _, sent := range sents {
-				s.populateSlots(sent.ID, nluDomain)
+				slotNameMap := s.getSlotNameMap(sent.ID)
 
-				intentExamples := s.genIntentExamples(sent)
+				s.populateSlots(sent.ID, slotNameMap, nluDomain)
+
+				intentExamples := s.genIntentSent(sent, slotNameMap)
 				intentItem.Examples += intentExamples + "\n"
 			}
 
@@ -163,6 +168,22 @@ func (s *NluConvertService) convertRegex(projectId uint, projectDir string, nluD
 	return
 }
 
+func (s *NluConvertService) getSlotNameMap(sentId uint) (ret map[string]string) {
+	ret = map[string]string{}
+
+	slots := s.NluSlotRepo.ListBySentId(sentId)
+	for _, slot := range slots {
+		slotName := s.getSlotNameByTypeAndId(slot.Type, slot.Value)
+		if slotName == "" {
+			continue
+		}
+
+		ret[fmt.Sprintf("%s-%s", slot.Type, slot.Value)] = slotName
+	}
+
+	return
+}
+
 func (s *NluConvertService) getSlotNameByTypeAndId(tp string, idStr string) (ret string) {
 	id, _ := strconv.Atoi(idStr)
 
@@ -182,10 +203,10 @@ func (s *NluConvertService) getSlotNameByTypeAndId(tp string, idStr string) (ret
 	return
 }
 
-func (s *NluConvertService) populateSlots(sentId uint, nluDomain *domain.NluDomain) {
+func (s *NluConvertService) populateSlots(sentId uint, nameMap map[string]string, nluDomain *domain.NluDomain) {
 	slots := s.NluSlotRepo.ListBySentId(sentId)
 	for _, slot := range slots {
-		slotName := s.getSlotNameByTypeAndId(slot.Type, slot.Value)
+		slotName := nameMap[fmt.Sprintf("%s-%s", slot.Type, slot.Value)]
 		if slotName == "" {
 			continue
 		}
@@ -196,10 +217,43 @@ func (s *NluConvertService) populateSlots(sentId uint, nluDomain *domain.NluDoma
 	}
 }
 
-func (s *NluConvertService) genIntentExamples(sent model.NluSent) (ret string) {
-	html := sent.Html
+func (s *NluConvertService) genIntentSent(sent model.NluSent, nameMap map[string]string) (ret string) {
+	if strings.Index(sent.Html, "<span") < 0 {
+		ret = sent.Html
+		return
+	}
 
-	ret = html
+	regx := regexp.MustCompile(`(?U)<span\b.*>(.*)</span>`)
+	spanArr := regx.FindAllString(sent.Html, -1)
+	for _, span := range spanArr {
+		line := ""
+
+		regx2 := regexp.MustCompile(
+			`<span id="(\d+)" ` +
+				`class="[a-z]+" ` +
+				`data-type="([a-z]+)" ` +
+				`data-value="(\d+)">(.*)</span>`)
+		arr := regx2.FindAllStringSubmatch(span, -1)
+		for _, subArr := range arr {
+			//seq := subArr[1]
+			tp := subArr[2]
+			val := subArr[3]
+			content := subArr[4]
+
+			if tp == string(serverConst.Text) {
+				line += content
+				continue
+			}
+
+			slotName := nameMap[fmt.Sprintf("%s-%s", tp, val)]
+			line += fmt.Sprintf(`[%s]{"entity":"%s", "value":"%s"}`, content, slotName, slotName)
+		}
+
+		if line != "" {
+			ret += line
+		}
+	}
+
 	return
 }
 
