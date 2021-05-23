@@ -2,12 +2,12 @@ package service
 
 import (
 	_fileUtils "github.com/utlai/utl/internal/pkg/libs/file"
-	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
 	"github.com/utlai/utl/internal/server/domain"
 	"github.com/utlai/utl/internal/server/repo"
 	serverConst "github.com/utlai/utl/internal/server/utils/const"
 	"gopkg.in/yaml.v2"
 	"path/filepath"
+	"strconv"
 )
 
 type NluConvertService struct {
@@ -21,6 +21,7 @@ type NluConvertService struct {
 	NluTaskRepo   *repo.NluTaskRepo   `inject:""`
 	NluIntentRepo *repo.NluIntentRepo `inject:""`
 	NluSentRepo   *repo.NluSentRepo   `inject:""`
+	NluSlotRepo   *repo.NluSlotRepo   `inject:""`
 }
 
 func NewNluConvertService() *NluConvertService {
@@ -31,21 +32,24 @@ func (s *NluConvertService) ConvertProject(id uint) (files []string) {
 	project := s.ProjectRepo.Get(id)
 	projectDir := project.Path
 
-	nluDomain := s.ParserDomain(projectDir)
+	nluDomain := s.parserDomain(projectDir)
 
-	s.ConvertIntent(id, projectDir)
-	s.ConvertSynonym(id, projectDir, &nluDomain)
-	s.ConvertLookup(id, projectDir, &nluDomain)
-	s.ConvertRegex(id, projectDir, &nluDomain)
+	nluDomain.Intents = make([]string, 0)
+	nluDomain.Entities = make([]string, 0)
+	nluDomain.Slots = yaml.MapSlice{}
+
+	s.convertIntent(id, projectDir, &nluDomain)
+	s.convertSynonym(id, projectDir, &nluDomain)
+	s.convertLookup(id, projectDir, &nluDomain)
+	s.convertRegex(id, projectDir, &nluDomain)
 
 	yamlStr := changeArrToFlow(nluDomain)
-	domainFilePath := filepath.Join(projectDir, "domain.yml")
-	_fileUtils.WriteFile(domainFilePath, yamlStr)
+	_fileUtils.WriteFile(filepath.Join(projectDir, "domain.yml"), yamlStr)
 
 	return
 }
 
-func (s *NluConvertService) ParserDomain(projectDir string) (nluDomain domain.NluDomain) {
+func (s *NluConvertService) parserDomain(projectDir string) (nluDomain domain.NluDomain) {
 	domainFilePath := filepath.Join(projectDir, "domain.yml")
 	content := _fileUtils.ReadFileBuf(domainFilePath)
 
@@ -54,11 +58,69 @@ func (s *NluConvertService) ParserDomain(projectDir string) (nluDomain domain.Nl
 	return
 }
 
-func (s *NluConvertService) ConvertSynonym(projectId uint, projectDir string, nluDomain *domain.NluDomain) {
+func (s *NluConvertService) convertIntent(projectId uint, projectDir string, nluDomain *domain.NluDomain) (files []string) {
+	_fileUtils.RmDir(filepath.Join(projectDir, "intent"))
+
+	tasks := s.NluTaskRepo.ListByProjectId(projectId)
+	for _, task := range tasks {
+		intents := s.NluIntentRepo.ListByTaskId(task.ID)
+
+		for _, intent := range intents {
+			nluDomain.Intents = append(nluDomain.Intents, intent.Name)
+
+			nluIntent := domain.NluIntent{}
+
+			sents := s.NluSentRepo.ListByIntentId(intent.ID)
+
+			for _, sent := range sents {
+				slots := s.NluSlotRepo.ListBySentId(sent.ID)
+				for _, slot := range slots {
+					slotName := s.getSlotNameByTypeAndId(slot.Type, slot.Value)
+					if slotName == "" {
+						continue
+					}
+
+					slotItem := domain.SlotItem{Type: "text", InfluenceConversation: false}
+					mapItem := yaml.MapItem{Key: slotName, Value: slotItem}
+					nluDomain.Slots = append(nluDomain.Slots, mapItem)
+				}
+			}
+
+			intentFilePath := filepath.Join(projectDir, "intent", intent.Name+".yml")
+			bytes, _ := yaml.Marshal(&nluIntent)
+			_fileUtils.WriteFile(intentFilePath, string(bytes))
+		}
+	}
+
+	return
+}
+
+func (s *NluConvertService) getSlotNameByTypeAndId(tp string, idStr string) (ret string) {
+	id, _ := strconv.Atoi(idStr)
+
+	if tp == string(serverConst.Synonym) {
+		entity := s.NluSynonymRepo.Get(uint(id))
+		ret = entity.Name
+
+	} else if tp == string(serverConst.Lookup) {
+		entity := s.NluLookupRepo.Get(uint(id))
+		ret = entity.Name
+
+	} else if tp == string(serverConst.Regex) {
+		entity := s.NluRegexRepo.Get(uint(id))
+		ret = entity.Name
+	}
+
+	return
+}
+
+func (s *NluConvertService) convertSynonym(projectId uint, projectDir string, nluDomain *domain.NluDomain) {
 	_fileUtils.RmDir(filepath.Join(projectDir, "synonym"))
 
 	synonyms := s.NluSynonymRepo.ListByProjectId(projectId)
 	for _, synonym := range synonyms {
+		nluDomain.Entities = append(nluDomain.Entities, synonym.Name)
+
 		nluSynonym := domain.NluSynonym{Version: serverConst.NluVersion}
 		synonymDef := domain.NluSynonymDef{Synonym: synonym.Name}
 
@@ -75,11 +137,13 @@ func (s *NluConvertService) ConvertSynonym(projectId uint, projectDir string, nl
 
 	return
 }
-func (s *NluConvertService) ConvertLookup(projectId uint, projectDir string, nluDomain *domain.NluDomain) {
+func (s *NluConvertService) convertLookup(projectId uint, projectDir string, nluDomain *domain.NluDomain) {
 	_fileUtils.RmDir(filepath.Join(projectDir, "lookup"))
 
 	lookups := s.NluLookupRepo.ListByProjectId(projectId)
 	for _, lookup := range lookups {
+		nluDomain.Entities = append(nluDomain.Entities, lookup.Name)
+
 		nluLookup := domain.NluLookup{Version: serverConst.NluVersion}
 		lookupDef := domain.NluLookupDef{Lookup: lookup.Name}
 
@@ -96,11 +160,13 @@ func (s *NluConvertService) ConvertLookup(projectId uint, projectDir string, nlu
 
 	return
 }
-func (s *NluConvertService) ConvertRegex(projectId uint, projectDir string, nluDomain *domain.NluDomain) {
+func (s *NluConvertService) convertRegex(projectId uint, projectDir string, nluDomain *domain.NluDomain) {
 	_fileUtils.RmDir(filepath.Join(projectDir, "regex"))
 
 	regexes := s.NluRegexRepo.ListByProjectId(projectId)
 	for _, regex := range regexes {
+		nluDomain.Entities = append(nluDomain.Entities, regex.Name)
+
 		nluRegex := domain.NluRegex{Version: serverConst.NluVersion}
 
 		regexDef := domain.NluRegexDef{Regex: regex.Name}
@@ -114,31 +180,6 @@ func (s *NluConvertService) ConvertRegex(projectId uint, projectDir string, nluD
 		filePath := filepath.Join(projectDir, "regex", regex.Name+".yml")
 		bytes, _ := yaml.Marshal(&nluRegex)
 		_fileUtils.WriteFile(filePath, string(bytes))
-	}
-
-	return
-}
-
-func (s *NluConvertService) ConvertIntent(projectId uint, projectDir string) (files []string) {
-	_fileUtils.RmDir(filepath.Join(projectDir, "intent"))
-
-	tasks := s.NluTaskRepo.ListByProjectId(projectId)
-	for _, task := range tasks {
-		intents := s.NluIntentRepo.ListByTaskId(task.ID)
-
-		for _, intent := range intents {
-			nluIntent := domain.NluIntent{}
-
-			sents := s.NluSentRepo.ListByIntentId(intent.ID)
-
-			for _, sent := range sents {
-				_logUtils.Info(sent.Text)
-			}
-
-			intentFilePath := filepath.Join(projectDir, "intent", intent.Name+".yml")
-			bytes, _ := yaml.Marshal(&nluIntent)
-			_fileUtils.WriteFile(intentFilePath, string(bytes))
-		}
 	}
 
 	return

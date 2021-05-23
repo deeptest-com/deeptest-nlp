@@ -1,12 +1,14 @@
 package domain
 
+import "gopkg.in/yaml.v2"
+
 type NluDomain struct {
-	Version       string                       `yaml:"version"`
-	SessionConfig SessionConfig                `yaml:"session_config"`
-	Responses     Responses                    `yaml:"responses"`
-	Intents       []string                     `yaml:"intents,flow"`
-	Entities      []string                     `yaml:"entities,flow"`
-	Slots         map[string]map[string]string `yaml:"slots"`
+	Version       string        `yaml:"version"`
+	SessionConfig SessionConfig `yaml:"session_config"`
+	Responses     Responses     `yaml:"responses"`
+	Intents       []string      `yaml:"intents,flow"`
+	Entities      []string      `yaml:"entities,flow"`
+	Slots         yaml.MapSlice `yaml:"slots"`
 }
 
 type Responses struct {
@@ -22,7 +24,7 @@ type SessionConfig struct {
 	CarryOverSlotsToNewSession bool  `yaml:"carry_over_slots_to_new_session"`
 }
 
-type Loglevel struct {
+type SlotItem struct {
 	Type                  string `yaml:"type"`
 	InfluenceConversation bool   `yaml:"influence_conversation"`
 }

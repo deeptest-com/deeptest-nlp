@@ -44,6 +44,20 @@ func (r *NluSlotRepo) Query(keywords, status string, pageNo int, pageSize int) (
 	return
 }
 
+func (r *NluSlotRepo) ListBySentId(sentId uint) (pos []model.NluSlot) {
+	query := r.DB.Select("*").
+		Where("deleted_at IS NULL AND NOT disabled").
+		Where("sent_refer = ?", sentId).
+		Order("id ASC")
+
+	err := query.Find(&pos).Error
+	if err != nil {
+		_logUtils.Errorf("sql error %s", err.Error())
+	}
+
+	return
+}
+
 func (r *NluSlotRepo) Get(id uint) (po model.NluSlot) {
 	r.DB.Where("id = ?", id).First(&po)
 	return

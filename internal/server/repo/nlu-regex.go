@@ -47,7 +47,7 @@ func (r *NluRegexRepo) Query(keywords, status string, pageNo int, pageSize int) 
 func (r *NluRegexRepo) ListByProjectId(projectId uint) (pos []model.NluRegex) {
 	query := r.DB.Select("*").
 		Where("deleted_at IS NULL AND NOT disabled").
-		Where("project_id = ?", projectId).
+		//Where("project_id = ?", projectId).
 		Order("id ASC")
 
 	err := query.Find(&pos).Error

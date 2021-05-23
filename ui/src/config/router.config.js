@@ -14,7 +14,7 @@ export const asyncRouterMap = [
     name: 'index',
     component: BasicLayout,
     meta: { title: 'menu.home' },
-    redirect: '/nlu/task/list',
+    redirect: '/platform/project/list',
     children: [
       {
         path: '/platform/dashboard',
