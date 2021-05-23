@@ -70,10 +70,12 @@ func (s *NluConvertService) convertIntent(projectId uint, projectDir string, nlu
 			nluDomain.Intents = append(nluDomain.Intents, intent.Name)
 
 			nluIntent := domain.NluIntent{}
+			intentItem := domain.NluIntentItem{Intent: intent.Name}
 
 			sents := s.NluSentRepo.ListByIntentId(intent.ID)
-
 			for _, sent := range sents {
+				intentItem.Examples += sent.Text + "\n" // TODO
+
 				slots := s.NluSlotRepo.ListBySentId(sent.ID)
 				for _, slot := range slots {
 					slotName := s.getSlotNameByTypeAndId(slot.Type, slot.Value)
@@ -87,9 +89,11 @@ func (s *NluConvertService) convertIntent(projectId uint, projectDir string, nlu
 				}
 			}
 
-			intentFilePath := filepath.Join(projectDir, "intent", intent.Name+".yml")
-			bytes, _ := yaml.Marshal(&nluIntent)
-			_fileUtils.WriteFile(intentFilePath, string(bytes))
+			nluIntent.Items = append(nluIntent.Items, intentItem)
+
+			yamlContent := changeArrToFlow(nluIntent)
+			intentFilePath := filepath.Join(projectDir, "data", "intent", intent.Name+".yml")
+			_fileUtils.WriteFile(intentFilePath, yamlContent)
 		}
 	}
 
@@ -127,13 +131,13 @@ func (s *NluConvertService) convertLookup(projectId uint, projectDir string, nlu
 		nluDomain.Entities = append(nluDomain.Entities, lookup.Name)
 
 		nluLookup := domain.NluLookup{Version: serverConst.NluVersion}
-		lookupDef := domain.NluLookupDef{Lookup: lookup.Name}
+		lookupDef := domain.NluLookupItem{Lookup: lookup.Name}
 
 		lookupItems := s.NluLookupItemRepo.ListByLookupId(lookup.ID)
 		for _, item := range lookupItems {
 			lookupDef.Examples += item.Content + "\n"
 		}
-		nluLookup.LookupDef = append(nluLookup.LookupDef, lookupDef)
+		nluLookup.Items = append(nluLookup.Items, lookupDef)
 
 		yamlContent := changeArrToFlow(nluLookup)
 		filePath := filepath.Join(projectDir, "data", "lookup", lookup.Name+".yml")
@@ -151,13 +155,13 @@ func (s *NluConvertService) convertRegex(projectId uint, projectDir string, nluD
 
 		nluRegex := domain.NluRegex{Version: serverConst.NluVersion}
 
-		regexDef := domain.NluRegexDef{Regex: regex.Name}
+		regexDef := domain.NluRegexItem{Regex: regex.Name}
 
 		regexItems := s.NluRegexItemRepo.ListByRegexId(regex.ID)
 		for _, item := range regexItems {
 			regexDef.Examples += item.Content + "\n"
 		}
-		nluRegex.RegexDef = append(nluRegex.RegexDef, regexDef)
+		nluRegex.Items = append(nluRegex.Items, regexDef)
 
 		yamlContent := changeArrToFlow(nluRegex)
 		filePath := filepath.Join(projectDir, "data", "regex", regex.Name+".yml")

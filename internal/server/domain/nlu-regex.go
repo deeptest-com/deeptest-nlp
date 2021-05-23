@@ -1,11 +1,11 @@
 package domain
 
 type NluRegex struct {
-	Version  string        `yaml:"version"`
-	RegexDef []NluRegexDef `yaml:"nlu,flow"`
+	Version string         `yaml:"version"`
+	Items   []NluRegexItem `yaml:"nlu,flow"`
 }
 
-type NluRegexDef struct {
+type NluRegexItem struct {
 	Regex    string `yaml:"regex"`
 	Examples string `yaml:"examples"`
 }
