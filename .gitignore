@@ -9,3 +9,4 @@
 /rasa/temp/
 /rasa/spacy/models/*.gz
 /rasa/spacy/res/*.gz
+/project/demo/data/
