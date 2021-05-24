@@ -62,5 +62,6 @@ SET sql_mode = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZER
 show variables like 'sql_mode';
 
 scp -r bin/utl-server/0.8/linux/utl-server 139.224.8.129:~
+scp -r bin/utl-server/0.8/linux/utl-server/utl-server 139.224.8.129:~/utl-server
 
 cd utl-server && nohup ./utl-server 2>&1 &

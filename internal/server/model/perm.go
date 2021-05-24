@@ -9,6 +9,6 @@ type Permission struct {
 	Act         string `gorm:"type:varchar(256)" json:"act" comment:"动作"`
 }
 
-//func (Permission) TableName() string {
-//	return "biz_permission"
-//}
+func (Permission) TableName() string {
+	return "biz_permission"
+}

@@ -41,6 +41,10 @@ type CasbinRule struct {
 	V5    string `gorm:"size:100;uniqueIndex:unique_index"`
 }
 
+func (CasbinRule) TableName() string {
+	return "biz_casbin_rule"
+}
+
 type Filter struct {
 	PType []string
 	V0    []string

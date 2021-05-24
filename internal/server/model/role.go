@@ -9,6 +9,6 @@ type Role struct {
 	PermIds     []uint `gorm:"-" json:"perm_ids" comment:"权限id"`
 }
 
-//func (Role) TableName() string {
-//	return "biz_role"
-//}
+func (Role) TableName() string {
+	return "biz_role"
+}
