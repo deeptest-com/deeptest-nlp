@@ -20,6 +20,7 @@ mac: prepare_res compile_mac copy_files package
 
 prepare_res:
 	@echo 'start prepare res'
+	@cp cmd/server/*.yml cmd/server/*.conf  res/server/
 	@go-bindata -o=res/server/res.go -pkg=serverRes res/server/... ui/dist/...
 	@rm -rf ${BIN_DIR}
 
@@ -39,15 +40,19 @@ compile_linux:
 
 compile_mac:
 	@echo 'start compile mac'
-	@CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -o ${BIN_MAC}utl-server src/main.go
+	@CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -o ${BIN_MAC}utl-server cmd/server/main.go
 
 copy_files:
 	@echo 'start copy files ${BIN_OUT}'
-	@cp -r {cmd/server/server.yml,cmd/server/perms.yml,cmd/server/rbac_model.conf} bin
-	@gsed -i "s/binData.*/binData: true/" bin/server.yml
+
+	@sqlite3 utl.db ".backup '${BIN_DIR}/utl.db'"
+	@sqlite3 '${BIN_DIR}/utl.db' ".read 'xdoc/clear-data.txt'"
 
 	@for subdir in `ls ${BIN_OUT}`; \
-		do cp -r {bin/server.yml,bin/perms.yml,bin/rbac_model.conf} "${BIN_OUT}$${subdir}/utl-server"; done
+		do cp -r utl.db "${BIN_OUT}$${subdir}/utl-server"; done
+
+	@for subdir in `ls ${BIN_OUT}`; \
+		do cp -r project "${BIN_OUT}$${subdir}/utl-server"; done
 
 package:
 	@echo 'start package'

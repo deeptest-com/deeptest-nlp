@@ -153,5 +153,5 @@ const (
 type ValidMethod string
 
 const (
-	ValidPath ValidMethod = "validPath"
+	ValidProjectPath ValidMethod = "validProjectPath"
 )

@@ -105,7 +105,7 @@ const locale = {
   'valid.format.code': '编码必须以字母开头，且只可包含字母和数字。',
   'valid.required.name': '请输入名称',
   'valid.required.path': '请输入路径',
-  'valid.format.path': '路径不存在',
+  'valid.project.path': '不是一个合法的项目路径',
   'valid.required.content': '请输入内容',
   'valid.select.dict': '请选择词典。',
 

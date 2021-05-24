@@ -2,11 +2,13 @@ package server
 
 import (
 	"fmt"
+	assetfs "github.com/elazarl/go-bindata-assetfs"
 	"github.com/facebookgo/inject"
 	"github.com/kataras/iris/v12"
 	"github.com/sirupsen/logrus"
 	"github.com/utlai/utl/cmd/server/router"
 	"github.com/utlai/utl/cmd/server/router/handler"
+	_commonUtils "github.com/utlai/utl/internal/pkg/libs/common"
 	"github.com/utlai/utl/internal/pkg/utils"
 	"github.com/utlai/utl/internal/server/biz/middleware"
 	middlewareUtils "github.com/utlai/utl/internal/server/biz/middleware/misc"
@@ -29,18 +31,19 @@ func Init(version string, printVersion, printRouter *bool) {
 
 	db.InitDB()
 
-	// irisServer := server.NewServer(AssetFile()) // 加载前端文件
 	irisServer := NewServer(nil)
 	if irisServer == nil {
 		panic("Http 初始化失败")
 	}
 	irisServer.App.Logger().SetLevel(serverConf.Config.LogLevel)
 
-	if serverConf.Config.BinData {
-		//	irisServer.App.RegisterView(iris.HTML(irisServer.AssetFile, ".html"))
-		//	irisServer.App.HandleDir("/", irisServer.AssetFile)
-
-		irisServer.App.HandleDir("/", serverRes.AssetDir)
+	if _commonUtils.IsRelease() {
+		irisServer.App.HandleDir("/",
+			&assetfs.AssetFS{Asset: serverRes.Asset, AssetDir: serverRes.AssetDir, AssetInfo: serverRes.AssetInfo,
+				Prefix: "ui/dist"}, iris.DirOptions{
+				IndexName: "index.html",
+				Compress:  false,
+			})
 	}
 
 	router := router.NewRouter(irisServer.App)

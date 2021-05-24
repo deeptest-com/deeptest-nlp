@@ -17,6 +17,7 @@ import { constantRouterMap, asyncRouterMap } from '@/config/router.config'
 Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
+  // mode: 'history',
+  mode: 'hash',
   routes: constantRouterMap.concat(asyncRouterMap)
 })

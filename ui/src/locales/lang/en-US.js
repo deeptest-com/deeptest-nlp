@@ -104,7 +104,7 @@ const locale = {
   'valid.required.name': 'Please input name',
   'valid.required.content': 'Please input content',
   'valid.required.path': 'Path not exist',
-  'valid.format.path': '',
+  'valid.project.path': 'Not a valid project path',
   'valid.select.dict': 'Please select dictionary.',
 
   'common.login': 'Login',

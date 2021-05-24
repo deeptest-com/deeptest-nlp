@@ -493,11 +493,11 @@ export function loadDicts (type) {
     params: { type: type }
   })
 }
-export function validPath (value) {
+export function validProjectPath (value) {
   return request({
     url: api.valid,
     method: 'post',
-    data: { method: 'validPath', value: value }
+    data: { method: 'validProjectPath', value: value }
   })
 }
 

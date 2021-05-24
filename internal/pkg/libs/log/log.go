@@ -23,7 +23,7 @@ func Init(app string) {
 	log.Info("Run as user " + usr.Username)
 
 	_vari.WorkDir = addPathSepIfNeeded(filepath.Join(usr.HomeDir, "utl"))
-	logDir := addPathSepIfNeeded(filepath.Join(_vari.WorkDir, "log"))
+	logDir := addPathSepIfNeeded("log")
 	MkDirIfNeeded(logDir)
 	log.Info("Log dir is " + logDir)
 
@@ -31,9 +31,9 @@ func Init(app string) {
 	logger.Out = ioutil.Discard
 
 	pathMap := lfshook.PathMap{
-		logrus.InfoLevel:  logDir + app + "-log.txt",
-		logrus.WarnLevel:  logDir + app + "-log.txt",
-		logrus.ErrorLevel: logDir + app + "-error.txt",
+		logrus.InfoLevel:  logDir + "utl-" + app + "-log.txt",
+		logrus.WarnLevel:  logDir + "utl-" + app + "-log.txt",
+		logrus.ErrorLevel: logDir + "utl-" + app + "-error.txt",
 	}
 
 	logger.Hooks.Add(lfshook.NewHook(

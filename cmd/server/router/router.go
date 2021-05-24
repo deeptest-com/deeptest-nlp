@@ -68,11 +68,11 @@ func (r *Router) App() {
 	app := r.api.Party("/api").AllowMethods(iris.MethodOptions)
 	{
 		// 二进制模式 ， 启用项目入口
-		if serverConf.Config.BinData {
-			app.Get("/", func(ctx iris.Context) { // 首页模块
-				_ = ctx.View("index.html")
-			})
-		}
+		//if serverConf.Config.BinData {
+		//	app.Get("/", func(ctx iris.Context) { // 首页模块
+		//		_ = ctx.View("index.html")
+		//	})
+		//}
 
 		v1 := app.Party("/v1")
 		{

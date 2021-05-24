@@ -2,21 +2,22 @@ package serverConf
 
 import (
 	"fmt"
+	"github.com/jinzhu/configor"
+	logger "github.com/sirupsen/logrus"
+	_commonUtils "github.com/utlai/utl/internal/pkg/libs/common"
 	_fileUtils "github.com/utlai/utl/internal/pkg/libs/file"
+	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
 	"github.com/utlai/utl/internal/pkg/utils"
 	serverConst "github.com/utlai/utl/internal/server/utils/const"
+	serverRes "github.com/utlai/utl/res/server"
 	"path/filepath"
 	"strings"
-
-	logger "github.com/sirupsen/logrus"
-
-	"github.com/jinzhu/configor"
 )
 
 var Config = struct {
 	LogLevel string `yaml:"logLevel" env:"LogLevel" default:"info"`
 	Debug    bool   `yaml:"debug" env:"Debug" default:"false"`
-	BinData  bool   `default:"false" env:"BinData"`
+	//BinData  bool   `yaml:"binData" default:"false" env:"BinData"`
 	Https    bool   `default:"false" env:"Https"`
 	CertPath string `default:"" env:"CertPath"`
 	CertKey  string `default:"" env:"CertKey"`
@@ -69,14 +70,19 @@ type DBConfig struct {
 }
 
 func Init() {
-	// in current dir
 	exeDir := _utils.GetExeDir()
-	configPath := filepath.Join(exeDir, "server.yml")
-	if !_fileUtils.FileExist(configPath) { // debug mode
+	configPath := ""
+	if _commonUtils.IsRelease() {
+		configPath = filepath.Join(exeDir, "server.yml")
+		if !_fileUtils.FileExist(configPath) {
+			bytes, _ := serverRes.Asset("res/server/server.yml")
+			_fileUtils.WriteFile(configPath, string(bytes))
+		}
+	} else {
 		configPath = filepath.Join(exeDir, "cmd", "server", "server.yml")
 	}
 
-	fmt.Println(fmt.Sprintf("配置YML文件路径：%v", configPath))
+	_logUtils.Infof("从文件%s加载server配置", configPath)
 	if err := configor.Load(&Config, configPath); err != nil {
 		logger.Println(fmt.Sprintf("Config Path:%s ,Error:%s", configPath, err.Error()))
 		return

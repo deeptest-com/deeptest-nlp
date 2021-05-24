@@ -45,7 +45,7 @@
 
 <script>
 import { labelCol, wrapperCol, wrapperFull } from '@/utils/const'
-import { requestSuccess, getProject, saveProject, validPath } from '@/api/manage'
+import { requestSuccess, getProject, saveProject, validProjectPath } from '@/api/manage'
 
 export default {
   name: 'ProjectEdit',
@@ -62,12 +62,12 @@ export default {
     const checkPath = (rule, value, callback) => {
       clearTimeout(checkPending)
       checkPending = setTimeout(() => {
-        validPath(value).then(json => {
-          console.log('validPath', json)
+        validProjectPath(value).then(json => {
+          console.log('validProjectPath', json)
           if (requestSuccess(json.code) && json.data.pass) {
             callback()
           } else {
-            callback(new Error(this.$t('valid.format.path')))
+            callback(new Error(this.$t('valid.project.path')))
           }
         })
       }, 500)
