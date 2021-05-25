@@ -1,4 +1,4 @@
-package middlewareUtils
+package bizCasbin
 
 import (
 	"fmt"
@@ -7,7 +7,6 @@ import (
 	_commonUtils "github.com/utlai/utl/internal/pkg/libs/common"
 	_fileUtils "github.com/utlai/utl/internal/pkg/libs/file"
 	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
-	"github.com/utlai/utl/internal/pkg/utils"
 	"github.com/utlai/utl/internal/server/db"
 	serverRes "github.com/utlai/utl/res/server"
 	"path/filepath"
@@ -19,7 +18,7 @@ func NewEnforcer() *casbin.Enforcer {
 		logrus.Println(fmt.Sprintf("NewAdapter 错误: %v", err))
 	}
 
-	exeDir := _utils.GetExeDir()
+	exeDir := _fileUtils.GetExeDir()
 	pth := ""
 	enforcer := &casbin.Enforcer{}
 	if _commonUtils.IsRelease() {

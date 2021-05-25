@@ -1,8 +1,7 @@
-package middleware
+package jwt
 
 import (
 	"fmt"
-	middlewareUtils "github.com/utlai/utl/internal/server/biz/middleware/misc"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -15,17 +14,17 @@ var (
 
 // JwtService the middleware for JSON Web tokens authentication method
 type JwtService struct {
-	Config middlewareUtils.Config
+	Config Config
 }
 
 // New constructs a new Secure instance with supplied options.
 func NewJwtService() *JwtService {
 	var mySecret = []byte("HS2JDFKhu7Y1av7b")
 
-	config := middlewareUtils.Config{
-		ContextKey:   middlewareUtils.DefaultContextKey,
-		Extractor:    middlewareUtils.FromAuthHeader,
-		ErrorHandler: middlewareUtils.OnError,
+	config := Config{
+		ContextKey:   DefaultContextKey,
+		Extractor:    FromAuthHeader,
+		ErrorHandler: OnError,
 
 		SigningMethod: jwt.SigningMethodHS256,
 		ValidationKeyGetter: func(token *jwt.Token) (interface{}, error) {
@@ -63,24 +62,24 @@ func (m *JwtService) CheckJWT(ctx iris.Context) error {
 
 	// If debugging is turned on, log the outcome
 	if err != nil {
-		middlewareUtils.Logf(ctx, "Error extracting JWT: %v", err)
+		Logf(ctx, "Error extracting JWT: %v", err)
 		return err
 	}
 
-	middlewareUtils.Logf(ctx, "Token extracted: %s", token)
+	Logf(ctx, "Token extracted: %s", token)
 
 	// If the token is empty...
 	if token == "" {
 		// Check if it was required
 		if m.Config.CredentialsOptional {
-			middlewareUtils.Logf(ctx, "No credentials found (CredentialsOptional=true)")
+			Logf(ctx, "No credentials found (CredentialsOptional=true)")
 			// No error, just no token (and that is ok given that CredentialsOptional is true)
 			return nil
 		}
 
 		// If we get here, the required token is missing
-		middlewareUtils.Logf(ctx, "Error: No credentials found (CredentialsOptional=false)")
-		return middlewareUtils.ErrTokenMissing
+		Logf(ctx, "Error: No credentials found (CredentialsOptional=false)")
+		return ErrTokenMissing
 	}
 
 	// Now parse the token
@@ -88,7 +87,7 @@ func (m *JwtService) CheckJWT(ctx iris.Context) error {
 	parsedToken, err := jwtParser.Parse(token, m.Config.ValidationKeyGetter)
 	// Check if there was an error in parsing...
 	if err != nil {
-		middlewareUtils.Logf(ctx, "Error parsing token: %v", err)
+		Logf(ctx, "Error parsing token: %v", err)
 		return err
 	}
 
@@ -96,27 +95,27 @@ func (m *JwtService) CheckJWT(ctx iris.Context) error {
 		err := fmt.Errorf("Expected %s signing method but token specified %s",
 			m.Config.SigningMethod.Alg(),
 			parsedToken.Header["alg"])
-		middlewareUtils.Logf(ctx, "Error validating token algorithm: %v", err)
+		Logf(ctx, "Error validating token algorithm: %v", err)
 		return err
 	}
 
 	// Check if the parsed token is valid...
 	if !parsedToken.Valid {
-		middlewareUtils.Logf(ctx, "Token is invalid")
+		Logf(ctx, "Token is invalid")
 		// m.Config.ErrorHandler(ctx, ErrTokenInvalid)
-		return middlewareUtils.ErrTokenInvalid
+		return ErrTokenInvalid
 	}
 
 	if m.Config.Expiration {
 		if claims, ok := parsedToken.Claims.(jwt.MapClaims); ok {
 			if expired := claims.VerifyExpiresAt(time.Now().Unix(), true); !expired {
-				middlewareUtils.Logf(ctx, "Token is expired")
-				return middlewareUtils.ErrTokenExpired
+				Logf(ctx, "Token is expired")
+				return ErrTokenExpired
 			}
 		}
 	}
 
-	middlewareUtils.Logf(ctx, "JWT: %v", parsedToken)
+	Logf(ctx, "JWT: %v", parsedToken)
 
 	// If we get here, everything worked and we can set the
 	// user property in context.

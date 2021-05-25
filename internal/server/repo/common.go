@@ -4,9 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/fatih/color"
-	"github.com/utlai/utl/internal/server/biz/domain"
-	"github.com/utlai/utl/internal/server/cfg"
 	"github.com/utlai/utl/internal/server/db"
+	"github.com/utlai/utl/internal/server/domain"
 	"gorm.io/gorm"
 	"strings"
 )
@@ -209,16 +208,28 @@ func (r *CommonRepo) Paginate(page, pageSize int) func(db *gorm.DB) *gorm.DB {
 	}
 }
 
-// DropTables 删除数据表
-func (r *CommonRepo) DropTables() {
-	_ = db.GetInst().DB().Migrator().DropTable(
-		serverConf.Config.DB.Prefix+"users",
-		serverConf.Config.DB.Prefix+"roles",
-		serverConf.Config.DB.Prefix+"permissions",
-		serverConf.Config.DB.Prefix+"articles",
-		serverConf.Config.DB.Prefix+"configs",
-		serverConf.Config.DB.Prefix+"tags",
-		serverConf.Config.DB.Prefix+"types",
-		serverConf.Config.DB.Prefix+"article_tags",
-		"casbin_rule")
+type SumRes struct {
+	Total int64 `json:"total"`
+}
+
+// Filed 查询字段结构体
+type Filed struct {
+	Condition string      `json:"condition"`
+	Key       string      `json:"key"`
+	Value     interface{} `json:"value"`
+}
+
+type Relate struct {
+	Value string
+	Func  interface{}
+}
+
+// Search 查询参数结构体
+type Search struct {
+	Fields    []*Filed  `json:"fields"`
+	Relations []*Relate `json:"relations"`
+	OrderBy   string    `json:"order_by"`
+	Sort      string    `json:"sort"`
+	Limit     int       `json:"limit"`
+	Offset    int       `json:"offset"`
 }

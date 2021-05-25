@@ -3,6 +3,7 @@ package _commonUtils
 import (
 	"fmt"
 	"github.com/emirpasic/gods/maps"
+	"net"
 	"os"
 	"os/user"
 	"path"
@@ -11,6 +12,7 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func Base(pathStr string) string {
@@ -96,4 +98,12 @@ func GetUserHome() string {
 	userProfile, _ := user.Current()
 	home := userProfile.HomeDir
 	return home
+}
+
+func IsPortInUse(port int) bool {
+	if conn, err := net.DialTimeout("tcp", net.JoinHostPort("", fmt.Sprintf("%d", port)), 3*time.Second); err == nil {
+		conn.Close()
+		return true
+	}
+	return false
 }

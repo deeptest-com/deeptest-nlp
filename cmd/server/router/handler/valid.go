@@ -2,7 +2,7 @@ package handler
 
 import (
 	"github.com/kataras/iris/v12"
-	"github.com/utlai/utl/internal/pkg/utils"
+	_httpUtils "github.com/utlai/utl/internal/pkg/libs/http"
 	"github.com/utlai/utl/internal/server/domain"
 	"github.com/utlai/utl/internal/server/service"
 )
@@ -20,11 +20,11 @@ func (c *ValidCtrl) Valid(ctx iris.Context) {
 
 	model := domain.ValidRequest{}
 	if err := ctx.ReadJSON(&model); err != nil {
-		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
 	result := c.ValidService.Valid(model)
 
-	_, _ = ctx.JSON(_utils.ApiRes(200, "请求成功", result))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "请求成功", result))
 }

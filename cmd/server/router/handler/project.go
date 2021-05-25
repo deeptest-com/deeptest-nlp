@@ -2,8 +2,8 @@ package handler
 
 import (
 	"github.com/kataras/iris/v12"
-	"github.com/utlai/utl/internal/pkg/utils"
-	sessionUtils "github.com/utlai/utl/internal/server/biz/session"
+	_httpUtils "github.com/utlai/utl/internal/pkg/libs/http"
+	"github.com/utlai/utl/internal/server/biz/jwt"
 	"github.com/utlai/utl/internal/server/model"
 	"github.com/utlai/utl/internal/server/service"
 	serverConst "github.com/utlai/utl/internal/server/utils/const"
@@ -31,7 +31,7 @@ func (c *ProjectCtrl) List(ctx iris.Context) {
 
 	projects, total := c.ProjectService.List(keywords, status, pageNo, pageSize)
 
-	_, _ = ctx.JSON(_utils.ApiResPage(200, "请求成功",
+	_, _ = ctx.JSON(_httpUtils.ApiResPage(200, "请求成功",
 		projects, pageNo, pageSize, total))
 }
 
@@ -41,22 +41,22 @@ func (c *ProjectCtrl) ListForSelect(ctx iris.Context) {
 	data := map[string]interface{}{}
 	data["projects"] = projects
 
-	projectId := sessionUtils.Get(ctx, "projectId")
+	projectId := jwt.Get(ctx, "projectId")
 	data["projects"] = projects
 	data["projectId"] = projectId
 
-	_, _ = ctx.JSON(_utils.ApiRes(200, "请求成功", data))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "请求成功", data))
 }
 
 func (c *ProjectCtrl) Get(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
 	if err != nil {
-		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
 	model := c.ProjectService.Get(uint(id))
-	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", model))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", model))
 	return
 }
 
@@ -65,7 +65,7 @@ func (c *ProjectCtrl) Create(ctx iris.Context) {
 
 	model := model.Project{}
 	if err := ctx.ReadJSON(&model); err != nil {
-		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
@@ -75,59 +75,59 @@ func (c *ProjectCtrl) Create(ctx iris.Context) {
 
 	err := c.ProjectService.Save(&model)
 	if err != nil {
-		_, _ = ctx.JSON(_utils.ApiRes(400, "操作失败", nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, "操作失败", nil))
 		return
 	}
 
-	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", model))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", model))
 	return
 }
 
 func (c *ProjectCtrl) Update(ctx iris.Context) {
 	model := model.Project{}
 	if err := ctx.ReadJSON(&model); err != nil {
-		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
 	err := c.ProjectService.Update(&model)
 	if err != nil {
-		_, _ = ctx.JSON(_utils.ApiRes(400, "操作失败", nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, "操作失败", nil))
 		return
 	}
 
-	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", model))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", model))
 }
 
 func (c *ProjectCtrl) SetDefault(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
 	if err != nil {
-		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
 	c.ProjectService.SetDefault(uint(id))
-	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", ""))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", ""))
 }
 
 func (c *ProjectCtrl) Disable(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
 	if err != nil {
-		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
 	c.ProjectService.Disable(uint(id))
-	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", ""))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", ""))
 }
 
 func (c *ProjectCtrl) Delete(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
 	if err != nil {
-		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
 	c.ProjectService.Delete(uint(id))
-	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", ""))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", ""))
 }

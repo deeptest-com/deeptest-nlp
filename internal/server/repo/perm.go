@@ -3,8 +3,8 @@ package repo
 import (
 	"fmt"
 	gf "github.com/snowlyg/gotransformer"
-	"github.com/utlai/utl/internal/server/biz/domain"
 	"github.com/utlai/utl/internal/server/biz/transformer"
+	"github.com/utlai/utl/internal/server/domain"
 	"github.com/utlai/utl/internal/server/model"
 	"time"
 

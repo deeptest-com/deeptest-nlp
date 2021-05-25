@@ -6,6 +6,7 @@ const api = {
   profile: `${prefix}/profile`,
   projects: `${prefix}/projects`,
   convert: `${prefix}/convert`,
+  training: `${prefix}/training`,
   tasks: `${prefix}/tasks`,
   intents: `${prefix}/intents`,
   sents: `${prefix}/sents`,
@@ -94,6 +95,13 @@ export function removeProject (model) {
 export function convert (model) {
   return request({
     url: api.convert + '/' + model.id,
+    method: 'post',
+    params: { }
+  })
+}
+export function training (model) {
+  return request({
+    url: api.training + '/' + model.id,
     method: 'post',
     params: { }
   })

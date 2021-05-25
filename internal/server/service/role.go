@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"github.com/fatih/color"
 	gf "github.com/snowlyg/gotransformer"
-	"github.com/utlai/utl/internal/server/biz/domain"
-	"github.com/utlai/utl/internal/server/biz/middleware"
+	bizCasbin "github.com/utlai/utl/internal/server/biz/casbin"
 	"github.com/utlai/utl/internal/server/biz/transformer"
+	"github.com/utlai/utl/internal/server/domain"
 	"github.com/utlai/utl/internal/server/model"
 	"github.com/utlai/utl/internal/server/repo"
 	"strconv"
@@ -19,7 +19,7 @@ type RoleService struct {
 	RoleRepo *repo.RoleRepo `inject:""`
 	PermRepo *repo.PermRepo `inject:""`
 
-	CasbinService *middleware.CasbinService `inject:""`
+	CasbinService *bizCasbin.CasbinService `inject:""`
 }
 
 func NewRoleService() *RoleService {

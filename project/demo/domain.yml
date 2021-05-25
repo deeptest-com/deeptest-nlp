@@ -5,16 +5,6 @@ session_config:
 responses:
   utter_greate:
   - text: fine
-intents:
-- 打印日志
-entities:
-- 打印
-- 日志类型
-- xpath
-slots:
-  print:
-    type: text
-    influence_conversation: false
-  loglevel:
-    type: text
-    influence_conversation: false
+intents: []
+entities: []
+slots: {}

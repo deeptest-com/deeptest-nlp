@@ -6,15 +6,15 @@ import (
 	"github.com/utlai/utl/internal/server/service"
 )
 
-type NluConvertCtrl struct {
-	NluConvertService *service.NluConvertService `inject:""`
+type NluTrainingCtrl struct {
+	NluTrainingService *service.NluTrainingService `inject:""`
 }
 
-func NewNluConvertCtrl() *NluConvertCtrl {
-	return &NluConvertCtrl{}
+func NewNluTrainingCtrl() *NluTrainingCtrl {
+	return &NluTrainingCtrl{}
 }
 
-func (c *NluConvertCtrl) Convert(ctx iris.Context) {
+func (c *NluTrainingCtrl) Training(ctx iris.Context) {
 	ctx.StatusCode(iris.StatusOK)
 
 	id, err := ctx.Params().GetInt("id")
@@ -23,7 +23,7 @@ func (c *NluConvertCtrl) Convert(ctx iris.Context) {
 		return
 	}
 
-	c.NluConvertService.ConvertProject(uint(id))
+	c.NluTrainingService.TrainingProject(uint(id))
 
 	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "请求成功", nil))
 }

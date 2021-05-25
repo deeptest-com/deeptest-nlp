@@ -64,6 +64,7 @@ const locale = {
   'form.disable': '禁用',
   'form.enable': '启用',
   'form.convert': '转换',
+  'form.training': '训练',
   'form.back': '返回',
   'form.save': '保存',
   'form.submit': '提交',
@@ -123,6 +124,7 @@ const locale = {
   'msg.unauthorized': '未授权的',
   'msg.auth.fail': '授权失败',
   'msg.convert.success': '成功转换项目为Rasa定义。',
+  'msg.training.start': '成功发起训练。',
 
   'app.setting.pagestyle': '页面演示设置',
   'app.setting.pagestyle.light': '淡色',

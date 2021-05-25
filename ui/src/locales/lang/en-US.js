@@ -62,6 +62,7 @@ const locale = {
   'form.disable': 'Disable',
   'form.enable': 'Enable',
   'form.convert': 'Convert',
+  'form.training': 'Training',
   'form.back': 'Back',
   'form.save': 'Save',
   'form.submit': 'Submit',
@@ -123,6 +124,7 @@ const locale = {
   'msg.unauthorized': 'Unauthorized',
   'msg.auth.fail': 'Authorization verification failed',
   'msg.convert.success': 'Convert to Rasa definition successfully.',
+  'msg.training.start': 'Start to training.',
 
   'app.setting.pagestyle': 'Page style setting',
   'app.setting.pagestyle.light': 'Light style',

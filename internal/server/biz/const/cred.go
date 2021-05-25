@@ -1,4 +1,4 @@
-package domain
+package bizConst
 
 import (
 	"github.com/pkg/errors"

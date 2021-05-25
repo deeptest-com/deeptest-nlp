@@ -2,15 +2,15 @@ package service
 
 import (
 	"fmt"
-	"github.com/utlai/utl/internal/server/biz/middleware"
-	"github.com/utlai/utl/internal/server/repo"
 	"github.com/fatih/color"
+	bizCasbin "github.com/utlai/utl/internal/server/biz/casbin"
+	"github.com/utlai/utl/internal/server/repo"
 	"strconv"
 )
 
 type CommonService struct {
-	CommonRepo    *repo.CommonRepo          `inject:""`
-	CasbinService *middleware.CasbinService `inject:""`
+	CommonRepo    *repo.CommonRepo         `inject:""`
+	CasbinService *bizCasbin.CasbinService `inject:""`
 }
 
 func NewCommonService() *CommonService {

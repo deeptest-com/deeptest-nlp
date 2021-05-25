@@ -85,19 +85,14 @@ export default {
   },
   methods: {
     loadData () {
-      if (!this.id) {
-        return
-      }
       if (this.id) {
         getTask(this.id).then(json => {
           this.model = json.data
         })
-        listProject().then(json => {
-          this.projects = json.data
-        })
-      } else {
-        this.reset()
       }
+      listProject().then(json => {
+        this.projects = json.data
+      })
     },
     save (e) {
       console.log(this.model)

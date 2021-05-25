@@ -1,16 +1,15 @@
-package middleware
+package jwt
 
 import (
-	_const "github.com/utlai/utl/internal/pkg/const"
-	"github.com/utlai/utl/internal/pkg/utils"
-	"github.com/utlai/utl/internal/server/biz/domain"
-	"github.com/utlai/utl/internal/server/biz/redis"
-	"github.com/utlai/utl/internal/server/biz/session"
-	"github.com/utlai/utl/internal/server/cfg"
-	"github.com/utlai/utl/internal/server/repo"
 	"github.com/casbin/casbin/v2"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/kataras/iris/v12"
+	_const "github.com/utlai/utl/internal/pkg/const"
+	_httpUtils "github.com/utlai/utl/internal/pkg/libs/http"
+	bizConst "github.com/utlai/utl/internal/server/biz/const"
+	"github.com/utlai/utl/internal/server/biz/redis"
+	"github.com/utlai/utl/internal/server/cfg"
+	"github.com/utlai/utl/internal/server/repo"
 	"net/http"
 	"strconv"
 	"time"
@@ -52,12 +51,12 @@ func (m *TokenService) Serve(ctx iris.Context) {
 
 			// refresh the credentials
 			uid := strconv.FormatUint(uint64(user.ID), 10)
-			cred := domain.UserCredentials{
+			cred := bizConst.UserCredentials{
 				UserId:       uid,
-				LoginType:    domain.LoginTypeWeb,
-				AuthType:     domain.AuthPwd,
+				LoginType:    bizConst.LoginTypeWeb,
+				AuthType:     bizConst.AuthPwd,
 				CreationDate: time.Now().Unix(),
-				Scope:        domain.AdminScope,
+				Scope:        bizConst.AdminScope,
 				Token:        tokenStr,
 			}
 
@@ -74,7 +73,7 @@ func (m *TokenService) Serve(ctx iris.Context) {
 					return
 				}
 			} else {
-				sessionUtils.SaveCredentials(ctx, &cred)
+				SaveCredentials(ctx, &cred)
 			}
 		}
 	}
@@ -83,7 +82,7 @@ func (m *TokenService) Serve(ctx iris.Context) {
 	credentials, _ = m.GetCredentials(value, ctx)
 	if credentials == nil {
 		ctx.StopExecution()
-		_, _ = ctx.JSON(_utils.ApiRes(401, "", nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(401, "", nil))
 		ctx.StopExecution()
 		return
 	}
@@ -92,7 +91,7 @@ func (m *TokenService) Serve(ctx iris.Context) {
 }
 
 func (m *TokenService) GetCredentials(value *jwt.Token, ctx iris.Context) (
-	credentials *domain.UserCredentials, err error) {
+	credentials *bizConst.UserCredentials, err error) {
 	if serverConf.Config.Redis.Enable {
 		conn := redisUtils.GetRedisClusterClient()
 		defer conn.Close()
@@ -100,12 +99,12 @@ func (m *TokenService) GetCredentials(value *jwt.Token, ctx iris.Context) (
 		credentials, err = m.TokenRepo.GetRedisSession(conn, value.Raw)
 		if err != nil || credentials == nil {
 			m.TokenRepo.UserTokenExpired(value.Raw)
-			_, _ = ctx.JSON(_utils.ApiRes(401, "", nil))
+			_, _ = ctx.JSON(_httpUtils.ApiRes(401, "", nil))
 			ctx.StopExecution()
 			return
 		}
 	} else {
-		credentials = sessionUtils.GetCredentials(ctx)
+		credentials = GetCredentials(ctx)
 	}
 
 	return

@@ -3,12 +3,13 @@ package service
 import (
 	"fmt"
 	logger "github.com/sirupsen/logrus"
+	_commonUtils "github.com/utlai/utl/internal/pkg/libs/common"
 	_fileUtils "github.com/utlai/utl/internal/pkg/libs/file"
-	"github.com/utlai/utl/internal/pkg/utils"
-	"github.com/utlai/utl/internal/server/biz/domain"
 	"github.com/utlai/utl/internal/server/cfg"
+	"github.com/utlai/utl/internal/server/domain"
 	"github.com/utlai/utl/internal/server/model"
 	"github.com/utlai/utl/internal/server/repo"
+	serverRes "github.com/utlai/utl/res/server"
 	"math/rand"
 	"path/filepath"
 	"time"
@@ -52,12 +53,17 @@ func (s *SeederService) init() {
 	Fake.Rand = rand.New(rand.NewSource(42))
 	rand.Seed(time.Now().UnixNano())
 
-	exeDir := _utils.GetExeDir()
-	pth := filepath.Join(exeDir, "perms.yml")
-	if !_fileUtils.FileExist(pth) { // debug mode
+	exeDir := _fileUtils.GetExeDir()
+	pth := ""
+	if _commonUtils.IsRelease() {
+		pth = filepath.Join(exeDir, "perms.yml")
+		if !_fileUtils.FileExist(pth) {
+			bytes, _ := serverRes.Asset("res/server/perms.yml")
+			_fileUtils.WriteFile(pth, string(bytes))
+		}
+	} else {
 		pth = filepath.Join(exeDir, "cmd", "server", "perms.yml")
 	}
-
 	filePaths, _ := filepath.Glob(pth)
 
 	if serverConf.Config.Debug {
@@ -66,11 +72,6 @@ func (s *SeederService) init() {
 	if err := configor.Load(&Seeds, filePaths...); err != nil {
 		logger.Println(err)
 	}
-}
-
-func (s *SeederService) Run() {
-	s.AutoMigrates()
-	s.AddPerms()
 }
 
 func (s *SeederService) AddPerms() {
@@ -86,6 +87,7 @@ func (s *SeederService) CreatePerms() {
 	if serverConf.Config.Debug {
 		fmt.Println(fmt.Sprintf("填充权限：%+v\n", Seeds))
 	}
+
 	for _, m := range Seeds.Perms {
 		search := &domain.Search{
 			Fields: []*domain.Filed{
@@ -209,7 +211,7 @@ func (s *SeederService) CreateAdminUser() {
 			Name:     serverConf.Config.Admin.Name,
 			Password: serverConf.Config.Admin.Password,
 			Avatar:   "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIPbZRufW9zPiaGpfdXgU7icRL1licKEicYyOiace8QQsYVKvAgCrsJx1vggLAD2zJMeSXYcvMSkw9f4pw/132",
-			Intro:    "超级弱鸡程序猿一枚！！！！",
+			Intro:    "檀越",
 		}
 
 		admin.RoleIds = roleIds
@@ -227,14 +229,4 @@ func (s *SeederService) CreateAdminUser() {
 		fmt.Println(fmt.Sprintf("管理员密码：%s\n", serverConf.Config.Admin.Password))
 		fmt.Println(fmt.Sprintf("填充管理员数据：%+v", admin))
 	}
-}
-
-/*
-	AutoMigrates 重置数据表
-	libs.DB.DropTableIfExists 删除存在数据表
-	libs.DB.AutoMigrate 重建数据表
-*/
-func (s *SeederService) AutoMigrates() {
-	s.CommonRepo.DropTables()
-	s.InitService.Init()
 }

@@ -46,6 +46,10 @@ perms:
     displayname: "转换NLU定义"
     description: ""
     act: "POST"
+  - name: "/api/v1/admin/training/{id:uint}"
+    displayname: "训练项目"
+    description: ""
+    act: "POST"
 
   # 任务
   - name: "/api/v1/admin/tasks"

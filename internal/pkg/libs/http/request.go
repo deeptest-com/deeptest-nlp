@@ -1,4 +1,4 @@
-package _utils
+package _httpUtils
 
 type Request struct {
 	PageSize int `json:"pageSize"`

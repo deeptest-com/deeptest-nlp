@@ -1,4 +1,4 @@
-package middlewareUtils
+package jwt
 
 import (
 	"errors"
@@ -27,7 +27,7 @@ var (
 )
 
 // A function called whenever an error is encountered
-type errorHandler func(iris.Context, error)
+type ErrorHandler func(iris.Context, error)
 
 // TokenExtractor is a function that takes a context as input and returns
 // either a token or an error.  An error should only be returned if an attempt

@@ -8,8 +8,9 @@ import (
 	"github.com/kataras/iris/v12/websocket"
 	"github.com/kataras/neffos/gorilla"
 	"github.com/utlai/utl/cmd/server/router/handler"
-	"github.com/utlai/utl/internal/server/biz/middleware"
-	middlewareUtils "github.com/utlai/utl/internal/server/biz/middleware/misc"
+	_httpUtils "github.com/utlai/utl/internal/pkg/libs/http"
+	bizCasbin "github.com/utlai/utl/internal/server/biz/casbin"
+	"github.com/utlai/utl/internal/server/biz/jwt"
 	"github.com/utlai/utl/internal/server/cfg"
 	"github.com/utlai/utl/internal/server/repo"
 	"github.com/utlai/utl/internal/server/service"
@@ -19,15 +20,14 @@ import (
 type Router struct {
 	api *iris.Application
 
-	InitService   *service.InitService      `inject:""`
-	JwtService    *middleware.JwtService    `inject:""`
-	TokenService  *middleware.TokenService  `inject:""`
-	CasbinService *middleware.CasbinService `inject:""`
+	InitService   *service.InitService     `inject:""`
+	JwtService    *jwt.JwtService          `inject:""`
+	TokenService  *jwt.TokenService        `inject:""`
+	CasbinService *bizCasbin.CasbinService `inject:""`
 
 	AccountCtrl *handler.AccountCtrl `inject:""`
 	FileCtrl    *handler.FileCtrl    `inject:""`
 
-	InitCtrl *handler.InitCtrl `inject:""`
 	PermCtrl *handler.PermCtrl `inject:""`
 	RoleCtrl *handler.RoleCtrl `inject:""`
 	UserCtrl *handler.UserCtrl `inject:""`
@@ -47,6 +47,7 @@ type Router struct {
 	NluRegexItemCtrl   *handler.NluRegexItemCtrl   `inject:""`
 	NluDictCtrl        *handler.NluDictCtrl        `inject:""`
 	NluConvertCtrl     *handler.NluConvertCtrl     `inject:""`
+	NluTrainingCtrl    *handler.NluTrainingCtrl    `inject:""`
 
 	ValidCtrl *handler.ValidCtrl `inject:""`
 	WsCtrl    *handler.WsCtrl    `inject:""`
@@ -63,7 +64,7 @@ func NewRouter(app *iris.Application) *Router {
 
 func (r *Router) App() {
 	iris.LimitRequestBodySize(serverConf.Config.Options.UploadMaxSize)
-	r.api.UseRouter(middlewareUtils.CrsAuth())
+	r.api.UseRouter(_httpUtils.CrsAuth())
 
 	app := r.api.Party("/api").AllowMethods(iris.MethodOptions)
 	{
@@ -81,7 +82,6 @@ func (r *Router) App() {
 			})
 
 			v1.PartyFunc("/admin", func(admin iris.Party) {
-				admin.Get("/init", r.InitCtrl.InitData)
 				admin.Post("/login", r.AccountCtrl.UserLogin)
 
 				//登录验证
@@ -106,6 +106,9 @@ func (r *Router) App() {
 
 				admin.PartyFunc("/convert/{id:uint}", func(party iris.Party) {
 					party.Post("/", r.NluConvertCtrl.Convert).Name = "NLU定义转换"
+				})
+				admin.PartyFunc("/training/{id:uint}", func(party iris.Party) {
+					party.Post("/", r.NluTrainingCtrl.Training).Name = "训练项目"
 				})
 
 				admin.PartyFunc("/tasks", func(party iris.Party) {

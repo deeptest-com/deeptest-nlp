@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"github.com/utlai/utl/internal/pkg/utils"
-	"github.com/utlai/utl/internal/server/biz/validate"
 	"github.com/go-playground/validator/v10"
 	"github.com/kataras/iris/v12"
+	_httpUtils "github.com/utlai/utl/internal/pkg/libs/http"
+	"github.com/utlai/utl/internal/server/biz/validate"
 )
 
 type BaseCtrl struct {
@@ -18,7 +18,7 @@ func (c *BaseCtrl) Validate(s interface{}, ctx iris.Context) bool {
 		errs := err.(validator.ValidationErrors)
 		for _, e := range errs.Translate(validate.ValidateTrans) {
 			if len(e) > 0 {
-				_, _ = ctx.JSON(_utils.ApiRes(400, e, nil))
+				_, _ = ctx.JSON(_httpUtils.ApiRes(400, e, nil))
 				return true
 			}
 		}

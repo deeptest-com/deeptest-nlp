@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/fatih/color"
-	"github.com/utlai/utl/internal/server/biz/domain"
+	"github.com/utlai/utl/internal/server/domain"
 	"github.com/utlai/utl/internal/server/model"
 	"gorm.io/gorm"
 	"time"

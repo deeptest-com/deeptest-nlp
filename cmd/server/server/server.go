@@ -9,9 +9,8 @@ import (
 	"github.com/utlai/utl/cmd/server/router"
 	"github.com/utlai/utl/cmd/server/router/handler"
 	_commonUtils "github.com/utlai/utl/internal/pkg/libs/common"
-	"github.com/utlai/utl/internal/pkg/utils"
-	"github.com/utlai/utl/internal/server/biz/middleware"
-	middlewareUtils "github.com/utlai/utl/internal/server/biz/middleware/misc"
+	bizCasbin "github.com/utlai/utl/internal/server/biz/casbin"
+	"github.com/utlai/utl/internal/server/biz/jwt"
 	"github.com/utlai/utl/internal/server/biz/redis"
 	"github.com/utlai/utl/internal/server/cfg"
 	serverCron "github.com/utlai/utl/internal/server/cron"
@@ -77,7 +76,7 @@ func Init(version string, printVersion, printRouter *bool) {
 		}
 	}
 
-	if _utils.IsPortInUse(serverConf.Config.Port) {
+	if _commonUtils.IsPortInUse(serverConf.Config.Port) {
 		panic(fmt.Sprintf("端口 %d 已被使用", serverConf.Config.Port))
 	}
 
@@ -113,10 +112,10 @@ func injectObj(router *router.Router) {
 		&inject.Object{Value: repo.NewUserRepo()},
 
 		// middleware
-		&inject.Object{Value: middlewareUtils.NewEnforcer()},
-		&inject.Object{Value: middleware.NewJwtService()},
-		&inject.Object{Value: middleware.NewTokenService()},
-		&inject.Object{Value: middleware.NewCasbinService()},
+		&inject.Object{Value: bizCasbin.NewEnforcer()},
+		&inject.Object{Value: jwt.NewJwtService()},
+		&inject.Object{Value: jwt.NewTokenService()},
+		&inject.Object{Value: bizCasbin.NewCasbinService()},
 
 		// service
 		&inject.Object{Value: service.NewProjectService()},
@@ -151,7 +150,6 @@ func injectObj(router *router.Router) {
 
 		&inject.Object{Value: handler.NewAccountCtrl()},
 		&inject.Object{Value: handler.NewFileCtrl()},
-		&inject.Object{Value: handler.NewInitCtrl()},
 		&inject.Object{Value: handler.NewPermCtrl()},
 		&inject.Object{Value: handler.NewUserCtrl()},
 

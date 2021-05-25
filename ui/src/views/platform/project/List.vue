@@ -76,6 +76,9 @@
             <a @click="convert(record)">{{ $t('form.convert') }}</a>
             <a-divider type="vertical" />
 
+            <a @click="training(record)">{{ $t('form.training') }}</a>
+            <a-divider type="vertical" />
+
             <a-popconfirm
               :title="$t('form.confirm.to.remove')"
               :okText="$t('form.ok')"
@@ -95,7 +98,7 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { listProject, disableProject, removeProject, convert } from '@/api/manage'
+import { listProject, disableProject, removeProject, convert, training } from '@/api/manage'
 
 export default {
   name: 'ProjectList',
@@ -194,13 +197,30 @@ export default {
       console.log('convert')
       convert(record).then(json => {
         console.log('convert', json)
-        this.$notification['success']({
-          message: this.$t('common.tips'),
-          description: this.$t('msg.convert.success'),
-          duration: 8
-        })
+
+        if (json.code === 200) {
+          this.$notification['success']({
+            message: this.$t('common.tips'),
+            description: this.$t('msg.convert.success'),
+            duration: 8
+          })
+        }
       })
     },
+    training (record) {
+      console.log('convert')
+      training(record).then(json => {
+        console.log('training', json)
+        if (json.code === 200) {
+          this.$notification['success']({
+            message: this.$t('common.tips'),
+            description: this.$t('msg.training.start'),
+            duration: 8
+          })
+        }
+      })
+    },
+
     // setDefault (record) {
     //   setDefaultProject(record).then(json => {
     //     console.log('setDefaultProject', json)

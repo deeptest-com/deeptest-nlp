@@ -1,4 +1,4 @@
-package middlewareUtils
+package jwt
 
 import (
 	"github.com/dgrijalva/jwt-go"
@@ -21,7 +21,7 @@ type Config struct {
 	ContextKey string
 	// The function that will be called when there's an error validating the token
 	// Default value:
-	ErrorHandler errorHandler
+	ErrorHandler ErrorHandler
 	// A boolean indicating if the credentials are required or not
 	// Default value: false
 	CredentialsOptional bool

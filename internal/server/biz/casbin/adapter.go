@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package middlewareUtils
+package bizCasbin
 
 import (
 	"errors"
@@ -27,7 +27,7 @@ import (
 )
 
 const (
-	defaultTableName = "biz_casbin"
+	defaultTableName = "biz_casbin_rules"
 )
 
 type CasbinRule struct {
@@ -39,10 +39,6 @@ type CasbinRule struct {
 	V3    string `gorm:"size:100;uniqueIndex:unique_index"`
 	V4    string `gorm:"size:100;uniqueIndex:unique_index"`
 	V5    string `gorm:"size:100;uniqueIndex:unique_index"`
-}
-
-func (CasbinRule) TableName() string {
-	return "biz_casbin_rule"
 }
 
 type Filter struct {

@@ -1,16 +1,16 @@
 package handler
 
 import (
+	"github.com/go-playground/validator/v10"
 	"github.com/utlai/utl/internal/pkg/libs/convertor"
-	"github.com/utlai/utl/internal/pkg/utils"
-	"github.com/utlai/utl/internal/server/biz/domain"
-	sessionUtils "github.com/utlai/utl/internal/server/biz/session"
+	_httpUtils "github.com/utlai/utl/internal/pkg/libs/http"
+	"github.com/utlai/utl/internal/server/biz/jwt"
 	"github.com/utlai/utl/internal/server/biz/transformer"
 	"github.com/utlai/utl/internal/server/biz/validate"
+	"github.com/utlai/utl/internal/server/domain"
 	"github.com/utlai/utl/internal/server/model"
 	"github.com/utlai/utl/internal/server/repo"
 	"github.com/utlai/utl/internal/server/service"
-	"github.com/go-playground/validator/v10"
 	"strconv"
 	"time"
 
@@ -42,73 +42,50 @@ func NewUserCtrl() *UserCtrl {
  */
 func (c *UserCtrl) GetProfile(ctx iris.Context) {
 	ctx.StatusCode(iris.StatusOK)
-	cred := sessionUtils.GetCredentials(ctx)
+	cred := jwt.GetCredentials(ctx)
 	if cred == nil {
-		_, _ = ctx.JSON(_utils.ApiRes(401, "not login", nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(401, "not login", nil))
 		return
 	}
 
-	id := uint(_utils.ParseInt(cred.UserId, 10))
+	idInt, _ := strconv.Atoi(cred.UserId)
 	s := &domain.Search{
 		Fields: []*domain.Filed{
 			{
 				Key:       "id",
 				Condition: "=",
-				Value:     id,
+				Value:     uint(idInt),
 			},
 		},
 	}
 	user, err := c.UserRepo.GetUser(s)
 	if err != nil {
-		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
-	_, _ = ctx.JSON(_utils.ApiRes(200, "请求成功", c.userTransform(user)))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "请求成功", c.userTransform(user)))
 }
 
-/**
-* @api {get} /profile 管理员信息
-* @apiName 管理员信息
-* @apiGroup Users
-* @apiVersion 1.0.0
-* @apiDescription 管理员信息
-* @apiSampleRequest /profile
-* @apiSuccess {String} msg 消息
-* @apiSuccess {bool} state 状态
-* @apiSuccess {String} data 返回数据
-* @apiPermission 登陆用户
- */
 func (c *UserCtrl) GetAdminInfo(ctx iris.Context) {
 	ctx.StatusCode(iris.StatusOK)
 
 	user, err := c.UserRepo.GetUser(nil)
 	if err != nil {
-		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
-	_, _ = ctx.JSON(_utils.ApiRes(200, "请求成功", map[string]string{"avatar": user.Avatar}))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "请求成功", map[string]string{"avatar": user.Avatar}))
 }
 
-/**
-* @api {get} /admin/change_avatar 修改头像
-* @apiName 修改头像
-* @apiGroup Users
-* @apiVersion 1.0.0
-* @apiDescription 修改头像
-* @apiSampleRequest /admin/change_avatar
-* @apiSuccess {String} msg 消息
-* @apiSuccess {bool} state 状态
-* @apiSuccess {String} data 返回数据
-* @apiPermission 登陆用户
- */
 func (c *UserCtrl) ChangeAvatar(ctx iris.Context) {
 	ctx.StatusCode(iris.StatusOK)
-	sess := sessionUtils.GetCredentials(ctx)
-	id := uint(_utils.ParseInt(sess.UserId, 10))
+	sess := jwt.GetCredentials(ctx)
+	idInt, _ := strconv.Atoi(sess.UserId)
+	id := uint(idInt)
 
 	avatar := new(model.Avatar)
 	if err := ctx.ReadJSON(avatar); err != nil {
-		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
@@ -117,7 +94,7 @@ func (c *UserCtrl) ChangeAvatar(ctx iris.Context) {
 		errs := err.(validator.ValidationErrors)
 		for _, e := range errs.Translate(validate.ValidateTrans) {
 			if len(e) > 0 {
-				_, _ = ctx.JSON(_utils.ApiRes(400, e, nil))
+				_, _ = ctx.JSON(_httpUtils.ApiRes(400, e, nil))
 				return
 			}
 		}
@@ -128,10 +105,10 @@ func (c *UserCtrl) ChangeAvatar(ctx iris.Context) {
 	user.Avatar = avatar.Avatar
 	err = c.UserService.UpdateUserById(id, user)
 	if err != nil {
-		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
-	_, _ = ctx.JSON(_utils.ApiRes(200, "请求成功", c.userTransform(user)))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "请求成功", c.userTransform(user)))
 }
 
 /**
@@ -152,10 +129,10 @@ func (c *UserCtrl) GetUser(ctx iris.Context) {
 
 	user, err := c.UserRepo.GetUser(nil)
 	if err != nil {
-		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
-	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", c.userTransform(user)))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", c.userTransform(user)))
 }
 
 /**
@@ -176,7 +153,7 @@ func (c *UserCtrl) CreateUser(ctx iris.Context) {
 	ctx.StatusCode(iris.StatusOK)
 	user := new(model.User)
 	if err := ctx.ReadJSON(user); err != nil {
-		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
@@ -185,7 +162,7 @@ func (c *UserCtrl) CreateUser(ctx iris.Context) {
 		errs := err.(validator.ValidationErrors)
 		for _, e := range errs.Translate(validate.ValidateTrans) {
 			if len(e) > 0 {
-				_, _ = ctx.JSON(_utils.ApiRes(400, e, nil))
+				_, _ = ctx.JSON(_httpUtils.ApiRes(400, e, nil))
 				return
 			}
 		}
@@ -193,15 +170,15 @@ func (c *UserCtrl) CreateUser(ctx iris.Context) {
 
 	err = c.UserService.CreateUser(user)
 	if err != nil {
-		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
 	if user.ID == 0 {
-		_, _ = ctx.JSON(_utils.ApiRes(400, "操作失败", nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, "操作失败", nil))
 		return
 	}
-	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", c.userTransform(user)))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", c.userTransform(user)))
 	return
 
 }
@@ -225,7 +202,7 @@ func (c *UserCtrl) UpdateUser(ctx iris.Context) {
 	user := new(model.User)
 
 	if err := ctx.ReadJSON(user); err != nil {
-		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 	}
 
 	err := validate.Validate.Struct(*user)
@@ -233,7 +210,7 @@ func (c *UserCtrl) UpdateUser(ctx iris.Context) {
 		errs := err.(validator.ValidationErrors)
 		for _, e := range errs.Translate(validate.ValidateTrans) {
 			if len(e) > 0 {
-				_, _ = ctx.JSON(_utils.ApiRes(400, e, nil))
+				_, _ = ctx.JSON(_httpUtils.ApiRes(400, e, nil))
 				return
 			}
 		}
@@ -241,16 +218,16 @@ func (c *UserCtrl) UpdateUser(ctx iris.Context) {
 
 	id, _ := ctx.Params().GetUint("id")
 	if user.Username == "username" {
-		_, _ = ctx.JSON(_utils.ApiRes(400, "不能编辑管理员", nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, "不能编辑管理员", nil))
 		return
 	}
 
 	err = c.UserService.UpdateUserById(id, user)
 	if err != nil {
-		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
-	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", c.userTransform(user)))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", c.userTransform(user)))
 }
 
 /**
@@ -271,10 +248,10 @@ func (c *UserCtrl) DeleteUser(ctx iris.Context) {
 
 	err := c.UserRepo.DeleteUser(id)
 	if err != nil {
-		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
-	_, _ = ctx.JSON(_utils.ApiRes(200, "删除成功", nil))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "删除成功", nil))
 }
 
 /**
@@ -295,12 +272,12 @@ func (c *UserCtrl) GetAllUsers(ctx iris.Context) {
 
 	users, count, err := c.UserRepo.GetAllUsers(nil)
 	if err != nil {
-		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
 	transform := c.usersTransform(users)
-	_, _ = ctx.JSON(_utils.ApiRes(200, "操作成功", map[string]interface{}{"items": transform, "total": count, "limit": "s.Limit"}))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", map[string]interface{}{"items": transform, "total": count, "limit": "s.Limit"}))
 
 }
 

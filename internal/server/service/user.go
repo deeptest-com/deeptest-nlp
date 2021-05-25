@@ -6,11 +6,11 @@ import (
 	"github.com/iris-contrib/middleware/jwt"
 	"github.com/jameskeane/bcrypt"
 	"github.com/kataras/iris/v12"
-	"github.com/utlai/utl/internal/pkg/utils"
-	"github.com/utlai/utl/internal/server/biz/domain"
-	"github.com/utlai/utl/internal/server/biz/middleware"
+	_stringUtils "github.com/utlai/utl/internal/pkg/libs/string"
+	bizCasbin "github.com/utlai/utl/internal/server/biz/casbin"
+	bizConst "github.com/utlai/utl/internal/server/biz/const"
+	jwt2 "github.com/utlai/utl/internal/server/biz/jwt"
 	"github.com/utlai/utl/internal/server/biz/redis"
-	sessionUtils "github.com/utlai/utl/internal/server/biz/session"
 	"github.com/utlai/utl/internal/server/cfg"
 	"github.com/utlai/utl/internal/server/model"
 	"github.com/utlai/utl/internal/server/repo"
@@ -22,7 +22,7 @@ type UserService struct {
 	UserRepo  *repo.UserRepo  `inject:""`
 	TokenRepo *repo.TokenRepo `inject:""`
 
-	CasbinService *middleware.CasbinService `inject:""`
+	CasbinService *bizCasbin.CasbinService `inject:""`
 }
 
 func NewUserService() *UserService {
@@ -46,10 +46,10 @@ func (s *UserService) CheckLogin(ctx iris.Context, u *model.User, password strin
 			})
 			tokenStr, _ := token.SignedString([]byte("HS2JDFKhu7Y1av7b"))
 
-			cred := domain.UserCredentials{
+			cred := bizConst.UserCredentials{
 				UserId:       uid,
-				LoginType:    domain.LoginTypeWeb,
-				AuthType:     domain.AuthPwd,
+				LoginType:    bizConst.LoginTypeWeb,
+				AuthType:     bizConst.AuthPwd,
 				CreationDate: time.Now().Unix(),
 				Scope:        s.TokenRepo.GetUserScope("admin"),
 				Token:        tokenStr,
@@ -66,7 +66,7 @@ func (s *UserService) CheckLogin(ctx iris.Context, u *model.User, password strin
 					return nil, 400, err.Error()
 				}
 			} else {
-				sessionUtils.SaveCredentials(ctx, &cred)
+				jwt2.SaveCredentials(ctx, &cred)
 			}
 
 			return &model.Token{Token: tokenStr}, 200, "登陆成功"
@@ -78,7 +78,7 @@ func (s *UserService) CheckLogin(ctx iris.Context, u *model.User, password strin
 
 // CreateUser create user
 func (s *UserService) CreateUser(u *model.User) error {
-	u.Password = _utils.HashPassword(u.Password)
+	u.Password = _stringUtils.HashPassword(u.Password)
 	if err := s.UserRepo.DB.Create(u).Error; err != nil {
 		return err
 	}
@@ -91,7 +91,7 @@ func (s *UserService) CreateUser(u *model.User) error {
 // UpdateUserById update user by id
 func (s *UserService) UpdateUserById(id uint, nu *model.User) error {
 	if len(nu.Password) > 0 {
-		nu.Password = _utils.HashPassword(nu.Password)
+		nu.Password = _stringUtils.HashPassword(nu.Password)
 	}
 	if err := s.UserRepo.UpdateObj(&model.User{}, nu, id); err != nil {
 		return err

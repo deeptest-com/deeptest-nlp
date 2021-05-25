@@ -1,6 +1,8 @@
 package _stringUtils
 
 import (
+	"encoding/base64"
+	"github.com/jameskeane/bcrypt"
 	"math/rand"
 	"strings"
 	"time"
@@ -54,4 +56,25 @@ func RandStr(n int) string {
 		remain--
 	}
 	return string(b)
+}
+
+func Base64Decode(str string) string {
+	s, err := base64.StdEncoding.DecodeString(str)
+	if err != nil {
+		return ""
+	}
+	return string(s)
+}
+
+func HashPassword(pwd string) string {
+	salt, err := bcrypt.Salt(10)
+	if err != nil {
+		return ""
+	}
+	hash, err := bcrypt.Hash(pwd, salt)
+	if err != nil {
+		return ""
+	}
+
+	return hash
 }

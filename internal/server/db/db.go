@@ -4,7 +4,6 @@ import (
 	"fmt"
 	_fileUtils "github.com/utlai/utl/internal/pkg/libs/file"
 	"github.com/utlai/utl/internal/pkg/libs/log"
-	"github.com/utlai/utl/internal/pkg/utils"
 	"github.com/utlai/utl/internal/server/cfg"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
@@ -103,17 +102,6 @@ func (i *Instance) Close() error {
 }
 
 func DBFile() string {
-	if FlagVarDBFile != "" {
-		return FlagVarDBFile
-	}
-	if _fileUtils.FileExist(DBFileDev()) {
-		return DBFileDev()
-	}
-
-	path := filepath.Join(_utils.GetExeDir(), strings.ToLower(serverConf.Config.DB.Name+".db"))
+	path := filepath.Join(_fileUtils.GetExeDir(), strings.ToLower(serverConf.Config.DB.Name+".db"))
 	return path
-}
-
-func DBFileDev() string {
-	return filepath.Join(_utils.CWD(), strings.ToLower(_utils.EXEName())+".dev.db")
 }

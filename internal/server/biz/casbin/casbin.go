@@ -1,21 +1,22 @@
-package middleware
+package bizCasbin
 
 import (
 	"errors"
 	"fmt"
-	"github.com/utlai/utl/internal/pkg/utils"
-	"github.com/utlai/utl/internal/server/repo"
 	"github.com/casbin/casbin/v2"
 	"github.com/fatih/color"
 	"github.com/kataras/iris/v12"
+	_httpUtils "github.com/utlai/utl/internal/pkg/libs/http"
+	"github.com/utlai/utl/internal/server/biz/jwt"
+	"github.com/utlai/utl/internal/server/repo"
 	"net/http"
 )
 
 type CasbinService struct {
-	TokenService *TokenService    `inject:""`
-	Enforcer     *casbin.Enforcer `inject:""`
-	UserRepo     *repo.UserRepo   `inject:""`
-	TokenRepo    *repo.TokenRepo  `inject:""`
+	TokenService *jwt.TokenService `inject:""`
+	Enforcer     *casbin.Enforcer  `inject:""`
+	UserRepo     *repo.UserRepo    `inject:""`
+	TokenRepo    *repo.TokenRepo   `inject:""`
 }
 
 func NewCasbinService() *CasbinService {
@@ -30,13 +31,13 @@ func (m *CasbinService) Serve(ctx iris.Context) {
 
 	if credentials == nil {
 		ctx.StopExecution()
-		_, _ = ctx.JSON(_utils.ApiRes(401, "", nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(401, "", nil))
 		ctx.StopExecution()
 		return
 	} else {
 		check, err := m.Check(ctx.Request(), credentials.UserId)
 		if !check {
-			_, _ = ctx.JSON(_utils.ApiRes(403, err.Error(), nil))
+			_, _ = ctx.JSON(_httpUtils.ApiRes(403, err.Error(), nil))
 			ctx.StopExecution()
 			return
 		} else {

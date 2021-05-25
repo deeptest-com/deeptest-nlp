@@ -1,9 +1,9 @@
-package sessionUtils
+package jwt
 
 import (
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/sessions"
-	"github.com/utlai/utl/internal/server/biz/domain"
+	bizConst "github.com/utlai/utl/internal/server/biz/const"
 	"github.com/utlai/utl/internal/server/cfg"
 )
 
@@ -23,13 +23,13 @@ func Set(ctx iris.Context, key string, obj interface{}) {
 	sess.Set(key, obj)
 }
 
-func GetCredentials(ctx iris.Context) (cred *domain.UserCredentials) {
+func GetCredentials(ctx iris.Context) (cred *bizConst.UserCredentials) {
 	if serverConf.Config.Redis.Enable {
 		credObj := ctx.Values().Get("sess")
 		if credObj == nil {
 			return
 		}
-		cred = credObj.(*domain.UserCredentials)
+		cred = credObj.(*bizConst.UserCredentials)
 	} else {
 		sess := session.Start(ctx)
 		credObj := sess.Get(CredKey)
@@ -37,13 +37,13 @@ func GetCredentials(ctx iris.Context) (cred *domain.UserCredentials) {
 			return
 		}
 
-		cred = credObj.(*domain.UserCredentials)
+		cred = credObj.(*bizConst.UserCredentials)
 	}
 
 	return
 }
 
-func SaveCredentials(ctx iris.Context, cred *domain.UserCredentials) {
+func SaveCredentials(ctx iris.Context, cred *bizConst.UserCredentials) {
 	sess := session.Start(ctx)
 	sess.Set(CredKey, cred)
 }

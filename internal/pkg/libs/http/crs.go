@@ -1,4 +1,4 @@
-package middlewareUtils
+package _httpUtils
 
 import (
 	"github.com/iris-contrib/middleware/cors"

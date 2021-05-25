@@ -1,11 +1,11 @@
 package handler
 
 import (
-	_domain "github.com/utlai/utl/internal/pkg/domain"
-	"github.com/utlai/utl/internal/pkg/utils"
-	"github.com/utlai/utl/internal/server/service"
 	"github.com/kataras/iris/v12"
 	"github.com/mitchellh/mapstructure"
+	_domain "github.com/utlai/utl/internal/pkg/domain"
+	_httpUtils "github.com/utlai/utl/internal/pkg/libs/http"
+	"github.com/utlai/utl/internal/server/service"
 )
 
 type RpcCtrl struct {
@@ -21,7 +21,7 @@ func (c *RpcCtrl) Request(ctx iris.Context) {
 	rpcReq := _domain.RpcReq{}
 	err := ctx.ReadJSON(&rpcReq)
 	if err != nil {
-		_, _ = ctx.JSON(_utils.ApiRes(400, err.Error(), nil))
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
@@ -34,5 +34,5 @@ func (c *RpcCtrl) Request(ctx iris.Context) {
 
 	rpcResult := c.RpcService.Request(rpcReq.ComputerIp, rpcReq.ComputerPort, rpcReq.ApiPath, rpcReq.ApiMethod, &obj)
 
-	_, _ = ctx.JSON(_utils.ApiRes(200, "请求成功", rpcResult))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "请求成功", rpcResult))
 }

@@ -7,7 +7,6 @@ import (
 	_commonUtils "github.com/utlai/utl/internal/pkg/libs/common"
 	_fileUtils "github.com/utlai/utl/internal/pkg/libs/file"
 	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
-	"github.com/utlai/utl/internal/pkg/utils"
 	serverConst "github.com/utlai/utl/internal/server/utils/const"
 	serverRes "github.com/utlai/utl/res/server"
 	"path/filepath"
@@ -70,7 +69,7 @@ type DBConfig struct {
 }
 
 func Init() {
-	exeDir := _utils.GetExeDir()
+	exeDir := _fileUtils.GetExeDir()
 	configPath := ""
 	if _commonUtils.IsRelease() {
 		configPath = filepath.Join(exeDir, "server.yml")

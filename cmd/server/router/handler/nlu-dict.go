@@ -2,7 +2,7 @@ package handler
 
 import (
 	"github.com/kataras/iris/v12"
-	"github.com/utlai/utl/internal/pkg/utils"
+	_httpUtils "github.com/utlai/utl/internal/pkg/libs/http"
 	"github.com/utlai/utl/internal/server/service"
 )
 
@@ -21,5 +21,5 @@ func (c *NluDictCtrl) List(ctx iris.Context) {
 
 	list := c.DictService.List(tp)
 
-	_, _ = ctx.JSON(_utils.ApiRes(200, "请求成功", list))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "请求成功", list))
 }
