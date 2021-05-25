@@ -11,3 +11,6 @@
 /rasa/spacy/res/*.gz
 /project/demo/data/
 /log/
+/res/server/*.yml
+/res/server/*.conf
+/res/server/*.go
