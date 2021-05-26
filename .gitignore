@@ -14,3 +14,4 @@
 /res/server/*.yml
 /res/server/*.conf
 /res/server/*.go
+access.log

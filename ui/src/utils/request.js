@@ -12,11 +12,9 @@ const request = axios.create({
 })
 
 const errorHandler = (error) => {
-  console.log('===errorHandler===', error)
+  // console.log('===errorHandler===', error)
   if (error.response) {
     const data = error.response.data
-    // 从 localstorage 获取 token
-    // const token = storage.get(ACCESS_TOKEN)
     if (error.response.status === 403) {
       notification.error({
         message: 'Forbidden',
@@ -24,17 +22,6 @@ const errorHandler = (error) => {
       })
     }
     if (error.response.status === 401 && !(data.result && data.result.isLogin)) {
-      // notification.error({
-      //   message: $t('msg.unauthorized'),
-      //   description: $t('msg.auth.fail')
-      // })
-      // if (token) {
-      //   store.dispatch('Logout').then(() => {
-      //     setTimeout(() => {
-      //       window.location.reload()
-      //     }, 1500)
-      //   })
-      // }
       router.push({ path: '/user/login' })
     }
   }

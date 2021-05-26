@@ -64,4 +64,5 @@ show variables like 'sql_mode';
 scp -r bin/utl-server/0.8/linux/utl-server 139.224.8.129:~
 scp -r bin/utl-server/0.8/linux/utl-server/utl-server 139.224.8.129:~/utl-server
 
-cd utl-server && nohup ./utl-server 2>&1 &
+ps -ef | grep utl | grep -v grep | cut -c 9-15 | xargs kill -s 9
+cd ~/utl-server && nohup ./utl-server 2>&1 &

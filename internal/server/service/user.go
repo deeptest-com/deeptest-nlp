@@ -69,7 +69,7 @@ func (s *UserService) CheckLogin(ctx iris.Context, u *model.User, password strin
 				jwt2.SaveCredentials(ctx, &cred)
 			}
 
-			return &model.Token{Token: tokenStr}, 200, "登陆成功"
+			return &model.Token{Token: tokenStr}, 200, "登录成功"
 		} else {
 			return nil, 400, "用户名或密码错误"
 		}

@@ -44,14 +44,14 @@ func NewAccountCtrl() *AccountCtrl {
  */
 func (c *AccountCtrl) UserLogin(ctx iris.Context) {
 	ctx.StatusCode(iris.StatusOK)
-	aul := new(validate.LoginRequest)
+	req := new(validate.LoginRequest)
 
-	if err := ctx.ReadJSON(aul); err != nil {
+	if err := ctx.ReadJSON(req); err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
-	err := validate.Validate.Struct(*aul)
+	err := validate.Validate.Struct(*req)
 	if err != nil {
 		errs := err.(validator.ValidationErrors)
 		for _, e := range errs.Translate(validate.ValidateTrans) {
@@ -62,14 +62,14 @@ func (c *AccountCtrl) UserLogin(ctx iris.Context) {
 		}
 	}
 
-	ctx.Application().Logger().Infof("%s 登录系统", aul.Username)
+	ctx.Application().Logger().Infof("%s 登录系统", req.Username)
 
 	search := &domain.Search{
 		Fields: []*domain.Filed{
 			{
 				Key:       "username",
 				Condition: "=",
-				Value:     aul.Username,
+				Value:     req.Username,
 			},
 		},
 	}
@@ -79,15 +79,15 @@ func (c *AccountCtrl) UserLogin(ctx iris.Context) {
 		return
 	}
 
-	response, code, msg := c.UserService.CheckLogin(ctx, user, aul.Password)
+	response, code, msg := c.UserService.CheckLogin(ctx, user, req.Password)
 	if code != 200 {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(code, msg, response))
 		return
 	}
-	response.RememberMe = aul.RememberMe
+	response.RememberMe = req.RememberMe
 
 	refreshToken := ""
-	if code == 200 && aul.RememberMe {
+	if code == 200 && req.RememberMe {
 		refreshToken = response.Token
 	}
 

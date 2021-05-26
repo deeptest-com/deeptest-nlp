@@ -28,7 +28,28 @@ const api = {
   orgTree: `${prefix}/org/tree`
 }
 
-export const WsApi = 'ws://127.0.0.1:8085/api/v1/ws'
+const WebSocketPath = 'api/v1/ws'
+export const WebSocketBaseDev = 'ws://127.0.0.1:8085/'
+export function GetWebSocketApi () {
+  const isProd = process.env.NODE_ENV === 'production'
+
+  let wsUri = ''
+  if (!isProd) {
+    wsUri = WebSocketBaseDev
+  } else {
+    const loc = window.location
+
+    if (loc.protocol === 'https:') {
+      wsUri = 'wss:'
+    } else {
+      wsUri = 'ws:'
+    }
+    wsUri += '//' + loc.host
+    wsUri += loc.pathname
+  }
+
+  return wsUri + WebSocketPath
+}
 
 export function requestSuccess (code) {
   return code === 200

@@ -16,7 +16,7 @@
       </div>
     </template>
 
-    <setting-drawer :settings="settings" @change="handleSettingChange" />
+    <setting-drawer v-if="!isProd" :settings="settings" @change="handleSettingChange" />
     <template v-slot:rightContentRender>
       <right-content :top-menu="settings.layout === 'topmenu'" :is-mobile="isMobile" :theme="settings.theme" />
     </template>
@@ -78,7 +78,8 @@ export default {
       query: {},
 
       // 是否手机模式
-      isMobile: false
+      isMobile: false,
+      isProd: process.env.NODE_ENV === 'production'
     }
   },
   computed: {

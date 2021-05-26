@@ -21,6 +21,9 @@ import './core/lazy_use' // use lazy load components
 import './utils/filter' // global filter
 import './global.less' // global style
 
+import global from './utils/global.js'
+Vue.prototype.$global = global
+
 Vue.config.productionTip = false
 
 // mount axios to `Vue.$http` and `this.$http`

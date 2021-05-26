@@ -230,15 +230,16 @@ func (r *Router) App() {
 			})
 		}
 
+		// enable websocket
 		websocketAPI := r.api.Party("/api/v1/ws")
 		m := mvc.New(websocketAPI)
 		m.Register(
 			&prefixedLogger{prefix: "DEV"},
 		)
 		m.HandleWebsocket(handler.NewWsCtrl())
+
 		websocketServer := websocket.New(
-			gorilla.Upgrader(gorillaWs.Upgrader{CheckOrigin: func(*http.Request) bool { return true }}),
-			m)
+			gorilla.Upgrader(gorillaWs.Upgrader{CheckOrigin: func(*http.Request) bool { return true }}), m)
 		websocketAPI.Get("/", websocket.Handler(websocketServer))
 	}
 }

@@ -13,7 +13,7 @@ admin:
   username: admin
   rolename: administrator
   name: admin
-  password: P2ssw0rd
+  password: pass
 
 db:
   adapter: sqlite3

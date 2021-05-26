@@ -18,7 +18,7 @@
             <a-input
               size="large"
               type="text"
-              placeholder="账户: admin"
+              placeholder="默认账户: admin"
               v-decorator="[
                 'username',
                 {rules: [{ required: true, message: '请输入帐户名或邮箱地址' }, { validator: handleUsernameOrEmail }], validateTrigger: 'change'}
@@ -31,7 +31,7 @@
           <a-form-item>
             <a-input-password
               size="large"
-              placeholder="密码: admin or ant.design"
+              placeholder="默认密码：pass"
               v-decorator="[
                 'password',
                 {rules: [{ required: true, message: '请输入密码' }], validateTrigger: 'blur'}
@@ -41,6 +41,7 @@
             </a-input-password>
           </a-form-item>
         </a-tab-pane>
+
         <a-tab-pane key="tab2" tab="手机号登录">
           <a-form-item>
             <a-input size="large" type="text" placeholder="手机号" v-decorator="['mobile', {rules: [{ required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' }], validateTrigger: 'change'}]">
@@ -70,7 +71,13 @@
       </a-tabs>
 
       <a-form-item>
-        <a-checkbox v-decorator="['rememberMe', { valuePropName: 'rememberMe' }]">自动登录</a-checkbox>
+        <a-checkbox
+          ref="rememberMe"
+          :defaultChecked="true"
+          v-model="rememberMe">
+          记住我
+        </a-checkbox>
+
         <router-link
           :to="{ name: 'recover', params: { user: 'aaa'} }"
           class="forge-password"
@@ -138,7 +145,8 @@ export default {
         // login type: 0 email, 1 username, 2 telephone
         loginType: 0,
         smsSendBtn: false
-      }
+      },
+      rememberMe: true
     }
   },
   created () {
@@ -181,6 +189,10 @@ export default {
           loginParams[!state.loginType ? 'email' : 'username'] = values.username
           loginParams.password = md5(values.password)
           loginParams.password = values.password
+
+          console.log(this.rememberMe)
+          loginParams.rememberMe = this.rememberMe
+
           Login(loginParams)
             .then((res) => this.loginSuccess(res))
             .catch(err => this.requestFailed(err))
