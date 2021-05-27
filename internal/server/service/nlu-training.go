@@ -8,6 +8,7 @@ import (
 	"github.com/utlai/utl/internal/server/model"
 	"github.com/utlai/utl/internal/server/repo"
 	serverConst "github.com/utlai/utl/internal/server/utils/const"
+	"strings"
 	"time"
 )
 
@@ -77,11 +78,12 @@ func (s *NluTrainingService) ExecTraining(project model.Project) {
 
 		return
 	} else {
-		_logUtils.Infof("--- training successfully, %s", ret)
-	}
+		_logUtils.Infof("--- training successfully: \n%s\n%s\n%s",
+			strings.Repeat("*", 100), ret, strings.Repeat("*", 100))
 
-	// start service
-	s.NluServiceService.Start(project)
+		// start service
+		s.NluServiceService.Start(project)
+	}
 }
 
 func (s *NluTrainingService) CancelTraining() (result string, err error) {
