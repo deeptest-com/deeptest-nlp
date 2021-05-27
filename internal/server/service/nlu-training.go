@@ -28,7 +28,7 @@ func (s *NluTrainingService) TrainingProject(id uint) (files []string) {
 }
 
 func (s *NluTrainingService) AsyncCall(project model.Project) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Millisecond*serverConst.TrainingTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*serverConst.TrainingTimeout)
 	defer cancel()
 	go func(ctx context.Context) {
 
@@ -38,10 +38,10 @@ func (s *NluTrainingService) AsyncCall(project model.Project) {
 
 	select {
 	case <-ctx.Done():
-		_logUtils.Infof("---async training completed---")
+		_logUtils.Infof("---async training project %s completed---", project.Path)
 		return
-	case <-time.After(time.Millisecond * serverConst.TrainingTimeout):
-		_logUtils.Infof("---async training timeout---")
+	case <-time.After(time.Second * serverConst.TrainingTimeout):
+		_logUtils.Infof("---async training project %s timeout---", project.Path)
 		return
 	}
 }
