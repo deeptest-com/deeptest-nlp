@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
 	_shellUtils "github.com/utlai/utl/internal/pkg/libs/shell"
 	"github.com/utlai/utl/internal/server/model"
@@ -60,19 +61,28 @@ func (s *NluTrainingService) CallTraining(project model.Project) {
 }
 
 func (s *NluTrainingService) ExecTraining(project model.Project) {
+	// stop service
 	s.NluServiceService.Stop(project)
 
+	// kill old training process
+	pName := fmt.Sprintf("models.%d", project.ID)
+	_shellUtils.KillProcess(pName)
+
+	// rm models
 	cmdStr := "rm -rf models"
 	ret, err := _shellUtils.ExeShellInDir(cmdStr, project.Path)
 
-	cmdStr = "rasa train"
+	// start training
+	cmdStr = fmt.Sprintf("rasa train --out models.%d", project.ID)
 	ret, err = _shellUtils.ExeShellInDir(cmdStr, project.Path)
+
 	if err != nil {
 		_logUtils.Errorf("training failed, error %s", err)
 	} else {
 		_logUtils.Infof("training successfully, %s", ret)
 	}
 
+	// start service
 	s.NluServiceService.Start(project)
 }
 

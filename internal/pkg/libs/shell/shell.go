@@ -35,7 +35,16 @@ func ExeShell(cmdStr string) (string, error) {
 	return ExeShellInDir(cmdStr, "")
 }
 
-func ExeShellInDir(cmdStr string, dir string) (string, error) {
+func ExeShellInDir(cmdStr string, dir string) (ret string, err error) {
+	ret, err, _ = ExeShellInDirWithPid(cmdStr, dir)
+	return
+}
+
+func ExeShellWithPid(cmdStr string) (string, error, int) {
+	return ExeShellInDirWithPid(cmdStr, "")
+}
+
+func ExeShellInDirWithPid(cmdStr string, dir string) (ret string, err error, pid int) {
 	var cmd *exec.Cmd
 	if _commonUtils.IsWin() {
 		cmd = exec.Command("cmd", "/C", cmdStr)
@@ -49,13 +58,14 @@ func ExeShellInDir(cmdStr string, dir string) (string, error) {
 	var out bytes.Buffer
 	cmd.Stdout = &out
 
-	err := cmd.Run()
+	err = cmd.Run()
 	if err != nil {
 		_logUtils.Error(fmt.Sprintf("fail to exec command `%s` in dir `%s`, error `%#v`.", cmdStr, cmd.Dir, err))
 	}
 
-	str := _stringUtils.TrimAll(out.String())
-	return str, err
+	pid = cmd.Process.Pid
+	ret = _stringUtils.TrimAll(out.String())
+	return
 }
 
 func ExeShellWithOutput(cmdStr string) ([]string, error) {
@@ -167,4 +177,9 @@ func KillProcess(app string) (string, error) {
 	output := out.String()
 
 	return output, err
+}
+
+func KillProcessById(pid int) {
+	cmdStr := fmt.Sprintf("kill -9 %d", pid)
+	ExeShell(cmdStr)
 }
