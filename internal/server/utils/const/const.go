@@ -6,7 +6,7 @@ const (
 	AppName    = "server"
 	NluVersion = "2.0"
 
-	TrainingTimeout = 60 * 60 // sec
+	TrainingTimeout = 2 // 60 * 60 // sec
 
 	PageSize            = 15
 	Kvm      VmPlatform = "kvm"
