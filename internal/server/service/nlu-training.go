@@ -49,7 +49,7 @@ func (s *NluTrainingService) CallTraining(project model.Project) {
 
 	select {
 	case <-ch:
-		_logUtils.Infof("--- 4. complete training project %s---", project.Path)
+		_logUtils.Infof("--- 4. finish training project %s---", project.Path)
 	case <-ctx.Done():
 		_logUtils.Infof("--- 0. timeout training project %s---", project.Path)
 
