@@ -6,6 +6,8 @@ const (
 	AppName    = "server"
 	NluVersion = "2.0"
 
+	TrainingTimeout = 60 * 60 // sec
+
 	PageSize            = 15
 	Kvm      VmPlatform = "kvm"
 	Pve      VmPlatform = "pve"

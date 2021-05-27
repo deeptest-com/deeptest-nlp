@@ -67,17 +67,14 @@
 
           <span slot="action" slot-scope="text, record">
             <template>
+              <a @click="view(record)">{{ $t('form.view') }}</a>
+              <a-divider type="vertical" />
+
               <a @click="edit(record)">{{ $t('form.edit') }}</a>
               <a-divider type="vertical" />
 
               <a v-if="!record.disabled" @click="disable(record)">{{ $t('form.disable') }}</a>
               <a v-if="record.disabled" @click="disable(record)">{{ $t('form.enable') }}</a>
-              <a-divider type="vertical" />
-
-              <a @click="convert(record)">{{ $t('form.convert') }}</a>
-              <a-divider type="vertical" />
-
-              <a @click="training(record)">{{ $t('form.training') }}</a>
               <a-divider type="vertical" />
 
               <a-popconfirm
@@ -108,7 +105,7 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { listProject, disableProject, removeProject, convert, training } from '@/api/manage'
+import { listProject, disableProject, removeProject } from '@/api/manage'
 
 export default {
   name: 'ProjectList',
@@ -217,47 +214,19 @@ export default {
 
       this.$router.push('/platform/project/0/edit')
     },
+    view (record) {
+      this.visible = true
+      this.mdl = { ...record }
+
+      this.$router.push('/platform/project/' + record.id + '/view')
+    },
     edit (record) {
       this.visible = true
       this.mdl = { ...record }
 
       this.$router.push('/platform/project/' + record.id + '/edit')
     },
-    convert (record) {
-      console.log('convert')
-      convert(record).then(json => {
-        console.log('convert', json)
 
-        if (json.code === 200) {
-          this.$notification['success']({
-            message: this.$t('common.tips'),
-            description: this.$t('msg.convert.success'),
-            duration: 8
-          })
-        }
-      })
-    },
-    training (record) {
-      console.log('convert')
-
-      training(record).then(json => {
-        console.log('training', json)
-        if (json.code === 200) {
-          this.$notification['success']({
-            message: this.$t('common.tips'),
-            description: this.$t('msg.training.start'),
-            duration: 8
-          })
-        }
-      })
-    },
-
-    // setDefault (record) {
-    //   setDefaultProject(record).then(json => {
-    //     console.log('setDefaultProject', json)
-    //     this.$refs.table.refresh(false)
-    //   })
-    // },
     disable (record) {
       disableProject(record).then(json => {
         console.log('disableProject', json)

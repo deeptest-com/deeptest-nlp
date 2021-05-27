@@ -41,6 +41,12 @@ export const asyncRouterMap = [
             name: 'project-edit',
             component: () => import('@/views/platform/project/Edit'),
             meta: { title: 'menu.project.edit', keepAlive: true }
+          },
+          {
+            path: '/platform/project/:id/view',
+            name: 'project-view',
+            component: () => import('@/views/platform/project/View'),
+            meta: { title: 'menu.project.view', keepAlive: true }
           }
         ]
       },

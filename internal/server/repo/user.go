@@ -23,6 +23,12 @@ func (r *UserRepo) NewUser() *model.User {
 	return &model.User{}
 }
 
+func (r *UserRepo) Get(id uint) (po model.User, err error) {
+	err = r.DB.Where("id = ?", id).First(&po).Error
+
+	return
+}
+
 // GetUser get user
 func (r *UserRepo) GetUser(search *domain.Search) (*model.User, error) {
 	t := r.NewUser()

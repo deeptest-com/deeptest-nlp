@@ -46,8 +46,7 @@ type Router struct {
 	NluRegexCtrl       *handler.NluRegexCtrl       `inject:""`
 	NluRegexItemCtrl   *handler.NluRegexItemCtrl   `inject:""`
 	NluDictCtrl        *handler.NluDictCtrl        `inject:""`
-	NluConvertCtrl     *handler.NluConvertCtrl     `inject:""`
-	NluTrainingCtrl    *handler.NluTrainingCtrl    `inject:""`
+	NluRasaCtrl        *handler.NluRasaCtrl        `inject:""`
 
 	ValidCtrl *handler.ValidCtrl `inject:""`
 	WsCtrl    *handler.WsCtrl    `inject:""`
@@ -70,7 +69,7 @@ func (r *Router) App() {
 	{
 		// 二进制模式 ， 启用项目入口
 		//if serverConf.Config.BinData {
-		//	app.Get("/", func(ctx iris.Context) { // 首页模块
+		//	app.GetDetail("/", func(ctx iris.Context) { // 首页模块
 		//		_ = ctx.View("index.html")
 		//	})
 		//}
@@ -104,11 +103,14 @@ func (r *Router) App() {
 					party.Get("/listForSelect", r.ProjectCtrl.ListForSelect).Name = "查询下拉框用项目列表"
 				})
 
-				admin.PartyFunc("/convert/{id:uint}", func(party iris.Party) {
-					party.Post("/", r.NluConvertCtrl.Convert).Name = "NLU定义转换"
+				admin.PartyFunc("/compile/{id:uint}", func(party iris.Party) {
+					party.Post("/", r.NluRasaCtrl.Compile).Name = "编译项目"
 				})
 				admin.PartyFunc("/training/{id:uint}", func(party iris.Party) {
-					party.Post("/", r.NluTrainingCtrl.Training).Name = "训练项目"
+					party.Post("/", r.NluRasaCtrl.Training).Name = "训练项目"
+				})
+				admin.PartyFunc("/start/{id:uint}", func(party iris.Party) {
+					party.Post("/", r.NluRasaCtrl.Start).Name = "启动项目"
 				})
 
 				admin.PartyFunc("/tasks", func(party iris.Party) {

@@ -16,9 +16,7 @@ package bizCasbin
 
 import (
 	"errors"
-	serverConf "github.com/utlai/utl/internal/server/cfg"
 	"gorm.io/driver/mysql"
-	"runtime"
 	"strings"
 
 	"github.com/casbin/casbin/v2/model"
@@ -75,80 +73,6 @@ func finalizer(a *Adapter) {
 	}
 }
 
-// NewAdapter is the constructor for Adapter.
-// Params : databaseName,tableName,dbSpecified
-//			databaseName,{tableName/dbSpecified}
-//			{database/dbSpecified}
-// databaseName and tableName are user defined.
-// Their default value are "casbin" and "casbin_rule"
-//
-// dbSpecified is an optional bool parameter. The default value is false.
-// It's up to whether you have specified an existing DB in dataSourceName.
-// If dbSpecified == true, you need to make sure the DB in dataSourceName exists.
-// If dbSpecified == false, the adapter will automatically create a DB named databaseName.
-func NewAdapter(driverName string, dataSourceName string, params ...interface{}) (*Adapter, error) {
-	a := &Adapter{}
-	a.driverName = driverName
-	a.dataSourceName = dataSourceName
-
-	a.tableName = defaultTableName
-	a.databaseName = serverConf.Config.DB.Name
-	a.dbSpecified = false
-
-	if len(params) == 0 {
-
-	} else if len(params) == 1 {
-		switch p1 := params[0].(type) {
-		case bool:
-			a.dbSpecified = p1
-		case string:
-			a.databaseName = p1
-		default:
-			return nil, errors.New("wrong format")
-		}
-	} else if len(params) == 2 {
-		switch p2 := params[1].(type) {
-		case bool:
-			a.dbSpecified = p2
-			p1, ok := params[0].(string)
-			if !ok {
-				return nil, errors.New("wrong format")
-			}
-			a.databaseName = p1
-		case string:
-			p1, ok := params[0].(string)
-			if !ok {
-				return nil, errors.New("wrong format")
-			}
-			a.databaseName = p1
-			a.tableName = p2
-		default:
-			return nil, errors.New("wrong format")
-		}
-	} else if len(params) == 3 {
-		if p3, ok := params[2].(bool); ok {
-			a.dbSpecified = p3
-			a.databaseName = params[0].(string)
-			a.tableName = params[1].(string)
-		} else {
-			return nil, errors.New("wrong format")
-		}
-	} else {
-		return nil, errors.New("too many parameters")
-	}
-
-	// Open the DB, create it if not existed.
-	err := a.open()
-	if err != nil {
-		return nil, err
-	}
-
-	// Call the destructor when the object is released.
-	runtime.SetFinalizer(a, finalizer)
-
-	return a, nil
-}
-
 // NewAdapterByDBUseTableName creates gorm-adapter by an existing Gorm instance and the specified table prefix and table name
 // Example: gormadapter.NewAdapterByDBUseTableName(&db, "cms", "casbin") Automatically generate table name like this "cms_casbin"
 func NewAdapterByDBUseTableName(db *gorm.DB, prefix string, tableName string) (*Adapter, error) {
@@ -168,17 +92,6 @@ func NewAdapterByDBUseTableName(db *gorm.DB, prefix string, tableName string) (*
 	}
 
 	return a, nil
-}
-
-// NewFilteredAdapter is the constructor for FilteredAdapter.
-// Casbin will not automatically call LoadPolicy() for a filtered adapter.
-func NewFilteredAdapter(driverName string, dataSourceName string, params ...interface{}) (*Adapter, error) {
-	adapter, err := NewAdapter(driverName, dataSourceName, params...)
-	if err != nil {
-		return nil, err
-	}
-	adapter.isFiltered = true
-	return adapter, err
 }
 
 // NewAdapterByDB creates gorm-adapter by an existing Gorm instance

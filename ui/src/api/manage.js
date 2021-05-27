@@ -5,8 +5,9 @@ const prefix = '/v1/admin'
 const api = {
   profile: `${prefix}/profile`,
   projects: `${prefix}/projects`,
-  convert: `${prefix}/convert`,
+  compile: `${prefix}/compile`,
   training: `${prefix}/training`,
+  start: `${prefix}/start`,
   tasks: `${prefix}/tasks`,
   intents: `${prefix}/intents`,
   sents: `${prefix}/sents`,
@@ -113,16 +114,23 @@ export function removeProject (model) {
     params: {}
   })
 }
-export function convert (model) {
+export function compileProject (model) {
   return request({
-    url: api.convert + '/' + model.id,
+    url: api.compile + '/' + model.id,
     method: 'post',
     params: { }
   })
 }
-export function training (model) {
+export function trainingProject (model) {
   return request({
     url: api.training + '/' + model.id,
+    method: 'post',
+    params: { }
+  })
+}
+export function startService (model) {
+  return request({
+    url: api.start + '/' + model.id,
     method: 'post',
     params: { }
   })

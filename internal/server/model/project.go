@@ -7,6 +7,10 @@ type Project struct {
 	Desc      string `json:"desc"`
 	Path      string `json:"path"`
 	IsDefault bool   `json:"isDefault"`
+
+	UserId    uint         `json:"userId"`
+	CreatedBy string       `json:"createdBy,omitempty" gorm:"-"`
+	Histories []NluHistory `json:"histories,omitempty" gorm:"-"`
 }
 
 func (Project) TableName() string {

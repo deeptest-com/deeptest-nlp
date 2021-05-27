@@ -9,7 +9,8 @@ import (
 
 type ProjectRepo struct {
 	CommonRepo
-	DB *gorm.DB `inject:""`
+	NluHistoryRepo *NluHistoryRepo `inject:""`
+	DB             *gorm.DB        `inject:""`
 }
 
 func NewProjectRepo() *ProjectRepo {
@@ -46,6 +47,20 @@ func (r *ProjectRepo) Query(keywords, status string, pageNo int, pageSize int) (
 
 func (r *ProjectRepo) Get(id uint) (po model.Project) {
 	r.DB.Where("id = ?", id).First(&po)
+
+	return
+}
+
+func (r *ProjectRepo) GetDetail(id uint) (po model.Project) {
+	r.DB.Where("id = ?", id).First(&po)
+
+	histories := r.NluHistoryRepo.ListByProjectId(id)
+
+	if len(histories) > 0 {
+		po.Histories = histories
+		po.CreatedBy = histories[len(histories)-1].UserName
+	}
+
 	return
 }
 

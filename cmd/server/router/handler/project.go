@@ -3,6 +3,7 @@ package handler
 import (
 	"github.com/kataras/iris/v12"
 	_httpUtils "github.com/utlai/utl/internal/pkg/libs/http"
+	_stringUtils "github.com/utlai/utl/internal/pkg/libs/string"
 	"github.com/utlai/utl/internal/server/biz/jwt"
 	"github.com/utlai/utl/internal/server/model"
 	"github.com/utlai/utl/internal/server/service"
@@ -55,7 +56,7 @@ func (c *ProjectCtrl) Get(ctx iris.Context) {
 		return
 	}
 
-	model := c.ProjectService.Get(uint(id))
+	model := c.ProjectService.GetDetail(uint(id))
 	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", model))
 	return
 }
@@ -73,7 +74,9 @@ func (c *ProjectCtrl) Create(ctx iris.Context) {
 		return
 	}
 
-	err := c.ProjectService.Save(&model)
+	cred := jwt.GetCredentials(ctx)
+
+	err := c.ProjectService.Save(&model, _stringUtils.ParseUint(cred.UserId))
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, "操作失败", nil))
 		return

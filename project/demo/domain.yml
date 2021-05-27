@@ -6,5 +6,8 @@ responses:
   utter_greate:
   - text: fine
 intents: []
-entities: []
+entities:
+- print
+- loglevel
+- xpath
 slots: {}

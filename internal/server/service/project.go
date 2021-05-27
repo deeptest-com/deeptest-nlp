@@ -3,10 +3,12 @@ package service
 import (
 	"github.com/utlai/utl/internal/server/model"
 	"github.com/utlai/utl/internal/server/repo"
+	serverConst "github.com/utlai/utl/internal/server/utils/const"
 )
 
 type ProjectService struct {
-	ProjectRepo *repo.ProjectRepo `inject:""`
+	ProjectRepo       *repo.ProjectRepo  `inject:""`
+	NluHistoryService *NluHistoryService `inject:""`
 }
 
 func NewProjectService() *ProjectService {
@@ -23,8 +25,16 @@ func (s *ProjectService) Get(id uint) (po model.Project) {
 	return
 }
 
-func (s *ProjectService) Save(po *model.Project) (err error) {
+func (s *ProjectService) GetDetail(id uint) (po model.Project) {
+	po = s.ProjectRepo.GetDetail(id)
+	return
+}
+
+func (s *ProjectService) Save(po *model.Project, userId uint) (err error) {
+	po.UserId = userId
 	err = s.ProjectRepo.Save(po)
+
+	s.NluHistoryService.Add(userId, po.ID, serverConst.Create)
 
 	return
 }

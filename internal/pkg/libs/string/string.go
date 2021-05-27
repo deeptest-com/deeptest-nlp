@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"github.com/jameskeane/bcrypt"
 	"math/rand"
+	"strconv"
 	"strings"
 	"time"
 	"unicode"
@@ -77,4 +78,14 @@ func HashPassword(pwd string) string {
 	}
 
 	return hash
+}
+
+func ParseInt(str string) (ret int) {
+	ret, _ = strconv.Atoi(str)
+	return
+}
+func ParseUint(str string) (ret uint) {
+	i := ParseInt(str)
+	ret = uint(i)
+	return
 }

@@ -14,7 +14,7 @@ import (
 	"strings"
 )
 
-type NluConvertService struct {
+type NluCompileService struct {
 	NluSynonymRepo     *repo.NluSynonymRepo     `inject:""`
 	NluSynonymItemRepo *repo.NluSynonymItemRepo `inject:""`
 	NluLookupRepo      *repo.NluLookupRepo      `inject:""`
@@ -29,12 +29,12 @@ type NluConvertService struct {
 	NluSlotRepo   *repo.NluSlotRepo   `inject:""`
 }
 
-func NewNluConvertService() *NluConvertService {
-	return &NluConvertService{}
+func NewNluCompileService() *NluCompileService {
+	return &NluCompileService{}
 }
 
-func (s *NluConvertService) ConvertProject(id uint) (files []string) {
-	project := s.ProjectRepo.Get(id)
+func (s *NluCompileService) CompileProject(id uint) (files []string) {
+	project := s.ProjectRepo.GetDetail(id)
 	projectDir := project.Path
 
 	nluDomain := s.parserDomain(projectDir)
@@ -54,7 +54,7 @@ func (s *NluConvertService) ConvertProject(id uint) (files []string) {
 	return
 }
 
-func (s *NluConvertService) parserDomain(projectDir string) (nluDomain domain.NluDomain) {
+func (s *NluCompileService) parserDomain(projectDir string) (nluDomain domain.NluDomain) {
 	domainFilePath := filepath.Join(projectDir, "domain.yml")
 	content := _fileUtils.ReadFileBuf(domainFilePath)
 
@@ -63,7 +63,7 @@ func (s *NluConvertService) parserDomain(projectDir string) (nluDomain domain.Nl
 	return
 }
 
-func (s *NluConvertService) convertIntent(projectId uint, projectDir string, nluDomain *domain.NluDomain) (files []string) {
+func (s *NluCompileService) convertIntent(projectId uint, projectDir string, nluDomain *domain.NluDomain) (files []string) {
 	_fileUtils.RmDir(filepath.Join(projectDir, "intent"))
 
 	tasks := s.NluTaskRepo.ListByProjectId(projectId)
@@ -83,7 +83,7 @@ func (s *NluConvertService) convertIntent(projectId uint, projectDir string, nlu
 				s.populateSlots(sent.ID, slotNameMap, nluDomain)
 
 				intentExamples := s.genIntentSent(sent, slotNameMap)
-				intentItem.Examples += intentExamples + "\n"
+				intentItem.Examples += "- " + intentExamples + "\n"
 			}
 
 			nluIntent.Items = append(nluIntent.Items, intentItem)
@@ -97,7 +97,7 @@ func (s *NluConvertService) convertIntent(projectId uint, projectDir string, nlu
 	return
 }
 
-func (s *NluConvertService) convertSynonym(projectId uint, projectDir string, nluDomain *domain.NluDomain) {
+func (s *NluCompileService) convertSynonym(projectId uint, projectDir string, nluDomain *domain.NluDomain) {
 	_fileUtils.RmDir(filepath.Join(projectDir, "synonym"))
 
 	synonyms := s.NluSynonymRepo.ListByProjectId(projectId)
@@ -110,7 +110,7 @@ func (s *NluConvertService) convertSynonym(projectId uint, projectDir string, nl
 
 		synonymItems := s.NluSynonymItemRepo.ListBySynonymId(synonym.ID)
 		for _, item := range synonymItems {
-			synonymDef.Examples += item.Content + "\n"
+			synonymDef.Examples += "- " + item.Content + "\n"
 		}
 		nluSynonym.SynonymDef = append(nluSynonym.SynonymDef, synonymDef)
 
@@ -121,7 +121,7 @@ func (s *NluConvertService) convertSynonym(projectId uint, projectDir string, nl
 
 	return
 }
-func (s *NluConvertService) convertLookup(projectId uint, projectDir string, nluDomain *domain.NluDomain) {
+func (s *NluCompileService) convertLookup(projectId uint, projectDir string, nluDomain *domain.NluDomain) {
 	_fileUtils.RmDir(filepath.Join(projectDir, "lookup"))
 
 	lookups := s.NluLookupRepo.ListByProjectId(projectId)
@@ -134,7 +134,7 @@ func (s *NluConvertService) convertLookup(projectId uint, projectDir string, nlu
 
 		lookupItems := s.NluLookupItemRepo.ListByLookupId(lookup.ID)
 		for _, item := range lookupItems {
-			lookupItem.Examples += item.Content + "\n"
+			lookupItem.Examples += "- " + item.Content + "\n"
 		}
 		nluLookup.Items = append(nluLookup.Items, lookupItem)
 
@@ -145,7 +145,7 @@ func (s *NluConvertService) convertLookup(projectId uint, projectDir string, nlu
 
 	return
 }
-func (s *NluConvertService) convertRegex(projectId uint, projectDir string, nluDomain *domain.NluDomain) {
+func (s *NluCompileService) convertRegex(projectId uint, projectDir string, nluDomain *domain.NluDomain) {
 	_fileUtils.RmDir(filepath.Join(projectDir, "regex"))
 
 	regexes := s.NluRegexRepo.ListByProjectId(projectId)
@@ -158,7 +158,7 @@ func (s *NluConvertService) convertRegex(projectId uint, projectDir string, nluD
 
 		regexItems := s.NluRegexItemRepo.ListByRegexId(regex.ID)
 		for _, item := range regexItems {
-			regexItem.Examples += item.Content + "\n"
+			regexItem.Examples += "- " + item.Content + "\n"
 		}
 		nluRegex.Items = append(nluRegex.Items, regexItem)
 
@@ -170,7 +170,7 @@ func (s *NluConvertService) convertRegex(projectId uint, projectDir string, nluD
 	return
 }
 
-func (s *NluConvertService) getSlotNameMap(sentId uint) (ret map[string]map[string]string) {
+func (s *NluCompileService) getSlotNameMap(sentId uint) (ret map[string]map[string]string) {
 	ret = map[string]map[string]string{}
 
 	slots := s.NluSlotRepo.ListBySentId(sentId)
@@ -186,7 +186,7 @@ func (s *NluConvertService) getSlotNameMap(sentId uint) (ret map[string]map[stri
 	return
 }
 
-func (s *NluConvertService) getSlotTypeAndId(tp string, idStr string) (ret map[string]string) {
+func (s *NluCompileService) getSlotTypeAndId(tp string, idStr string) (ret map[string]string) {
 	ret = map[string]string{}
 
 	id, _ := strconv.Atoi(idStr)
@@ -210,7 +210,7 @@ func (s *NluConvertService) getSlotTypeAndId(tp string, idStr string) (ret map[s
 	return
 }
 
-func (s *NluConvertService) populateSlots(sentId uint, slotMap map[string]map[string]string, nluDomain *domain.NluDomain) {
+func (s *NluCompileService) populateSlots(sentId uint, slotMap map[string]map[string]string, nluDomain *domain.NluDomain) {
 	slots := s.NluSlotRepo.ListBySentId(sentId)
 	for _, slot := range slots {
 		slotCode := slotMap[fmt.Sprintf("%s-%s", slot.Type, slot.Value)]["code"]
@@ -224,7 +224,7 @@ func (s *NluConvertService) populateSlots(sentId uint, slotMap map[string]map[st
 	}
 }
 
-func (s *NluConvertService) genIntentSent(sent model.NluSent, slotMap map[string]map[string]string) (ret string) {
+func (s *NluCompileService) genIntentSent(sent model.NluSent, slotMap map[string]map[string]string) (ret string) {
 	if strings.Index(sent.Html, "<span") < 0 {
 		ret = sent.Html
 		return
