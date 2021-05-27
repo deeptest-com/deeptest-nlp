@@ -22,14 +22,14 @@ func NewNluTrainingService() *NluTrainingService {
 func (s *NluTrainingService) TrainingProject(id uint) (files []string) {
 	project := s.ProjectRepo.GetDetail(id)
 
-	go s.AsyncCall(project)
+	go s.CallTraining(project)
 
-	_logUtils.Infof("--- 1. return training project %s---", project.Path)
+	_logUtils.Infof("--- 1. call training project %s---", project.Path)
 
 	return
 }
 
-func (s *NluTrainingService) AsyncCall(project model.Project) {
+func (s *NluTrainingService) CallTraining(project model.Project) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*serverConst.TrainingTimeout)
 	defer cancel()
 
@@ -39,7 +39,7 @@ func (s *NluTrainingService) AsyncCall(project model.Project) {
 		_logUtils.Infof("--- 2. %s start training project %s---",
 			time.Now().Format("2006-01-02 15:04:05"), project.Path)
 
-		s.Training(project)
+		s.ExecTraining(project)
 
 		_logUtils.Infof("--- 3. %s end training project %s---",
 			time.Now().Format("2006-01-02 15:04:05"), project.Path)
@@ -59,7 +59,7 @@ func (s *NluTrainingService) AsyncCall(project model.Project) {
 	}
 }
 
-func (s *NluTrainingService) Training(project model.Project) {
+func (s *NluTrainingService) ExecTraining(project model.Project) {
 	s.NluServiceService.Stop(project)
 
 	cmdStr := "rm -rf models"
