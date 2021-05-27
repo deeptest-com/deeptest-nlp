@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
 	_shellUtils "github.com/utlai/utl/internal/pkg/libs/shell"
 	"github.com/utlai/utl/internal/server/model"
@@ -29,14 +30,18 @@ func (s *NluServiceService) ReStart(id uint) (result string, err error) {
 }
 
 func (s *NluServiceService) Stop(project model.Project) (result string, err error) {
-	cmdStr := "ps -ef | grep 'rasa run' | grep -v grep | awk '{print $2}' | xargs kill -9"
+	cmdStr := fmt.Sprintf("ps -ef | grep 'm models_%d' | grep -v grep | awk '{print $2}' | xargs kill -9", project.ID)
+	_logUtils.Infof("--- stop service project %s---", cmdStr)
+
 	result, err = _shellUtils.ExeShell(cmdStr)
 
 	return
 }
 
 func (s *NluServiceService) Start(project model.Project) (result string, err error) {
-	cmdStr := "nohup rasa run --enable-api -m models --log-file out.log 1 >/dev/null 2>&1 &"
+	cmdStr := fmt.Sprintf("nohup rasa run --enable-api -m models_%d --log-file out.log 2>&1 &", project.ID)
+	_logUtils.Infof("--- start service project %s---", cmdStr)
+
 	result, err = _shellUtils.ExeShellInDir(cmdStr, project.Path)
 
 	return

@@ -37,24 +37,20 @@ func (s *NluTrainingService) CallTraining(project model.Project) {
 	ch := make(chan struct{}, 0)
 
 	go func() {
-		_logUtils.Infof("--- 2. %s start training project %s---",
-			time.Now().Format("2006-01-02 15:04:05"), project.Path)
+		_logUtils.Infof("--- 2. start training project %s---", project.Path)
 
 		s.ExecTraining(project)
 
-		_logUtils.Infof("--- 3. %s end training project %s---",
-			time.Now().Format("2006-01-02 15:04:05"), project.Path)
+		_logUtils.Infof("--- 3. end training project %s---", project.Path)
 
 		ch <- struct{}{}
 	}()
 
 	select {
 	case <-ch:
-		_logUtils.Infof("--- 4. %s complete training project %s---",
-			time.Now().Format("2006-01-02 15:04:05"), project.Path)
+		_logUtils.Infof("--- 4. complete training project %s---", project.Path)
 	case <-ctx.Done():
-		_logUtils.Infof("--- 0. %s timeout training project %s---",
-			time.Now().Format("2006-01-02 15:04:05"), project.Path)
+		_logUtils.Infof("--- 0. timeout training project %s---", project.Path)
 
 		s.CancelTraining()
 	}
@@ -65,21 +61,23 @@ func (s *NluTrainingService) ExecTraining(project model.Project) {
 	s.NluServiceService.Stop(project)
 
 	// kill old training process
-	pName := fmt.Sprintf("models.%d", project.ID)
+	pName := fmt.Sprintf("out models_%d", project.ID)
 	_shellUtils.KillProcess(pName)
 
 	// rm models
-	cmdStr := "rm -rf models"
+	cmdStr := "rm -rf models_*"
 	ret, err := _shellUtils.ExeShellInDir(cmdStr, project.Path)
 
 	// start training
-	cmdStr = fmt.Sprintf("rasa train --out models.%d", project.ID)
+	cmdStr = fmt.Sprintf("rasa train --out models_%d", project.ID)
 	ret, err = _shellUtils.ExeShellInDir(cmdStr, project.Path)
 
 	if err != nil {
-		_logUtils.Errorf("training failed, error %s", err)
+		_logUtils.Errorf("--- training failed, error %s", err)
+
+		return
 	} else {
-		_logUtils.Infof("training successfully, %s", ret)
+		_logUtils.Infof("--- training successfully, %s", ret)
 	}
 
 	// start service
