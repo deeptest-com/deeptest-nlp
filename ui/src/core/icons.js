@@ -14,5 +14,6 @@ import lookup from '@/assets/icons/lookup.svg?inline'
 import synonym from '@/assets/icons/synonym.svg?inline'
 import regex from '@/assets/icons/regex.svg?inline'
 import setting from '@/assets/icons/setting.svg?inline'
+import robot from '@/assets/icons/robot.svg?inline'
 
-export { dashboard, project, task, lookup, synonym, regex, setting }
+export { dashboard, project, task, lookup, synonym, regex, setting, robot }

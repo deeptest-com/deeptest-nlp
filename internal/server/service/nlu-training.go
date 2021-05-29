@@ -58,12 +58,12 @@ func (s *NluTrainingService) CallTraining(project model.Project) {
 }
 
 func (s *NluTrainingService) ExecTraining(project model.Project) {
-	// stop service
-	s.NluServiceService.Stop(project)
-
 	// kill old training process
 	pName := fmt.Sprintf("out models_%d", project.ID)
 	_shellUtils.KillProcess(pName)
+
+	// stop service
+	s.NluServiceService.Stop(project)
 
 	// rm models
 	cmdStr := "rm -rf models_*"
@@ -73,17 +73,16 @@ func (s *NluTrainingService) ExecTraining(project model.Project) {
 	cmdStr = fmt.Sprintf("rasa train --out models_%d", project.ID)
 	ret, err = _shellUtils.ExeShellInDir(cmdStr, project.Path)
 
-	if err != nil {
+	if err != nil { // e.x. killed by new one
 		_logUtils.Errorf("--- training failed, error %s", err)
-
 		return
-	} else {
-		_logUtils.Infof("--- training successfully: \n%s\n%s\n%s",
-			strings.Repeat("*", 100), ret, strings.Repeat("*", 100))
-
-		// start service
-		s.NluServiceService.Start(project)
 	}
+
+	_logUtils.Infof("--- training successfully: \n%s\n%s\n%s",
+		strings.Repeat("*", 100), ret, strings.Repeat("*", 100))
+
+	// start service
+	s.NluServiceService.Start(project)
 }
 
 func (s *NluTrainingService) CancelTraining() (result string, err error) {

@@ -67,6 +67,9 @@
 
           <span slot="action" slot-scope="text, record">
             <template>
+              <a @click="test(record)">{{ $t('form.test') }}</a>
+              <a-divider type="vertical" />
+
               <a @click="view(record)">{{ $t('form.view') }}</a>
               <a-divider type="vertical" />
 
@@ -213,6 +216,12 @@ export default {
       this.visible = true
 
       this.$router.push('/platform/project/0/edit')
+    },
+    test (record) {
+      this.visible = true
+      this.mdl = { ...record }
+
+      this.$router.push('/platform/project/' + record.id + '/test')
     },
     view (record) {
       this.visible = true
