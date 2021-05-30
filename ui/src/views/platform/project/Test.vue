@@ -12,36 +12,30 @@
     <a-card
       style="margin-top: 24px"
       :bordered="false">
-      <div class="testing">
-        <div class="request">
-          <a-comment name="chat">
-            <a-avatar slot="avatar" icon="android" class="my-avatar-icon"/>
-            <span slot="author">
-              <span>{{ $t('msg.testing.can.not.understand') }}</span>
-            </span>
-            <span slot="content">
-              <a @click="view('result')">{{ $t('common.view.result') }}</a>
-              &nbsp;&nbsp;&nbsp;  | &nbsp;&nbsp;&nbsp;
-              <a @click="view('json')">{{ $t('common.view.json') }}</a>
-              &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;
-              <a @click="view('nothing')">{{ $t('common.view.nothing') }}</a>
-            </span>
-          </a-comment>
-
-          <div class="form">
-            <div class="left">
-              <a-input v-model="data.text" placeholder=""/>
+      <div class="testing" :style="chatHeight">
+        <div class="row1">
+          <div class="request">
+            <div v-for="(item, index) in messages" :value="item.id" :key="index">
+              <ChatMessage :msg="item" @view="view" />
             </div>
-            <div class="right">
-              <a-button type="primary" @click="send()">{{ $t('form.send') }}</a-button>
+          </div>
+          <div class="response">
+            <div class="result" v-if="viewMode==='result'">
+              result
+            </div>
+            <div class="json" v-if="viewMode==='json'">
+              json
             </div>
           </div>
         </div>
-        <div class="result" v-if="viewMode==='result'">
-          result
-        </div>
-        <div class="json" v-if="viewMode==='json'">
-          json
+
+        <div class="form">
+          <div class="left">
+            <a-input v-model="question.text" placeholder=""/>
+          </div>
+          <div class="right">
+            <a-button type="primary" @click="send">{{ $t('form.send') }}</a-button>
+          </div>
         </div>
 
       </div>
@@ -51,13 +45,16 @@
 </template>
 
 <script>
-import moment from 'moment'
-import { getProject } from '@/api/manage'
 
 import { baseMixin } from '@/store/app-mixin'
+import ChatMessage from './component/Message'
+import { nluRequest, requestSuccess } from '@/api/manage'
 
 export default {
   name: 'ProjectEdit',
+  components: {
+    ChatMessage
+  },
   mixins: [baseMixin],
   statusMap: {},
   props: {
@@ -71,9 +68,11 @@ export default {
   data () {
     return {
       model: {},
-      data: {},
+      question: {},
+      messages: [],
+
       viewMode: '',
-      moment
+      chatHeight: 0
     }
   },
   watch: {
@@ -83,6 +82,9 @@ export default {
     }
   },
   mounted () {
+    this.chatHeight = {
+      height: `${200}px`
+    }
     this.loadData()
   },
   created () {
@@ -99,16 +101,7 @@ export default {
   },
   methods: {
     loadData () {
-      if (!this.id) {
-        return
-      }
-      if (this.id) {
-        getProject(this.id).then(json => {
-          this.model = json.data
-        })
-      } else {
-        this.reset()
-      }
+      this.messages = [{ type: 'welcome' }]
     },
     view (mode) {
       console.log('view')
@@ -116,9 +109,18 @@ export default {
         this.viewMode = 'result'
       } else if (mode === 'json') {
         this.viewMode = 'json'
-      } else if (mode === 'nothing') {
+      } else {
         this.viewMode = ''
       }
+    },
+    send () {
+      console.log('send', this.question.text)
+
+      nluRequest(this.id, this.question.text).then(json => {
+        console.log('nluRequest', json)
+        if (requestSuccess(json.code)) {
+        }
+      })
     },
     back () {
       this.$router.push('/platform/project/list')
@@ -134,49 +136,52 @@ export default {
 }
 
 .testing {
-  display: flex;
 
-  .request {
-    flex: 1;
+  .row1 {
+    display: flex;
+    height: calc(100% - 30px);
+    margin-bottom: 10px;
+    .request {
+      flex: 1;
 
-    .chat {
-      .ant-comment-content-author {
-        margin-bottom: 0px !important;
+      .chat {
+        .ant-comment-content-author {
+          margin-bottom: 0px !important;
 
-        span {
-          font-size: 14px;
+          span {
+            font-size: 14px;
+          }
         }
-      }
 
-      .ant-comment-content-detail {
-        a {
-          font-size: 12px;
+        .ant-comment-content-detail {
+          a {
+            font-size: 12px;
+          }
         }
       }
     }
-
-    .form {
-      display: flex;
-      margin-left: 10px;
-
-      .left {
-        flex: 1;
-        margin-right: 10px;
-      }
-
-      .right {
-        width: 60px;
-      }
+    .response {
+      flex: 1;
+      padding: 10px 20px;
+      border-left: 1px solid #e8e8e8;
     }
   }
 
-  .result {
-    flex: 1;
-    padding: 10px 20px;
-  }
-  .json {
-    flex: 1;
-    padding: 10px 20px;
+  .form {
+    margin-top: 10px;
+    width: 90%;
+
+    display: flex;
+    margin-left: 10px;
+
+    .left {
+      flex: 1;
+      margin-right: 10px;
+    }
+
+    .right {
+      width: 60px;
+    }
   }
 }
 

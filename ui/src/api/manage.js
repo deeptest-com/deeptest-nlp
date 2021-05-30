@@ -3,6 +3,7 @@ import request from '@/utils/request'
 const prefix = '/v1/admin'
 
 const api = {
+  nlu: `${prefix}/nlu`,
   profile: `${prefix}/profile`,
   projects: `${prefix}/projects`,
   compile: `${prefix}/compile`,
@@ -131,6 +132,16 @@ export function trainingProject (model) {
 export function startService (model) {
   return request({
     url: api.start + '/' + model.id,
+    method: 'post',
+    params: { }
+  })
+}
+
+// nul
+export function nluRequest (projectId, msg) {
+  const port = 123
+  return request({
+    url: api.nlu + ':' + port,
     method: 'post',
     params: { }
   })
