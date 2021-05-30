@@ -12,9 +12,12 @@ const (
 type NluAction string
 
 const (
-	Create        NluAction = "create"
-	Compile       NluAction = "compile"
-	StartTraining NluAction = "startTraining"
-	EndTraining   NluAction = "endTraining"
-	StartService  NluAction = "startService"
+	Create         NluAction = "create"
+	Compile        NluAction = "compile"
+	StartTraining  NluAction = "startTraining"
+	EndTraining    NluAction = "endTraining"
+	CancelTraining NluAction = "cancelTraining"
+	LaunchService  NluAction = "launchService"
+	StartService   NluAction = "startService"
+	StopService    NluAction = "stopService"
 )

@@ -6,6 +6,8 @@ import (
 	_shellUtils "github.com/utlai/utl/internal/pkg/libs/shell"
 	"github.com/utlai/utl/internal/server/model"
 	"github.com/utlai/utl/internal/server/repo"
+	"strconv"
+	"strings"
 )
 
 type NluServiceService struct {
@@ -34,15 +36,39 @@ func (s *NluServiceService) Stop(project model.Project) (result string, err erro
 	_logUtils.Infof("--- stop service project %s---", cmdStr)
 
 	result, err = _shellUtils.ExeShell(cmdStr)
+	s.ProjectRepo.StopService(project.ID)
 
 	return
 }
 
 func (s *NluServiceService) Start(project model.Project) (result string, err error) {
-	cmdStr := fmt.Sprintf("nohup rasa run --enable-api -m models_%d --log-file out.log 2>&1 &", project.ID)
+	port := getValidPort()
+	cmdStr := fmt.Sprintf("nohup rasa run -p %d -m models_%d --enable-api --log-file out.log 2>&1 &",
+		port, project.ID)
 	_logUtils.Infof("--- start service project %s---", cmdStr)
 
 	result, err = _shellUtils.ExeShellInDir(cmdStr, project.Path)
+
+	s.ProjectRepo.StartService(project.ID, port)
+
+	return
+}
+
+func getValidPort() (port int) {
+	cmd := "ps -ef | grep 'rasa run' | grep -v 'grep' | awk '{print $12}'"
+	output, err := _shellUtils.ExeShell(cmd)
+
+	port = 55005
+	if err != nil || output == "" {
+		return
+	}
+
+	lines := strings.Split(output, "\n")
+	for _, line := range lines {
+		if strconv.Itoa(port) == line {
+			port += 1
+		}
+	}
 
 	return
 }

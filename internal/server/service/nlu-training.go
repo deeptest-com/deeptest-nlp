@@ -53,7 +53,7 @@ func (s *NluTrainingService) CallTraining(project model.Project) {
 	case <-ctx.Done():
 		_logUtils.Infof("--- 0. timeout training project %s---", project.Path)
 
-		s.CancelTraining()
+		s.CancelTraining(project.ID)
 	}
 }
 
@@ -70,8 +70,12 @@ func (s *NluTrainingService) ExecTraining(project model.Project) {
 	ret, err := _shellUtils.ExeShellInDir(cmdStr, project.Path)
 
 	// start training
+	s.ProjectRepo.StartTraining(project.ID)
+
 	cmdStr = fmt.Sprintf("rasa train --out models_%d", project.ID)
 	ret, err = _shellUtils.ExeShellInDir(cmdStr, project.Path)
+
+	s.ProjectRepo.EndTraining(project.ID)
 
 	if err != nil { // e.x. killed by new one
 		_logUtils.Errorf("--- training failed, error %s", err)
@@ -85,9 +89,12 @@ func (s *NluTrainingService) ExecTraining(project model.Project) {
 	s.NluServiceService.Start(project)
 }
 
-func (s *NluTrainingService) CancelTraining() (result string, err error) {
-	cmdStr := "ps -ef | grep 'rasa train' | grep -v grep | awk '{print $2}' | xargs kill -9"
+func (s *NluTrainingService) CancelTraining(projectId uint) (result string, err error) {
+	cmdStr := fmt.Sprintf("ps -ef | grep 'out models_%d' | grep -v grep | awk '{print $2}' | xargs kill -9",
+		projectId)
 	result, err = _shellUtils.ExeShell(cmdStr)
+
+	s.ProjectRepo.CancelTraining(projectId)
 
 	return
 }

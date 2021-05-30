@@ -3,6 +3,7 @@ package repo
 import (
 	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
 	"github.com/utlai/utl/internal/server/model"
+	serverConst "github.com/utlai/utl/internal/server/utils/const"
 	"gorm.io/gorm"
 	"time"
 )
@@ -101,6 +102,40 @@ func (r *ProjectRepo) Disable(id uint) (err error) {
 func (r *ProjectRepo) Delete(id uint) (err error) {
 	err = r.DB.Model(&model.Project{}).Where("id = ?", id).
 		Updates(map[string]interface{}{"deleted_at": time.Now()}).Error
+
+	return
+}
+
+func (r *ProjectRepo) StartService(id uint, port int) (err error) {
+	err = r.DB.Model(&model.Project{}).Where("id = ?", id).
+		Updates(map[string]interface{}{"service_status": serverConst.StartService, "service_port": port}).Error
+
+	return
+}
+func (r *ProjectRepo) StopService(id uint) (err error) {
+	err = r.DB.Model(&model.Project{}).Where("id = ?", id).
+		Updates(map[string]interface{}{"service_status": serverConst.StopService, "service_port": 0}).Error
+
+	return
+}
+
+func (r *ProjectRepo) StartTraining(id uint) (err error) {
+	err = r.DB.Model(&model.Project{}).Where("id = ?", id).
+		Updates(map[string]interface{}{"service_status": serverConst.StartTraining, "service_port": 0}).Error
+
+	return
+}
+
+func (r *ProjectRepo) EndTraining(id uint) (err error) {
+	err = r.DB.Model(&model.Project{}).Where("id = ?", id).
+		Updates(map[string]interface{}{"service_status": serverConst.EndTraining, "service_port": 0}).Error
+
+	return
+}
+
+func (r *ProjectRepo) CancelTraining(id uint) (err error) {
+	err = r.DB.Model(&model.Project{}).Where("id = ?", id).
+		Updates(map[string]interface{}{"service_status": serverConst.CancelTraining, "service_port": 0}).Error
 
 	return
 }
