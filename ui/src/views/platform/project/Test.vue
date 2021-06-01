@@ -123,21 +123,23 @@ export default {
       nluRequest(this.id, this.question.text).then(json => {
         console.log('nluRequest', json)
         const data = json.data
-        if (data.code === -1) { // success
+        if (data.code === 1) { // success
           this.messages.push({ type: 'answer', content: data.result })
         } else {
           this.messages.push({ type: 'pardon' })
         }
 
         this.question = {}
-
-        setTimeout(() => {
-          const leftContainer = this.$refs.leftContainer
-          leftContainer.scrollTop = leftContainer.scrollHeight
-          const rightContainer = this.$refs.rightContainer
-          if (rightContainer) rightContainer.scrollTop = rightContainer.scrollHeight
-        }, 500)
+        this.scroll()
       })
+    },
+    scroll () {
+      setTimeout(() => {
+        const leftContainer = this.$refs.leftContainer
+        leftContainer.scrollTop = leftContainer.scrollHeight
+        const rightContainer = this.$refs.rightContainer
+        if (rightContainer) rightContainer.scrollTop = rightContainer.scrollHeight
+      }, 300)
     },
     back () {
       this.$router.push('/platform/project/list')
