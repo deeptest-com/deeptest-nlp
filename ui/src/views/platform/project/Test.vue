@@ -83,7 +83,7 @@ export default {
   },
   mounted () {
     this.chatHeight = {
-      height: `${200}px`,
+      height: document.body.clientHeight - 330 + 'px',
       overflow: 'auto'
 
     }
