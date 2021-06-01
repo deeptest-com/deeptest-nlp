@@ -1,15 +1,16 @@
 <template>
   <div>
-    <div v-if="msg.type!=='question'" class="message a">
+    <div v-if="msg.type!=='question'" class="message a" :class="{'welcome':msg.type==='welcome'}">
       <div class="avatar">
         <a-avatar slot="avatar" icon="android" class="my-avatar-icon" :style="{ fontSize: '23px' }" />
       </div>
-      <div class="box a">
+      <div class="box a" :class="{'welcome':msg.type==='welcome'}">
         <div class="content">
-          <span v-if="msg.type==='welcome'">{{ $t('msg.testing.can.not.understand') }}</span>
-          <span v-if="msg.type!=='welcome'">{{ msg.content }}</span>
+          <span v-if="msg.type==='welcome'">{{ $t('msg.testing.welcome') }}</span>
+          <span v-else-if="msg.type==='pardon'">{{ $t('msg.testing.pardon') }}</span>
+          <span v-else-if="msg.type==='answer'">{{ msg.content }}</span>
         </div>
-        <div class="action">
+        <div v-if="msg.type!=='welcome'" class="action">
           <a @click="view('result')">{{ $t('common.view.result') }}</a>
           &nbsp;&nbsp;&nbsp;  | &nbsp;&nbsp;&nbsp;
           <a @click="view('json')">{{ $t('common.view.json') }}</a>
@@ -79,6 +80,7 @@ export default {
   position: relative;
   display: flex;
   margin-bottom: 10px;
+  padding: 0 20px;
 
   .avatar {
     width: 30px;
@@ -87,23 +89,27 @@ export default {
   &.q {
     flex-direction:row-reverse;
     .avatar {
-      width: 20px;
       padding: 10px 0;
+    }
+  }
+  &.welcome {
+    .avatar {
+      padding: 6px 0;
     }
   }
   .box{
     position: relative;
     padding: 10px;
     min-width: 220px;
+    background: #f2f4f5;
     top:0px;
-    height: 60px;
     -moz-border-radius: 12px;
     -webkit-border-radius: 12px;
     border-radius: 12px;
 
     &.a {
+      height: 60px;
       left: 28px;
-      background: #f2f4f5;
       &:before {
         position: absolute;
         content: "";
@@ -115,11 +121,17 @@ export default {
         border-bottom: 13px solid transparent;
         border-right: 26px solid #f2f4f5;
       }
+
+      &.welcome {
+        height: 45px;
+        &:before {
+          top: 10px;
+        }
+      }
     }
     &.q {
       height: 45px;
       right: 25px;
-      background: #f2f4f5;
       &:after {
         position: absolute;
         content: "";

@@ -12,14 +12,14 @@
     <a-card
       style="margin-top: 24px"
       :bordered="false">
-      <div class="testing" :style="chatHeight">
+      <div class="testing">
         <div class="row1">
-          <div class="request">
+          <div class="request" :style="chatHeight" ref="leftContainer">
             <div v-for="(item, index) in messages" :value="item.id" :key="index">
               <ChatMessage :msg="item" @view="view" />
             </div>
           </div>
-          <div class="response">
+          <div class="response" :style="chatHeight" ref="rightContainer" v-if="viewMode!==''">
             <div class="result" v-if="viewMode==='result'">
               result
             </div>
@@ -48,7 +48,7 @@
 
 import { baseMixin } from '@/store/app-mixin'
 import ChatMessage from './component/Message'
-import { nluRequest, requestSuccess } from '@/api/manage'
+import { nluRequest } from '@/api/manage'
 
 export default {
   name: 'ProjectEdit',
@@ -72,7 +72,7 @@ export default {
       messages: [],
 
       viewMode: '',
-      chatHeight: 0
+      chatHeight: {}
     }
   },
   watch: {
@@ -83,7 +83,9 @@ export default {
   },
   mounted () {
     this.chatHeight = {
-      height: `${200}px`
+      height: `${200}px`,
+      overflow: 'auto'
+
     }
     this.loadData()
   },
@@ -116,10 +118,25 @@ export default {
     send () {
       console.log('send', this.question.text)
 
+      this.messages.push({ type: 'question', content: this.question.text })
+
       nluRequest(this.id, this.question.text).then(json => {
         console.log('nluRequest', json)
-        if (requestSuccess(json.code)) {
+        const data = json.data
+        if (data.code === -1) { // success
+          this.messages.push({ type: 'answer', content: data.result })
+        } else {
+          this.messages.push({ type: 'pardon' })
         }
+
+        this.question = {}
+
+        setTimeout(() => {
+          const leftContainer = this.$refs.leftContainer
+          leftContainer.scrollTop = leftContainer.scrollHeight
+          const rightContainer = this.$refs.rightContainer
+          if (rightContainer) rightContainer.scrollTop = rightContainer.scrollHeight
+        }, 500)
       })
     },
     back () {
@@ -136,10 +153,11 @@ export default {
 }
 
 .testing {
+  padding-bottom: 0px;
 
   .row1 {
     display: flex;
-    height: calc(100% - 30px);
+    height: calc(100% - 45px);
     margin-bottom: 10px;
     .request {
       flex: 1;

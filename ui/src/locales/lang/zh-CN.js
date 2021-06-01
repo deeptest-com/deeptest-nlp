@@ -145,7 +145,8 @@ const locale = {
   'msg.training.start': '成功发起训练。',
   'msg.service.start': '成功启动服务。',
 
-  'msg.testing.can.not.understand': '我听不懂你说了什么，请你再说一遍。',
+  'msg.testing.welcome': '请问有什么可以帮您？',
+  'msg.testing.pardon': '我听不懂您说了什么，请再说一遍。',
 
   'app.setting.pagestyle': '页面演示设置',
   'app.setting.pagestyle.light': '淡色',

@@ -3,12 +3,14 @@ import request from '@/utils/request'
 const prefix = '/v1/admin'
 
 const api = {
-  nlu: `${prefix}/nlu`,
   profile: `${prefix}/profile`,
   projects: `${prefix}/projects`,
-  compile: `${prefix}/compile`,
-  training: `${prefix}/training`,
-  start: `${prefix}/start`,
+
+  compile: `${prefix}/rasa/compile`,
+  training: `${prefix}/rasa/training`,
+  start: `${prefix}/rasa/start`,
+  parse: `${prefix}/rasa/parse`,
+
   tasks: `${prefix}/tasks`,
   intents: `${prefix}/intents`,
   sents: `${prefix}/sents`,
@@ -138,12 +140,11 @@ export function startService (model) {
 }
 
 // nul
-export function nluRequest (projectId, msg) {
-  const port = 123
+export function nluRequest (projectId, sent) {
   return request({
-    url: api.nlu + ':' + port,
+    url: api.parse + '/' + projectId,
     method: 'post',
-    params: { }
+    data: { sent: sent }
   })
 }
 

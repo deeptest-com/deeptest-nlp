@@ -27,7 +27,6 @@ import (
 )
 
 func Init(version string, printVersion, printRouter *bool) {
-
 	db.InitDB()
 
 	irisServer := NewServer(nil)

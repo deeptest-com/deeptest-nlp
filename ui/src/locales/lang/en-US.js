@@ -146,6 +146,9 @@ const locale = {
   'msg.training.start': 'Training started.',
   'msg.service.start': 'Service started.',
 
+  'msg.testing.welcome': 'Can I help you?',
+  'msg.testing.pardon': 'Could you please say it again?',
+
   'app.setting.pagestyle': 'Page style setting',
   'app.setting.pagestyle.light': 'Light style',
   'app.setting.pagestyle.dark': 'Dark style',

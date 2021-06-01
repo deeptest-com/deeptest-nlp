@@ -46,7 +46,9 @@ type Router struct {
 	NluRegexCtrl       *handler.NluRegexCtrl       `inject:""`
 	NluRegexItemCtrl   *handler.NluRegexItemCtrl   `inject:""`
 	NluDictCtrl        *handler.NluDictCtrl        `inject:""`
-	NluRasaCtrl        *handler.NluRasaCtrl        `inject:""`
+
+	NluRasaCtrl  *handler.NluRasaCtrl  `inject:""`
+	NluParseCtrl *handler.NluParseCtrl `inject:""`
 
 	ValidCtrl *handler.ValidCtrl `inject:""`
 	WsCtrl    *handler.WsCtrl    `inject:""`
@@ -103,14 +105,17 @@ func (r *Router) App() {
 					party.Get("/listForSelect", r.ProjectCtrl.ListForSelect).Name = "查询下拉框用项目列表"
 				})
 
-				admin.PartyFunc("/compile/{id:uint}", func(party iris.Party) {
+				admin.PartyFunc("/rasa/compile/{id:uint}", func(party iris.Party) {
 					party.Post("/", r.NluRasaCtrl.Compile).Name = "编译项目"
 				})
-				admin.PartyFunc("/training/{id:uint}", func(party iris.Party) {
+				admin.PartyFunc("/rasa/training/{id:uint}", func(party iris.Party) {
 					party.Post("/", r.NluRasaCtrl.Training).Name = "训练项目"
 				})
-				admin.PartyFunc("/start/{id:uint}", func(party iris.Party) {
+				admin.PartyFunc("/rasa/start/{id:uint}", func(party iris.Party) {
 					party.Post("/", r.NluRasaCtrl.Start).Name = "启动项目"
+				})
+				admin.PartyFunc("/rasa/parse/{id:uint}", func(party iris.Party) {
+					party.Post("/", r.NluParseCtrl.Parse).Name = "启动项目"
 				})
 
 				admin.PartyFunc("/tasks", func(party iris.Party) {
