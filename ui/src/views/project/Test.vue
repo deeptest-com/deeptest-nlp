@@ -31,12 +31,18 @@
 
         <div class="form">
           <div class="left">
-            <a-input v-model="question.text" placeholder=""/>
+            <a-input
+              v-model="question"
+              @keydown.down="down"
+              @keydown.up="up"
+              @keyup.enter="send"
+              :placeholder="$t('form.input.sent')"/>
           </div>
           <div class="right">
             <a-button type="primary" @click="send">{{ $t('form.send') }}</a-button>
           </div>
         </div>
+        <div class="tips">{{ $t('form.nav.history') }}</div>
 
       </div>
     </a-card>
@@ -68,8 +74,10 @@ export default {
   data () {
     return {
       model: {},
-      question: {},
+      question: '',
       messages: [],
+      histories: [],
+      historyIndex: 0,
 
       viewMode: '',
       chatHeight: {}
@@ -116,11 +124,13 @@ export default {
       }
     },
     send () {
-      console.log('send', this.question.text)
+      console.log('send', this.question)
 
-      this.messages.push({ type: 'question', content: this.question.text })
+      this.histories.push(this.question)
+      this.historyIndex = this.histories.length
+      this.messages.push({ type: 'question', content: this.question })
 
-      nluRequest(this.id, this.question.text).then(json => {
+      nluRequest(this.id, this.question).then(json => {
         console.log('nluRequest', json)
         const data = json.data
         if (data.code === 1) { // success
@@ -129,9 +139,19 @@ export default {
           this.messages.push({ type: 'pardon' })
         }
 
-        this.question = {}
+        this.question = ''
         this.scroll()
       })
+    },
+    up () {
+      console.log('up')
+      if (this.historyIndex > 0) this.historyIndex--
+      this.question = this.histories[this.historyIndex]
+    },
+    down () {
+      console.log('down')
+      if (this.historyIndex < this.histories.length - 1) this.historyIndex++
+      this.question = this.histories[this.historyIndex]
     },
     scroll () {
       setTimeout(() => {
@@ -142,7 +162,7 @@ export default {
       }, 300)
     },
     back () {
-      this.$router.push('/platform/project/list')
+      this.$router.push('/project/list')
     }
   }
 }
@@ -189,10 +209,10 @@ export default {
 
   .form {
     margin-top: 10px;
+    margin-left: 10px;
     width: 90%;
 
     display: flex;
-    margin-left: 10px;
 
     .left {
       flex: 1;
@@ -202,6 +222,9 @@ export default {
     .right {
       width: 60px;
     }
+  }
+  .tips {
+    margin-left: 10px;
   }
 }
 

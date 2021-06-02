@@ -172,7 +172,7 @@ export default {
           this.$notification['success']({
             message: that.$t('common.tips'),
             description: that.$t('msg.compile.success'),
-            placement: 'bottomRight',
+            // placement: 'bottomRight',
             duration: 8
           })
 
@@ -190,7 +190,7 @@ export default {
           this.$notification['success']({
             message: that.$t('common.tips'),
             description: that.$t('msg.training.start'),
-            placement: 'bottomRight',
+            // placement: 'bottomRight',
             duration: 8
           })
 
@@ -206,7 +206,7 @@ export default {
           this.$notification['success']({
             message: this.$root.$t('common.tips'),
             description: this.$root.$t('msg.service.start'),
-            placement: 'bottomRight',
+            // placement: 'bottomRight',
             duration: 8
           })
 
@@ -215,7 +215,7 @@ export default {
       })
     },
     back () {
-      this.$router.push('/platform/project/list')
+      this.$router.push('/project/list')
     }
   }
 }

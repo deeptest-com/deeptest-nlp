@@ -106,6 +106,8 @@ const locale = {
   'form.use.lookup': 'Use Lookup',
   'form.mark': 'Mark',
   'form.select.to.mark': 'Please select text to mark, the original slots in selected area will be removed.',
+  'form.input.sent': 'Please input your question',
+  'form.nav.history': 'Use ↑ ↓ to navigate through history.',
 
   'status.enable': 'Enable',
   'status.disable': 'Disable',

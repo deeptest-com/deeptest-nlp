@@ -215,25 +215,25 @@ export default {
       this.mdl = null
       this.visible = true
 
-      this.$router.push('/platform/project/0/edit')
+      this.$router.push('/project/0/edit')
     },
     test (record) {
       this.visible = true
       this.mdl = { ...record }
 
-      this.$router.push('/platform/project/' + record.id + '/test')
+      this.$router.push('/project/' + record.id + '/test')
     },
     view (record) {
       this.visible = true
       this.mdl = { ...record }
 
-      this.$router.push('/platform/project/' + record.id + '/view')
+      this.$router.push('/project/' + record.id + '/view')
     },
     edit (record) {
       this.visible = true
       this.mdl = { ...record }
 
-      this.$router.push('/platform/project/' + record.id + '/edit')
+      this.$router.push('/project/' + record.id + '/edit')
     },
 
     disable (record) {

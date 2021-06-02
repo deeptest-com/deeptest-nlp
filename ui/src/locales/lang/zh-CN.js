@@ -107,6 +107,8 @@ const locale = {
   'form.use.lookup': '使用词表',
   'form.mark': '标记',
   'form.select.to.mark': '请选择文本进行标记，选中内容中包括的原有语义槽将被移除。',
+  'form.input.sent': '请输入您想说的话',
+  'form.nav.history': '按键盘的↑ ↓键，切换历史说法.',
 
   'status.enable': '启用',
   'status.disable': '禁用',

@@ -14,7 +14,7 @@ export const asyncRouterMap = [
     name: 'index',
     component: BasicLayout,
     meta: { title: 'menu.home' },
-    redirect: '/platform/project/list',
+    redirect: '/project/list',
     children: [
       {
         path: '/platform/dashboard',
@@ -23,35 +23,35 @@ export const asyncRouterMap = [
         meta: { title: 'menu.platform.dashboard', icon: dashboard, keepAlive: true }
       },
       {
-        path: '/platform/project',
+        path: '/project',
         name: 'project',
-        redirect: '/platform/project/list',
+        redirect: '/project/list',
         component: RouteView,
         meta: { title: 'menu.project', icon: project, keepAlive: true },
         hideChildrenInMenu: true,
         children: [
           {
-            path: '/platform/project/list',
+            path: '/project/list',
             name: 'project-list',
-            component: () => import('@/views/platform/project/List'),
+            component: () => import('@/views/project/List'),
             meta: { title: 'menu.project.list', keepAlive: true }
           },
           {
-            path: '/platform/project/:id/edit',
+            path: '/project/:id/edit',
             name: 'project-edit',
-            component: () => import('@/views/platform/project/Edit'),
+            component: () => import('@/views/project/Edit'),
             meta: { title: 'menu.project.edit', keepAlive: true }
           },
           {
-            path: '/platform/project/:id/view',
+            path: '/project/:id/view',
             name: 'project-view',
-            component: () => import('@/views/platform/project/View'),
+            component: () => import('@/views/project/View'),
             meta: { title: 'menu.project.view', keepAlive: true }
           },
           {
-            path: '/platform/project/:id/test',
+            path: '/project/:id/test',
             name: 'project-view',
-            component: () => import('@/views/platform/project/Test'),
+            component: () => import('@/views/project/Test'),
             meta: { title: 'menu.project.test', keepAlive: true }
           }
         ]

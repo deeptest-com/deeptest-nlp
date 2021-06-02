@@ -121,7 +121,7 @@ export default {
         saveProject(this.model).then(json => {
           console.log('saveProject', json)
           if (requestSuccess(json.code)) {
-            this.$router.push('/platform/project/list')
+            this.$router.push('/project/list')
           }
         })
       })
@@ -131,7 +131,7 @@ export default {
       this.$refs.form.resetFields()
     },
     back () {
-      this.$router.push('/platform/project/list')
+      this.$router.push('/project/list')
     }
   }
 }

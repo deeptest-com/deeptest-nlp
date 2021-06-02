@@ -178,7 +178,7 @@ export default {
       setTimeout(() => {
         this.$notification.success({
           message: '欢迎',
-          placement: 'bottomRight',
+          // placement: 'bottomRight',
           description: `${timeFix()}，欢迎回来`
         })
       }, 1000)
@@ -191,7 +191,7 @@ export default {
       this.$notification['error']({
         message: '错误',
         description: ((err.response || {}).data || {}).message || '请求出现错误，请稍后再试',
-        placement: 'bottomRight',
+        // placement: 'bottomRight',
         duration: 4
       })
     }
