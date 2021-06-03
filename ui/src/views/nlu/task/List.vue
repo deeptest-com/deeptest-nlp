@@ -70,15 +70,16 @@
 
           <span slot="action" slot-scope="text, record">
             <template>
+              <a @click="design(record)">{{ $t('form.design') }}</a>
+              <a-divider type="vertical" />
+
               <a @click="edit(record)">{{ $t('form.edit') }}</a>
               <a-divider type="vertical" />
-              <a @click="design(record)">{{ $t('form.design') }}</a>
 
-              <a-divider type="vertical" />
               <a v-if="!record.disabled" @click="disable(record)">{{ $t('form.disable') }}</a>
               <a v-if="record.disabled" @click="disable(record)">{{ $t('form.enable') }}</a>
-
               <a-divider type="vertical" />
+
               <a-popconfirm
                 v-if="!record.isDefault"
                 :title="$t('form.confirm.to.remove')"
