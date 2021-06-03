@@ -70,11 +70,11 @@ func (s *NluCompileService) convertIntent(projectId uint, projectDir string, nlu
 	for _, task := range tasks {
 		intents := s.NluIntentRepo.ListByTaskId(task.ID)
 
+		nluTask := domain.NluTask{}
 		for _, intent := range intents {
 			nluDomain.Intents = append(nluDomain.Intents, intent.Name)
 
-			nluIntent := domain.NluIntent{}
-			intentItem := domain.NluIntentItem{Intent: intent.Name}
+			nluIntent := domain.NluIntent{Intent: intent.Name}
 
 			sents := s.NluSentRepo.ListByIntentId(intent.ID)
 			for _, sent := range sents {
@@ -83,15 +83,16 @@ func (s *NluCompileService) convertIntent(projectId uint, projectDir string, nlu
 				s.populateSlots(sent.ID, slotNameMap, nluDomain)
 
 				intentExamples := s.genIntentSent(sent, slotNameMap)
-				intentItem.Examples += "- " + intentExamples + "\n"
+				nluIntent.Examples += "- " + intentExamples + "\n"
 			}
 
-			nluIntent.Items = append(nluIntent.Items, intentItem)
-
-			yamlContent := changeArrToFlow(nluIntent)
-			intentFilePath := filepath.Join(projectDir, "data", "intent", intent.Name+".yml")
-			_fileUtils.WriteFile(intentFilePath, yamlContent)
+			nluTask.Intents = append(nluTask.Intents, nluIntent)
 		}
+
+		yamlContent := changeArrToFlow(nluTask)
+
+		intentFilePath := filepath.Join(projectDir, "data", "intent", task.Name+".yml")
+		_fileUtils.WriteFile(intentFilePath, yamlContent)
 	}
 
 	return

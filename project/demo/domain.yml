@@ -5,7 +5,8 @@ session_config:
 responses:
   utter_greate:
   - text: fine
-intents: []
+intents:
+- 打印日志
 entities:
 - print
 - loglevel

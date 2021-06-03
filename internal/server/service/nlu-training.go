@@ -67,20 +67,20 @@ func (s *NluTrainingService) ExecTraining(project model.Project) {
 
 	// rm models
 	cmdStr := "rm -rf models_*"
-	ret, err := _shellUtils.ExeShellInDir(cmdStr, project.Path)
+	_, err, _ := _shellUtils.ExeShell(cmdStr, project.Path)
 
 	// start training
 	s.ProjectRepo.StartTraining(project.ID)
 
 	cmdStr = fmt.Sprintf("rasa train --out models_%d", project.ID)
-	ret, err = _shellUtils.ExeShellInDir(cmdStr, project.Path)
-
-	s.ProjectRepo.EndTraining(project.ID)
-
+	ret := make([]string, 0)
+	ret, err, _ = _shellUtils.ExeShellWithOutput(cmdStr, project.Path)
 	if err != nil { // e.x. killed by new one
-		_logUtils.Errorf("--- training failed, error %s", err)
+		_logUtils.Errorf("--- training failed return %v, error %s", ret, err)
 		return
 	}
+
+	s.ProjectRepo.EndTraining(project.ID)
 
 	_logUtils.Infof("--- training successfully: \n%s\n%s\n%s",
 		strings.Repeat("*", 100), ret, strings.Repeat("*", 100))
@@ -92,7 +92,7 @@ func (s *NluTrainingService) ExecTraining(project model.Project) {
 func (s *NluTrainingService) CancelTraining(projectId uint) (result string, err error) {
 	cmdStr := fmt.Sprintf("ps -ef | grep 'out models_%d' | grep -v grep | awk '{print $2}' | xargs kill -9",
 		projectId)
-	result, err = _shellUtils.ExeShell(cmdStr)
+	result, err, _ = _shellUtils.ExeShell(cmdStr, "")
 
 	s.ProjectRepo.CancelTraining(projectId)
 

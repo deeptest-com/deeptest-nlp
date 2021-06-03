@@ -18,7 +18,7 @@
       <a-button-group style="margin-right: 4px;">
         <a-button @click="compile()">{{ $t('common.compile') }}</a-button>
         <a-button @click="training()">{{ $t('common.training') }}</a-button>
-        <a-button @click="start()">{{ $t('common.startService') }}</a-button>
+        <a-button @click="start()">{{ $t('common.start_service') }}</a-button>
       </a-button-group>
       <a-button @click="back()" type="primary">{{ $t('common.back') }}</a-button>
     </template>

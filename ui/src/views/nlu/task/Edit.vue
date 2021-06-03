@@ -70,7 +70,8 @@ export default {
       model: {},
       projects: [],
       rules: {
-        name: [{ required: true, message: this.$t('valid.required.name'), trigger: 'blur' }]
+        name: [{ required: true, message: this.$t('valid.required.name'), trigger: 'blur' }],
+        projectId: [{ required: true, message: this.$t('valid.required.project'), trigger: 'blur' }]
       }
     }
   },

@@ -31,20 +31,7 @@ func ExeSysCmd(cmdStr string) (string, error) {
 	return output, err
 }
 
-func ExeShell(cmdStr string) (string, error) {
-	return ExeShellInDir(cmdStr, "")
-}
-
-func ExeShellInDir(cmdStr string, dir string) (ret string, err error) {
-	ret, err, _ = ExeShellInDirWithPid(cmdStr, dir)
-	return
-}
-
-func ExeShellWithPid(cmdStr string) (string, error, int) {
-	return ExeShellInDirWithPid(cmdStr, "")
-}
-
-func ExeShellInDirWithPid(cmdStr string, dir string) (ret string, err error, pid int) {
+func ExeShell(cmdStr string, dir string) (ret string, err error, pid int) {
 	var cmd *exec.Cmd
 	if _commonUtils.IsWin() {
 		cmd = exec.Command("cmd", "/C", cmdStr)
@@ -68,11 +55,7 @@ func ExeShellInDirWithPid(cmdStr string, dir string) (ret string, err error, pid
 	return
 }
 
-func ExeShellWithOutput(cmdStr string) ([]string, error) {
-	return ExeShellWithOutputInDir(cmdStr, "")
-}
-
-func ExeShellWithOutputInDir(cmdStr string, dir string) ([]string, error) {
+func ExeShellWithOutput(cmdStr string, dir string) (output []string, err error, pid int) {
 	var cmd *exec.Cmd
 	if _commonUtils.IsWin() {
 		cmd = exec.Command("cmd", "/C", cmdStr)
@@ -84,20 +67,14 @@ func ExeShellWithOutputInDir(cmdStr string, dir string) ([]string, error) {
 		cmd.Dir = dir
 	}
 
-	output := make([]string, 0)
-
-	stdout, err := cmd.StdoutPipe()
-
-	if err != nil {
-		fmt.Println(err)
-		return output, err
+	stdout, err1 := cmd.StdoutPipe()
+	if err1 != nil {
+		err = err1
+		_logUtils.Error(err.Error())
+		return
 	}
 
 	cmd.Start()
-
-	if err != nil {
-		return output, err
-	}
 
 	reader := bufio.NewReader(stdout)
 	for {
@@ -111,7 +88,8 @@ func ExeShellWithOutputInDir(cmdStr string, dir string) ([]string, error) {
 
 	cmd.Wait()
 
-	return output, nil
+	pid = cmd.Process.Pid
+	return
 }
 
 func GetProcess(app string) (string, error) {
@@ -181,5 +159,5 @@ func KillProcess(app string) (string, error) {
 
 func KillProcessById(pid int) {
 	cmdStr := fmt.Sprintf("kill -9 %d", pid)
-	ExeShell(cmdStr)
+	ExeShell(cmdStr, "")
 }

@@ -66,3 +66,6 @@ scp -r bin/utl-server/0.8/linux/utl-server/utl-server 139.224.8.129:~/utl-server
 
 ps -ef | grep utl | grep -v grep | awk '{print $2}' | xargs kill -9
 cd ~/utl-server && nohup ./utl-server 2>&1 &
+
+rasa train --out models_3
+rasa run -p 55005 -m models_3 --enable-api --log-file out.log

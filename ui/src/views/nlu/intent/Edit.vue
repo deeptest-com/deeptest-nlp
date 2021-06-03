@@ -3,8 +3,8 @@
     <div class="header">
       <div class="title">{{ model.name }}</div>
       <div class="buttons">
-        <a-button @click="train()" type="primary">{{ $t('common.train') }}</a-button>
-        <a-button @click="test()">{{ $t('common.test') }}</a-button>
+<!--        <a-button @click="train()" type="primary">{{ $t('common.training') }}</a-button>
+        <a-button @click="test()">{{ $t('common.test') }}</a-button>-->
       </div>
     </div>
 

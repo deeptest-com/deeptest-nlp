@@ -14,10 +14,10 @@ type NluAction string
 const (
 	Create         NluAction = "create"
 	Compile        NluAction = "compile"
-	StartTraining  NluAction = "startTraining"
-	EndTraining    NluAction = "endTraining"
-	CancelTraining NluAction = "cancelTraining"
-	LaunchService  NluAction = "launchService"
-	StartService   NluAction = "startService"
-	StopService    NluAction = "stopService"
+	StartTraining  NluAction = "start_training"
+	EndTraining    NluAction = "end_training"
+	CancelTraining NluAction = "cancel_training"
+	LaunchService  NluAction = "launch_service"
+	StartService   NluAction = "start_service"
+	StopService    NluAction = "stop_service"
 )
