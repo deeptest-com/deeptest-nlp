@@ -14,17 +14,29 @@
       :draggable="true"
       @dragenter="onDragEnter"
       @drop="onDrop"
+      @load="load"
     />
     <div v-if="treeNode" :style="this.tmpStyle" class="tree-context-menu">
       <a-menu @click="menuClick" mode="inline" class="menu">
-        <a-menu-item key="addNeighbor" v-if="!isRoot">
-          <a-icon type="plus" />{{ $t('menu.create.intent') }}
-        </a-menu-item>
+        <template v-if="!isRoot">
+          <a-menu-item key="addNeighbor" >
+            <a-icon type="plus" />{{ $t('menu.create.intent') }}
+          </a-menu-item>
+
+          <a-menu-item key="disable" v-if="isDisabled">
+            <a-icon type="reload" />{{ $t('menu.enable.intent') }}
+          </a-menu-item>
+          <a-menu-item key="disable" v-if="!isDisabled">
+            <a-icon type="pause" />{{ $t('menu.disable.intent') }}
+          </a-menu-item>
+
+          <a-menu-item key="remove">
+            <a-icon type="delete" />{{ $t('menu.remove.intent') }}
+          </a-menu-item>
+        </template>
+
         <a-menu-item key="addChild" v-if="isRoot">
           <a-icon type="plus" />{{ $t('menu.create.intent') }}
-        </a-menu-item>
-        <a-menu-item key="remove" v-if="!isRoot">
-          <a-icon type="delete" />{{ $t('menu.remove.intent') }}
         </a-menu-item>
       </a-menu>
     </div>
@@ -44,7 +56,7 @@
 
 <script>
 
-import { listIntent, createIntent, removeIntent, moveIntent, wrapperIntents } from '@/api/manage'
+import { listIntent, createIntent, disableIntent, removeIntent, moveIntent, wrapperIntents } from '@/api/manage'
 
 export default {
   name: 'IntentTree',
@@ -87,6 +99,10 @@ export default {
     isRoot () {
       console.log('isRoot', this.treeNode)
       return this.treeNode.id === 0
+    },
+    isDisabled () {
+      console.log('isDisabled', this.treeNode)
+      return this.treeNode.disabled
     }
   },
   methods: {
@@ -117,8 +133,8 @@ export default {
         pageX: x,
         pageY: y,
         id: node._props.eventKey,
-        title: node._props.title
-        // parentID: node._props.dataRef.parentID || null
+        title: node._props.title,
+        disabled: node.disabled
       }
 
       this.tmpStyle = {
@@ -139,6 +155,8 @@ export default {
         this.addNeighbor()
       } else if (e.key === 'addChild') {
         this.addChild()
+      } else if (e.key === 'disable') {
+        this.disableNode()
       } else if (e.key === 'remove') {
         this.removeVisible = true
       }
@@ -162,6 +180,9 @@ export default {
         this.updateCallback(json)
       })
     },
+    load (loadedKeys, event, node) {
+      console.log('filterTreeNode', node)
+    },
     addChild () {
       console.log('addChild', this.targetId)
 
@@ -181,8 +202,14 @@ export default {
     updateCallback (json) {
       this.treeData = wrapperIntents(json.data, this.$t('menu.intent'))
       this.getOpenKeys(this.treeData[0])
-
-      // this.selectedKeys = [json.model.id] // select
+      // this.selectedKeys = [json.model.id]
+    },
+    disableNode () {
+      console.log('disableNode', this.targetId)
+      disableIntent(this.targetId, this.taskId).then(json => {
+        console.log('disableIntent', json)
+        this.updateCallback(json)
+      })
     },
     removeNode () {
       console.log('removeNode', this.targetId)
@@ -200,6 +227,8 @@ export default {
       if (!node) return
 
       this.openKeys.push(node.id)
+      if (node.disabled) node.disabled = true
+
       if (node.children) {
         node.children.forEach((item) => {
           this.getOpenKeys(item)

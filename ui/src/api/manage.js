@@ -216,11 +216,11 @@ export function updateIntent (model) {
     data: model
   })
 }
-export function disableIntent (model) {
+export function disableIntent (id, taskId) {
   return request({
-    url: api.intents + '/' + model.id + '/disable',
+    url: api.intents + '/' + id + '/disable',
     method: 'post',
-    params: {}
+    params: { taskId: taskId }
   })
 }
 export function removeIntent (id, taskId) {

@@ -87,6 +87,7 @@ func (c *NluIntentCtrl) SetDefault(ctx iris.Context) {
 }
 
 func (c *NluIntentCtrl) Disable(ctx iris.Context) {
+	taskId, _ := ctx.URLParamInt("taskId")
 	id, err := ctx.Params().GetInt("id")
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
@@ -94,7 +95,9 @@ func (c *NluIntentCtrl) Disable(ctx iris.Context) {
 	}
 
 	c.IntentService.Disable(uint(id))
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", ""))
+	intents := c.IntentService.ListByTask(uint(taskId))
+
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", intents))
 }
 
 func (c *NluIntentCtrl) Delete(ctx iris.Context) {
