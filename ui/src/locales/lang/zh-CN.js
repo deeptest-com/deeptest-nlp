@@ -83,6 +83,8 @@ const locale = {
   'form.search': '查询',
   'form.collapse': '收缩',
   'form.expand': '展开',
+
+  'form.pls.select': '请选择',
   'form.ok': '确认',
   'form.confirm.to.remove': '确认删除？',
 

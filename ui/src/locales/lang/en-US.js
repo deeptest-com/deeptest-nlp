@@ -77,11 +77,13 @@ const locale = {
   'form.submit': 'Submit',
   'form.send': 'Send',
   'form.reset': 'Reset',
+  'form.confirm': 'Confirm',
   'form.cancel': 'Cancel',
   'form.search': 'Search',
   'form.collapse': 'Collapse',
   'form.expand': 'Expand',
 
+  'form.pls.select': 'Please Select',
   'form.ok': 'Ok',
   'form.confirm.to.remove': 'Confirm to delete?',
 

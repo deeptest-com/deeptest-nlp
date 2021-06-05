@@ -42,14 +42,14 @@
     </div>
 
     <a-modal
-      title="确认删除"
+      :title="$t('form.pls.select')"
       :width="400"
       :visible="removeVisible"
-      okText="确认"
-      cancelText="取消"
+      :okText="$t('form.ok')"
+      :cancelText="$t('form.cancel')"
       @ok="removeNode"
       @cancel="cancelRemove">
-      <div>确认删除选中节点？</div>
+      <div>{{ $t('form.confirm.to.remove') }}</div>
     </a-modal>
   </div>
 </template>
