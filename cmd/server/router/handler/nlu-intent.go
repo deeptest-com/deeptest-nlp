@@ -3,6 +3,7 @@ package handler
 import (
 	"github.com/kataras/iris/v12"
 	_httpUtils "github.com/utlai/utl/internal/pkg/libs/http"
+	_stringUtils "github.com/utlai/utl/internal/pkg/libs/string"
 	"github.com/utlai/utl/internal/server/model"
 	"github.com/utlai/utl/internal/server/service"
 )
@@ -97,6 +98,7 @@ func (c *NluIntentCtrl) Disable(ctx iris.Context) {
 }
 
 func (c *NluIntentCtrl) Delete(ctx iris.Context) {
+	taskId, _ := ctx.URLParamInt("taskId")
 	id, err := ctx.Params().GetInt("id")
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
@@ -104,21 +106,29 @@ func (c *NluIntentCtrl) Delete(ctx iris.Context) {
 	}
 
 	c.IntentService.Delete(uint(id))
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", ""))
+	intents := c.IntentService.ListByTask(uint(taskId))
+
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", intents))
 }
 
-func (c *NluIntentCtrl) BatchRemove(ctx iris.Context) {
-	ids := make([]int, 0)
-	if err := ctx.ReadJSON(&ids); err != nil {
+func (c *NluIntentCtrl) Move(ctx iris.Context) {
+	data := map[string]string{}
+	if err := ctx.ReadJSON(&data); err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
-	err := c.IntentService.BatchDelete(ids)
+	taskId := _stringUtils.ParseUint(data["taskId"])
+	srcId := _stringUtils.ParseUint(data["srcId"])
+	targetId := _stringUtils.ParseUint(data["targetId"])
+
+	_, err := c.IntentService.Move(srcId, targetId, taskId, data["mode"])
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, "操作失败", nil))
 		return
 	}
 
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", nil))
+	intents := c.IntentService.ListByTask(taskId)
+
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", intents))
 }

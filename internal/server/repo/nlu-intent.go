@@ -49,7 +49,7 @@ func (r *NluIntentRepo) ListByTaskId(taskId uint) (pos []model.NluIntent) {
 	query := r.DB.Select("*").
 		Where("deleted_at IS NULL AND NOT disabled").
 		Where("task_id = ?", taskId).
-		Order("id ASC")
+		Order("ordr ASC")
 
 	err := query.Find(&pos).Error
 	if err != nil {
@@ -113,7 +113,7 @@ func (r *NluIntentRepo) BatchDelete(ids []int) (err error) {
 }
 
 func (r *NluIntentRepo) AddOrderForTargetAndNext(srcId uint, targetOrder int, taskId uint) (err error) {
-	sql := fmt.Sprintf(`UPDATE %s SET ord = ord + 1 WHERE ord >= %d AND task_id = %d AND id!=%d`,
+	sql := fmt.Sprintf(`UPDATE %s SET ordr = ordr + 1 WHERE ordr >= %d AND task_id = %d AND id!=%d`,
 		(&model.NluIntent{}).TableName(), targetOrder, taskId, srcId)
 	err = r.DB.Exec(sql).Error
 
@@ -121,14 +121,14 @@ func (r *NluIntentRepo) AddOrderForTargetAndNext(srcId uint, targetOrder int, ta
 }
 
 func (r *NluIntentRepo) AddOrderForNext(srcId uint, targetOrder int, taskId uint) (err error) {
-	sql := fmt.Sprintf(`UPDATE %s SET ord = ord + 1 WHERE ord > %d AND task_id = %d AND id!=%d`,
+	sql := fmt.Sprintf(`UPDATE %s SET ordr = ordr + 1 WHERE ordr > %d AND task_id = %d AND id!=%d`,
 		(&model.NluIntent{}).TableName(), targetOrder, taskId, srcId)
 	err = r.DB.Exec(sql).Error
 
 	return
 }
 
-func (r *NluIntentRepo) UpdateOrdAndParent(field model.NluIntent) (err error) {
+func (r *NluIntentRepo) UpdateOrd(field model.NluIntent) (err error) {
 	err = r.DB.Model(&field).UpdateColumn("ordr", field.Ordr).Error
 
 	return
@@ -138,7 +138,7 @@ func (r *NluIntentRepo) GetMaxOrder(taskId uint) (ordr int) {
 	preChild := model.NluIntent{}
 	err := r.DB.
 		Where("task_id=?", taskId).
-		Order("ord DESC").Limit(1).
+		Order("ordr DESC").Limit(1).
 		First(&preChild).Error
 
 	if err != nil {

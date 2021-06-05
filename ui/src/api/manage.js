@@ -223,15 +223,15 @@ export function disableIntent (model) {
     params: {}
   })
 }
-export function removeIntent (id) {
+export function removeIntent (id, taskId) {
   return request({
     url: api.intents + '/' + id,
     method: 'delete',
-    params: {}
+    params: { taskId: taskId }
   })
 }
-export function moveIntent (src, dist, mode) {
-  const data = { src: src, dist: dist, mode: '' + mode }
+export function moveIntent (srcId, targetId, mode, taskId) {
+  const data = { srcId: srcId, targetId: targetId, mode: '' + mode, taskId: taskId }
 
   return request({
     url: api.intents + '/move',

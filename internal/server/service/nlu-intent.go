@@ -80,8 +80,27 @@ func (s *NluIntentService) Delete(id uint) (err error) {
 	return
 }
 
-func (s *NluIntentService) BatchDelete(ids []int) (err error) {
-	err = s.NluIntentRepo.BatchDelete(ids)
+func (s *NluIntentService) Move(srcId, targetId, taskId uint, mode string) (src model.NluIntent, err error) {
+	src = s.NluIntentRepo.Get(srcId)
+	target := s.NluIntentRepo.Get(targetId)
+
+	if "0" == mode || "-1" == mode {
+		err = s.NluIntentRepo.AddOrderForTargetAndNext(src.ID, target.Ordr, taskId)
+		if err != nil {
+			return
+		}
+
+		src.Ordr = target.Ordr
+	} else if "1" == mode {
+		err = s.NluIntentRepo.AddOrderForNext(src.ID, target.Ordr, taskId)
+		if err != nil {
+			return
+		}
+
+		src.Ordr = target.Ordr + 1
+	}
+
+	err = s.NluIntentRepo.UpdateOrd(src)
 
 	return
 }

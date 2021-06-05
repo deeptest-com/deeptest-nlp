@@ -133,7 +133,8 @@ func (r *Router) App() {
 					party.Post("/", r.NluIntentCtrl.Create).Name = "创建意图"
 					party.Put("/{id:uint}", r.NluIntentCtrl.Update).Name = "更新意图"
 					party.Delete("/{id:uint}", r.NluIntentCtrl.Delete).Name = "删除意图"
-					party.Post("/{id:uint}/disable", r.NluIntentCtrl.Disable).Name = "禁用/启动项目"
+					party.Post("/{id:uint}/disable", r.NluIntentCtrl.Disable).Name = "禁用/启动意图"
+					party.Post("/move", r.NluIntentCtrl.Move).Name = "移动意图"
 				})
 				admin.PartyFunc("/sents", func(party iris.Party) {
 					party.Get("/", r.NluSentCtrl.List).Name = "句子列表"

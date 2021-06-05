@@ -154,13 +154,12 @@ export default {
       this.expandedKeys = info.expandedKeys
     },
     onDrop (info) {
-      console.log(info, info.dragNode.eventKey, info.node.eventKey, info.dropPosition)
+      console.log('onDrop', info, info.dropToGap, info.dragNode.eventKey, info.node.eventKey, info.dropPosition)
 
-      moveIntent(info.dragNode.eventKey, info.node.eventKey, info.dropPosition).then(res => {
-        this.treeData = [res.data]
-
-        this.selectedKeys = [res.modelId] // select
-        this.$emit('selected', res.modelId)
+      if (!info.dropToGap || info.node.eventKey === 0) return
+      moveIntent(info.dragNode.eventKey, info.node.eventKey, info.dropPosition, this.taskId).then(json => {
+        console.log('moveIntent', json)
+        this.updateCallback(json)
       })
     },
     addChild () {
@@ -186,15 +185,12 @@ export default {
       // this.selectedKeys = [json.model.id] // select
     },
     removeNode () {
-      console.log('removeNode', this.targetModel)
+      console.log('removeNode', this.targetId)
       this.removeVisible = false
-      removeIntent(this.targetModel).then(json => {
+      removeIntent(this.targetId, this.taskId).then(json => {
         console.log('removeIntent', json)
-        this.removeCallback(json)
+        this.updateCallback(json)
       })
-    },
-    removeCallback (json) {
-      this.treeData = [json.data]
     },
     cancelRemove (e) {
       e.preventDefault()

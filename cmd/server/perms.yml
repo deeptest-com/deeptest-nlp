@@ -110,6 +110,10 @@ perms:
     displayname: "意图禁用"
     description: ""
     act: "POST"
+  - name: "/api/v1/admin/intents/move"
+    displayname: "意图移动"
+    description: ""
+    act: "POST"
 
   - name: "/api/v1/admin/sents"
     displayname: "句子列表"
