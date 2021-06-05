@@ -186,11 +186,11 @@ export function removeTask (model) {
 }
 
 // 意图
-export function listIntent (params) {
+export function listIntent (taskId) {
   return request({
     url: api.intents,
     method: 'get',
-    params: params
+    params: { taskId: taskId }
   })
 }
 export function getIntent (id) {
@@ -200,10 +200,19 @@ export function getIntent (id) {
     params: {}
   })
 }
-export function saveIntent (model) {
+export function createIntent (taskId, targetId, mode, name) {
+  const data = { taskId: taskId, targetId: targetId, mode: mode, name: name }
+  console.log(data)
   return request({
-    url: !model.id ? api.intents : api.intents + '/' + model.id,
-    method: !model.id ? 'post' : 'put',
+    url: api.intents,
+    method: 'post',
+    data: data
+  })
+}
+export function updateIntent (model) {
+  return request({
+    url: api.intents + '/' + model.id,
+    method: 'put',
     data: model
   })
 }
@@ -214,12 +223,29 @@ export function disableIntent (model) {
     params: {}
   })
 }
-export function removeIntent (model) {
+export function removeIntent (id) {
   return request({
-    url: api.intents + '/' + model.id,
+    url: api.intents + '/' + id,
     method: 'delete',
     params: {}
   })
+}
+export function moveIntent (src, dist, mode) {
+  const data = { src: src, dist: dist, mode: '' + mode }
+
+  return request({
+    url: api.intents + '/move',
+    method: 'post',
+    data: data
+  })
+}
+
+export function wrapperIntents (intents, rootName) {
+  const root = { id: 0, name: rootName, children: [] }
+  intents.forEach((item, index) => {
+    root.children.push(item)
+  })
+  return [root]
 }
 
 export function listSent (params) {

@@ -55,6 +55,9 @@ const locale = {
   'menu.regex.items': '正则表达式项',
   'menu.regex.create.item': '创建正则表达式项',
   'menu.regex.edit.item': '编辑正则表达式项',
+  'menu.create.intent': '新建意图',
+  'menu.remove.intent': '删除意图',
+  'menu.intent.new': '新意图',
 
   'common.login': '登录',
   'common.logout': '登出',

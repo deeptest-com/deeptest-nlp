@@ -11,11 +11,12 @@
     >
       <div class="main">
         <div class="left" :style="styl">
-          <intent-list
-            ref="intentList"
-            :models="model.intents"
+          <intent-tree
+            ref="intentTree"
+            :taskId="model.id"
+            :time="time2"
             @selected="select">
-          </intent-list>
+          </intent-tree>
         </div>
         <div class="right" :style="styl">
           <intent-edit
@@ -31,13 +32,13 @@
 
 <script>
 import { getTask } from '@/api/manage'
-import IntentList from '../intent/List'
+import IntentTree from '../intent/Tree'
 import IntentEdit from '../intent/Edit'
 
 export default {
   name: 'TaskDesign',
   components: {
-    IntentList, IntentEdit
+    IntentTree, IntentEdit
   },
   props: {
     visible: {
@@ -56,10 +57,11 @@ export default {
   data () {
     const styl = 'height: ' + (document.documentElement.clientHeight - 56) + 'px;'
     return {
-      model: { intents: [] },
+      model: {},
       intentId: 0,
       intentEditVisible: false,
-      styl: styl
+      styl: styl,
+      time2: 0
     }
   },
   watch: {
@@ -88,6 +90,9 @@ export default {
     getModel () {
       getTask(this.modelProp.id, true).then(json => {
         this.model = json.data
+        console.log('getTask', this.model)
+
+        this.time2 = Date.now()
       })
     },
     cancel () {

@@ -55,6 +55,9 @@ const locale = {
   'menu.regex.items': 'Regex Items',
   'menu.regex.create.item': 'Crete Regex Item',
   'menu.regex.edit.item': 'Edit Regex Item',
+  'menu.create.intent': 'Create Intent',
+  'menu.remove.intent': 'Remove Intent',
+  'menu.intent.new': 'New Intent',
 
   'form.view': 'View',
   'form.create': 'Create',
