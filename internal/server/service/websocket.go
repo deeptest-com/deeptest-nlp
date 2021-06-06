@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	WsConn *neffos.Conn
+	wsConn *neffos.Conn
 )
 
 type WebSocketService struct {
@@ -20,10 +20,14 @@ func NewWebSocketService() *WebSocketService {
 func (s *WebSocketService) Broadcast(namespace, room, event string, data interface{}) {
 	bytes, _ := json.Marshal(data)
 
-	WsConn.Server().Broadcast(nil, websocket.Message{
+	wsConn.Server().Broadcast(nil, websocket.Message{
 		Namespace: namespace,
 		Room:      room,
 		Event:     event,
 		Body:      bytes,
 	})
+}
+
+func (s *WebSocketService) SetConn(conn *neffos.Conn) {
+	wsConn = conn
 }

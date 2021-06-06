@@ -21,7 +21,7 @@ func NewWsCtrl() *WsCtrl {
 }
 
 func (c *WsCtrl) OnNamespaceConnected(msg websocket.Message) error {
-	service.WsConn = c.Conn
+	c.WebSocketService.SetConn(c.Conn)
 
 	_logUtils.Infof("websocket client connected %s", c.Conn.ID())
 
