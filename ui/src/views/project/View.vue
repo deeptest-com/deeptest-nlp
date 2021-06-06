@@ -169,8 +169,9 @@ export default {
       console.log('EventBus in page', json)
       that.outputModel += json.room + ': ' + json.msg + '\n'
 
-      if (json.msg.action === 'end_training' && json.msg.projectId === that.mode.id) {
-        that.mode.trainingStatus = 'end_training'
+      const msg = JSON.parse(json.msg)
+      if (msg.action === 'end_training' && msg.projectId === that.model.id) {
+        that.model.trainingStatus = 'end_training'
       }
     })
 
@@ -243,7 +244,7 @@ export default {
       trainingProject(this.model).then(json => {
         console.log('training', json)
         if (json.code === 200) {
-          this.model = json.data
+          this.model.trainingStatus = json.data.trainingStatus
           const that = this
           this.$notification['success']({
             message: that.$t('common.tips'),
