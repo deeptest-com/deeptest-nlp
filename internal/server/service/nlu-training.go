@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"github.com/kataras/iris/v12/websocket"
 	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
@@ -68,19 +67,10 @@ func (s *NluTrainingService) CallTraining(project model.Project) {
 }
 
 func (s *NluTrainingService) CompleteTraining(projectId uint) {
-	data := map[string]interface{}{}
-	data["projectId"] = projectId
-	data["action"] = serverConst.EndTraining
-	bytes, _ := json.Marshal(data)
-
 	s.ProjectRepo.EndTraining(projectId)
 
-	WsConn.Server().Broadcast(nil, websocket.Message{
-		Namespace: serverConst.WsNamespace,
-		Room:      serverConst.WsDefaultRoom,
-		Event:     serverConst.WsEvent,
-		Body:      bytes,
-	})
+	data := map[string]interface{}{"projectId": projectId, "action": serverConst.EndTraining}
+	s.WebSocketService.Broadcast(serverConst.WsNamespace, serverConst.WsDefaultRoom, serverConst.WsEvent, data)
 }
 
 func (s *NluTrainingService) ExecTraining(project model.Project) {

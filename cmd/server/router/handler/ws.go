@@ -24,11 +24,9 @@ func (c *WsCtrl) OnNamespaceConnected(msg websocket.Message) error {
 	service.WsConn = c.Conn
 
 	_logUtils.Infof("websocket client connected %s", c.Conn.ID())
-	c.Conn.Server().Broadcast(nil, websocket.Message{
-		Namespace: msg.Namespace,
-		Event:     "OnVisit",
-		Body:      []byte(fmt.Sprintf("%s", "server: connected to websocket")),
-	})
+
+	data := map[string]string{"msg": "server: connected to websocket"}
+	c.WebSocketService.Broadcast(msg.Namespace, "", "OnVisit", data)
 	return nil
 }
 
@@ -36,11 +34,9 @@ func (c *WsCtrl) OnNamespaceConnected(msg websocket.Message) error {
 // it can't because it's left but for any case use this type of design
 func (c *WsCtrl) OnNamespaceDisconnect(msg websocket.Message) error {
 	_logUtils.Infof("%s disconnected", c.Conn.ID())
-	c.Conn.Server().Broadcast(nil, websocket.Message{
-		Namespace: msg.Namespace,
-		Event:     "OnVisit",
-		Body:      []byte(fmt.Sprintf("%s", "server: disconnected from websocket")),
-	})
+
+	data := map[string]string{"msg": "server: disconnected to websocket"}
+	c.WebSocketService.Broadcast(msg.Namespace, "", "OnVisit", data)
 	return nil
 }
 
@@ -51,12 +47,8 @@ func (c *WsCtrl) OnChat(msg websocket.Message) (err error) {
 	str := ctx.RemoteAddr()
 	_logUtils.Info(str + ", " + string(msg.Body))
 
-	c.Conn.Server().Broadcast(nil, websocket.Message{
-		Namespace: msg.Namespace,
-		Room:      msg.Room,
-		Event:     msg.Event,
-		Body:      []byte(fmt.Sprintf(" response %s", "abc")),
-	})
+	data := map[string]string{"msg": fmt.Sprintf("response %s", "abc")}
+	c.WebSocketService.Broadcast(msg.Namespace, msg.Room, msg.Event, data)
 
 	return
 }
