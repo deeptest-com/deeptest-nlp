@@ -128,6 +128,7 @@ func injectObj(router *router.Router) {
 		&inject.Object{Value: service.NewNluDictService()},
 
 		&inject.Object{Value: serverCron.NewServerCron()},
+		&inject.Object{Value: service.NewWebSocketService()},
 		&inject.Object{Value: service.NewCommonService()},
 
 		&inject.Object{Value: service.NewPermService()},

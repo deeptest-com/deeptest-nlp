@@ -9,6 +9,7 @@ const api = {
   compile: `${prefix}/rasa/compile`,
   training: `${prefix}/rasa/training`,
   start: `${prefix}/rasa/start`,
+  stop: `${prefix}/rasa/stop`,
   parse: `${prefix}/rasa/parse`,
 
   tasks: `${prefix}/tasks`,
@@ -134,6 +135,13 @@ export function trainingProject (model) {
 export function startService (model) {
   return request({
     url: api.start + '/' + model.id,
+    method: 'post',
+    params: { }
+  })
+}
+export function endService (model) {
+  return request({
+    url: api.stop + '/' + model.id,
     method: 'post',
     params: { }
   })

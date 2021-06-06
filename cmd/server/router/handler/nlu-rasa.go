@@ -47,12 +47,12 @@ func (c *NluRasaCtrl) Training(ctx iris.Context) {
 		return
 	}
 
-	c.NluTrainingService.TrainingProject(uint(id))
+	project := c.NluTrainingService.TrainingProject(uint(id))
 
 	cred := jwt.GetCredentials(ctx)
 	c.NluHistoryService.Add(_stringUtils.ParseUint(cred.UserId), uint(id), serverConst.StartTraining)
 
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "请求成功", nil))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "请求成功", project))
 }
 
 func (c *NluRasaCtrl) Start(ctx iris.Context) {
@@ -64,10 +64,28 @@ func (c *NluRasaCtrl) Start(ctx iris.Context) {
 		return
 	}
 
-	c.NluServiceService.ReStart(uint(id))
+	project, _ := c.NluServiceService.ReStart(uint(id))
 
 	cred := jwt.GetCredentials(ctx)
 	c.NluHistoryService.Add(_stringUtils.ParseUint(cred.UserId), uint(id), serverConst.StartService)
 
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "请求成功", nil))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "请求成功", project))
+}
+
+func (c *NluRasaCtrl) Stop(ctx iris.Context) {
+	ctx.StatusCode(iris.StatusOK)
+
+	id, err := ctx.Params().GetInt("id")
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		return
+	}
+
+	project := c.NluServiceService.Get(uint(id))
+	project, _ = c.NluServiceService.Stop(project)
+
+	cred := jwt.GetCredentials(ctx)
+	c.NluHistoryService.Add(_stringUtils.ParseUint(cred.UserId), uint(id), serverConst.StartService)
+
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "请求成功", project))
 }

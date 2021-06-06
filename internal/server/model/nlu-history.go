@@ -16,8 +16,8 @@ type NluHistory struct {
 	ProjectName string `json:"projectName"`
 	UserName    string `json:"userName"`
 
-	Action      serverConst.NluAction `json:"action"`
-	CompletedAt *time.Time            `json:"completedAt"`
+	Action      serverConst.ServiceStatus `json:"action"`
+	CompletedAt *time.Time                `json:"completedAt"`
 }
 
 func (NluHistory) TableName() string {

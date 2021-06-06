@@ -4,19 +4,25 @@ import (
 	"fmt"
 	"github.com/kataras/iris/v12/websocket"
 	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
+	"github.com/utlai/utl/internal/server/service"
+	serverConst "github.com/utlai/utl/internal/server/utils/const"
 )
 
 type WsCtrl struct {
 	BaseCtrl
-	*websocket.NSConn `stateless:"true"`
 	Namespace         string
+	*websocket.NSConn `stateless:"true"`
+
+	WebSocketService *service.WebSocketService `inject:""`
 }
 
 func NewWsCtrl() *WsCtrl {
-	return &WsCtrl{Namespace: "default"}
+	return &WsCtrl{Namespace: serverConst.WsNamespace}
 }
 
 func (c *WsCtrl) OnNamespaceConnected(msg websocket.Message) error {
+	service.WsConn = c.Conn
+
 	_logUtils.Infof("websocket client connected %s", c.Conn.ID())
 	c.Conn.Server().Broadcast(nil, websocket.Message{
 		Namespace: msg.Namespace,

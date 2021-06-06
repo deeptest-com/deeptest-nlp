@@ -44,7 +44,7 @@ export default {
 
               console.log('connected to namespace: ' + msg.Namespace)
               that.$global.setWs(nsConn)
-              that.$global.ws.joinRoom(that.$global.defaultRoom)
+              that.$global.ws.joinRoom(that.$global.wsDefaultRoom)
             },
             _OnNamespaceDisconnect: (nsConn, msg) => {
               console.log('disconnected from namespace: ' + msg.Namespace)

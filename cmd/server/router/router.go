@@ -112,7 +112,10 @@ func (r *Router) App() {
 					party.Post("/", r.NluRasaCtrl.Training).Name = "训练项目"
 				})
 				admin.PartyFunc("/rasa/start/{id:uint}", func(party iris.Party) {
-					party.Post("/", r.NluRasaCtrl.Start).Name = "启动项目"
+					party.Post("/", r.NluRasaCtrl.Start).Name = "启动服务"
+				})
+				admin.PartyFunc("/rasa/stop/{id:uint}", func(party iris.Party) {
+					party.Post("/", r.NluRasaCtrl.Stop).Name = "停止服务"
 				})
 				admin.PartyFunc("/rasa/parse/{id:uint}", func(party iris.Party) {
 					party.Post("/", r.NluParseCtrl.Parse).Name = "启动项目"

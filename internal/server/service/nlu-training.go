@@ -2,7 +2,9 @@ package service
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"github.com/kataras/iris/v12/websocket"
 	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
 	_shellUtils "github.com/utlai/utl/internal/pkg/libs/shell"
 	"github.com/utlai/utl/internal/server/model"
@@ -15,18 +17,24 @@ import (
 type NluTrainingService struct {
 	ProjectRepo       *repo.ProjectRepo  `inject:""`
 	NluServiceService *NluServiceService `inject:""`
+	WebSocketService  *WebSocketService  `inject:""`
+	Namespace         string
+	*websocket.NSConn `stateless:"true"`
 }
 
 func NewNluTrainingService() *NluTrainingService {
-	return &NluTrainingService{}
+	return &NluTrainingService{Namespace: serverConst.WsNamespace}
 }
 
-func (s *NluTrainingService) TrainingProject(id uint) (files []string) {
-	project := s.ProjectRepo.GetDetail(id)
+func (s *NluTrainingService) TrainingProject(id uint) (project model.Project) {
+	project = s.ProjectRepo.GetDetail(id)
 
 	go s.CallTraining(project)
 
 	_logUtils.Infof("--- 1. call training project %s---", project.Path)
+
+	s.ProjectRepo.StartTraining(project.ID)
+	project = s.ProjectRepo.Get(id)
 
 	return
 }
@@ -50,11 +58,29 @@ func (s *NluTrainingService) CallTraining(project model.Project) {
 	select {
 	case <-ch:
 		_logUtils.Infof("--- 4. finish training project %s---", project.Path)
+		s.CompleteTraining(project.ID)
+
 	case <-ctx.Done():
 		_logUtils.Infof("--- 0. timeout training project %s---", project.Path)
 
 		s.CancelTraining(project.ID)
 	}
+}
+
+func (s *NluTrainingService) CompleteTraining(projectId uint) {
+	data := map[string]interface{}{}
+	data["projectId"] = projectId
+	data["action"] = serverConst.EndTraining
+	bytes, _ := json.Marshal(data)
+
+	s.ProjectRepo.EndTraining(projectId)
+
+	WsConn.Server().Broadcast(nil, websocket.Message{
+		Namespace: serverConst.WsNamespace,
+		Room:      serverConst.WsDefaultRoom,
+		Event:     serverConst.WsEvent,
+		Body:      bytes,
+	})
 }
 
 func (s *NluTrainingService) ExecTraining(project model.Project) {
@@ -69,24 +95,16 @@ func (s *NluTrainingService) ExecTraining(project model.Project) {
 	cmdStr := "rm -rf models_*"
 	_, err, _ := _shellUtils.ExeShell(cmdStr, project.Path)
 
-	// start training
-	s.ProjectRepo.StartTraining(project.ID)
-
-	cmdStr = fmt.Sprintf("rasa train --out models_%d", project.ID)
+	trainingCmd := fmt.Sprintf("rasa train --out models_%d", project.ID)
 	ret := make([]string, 0)
-	ret, err, _ = _shellUtils.ExeShellWithOutput(cmdStr, project.Path)
+	ret, err, _ = _shellUtils.ExeShellWithOutput(trainingCmd, project.Path)
 	if err != nil { // e.x. killed by new one
 		_logUtils.Errorf("--- training failed return %v, error %s", ret, err)
 		return
 	}
 
-	s.ProjectRepo.EndTraining(project.ID)
-
 	_logUtils.Infof("--- training successfully: \n%s\n%s\n%s",
 		strings.Repeat("*", 100), ret, strings.Repeat("*", 100))
-
-	// start service
-	s.NluServiceService.Start(project)
 }
 
 func (s *NluTrainingService) CancelTraining(projectId uint) (result string, err error) {

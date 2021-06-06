@@ -17,7 +17,7 @@ func NewNluHistoryService() *NluHistoryService {
 	return &NluHistoryService{}
 }
 
-func (s *NluHistoryService) Add(userId uint, projectId uint, action serverConst.NluAction) (err error) {
+func (s *NluHistoryService) Add(userId uint, projectId uint, action serverConst.ServiceStatus) (err error) {
 	user, _ := s.UserRepo.Get(userId)
 	project := s.ProjectRepo.GetDetail(projectId)
 	po := model.NluHistory{

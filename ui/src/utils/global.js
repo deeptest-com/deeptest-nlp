@@ -7,7 +7,7 @@ export default {
 
   ws: {},
   wsEventName: 'wsEvent',
-  defaultRoom: 'square',
+  wsDefaultRoom: 'square',
   setWs: function (conn) {
     this.ws = conn
   }

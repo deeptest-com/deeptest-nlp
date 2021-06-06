@@ -94,14 +94,6 @@
         </s-table>
       </a-card>
     </page-header-wrapper>
-    <br />
-    <div>
-      <a-form layout="inline">
-        <a-form-item><a-input id="input" type="text" v-model="inputModel" /></a-form-item>
-        <a-form-item><a-button id="sendBtn" @click="sendWs">Send</a-button></a-form-item>
-      </a-form>
-      <div><pre id="output">{{ outputModel }}</pre></div>
-    </div>
   </div>
 </template>
 
@@ -120,10 +112,6 @@ export default {
   statusMap: {},
   data () {
     return {
-      wsConn: null,
-      room1: null,
-      inputModel: 'websocket request',
-      outputModel: '',
       isProd: process.env.NODE_ENV === 'production',
 
       visible: false,
@@ -204,13 +192,6 @@ export default {
 
   },
   methods: {
-    sendWs () {
-      console.log('sendWs', this.inputModel, this.$global.ws)
-      this.$global.ws.room(this.$global.defaultRoom).emit('OnChat', this.inputModel)
-
-      this.outputModel += 'me: ' + this.inputModel + '\n'
-    },
-
     create () {
       this.mdl = null
       this.visible = true

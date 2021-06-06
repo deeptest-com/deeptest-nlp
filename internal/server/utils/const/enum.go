@@ -12,12 +12,21 @@ const (
 type NluAction string
 
 const (
-	Create         NluAction = "create"
-	Compile        NluAction = "compile"
-	StartTraining  NluAction = "start_training"
-	EndTraining    NluAction = "end_training"
-	CancelTraining NluAction = "cancel_training"
-	LaunchService  NluAction = "launch_service"
-	StartService   NluAction = "start_service"
-	StopService    NluAction = "stop_service"
+	Create  ServiceStatus = "create"
+	Compile ServiceStatus = "compile"
+)
+
+type ServiceStatus string
+
+const (
+	StartService ServiceStatus = "start_service"
+	StopService  ServiceStatus = "stop_service"
+)
+
+type TrainingStatus string
+
+const (
+	StartTraining  ServiceStatus = "start_training"
+	EndTraining    ServiceStatus = "end_training"
+	CancelTraining ServiceStatus = "cancel_training"
 )

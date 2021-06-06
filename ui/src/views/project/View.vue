@@ -17,8 +17,20 @@
     <template v-slot:extra>
       <a-button-group style="margin-right: 4px;">
         <a-button @click="compile()">{{ $t('common.compile') }}</a-button>
-        <a-button @click="training()">{{ $t('common.training') }}</a-button>
-        <a-button @click="start()">{{ $t('common.start_service') }}</a-button>
+
+        <a-button
+          @click="training()"
+          :disabled="model.trainingStatus === 'start_training'">
+            {{ $t('common.training') }}
+        </a-button>
+
+        <template v-if="model.serviceStatus !== 'start_service'">
+          <a-button @click="startService()" :disabled="model.trainingStatus !== 'end_training'">
+            {{ $t('common.start_service') }}
+          </a-button>
+        </template>
+        <a-button @click="endService()" v-if="model.serviceStatus === 'start_service'">{{ $t('common.stop_service') }}</a-button>
+
       </a-button-group>
       <a-button @click="back()" type="primary">{{ $t('common.back') }}</a-button>
     </template>
@@ -29,7 +41,15 @@
         <a-col :xs="12" :sm="12">
           <div class="text">{{ $t('common.status') }}</div>
           <div class="heading">
-            <a-badge :status="!model.disabled | statusTypeFilter(statusMap)" :text="!model.disabled | statusFilter(statusMap)" />
+            <a-badge
+              v-if="model.trainingStatus === 'start_training'"
+              :status="'processing'"
+              :text="$t('status.start.training')" />
+
+            <a-badge
+              v-if="model.trainingStatus !== 'start_training'"
+              :status="model.serviceStatus | statusTypeFilter(statusMap)"
+              :text="model.serviceStatus | statusFilter(statusMap)" />
           </div>
         </a-col>
         <a-col :xs="3" :sm="3"></a-col>
@@ -61,12 +81,21 @@
       </div>
     </a-card>
 
+    <br />
+    <div>
+      <a-form layout="inline">
+        <a-form-item><a-input id="input" type="text" v-model="inputModel" /></a-form-item>
+        <a-form-item><a-button id="sendBtn" @click="sendWs">Send</a-button></a-form-item>
+      </a-form>
+      <div><pre id="output">{{ outputModel }}</pre></div>
+    </div>
+
   </page-header-wrapper>
 </template>
 
 <script>
 import moment from 'moment'
-import { getProject, compileProject, trainingProject, startService } from '@/api/manage'
+import { getProject, compileProject, trainingProject, startService, endService } from '@/api/manage'
 
 import { baseMixin } from '@/store/app-mixin'
 
@@ -84,6 +113,11 @@ export default {
   },
   data () {
     return {
+      wsConn: null,
+      room1: null,
+      inputModel: 'websocket request',
+      outputModel: '',
+
       model: {},
       moment,
 
@@ -130,26 +164,49 @@ export default {
     this.loadData()
   },
   created () {
+    const that = this
+    this.$global.EventBus.$on(this.$global.wsEventName, (json) => {
+      console.log('EventBus in page', json)
+      that.outputModel += json.room + ': ' + json.msg + '\n'
+
+      if (json.msg.action === 'end_training' && json.msg.projectId === that.mode.id) {
+        that.mode.trainingStatus = 'end_training'
+      }
+    })
+
     this.statusMap = {
-      true: {
-        type: 'processing',
-        text: this.$t('status.enable')
-      },
-      false: {
+      '': {
         type: 'default',
-        text: this.$t('status.disable')
+        text: ''
+      },
+      start_service: {
+        type: 'success',
+        text: this.$t('status.start.service')
+      },
+      stop_service: {
+        type: 'default',
+        text: this.$t('status.stop.service')
       }
     }
   },
   filters: {
     statusFilter (status, statusMap) {
+      if (!status) status = ''
       return statusMap[status].text
     },
     statusTypeFilter (status, statusMap) {
+      if (!status) status = ''
       return statusMap[status].type
     }
   },
   methods: {
+    sendWs () {
+      console.log('sendWs', this.inputModel, this.$global.ws)
+      this.$global.ws.room(this.$global.wsDefaultRoom).emit('OnChat', this.inputModel)
+
+      this.outputModel += 'me: ' + this.inputModel + '\n'
+    },
+
     loadData () {
       if (!this.id) {
         return
@@ -186,10 +243,25 @@ export default {
       trainingProject(this.model).then(json => {
         console.log('training', json)
         if (json.code === 200) {
+          this.model = json.data
           const that = this
           this.$notification['success']({
             message: that.$t('common.tips'),
             description: that.$t('msg.training.start'),
+            // placement: 'bottomRight',
+            duration: 8
+          })
+        }
+      })
+    },
+    startService () {
+      console.log('startService')
+      startService(this.model).then(json => {
+        console.log('startService', json)
+        if (json.code === 200) {
+          this.$notification['success']({
+            message: this.$root.$t('common.tips'),
+            description: this.$root.$t('msg.service.start'),
             // placement: 'bottomRight',
             duration: 8
           })
@@ -198,14 +270,14 @@ export default {
         }
       })
     },
-    start () {
-      console.log('start')
-      startService(this.model).then(json => {
-        console.log('training', json)
+    endService () {
+      console.log('endService')
+      endService(this.model).then(json => {
+        console.log('endService', json)
         if (json.code === 200) {
           this.$notification['success']({
             message: this.$root.$t('common.tips'),
-            description: this.$root.$t('msg.service.start'),
+            description: this.$root.$t('msg.service.stop'),
             // placement: 'bottomRight',
             duration: 8
           })

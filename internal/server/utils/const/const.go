@@ -6,6 +6,10 @@ const (
 	AppName    = "server"
 	NluVersion = "2.0"
 
+	WsNamespace   = "default"
+	WsEvent       = "OnChat"
+	WsDefaultRoom = "square"
+
 	TrainingTimeout = 60 * 60 // sec
 
 	PageSize            = 15

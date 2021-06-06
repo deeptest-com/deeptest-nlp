@@ -121,14 +121,14 @@ func (r *ProjectRepo) StopService(id uint) (err error) {
 
 func (r *ProjectRepo) StartTraining(id uint) (err error) {
 	err = r.DB.Model(&model.Project{}).Where("id = ?", id).
-		Updates(map[string]interface{}{"service_status": serverConst.StartTraining, "service_port": 0}).Error
+		Updates(map[string]interface{}{"training_status": serverConst.StartTraining, "service_port": 0}).Error
 
 	return
 }
 
 func (r *ProjectRepo) EndTraining(id uint) (err error) {
 	err = r.DB.Model(&model.Project{}).Where("id = ?", id).
-		Updates(map[string]interface{}{"service_status": serverConst.EndTraining, "service_port": 0}).Error
+		Updates(map[string]interface{}{"training_status": serverConst.EndTraining, "service_port": 0}).Error
 
 	return
 }
