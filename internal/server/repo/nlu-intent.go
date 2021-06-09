@@ -31,7 +31,7 @@ func (r *NluIntentRepo) Query(keywords, status string, pageNo int, pageSize int)
 	if pageNo > 0 {
 		query = query.Offset((pageNo - 1) * pageSize).Limit(pageSize)
 	}
-	query = query.Where("deleted_at IS NULL")
+	query = query.Where("NOT deleted")
 
 	err := query.Find(&pos).Error
 	if err != nil {
@@ -47,7 +47,20 @@ func (r *NluIntentRepo) Query(keywords, status string, pageNo int, pageSize int)
 
 func (r *NluIntentRepo) ListByTaskId(taskId uint) (pos []model.NluIntent) {
 	query := r.DB.Select("*").
-		Where("deleted_at IS NULL").
+		Where("NOT deleted").
+		Where("task_id = ?", taskId).
+		Order("ordr ASC")
+
+	err := query.Find(&pos).Error
+	if err != nil {
+		_logUtils.Errorf("sql error %s", err.Error())
+	}
+
+	return
+}
+func (r *NluIntentRepo) ListByTaskIdNoDisabled(taskId uint) (pos []model.NluIntent) {
+	query := r.DB.Select("*").
+		Where("NOT disabled AND NOT deleted").
 		Where("task_id = ?", taskId).
 		Order("ordr ASC")
 
@@ -100,14 +113,14 @@ func (r *NluIntentRepo) Disable(id uint) (err error) {
 
 func (r *NluIntentRepo) Delete(id uint) (err error) {
 	err = r.DB.Model(&model.NluIntent{}).Where("id = ?", id).
-		Updates(map[string]interface{}{"deleted_at": time.Now()}).Error
+		Updates(map[string]interface{}{"deleted": true, "deleted_at": time.Now()}).Error
 
 	return
 }
 
 func (r *NluIntentRepo) BatchDelete(ids []int) (err error) {
 	err = r.DB.Model(&model.NluIntent{}).Where("id IN (?)", ids).
-		Updates(map[string]interface{}{"deleted_at": time.Now()}).Error
+		Updates(map[string]interface{}{"deleted": true, "deleted_at": time.Now()}).Error
 
 	return
 }

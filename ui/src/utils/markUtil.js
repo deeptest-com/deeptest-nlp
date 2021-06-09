@@ -8,11 +8,11 @@ export const convertSelectedToSlots = function (target, editor) {
   const slt = window.getSelection()
   if (slt.toString() === '' || slt.rangeCount !== 1) return {}
 
-  console.log('anchorNode', slt.anchorNode)
-  console.log('anchorOffset', slt.anchorOffset)
-
-  console.log('focusNode', slt.focusNode)
-  console.log('focusOffset', slt.focusOffset)
+  // console.log('startNode', slt.anchorNode)
+  // console.log('startOffset', slt.anchorOffset)
+  //
+  // console.log('endNode', slt.focusNode)
+  // console.log('endOffset', slt.focusOffset)
 
   const range = slt.getRangeAt(0)
   console.log('range', range, range.toString())
@@ -50,8 +50,8 @@ export const convertSelectedToSlots = function (target, editor) {
       const span1 = textToSpan(item2)
       allSlots.push(span1)
     } else if (j === start) {
-      const startLeft1 = slt.anchorOffset
-      const startRight1 = isSame ? slt.focusOffset : startContainer.textContent.length
+      const startLeft1 = range.startOffset
+      const startRight1 = isSame ? range.endOffset : startContainer.textContent.length
       const leftSection1 = startText.substr(0, startLeft1)
       const rightSection1 = startText.substr(startLeft1, startRight1 - startLeft1)
 
@@ -77,7 +77,7 @@ export const convertSelectedToSlots = function (target, editor) {
       selectedText += item2.textContent
     } else if (j === end && !isSame) { // already be done if selection in single node
       // const endLeft2 = 0
-      const endRight2 = slt.focusOffset
+      const endRight2 = range.endOffset
       const leftSection2 = endText.substr(0, endRight2)
       const rightSection2 = endText.substr(endRight2)
 
@@ -166,8 +166,9 @@ export const genSpan = function (text, node) {
   const span7 = document.createElement('span')
   span7.innerText = text
 
+  const dataType = node.getAttribute('data-type')
   if (node.getAttribute) {
-    span7.setAttribute('data-type', node.getAttribute('data-type'))
+    span7.setAttribute('data-type', dataType === 'null' ? '' : dataType)
     span7.setAttribute('data-value', node.getAttribute('data-value'))
   }
 

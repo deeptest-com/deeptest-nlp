@@ -17,7 +17,7 @@ func NewNluHistoryRepo() *NluHistoryRepo {
 
 func (r *NluHistoryRepo) ListByProjectId(projectId uint) (pos []model.NluHistory) {
 	query := r.DB.Select("*").
-		Where("deleted_at IS NULL AND NOT disabled").
+		Where("NOT deleted AND NOT disabled").
 		Where("project_id = ?", projectId).
 		Order("id DESC").
 		Limit(15)

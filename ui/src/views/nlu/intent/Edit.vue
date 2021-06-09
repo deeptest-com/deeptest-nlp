@@ -2,10 +2,7 @@
   <div v-show="model.id">
     <div class="header">
       <div class="title">{{ model.name }}</div>
-      <div class="buttons">
-<!--        <a-button @click="train()" type="primary">{{ $t('common.training') }}</a-button>
-        <a-button @click="test()">{{ $t('common.test') }}</a-button>-->
-      </div>
+      <div class="buttons"></div>
     </div>
 
     <div class="edit">
@@ -13,9 +10,10 @@
         {{ $t('form.sent.edit') }}
       </div>
       <div class="edit-links">
-        <a-tag @click="useSynonym" class="tag synonym">{{ $t('form.use.synonym') }}</a-tag>
-        <a-tag @click="useLookup" class="tag lookup">{{ $t('form.use.lookup') }}</a-tag>
-        <a-tag @click="useRegex" class="tag regex">{{ $t('form.use.regex') }} </a-tag>
+        <a-tag @click="useSynonym" class="tag synonym">{{ $t('form.synonym') }}</a-tag>
+        <a-tag @click="useLookup" class="tag lookup">{{ $t('form.lookup') }}</a-tag>
+        <a-tag @click="useRegex" class="tag regex">{{ $t('form.regex') }} </a-tag>
+        <a-tag @click="useSlot" class="tag _slot_">{{ $t('form.slot') }} </a-tag>
       </div>
       <div class="edit-inputs">
         <div class="left">
@@ -35,6 +33,7 @@
         </div>
         <div class="right">
           <a-button @click="save()">{{ $t('form.save') }}</a-button>
+          <a-button @click="reset()">{{ $t('form.reset') }}</a-button>
         </div>
       </div>
     </div>
@@ -60,6 +59,7 @@
     <a-modal
       :title="$t('form.mark')"
       dialogClass="mark-dialog"
+      :width="650"
       :visible="slotEditVisible"
       @cancel="() => cancelSlot()"
       @ok="() => saveSlot()"
@@ -70,7 +70,12 @@
             <a-radio value="synonym">{{ $t('form.synonym') }}</a-radio>
             <a-radio value="lookup">{{ $t('form.lookup') }}</a-radio>
             <a-radio value="regex">{{ $t('form.regex') }}</a-radio>
+            <a-radio value="_slot_">{{ $t('form.slot') }}</a-radio>
           </a-radio-group>
+        </a-form-model-item>
+
+        <a-form-model-item prop="value" v-if="slot.slotType === '_slot_'" :label="$t('form.slot')">
+          <a-input v-model="slot.value" />
         </a-form-model-item>
 
         <a-form-model-item prop="value" v-if="slot.slotType === 'synonym'" :label="$t('form.synonym')">
@@ -138,6 +143,7 @@ export default {
 
       dicts: [],
       rules: {
+        slotType: [{ required: true, message: this.$t('valid.slot.type'), trigger: 'change' }],
         value: [{ required: true, message: this.$t('valid.select.dict'), trigger: 'change' }]
       }
     }
@@ -172,6 +178,9 @@ export default {
     useLookup () {
       console.log('useLookup')
     },
+    useSlot () {
+      console.log('useLookup')
+    },
     editSent (item) {
       console.log('editSent')
       getSent(item.id).then(json => {
@@ -192,6 +201,10 @@ export default {
         this.$refs.editor.innerHTML = ''
       })
     },
+    reset () {
+      this.sent = {}
+      this.$refs.editor.innerHTML = ''
+    },
     toDeleteSent (item) {
       console.log('toDeleteSent')
 
@@ -211,16 +224,14 @@ export default {
       })
     },
 
-    reset () {
-      this.model = {}
-    },
     back () {
       this.$router.push('/nlu/task/list')
     },
 
     textSelected (event) {
       const mp = convertSelectedToSlots(event.target, document.getElementById('editor'))
-      if (!mp.selectedIndex) return
+      if (!mp.allSlots) return
+      // if (!mp.selectedIndex) return
       mp.allSlots.forEach((item, index) => {
         console.log('=' + index + '=', index, item)
       })
@@ -230,14 +241,19 @@ export default {
       this.selectedSlot = this.allSlots[this.selectedIndex]
       console.log('=curr=', this.selectedSlot)
 
-      let id = this.selectedSlot.getAttribute('data-value')
-      id = id ? parseInt(id) : ''
-      this.slot = { slotType: this.selectedSlot.getAttribute('data-type'), value: id }
+      const dataType = this.selectedSlot.getAttribute('data-type')
+      let dataValue = this.selectedSlot.getAttribute('data-value')
+      if (dataType !== '_slot_') {
+        dataValue = dataValue ? parseInt(dataValue) : ''
+      }
+      this.slot = { slotType: dataType === 'null' ? '' : dataType, value: dataValue }
       this.slotEditVisible = true
 
       this.slotTypeChanged()
     },
     slotTypeChanged () {
+      if (this.slot.slotType === 'slot') return
+
       loadDicts(this.slot.slotType).then(json => {
         console.log(json)
         this.dicts = json.data

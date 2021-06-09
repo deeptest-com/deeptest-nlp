@@ -30,7 +30,7 @@ func (r *NluSlotRepo) Query(keywords, status string, pageNo int, pageSize int) (
 	if pageNo > 0 {
 		query = query.Offset((pageNo - 1) * pageSize).Limit(pageSize)
 	}
-	query = query.Where("deleted_at IS NULL")
+	query = query.Where("NOT deleted")
 
 	err := query.Find(&pos).Error
 	if err != nil {
@@ -46,7 +46,7 @@ func (r *NluSlotRepo) Query(keywords, status string, pageNo int, pageSize int) (
 
 func (r *NluSlotRepo) ListBySentId(sentId uint) (pos []model.NluSlot) {
 	query := r.DB.Select("*").
-		Where("deleted_at IS NULL AND NOT disabled").
+		Where("NOT deleted AND NOT disabled").
 		Where("sent_refer = ?", sentId).
 		Order("id ASC")
 
@@ -99,14 +99,14 @@ func (r *NluSlotRepo) Disable(id uint) (err error) {
 
 func (r *NluSlotRepo) Delete(id uint) (err error) {
 	err = r.DB.Model(&model.NluSlot{}).Where("id = ?", id).
-		Updates(map[string]interface{}{"deleted_at": time.Now()}).Error
+		Updates(map[string]interface{}{"deleted": true, "deleted_at": time.Now()}).Error
 
 	return
 }
 
 func (r *NluSlotRepo) BatchDelete(ids []int) (err error) {
 	err = r.DB.Model(&model.NluSlot{}).Where("id IN (?)", ids).
-		Updates(map[string]interface{}{"deleted_at": time.Now()}).Error
+		Updates(map[string]interface{}{"deleted": true, "deleted_at": time.Now()}).Error
 
 	return
 }

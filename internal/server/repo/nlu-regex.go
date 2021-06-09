@@ -30,7 +30,7 @@ func (r *NluRegexRepo) Query(keywords, status string, pageNo int, pageSize int) 
 	if pageNo > 0 {
 		query = query.Offset((pageNo - 1) * pageSize).Limit(pageSize)
 	}
-	query = query.Where("deleted_at IS NULL")
+	query = query.Where("NOT deleted")
 
 	err := query.Find(&pos).Error
 	if err != nil {
@@ -46,7 +46,7 @@ func (r *NluRegexRepo) Query(keywords, status string, pageNo int, pageSize int) 
 
 func (r *NluRegexRepo) ListByProjectId(projectId uint) (pos []model.NluRegex) {
 	query := r.DB.Select("*").
-		Where("deleted_at IS NULL AND NOT disabled").
+		Where("NOT deleted AND NOT disabled").
 		//Where("project_id = ?", projectId).
 		Order("id ASC")
 
@@ -99,21 +99,21 @@ func (r *NluRegexRepo) Disable(id uint) (err error) {
 
 func (r *NluRegexRepo) Delete(id uint) (err error) {
 	err = r.DB.Model(&model.NluRegex{}).Where("id = ?", id).
-		Updates(map[string]interface{}{"deleted_at": time.Now()}).Error
+		Updates(map[string]interface{}{"deleted": true, "deleted_at": time.Now()}).Error
 
 	return
 }
 
 func (r *NluRegexRepo) BatchDelete(ids []int) (err error) {
 	err = r.DB.Model(&model.NluRegex{}).Where("id IN (?)", ids).
-		Updates(map[string]interface{}{"deleted_at": time.Now()}).Error
+		Updates(map[string]interface{}{"deleted": true, "deleted_at": time.Now()}).Error
 
 	return
 }
 
 func (r *NluRegexRepo) List() (pos []map[string]interface{}) {
 	err := r.DB.Model(&model.NluRegex{}).
-		Where("deleted_at IS NULL").
+		Where("NOT deleted").
 		Order("id ASC").
 		Find(&pos).
 		Error

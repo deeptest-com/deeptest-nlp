@@ -20,7 +20,7 @@ func NewNluTaskRepo() *NluTaskRepo {
 func (r *NluTaskRepo) Query(projectId int, keywords, status string, pageNo int, pageSize int) (pos []model.NluTask, total int64) {
 	sql := "SELECT t.*, p.name project_name FROM nlu_task t" +
 		" LEFT JOIN biz_project p ON t.project_id = p.id" +
-		" WHERE t.deleted_at IS NULL"
+		" WHERE NOT t.deleted"
 
 	if projectId > 0 {
 		sql += fmt.Sprintf(" AND t.project_id = %d", projectId)
@@ -54,7 +54,7 @@ func (r *NluTaskRepo) Query(projectId int, keywords, status string, pageNo int, 
 
 func (r *NluTaskRepo) ListByProjectId(projectId uint) (pos []model.NluTask) {
 	query := r.DB.Select("*").
-		Where("deleted_at IS NULL AND NOT disabled").
+		Where("NOT deleted AND NOT disabled").
 		Where("project_id = ?", projectId).
 		Order("id ASC")
 
@@ -107,14 +107,14 @@ func (r *NluTaskRepo) Disable(id uint) (err error) {
 
 func (r *NluTaskRepo) Delete(id uint) (err error) {
 	err = r.DB.Model(&model.NluTask{}).Where("id = ?", id).
-		Updates(map[string]interface{}{"deleted_at": time.Now()}).Error
+		Updates(map[string]interface{}{"deleted": true, "deleted_at": time.Now()}).Error
 
 	return
 }
 
 func (r *NluTaskRepo) BatchDelete(ids []int) (err error) {
 	err = r.DB.Model(&model.NluTask{}).Where("id IN (?)", ids).
-		Updates(map[string]interface{}{"deleted_at": time.Now()}).Error
+		Updates(map[string]interface{}{"deleted": true, "deleted_at": time.Now()}).Error
 
 	return
 }

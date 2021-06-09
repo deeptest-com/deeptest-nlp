@@ -32,7 +32,7 @@ func (r *NluSynonymItemRepo) Query(synonymId int, keywords, status string, pageN
 	if pageNo > 0 {
 		query = query.Offset((pageNo - 1) * pageSize).Limit(pageSize)
 	}
-	query = query.Where("deleted_at IS NULL")
+	query = query.Where("NOT deleted")
 
 	err := query.Find(&pos).Error
 	if err != nil {
@@ -48,7 +48,7 @@ func (r *NluSynonymItemRepo) Query(synonymId int, keywords, status string, pageN
 
 func (r *NluSynonymItemRepo) ListBySynonymId(synonymId uint) (pos []model.NluSynonymItem) {
 	query := r.DB.Select("*").
-		Where("deleted_at IS NULL AND NOT disabled").
+		Where("NOT deleted AND NOT disabled").
 		Where("synonym_id = ?", synonymId).
 		Order("id ASC")
 
@@ -101,21 +101,21 @@ func (r *NluSynonymItemRepo) Disable(id uint) (err error) {
 
 func (r *NluSynonymItemRepo) Delete(id uint) (err error) {
 	err = r.DB.Model(&model.NluSynonymItem{}).Where("id = ?", id).
-		Updates(map[string]interface{}{"deleted_at": time.Now()}).Error
+		Updates(map[string]interface{}{"deleted": true, "deleted_at": time.Now()}).Error
 
 	return
 }
 
 func (r *NluSynonymItemRepo) BatchDelete(ids []int) (err error) {
 	err = r.DB.Model(&model.NluSynonymItem{}).Where("id IN (?)", ids).
-		Updates(map[string]interface{}{"deleted_at": time.Now()}).Error
+		Updates(map[string]interface{}{"deleted": true, "deleted_at": time.Now()}).Error
 
 	return
 }
 
 func (r *NluSynonymItemRepo) List() (pos []map[string]interface{}) {
 	err := r.DB.Model(&model.NluSynonymItem{}).
-		Where("deleted_at IS NULL").
+		Where("NOT deleted").
 		Order("id ASC").
 		Find(&pos).
 		Error

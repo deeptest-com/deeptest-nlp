@@ -31,7 +31,7 @@ func (r *NluLookupRepo) Query(keywords, status string, pageNo int, pageSize int)
 	if pageNo > 0 {
 		query = query.Offset((pageNo - 1) * pageSize).Limit(pageSize)
 	}
-	query = query.Where("deleted_at IS NULL")
+	query = query.Where("NOT deleted")
 
 	err := query.Find(&pos).Error
 	if err != nil {
@@ -47,7 +47,7 @@ func (r *NluLookupRepo) Query(keywords, status string, pageNo int, pageSize int)
 
 func (r *NluLookupRepo) ListByProjectId(projectId uint) (pos []model.NluLookup) {
 	query := r.DB.Select("*").
-		Where("deleted_at IS NULL AND NOT disabled").
+		Where("NOT deleted AND NOT disabled").
 		//Where("project_id = ?", projectId).
 		Order("id ASC")
 
@@ -100,21 +100,21 @@ func (r *NluLookupRepo) Disable(id uint) (err error) {
 
 func (r *NluLookupRepo) Delete(id uint) (err error) {
 	err = r.DB.Model(&model.NluLookup{}).Where("id = ?", id).
-		Updates(map[string]interface{}{"deleted_at": time.Now()}).Error
+		Updates(map[string]interface{}{"deleted": true, "deleted_at": time.Now()}).Error
 
 	return
 }
 
 func (r *NluLookupRepo) BatchDelete(ids []int) (err error) {
 	err = r.DB.Model(&model.NluLookup{}).Where("id IN (?)", ids).
-		Updates(map[string]interface{}{"deleted_at": time.Now()}).Error
+		Updates(map[string]interface{}{"deleted": true, "deleted_at": time.Now()}).Error
 
 	return
 }
 
 func (r *NluLookupRepo) List() (pos []map[string]interface{}) {
 	err := r.DB.Model(&model.NluLookup{}).
-		Where("deleted_at IS NULL").
+		Where("NOT deleted").
 		Order("id ASC").
 		Find(&pos).
 		Error

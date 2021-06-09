@@ -32,7 +32,7 @@ func (r *ProjectRepo) Query(keywords, status string, pageNo int, pageSize int) (
 	if pageNo > 0 {
 		query = query.Offset((pageNo - 1) * pageSize).Limit(pageSize)
 	}
-	query = query.Where("deleted_at IS NULL")
+	query = query.Where("NOT deleted")
 
 	err := query.Find(&pos).Error
 	if err != nil {
@@ -101,7 +101,7 @@ func (r *ProjectRepo) Disable(id uint) (err error) {
 
 func (r *ProjectRepo) Delete(id uint) (err error) {
 	err = r.DB.Model(&model.Project{}).Where("id = ?", id).
-		Updates(map[string]interface{}{"deleted_at": time.Now()}).Error
+		Updates(map[string]interface{}{"deleted": true, "deleted_at": time.Now()}).Error
 
 	return
 }

@@ -12,6 +12,7 @@ type BaseModel struct {
 	UpdatedAt *time.Time `json:"updatedAt"`
 	DeletedAt *time.Time `sql:"index" json:"deletedAt"`
 
+	Deleted  bool `json:"deleted" gorm:"default:false"`
 	Disabled bool `json:"disabled" gorm:"default:false"`
 }
 

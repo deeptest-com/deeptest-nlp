@@ -30,7 +30,7 @@ func (r *NluSentRepo) Query(keywords, status string, pageNo int, pageSize int) (
 	if pageNo > 0 {
 		query = query.Offset((pageNo - 1) * pageSize).Limit(pageSize)
 	}
-	query = query.Where("deleted_at IS NULL")
+	query = query.Where("NOT deleted")
 
 	err := query.Find(&pos).Error
 	if err != nil {
@@ -46,7 +46,7 @@ func (r *NluSentRepo) Query(keywords, status string, pageNo int, pageSize int) (
 
 func (r *NluSentRepo) ListByIntentId(intentId uint) (pos []model.NluSent) {
 	query := r.DB.Select("*").
-		Where("deleted_at IS NULL AND NOT disabled").
+		Where("NOT deleted AND NOT disabled").
 		Where("intent_id = ?", intentId).
 		Order("id ASC")
 
@@ -119,22 +119,21 @@ func (r *NluSentRepo) Disable(id uint) (err error) {
 
 func (r *NluSentRepo) Delete(id uint) (err error) {
 	err = r.DB.Model(&model.NluSent{}).Where("id = ?", id).
-		Updates(map[string]interface{}{"deleted_at": time.Now()}).Error
+		Updates(map[string]interface{}{"deleted": true, "deleted_at": time.Now()}).Error
 
 	return
 }
 
 func (r *NluSentRepo) BatchDelete(ids []int) (err error) {
 	err = r.DB.Model(&model.NluSent{}).Where("id IN (?)", ids).
-		Updates(map[string]interface{}{"deleted_at": time.Now()}).Error
+		Updates(map[string]interface{}{"deleted": true, "deleted_at": time.Now()}).Error
 
 	return
 }
 
 func (r *NluSentRepo) ListByIntent(intentId uint) (pos []model.NluSent) {
 	r.DB.Where("intent_id = ?", intentId).
-		Where("deleted_at IS NULL").
-		//Where("NOT disabled").
+		Where("NOT deleted").
 		Find(&pos)
 
 	return

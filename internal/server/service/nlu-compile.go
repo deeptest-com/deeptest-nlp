@@ -34,7 +34,7 @@ func NewNluCompileService() *NluCompileService {
 }
 
 func (s *NluCompileService) CompileProject(id uint) (files []string) {
-	project := s.ProjectRepo.GetDetail(id)
+	project := s.ProjectRepo.Get(id)
 	projectDir := project.Path
 
 	nluDomain := s.parserDomain(projectDir)
@@ -66,9 +66,11 @@ func (s *NluCompileService) parserDomain(projectDir string) (nluDomain domain.Nl
 func (s *NluCompileService) convertIntent(projectId uint, projectDir string, nluDomain *domain.NluDomain) (files []string) {
 	_fileUtils.RmDir(filepath.Join(projectDir, "intent"))
 
+	existSlotCodeMap := map[string]bool{}
+
 	tasks := s.NluTaskRepo.ListByProjectId(projectId)
 	for _, task := range tasks {
-		intents := s.NluIntentRepo.ListByTaskId(task.ID)
+		intents := s.NluIntentRepo.ListByTaskIdNoDisabled(task.ID)
 
 		nluTask := domain.NluTask{}
 		for _, intent := range intents {
@@ -80,7 +82,7 @@ func (s *NluCompileService) convertIntent(projectId uint, projectDir string, nlu
 			for _, sent := range sents {
 				slotNameMap := s.getSlotNameMap(sent.ID)
 
-				s.populateSlots(sent.ID, slotNameMap, nluDomain)
+				s.populateSlots(sent.ID, slotNameMap, &existSlotCodeMap, nluDomain)
 
 				intentExamples := s.genIntentSent(sent, slotNameMap)
 				nluIntent.Examples += "- " + intentExamples + "\n"
@@ -211,17 +213,19 @@ func (s *NluCompileService) getSlotTypeAndId(tp string, idStr string) (ret map[s
 	return
 }
 
-func (s *NluCompileService) populateSlots(sentId uint, slotMap map[string]map[string]string, nluDomain *domain.NluDomain) {
+func (s *NluCompileService) populateSlots(sentId uint, slotMap map[string]map[string]string, codeMap *map[string]bool, nluDomain *domain.NluDomain) {
 	slots := s.NluSlotRepo.ListBySentId(sentId)
 	for _, slot := range slots {
 		slotCode := slotMap[fmt.Sprintf("%s-%s", slot.Type, slot.Value)]["code"]
-		if slotCode == "" {
+		if slotCode == "" || slotCode == "_slot_" || (*codeMap)[slotCode] {
 			continue
 		}
 
 		slotItem := domain.SlotItem{Type: "text", InfluenceConversation: false}
 		mapItem := yaml.MapItem{Key: slotCode, Value: slotItem}
 		nluDomain.Slots = append(nluDomain.Slots, mapItem)
+
+		(*codeMap)[slotCode] = true
 	}
 }
 
@@ -236,26 +240,37 @@ func (s *NluCompileService) genIntentSent(sent model.NluSent, slotMap map[string
 	for _, span := range spanArr {
 		line := ""
 
-		regx2 := regexp.MustCompile(
-			`<span id="(\d+)" ` +
-				`class="[a-z]+" ` +
-				`data-type="([a-z]+)" ` +
-				`data-value="(\d+)">(.*)</span>`)
-		arr := regx2.FindAllStringSubmatch(span, -1)
-		for _, subArr := range arr {
-			//seq := subArr[1]
-			tp := subArr[2]
-			val := subArr[3]
-			content := subArr[4]
+		regx2 := regexp.MustCompile(`\s(\S*)="(\S*)"`)
+		arr2 := regx2.FindAllStringSubmatch(span, -1)
 
-			if tp == string(serverConst.Text) {
-				line += content
-				continue
+		tp := ""
+		val := ""
+		for _, subArr := range arr2 {
+			//all := subArr[0]
+			tpTemp := subArr[1]
+			valTemp := subArr[2]
+
+			if tpTemp == "data-type" {
+				tp = valTemp
+			} else if tpTemp == "data-value" {
+				val = valTemp
 			}
+		}
 
+		regx3 := regexp.MustCompile(`>(.*)<`)
+		arr3 := regx3.FindAllStringSubmatch(span, -1)
+		content := strings.TrimSpace(arr3[0][1])
+
+		if tp == "" || tp == string(serverConst.Text) {
+			line += content
+		} else {
 			slotCode := slotMap[fmt.Sprintf("%s-%s", tp, val)]["code"]
-			line += fmt.Sprintf(`[%s]{"entity":"%s", "value":"%s_%s"}`,
-				content, slotCode, slotCode, serverConst.SlotTypeAbbrMap[tp])
+			if tp == "_slot_" {
+				line += fmt.Sprintf(`[%s](%s)`, content, val)
+			} else {
+				line += fmt.Sprintf(`[%s]{"entity":"%s", "value":"%s_%s"}`,
+					content, slotCode, slotCode, serverConst.SlotTypeAbbrMap[tp])
+			}
 		}
 
 		if line != "" {

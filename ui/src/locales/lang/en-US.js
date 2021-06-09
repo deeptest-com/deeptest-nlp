@@ -108,9 +108,7 @@ const locale = {
   'form.regex': 'Regular Expression',
   'form.synonym': 'Synonym',
   'form.lookup': 'Lookup',
-  'form.use.regex': 'Use Regular Expression',
-  'form.use.synonym': 'Use Synonym',
-  'form.use.lookup': 'Use Lookup',
+  'form.slot': 'Slot',
   'form.mark': 'Mark',
   'form.select.to.mark': 'Please select text to mark, the original slots in selected area will be removed.',
   'form.input.sent': 'Please input your question',
@@ -127,6 +125,7 @@ const locale = {
   'valid.required.path': 'Path not exist.',
   'valid.project.path': 'Not a valid project path.',
   'valid.select.dict': 'Please select dictionary.',
+  'valid.slot.type': 'Please select the type.',
 
   'common.status': '状态',
   'common.login': 'Login',

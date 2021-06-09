@@ -8,7 +8,12 @@ responses:
 intents:
 - 打印日志
 entities:
-- print
 - loglevel
 - xpath
-slots: {}
+slots:
+  print:
+    type: text
+    influence_conversation: false
+  loglevel:
+    type: text
+    influence_conversation: false
