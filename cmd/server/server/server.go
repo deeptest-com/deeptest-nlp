@@ -98,6 +98,9 @@ func injectObj(router *router.Router) {
 		// repo
 		&inject.Object{Value: repo.NewProjectRepo()},
 		&inject.Object{Value: repo.NewNluIntentRepo()},
+		&inject.Object{Value: repo.NewNluRuleRepo()},
+		&inject.Object{Value: repo.NewNluSentRepo()},
+		&inject.Object{Value: repo.NewNluSlotRepo()},
 		&inject.Object{Value: repo.NewNluSynonymRepo()},
 		&inject.Object{Value: repo.NewNluSynonymItemRepo()},
 		&inject.Object{Value: repo.NewNluLookupRepo()},
@@ -119,6 +122,9 @@ func injectObj(router *router.Router) {
 		// service
 		&inject.Object{Value: service.NewProjectService()},
 		&inject.Object{Value: service.NewNluIntentService()},
+		&inject.Object{Value: service.NewNluRuleService()},
+		&inject.Object{Value: service.NewNluSentService()},
+		&inject.Object{Value: service.NewNluSlotService()},
 		&inject.Object{Value: service.NewNluSynonymService()},
 		&inject.Object{Value: service.NewNluSynonymItemService()},
 		&inject.Object{Value: service.NewNluLookupService()},
@@ -140,6 +146,9 @@ func injectObj(router *router.Router) {
 		// controller
 		&inject.Object{Value: handler.NewProjectCtrl()},
 		&inject.Object{Value: handler.NewNluIntentCtrl()},
+		&inject.Object{Value: handler.NewNluRuleCtrl()},
+		&inject.Object{Value: handler.NewNluSentCtrl()},
+		&inject.Object{Value: handler.NewNluSlotCtrl()},
 		&inject.Object{Value: handler.NewNluSynonymCtrl()},
 		&inject.Object{Value: handler.NewNluSynonymItemCtrl()},
 		&inject.Object{Value: handler.NewNluLookupCtrl()},

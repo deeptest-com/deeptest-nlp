@@ -21,6 +21,7 @@ var (
 		&Project{},
 		&NluTask{},
 		&NluIntent{},
+		&NluRule{},
 		&NluSent{},
 		&NluSlot{},
 		&NluSynonym{},

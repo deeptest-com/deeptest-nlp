@@ -37,6 +37,7 @@ type Router struct {
 	ProjectCtrl        *handler.ProjectCtrl        `inject:""`
 	NluTaskCtrl        *handler.NluTaskCtrl        `inject:""`
 	NluIntentCtrl      *handler.NluIntentCtrl      `inject:""`
+	NluRuleCtrl        *handler.NluRuleCtrl        `inject:""`
 	NluSentCtrl        *handler.NluSentCtrl        `inject:""`
 	NluSlotCtrl        *handler.NluSlotCtrl        `inject:""`
 	NluLookupCtrl      *handler.NluLookupCtrl      `inject:""`
@@ -139,12 +140,20 @@ func (r *Router) App() {
 					party.Post("/{id:uint}/disable", r.NluIntentCtrl.Disable).Name = "禁用/启动意图"
 					party.Post("/move", r.NluIntentCtrl.Move).Name = "移动意图"
 				})
+				admin.PartyFunc("/rules", func(party iris.Party) {
+					party.Get("/", r.NluRuleCtrl.List).Name = "规则列表"
+					party.Get("/{id:uint}", r.NluRuleCtrl.Get).Name = "规则详情"
+					party.Post("/", r.NluRuleCtrl.Create).Name = "创建规则"
+					party.Put("/{id:uint}", r.NluRuleCtrl.Update).Name = "更新规则"
+					party.Delete("/{id:uint}", r.NluRuleCtrl.Delete).Name = "删除规则"
+					party.Post("/{id:uint}/disable", r.NluRuleCtrl.Disable).Name = "禁用/启动规则"
+				})
 				admin.PartyFunc("/sents", func(party iris.Party) {
-					party.Get("/", r.NluSentCtrl.List).Name = "句子列表"
-					party.Get("/{id:uint}", r.NluSentCtrl.Get).Name = "句子详情"
-					party.Post("/", r.NluSentCtrl.Create).Name = "创建句子"
-					party.Put("/{id:uint}", r.NluSentCtrl.Update).Name = "更新句子"
-					party.Delete("/{id:uint}", r.NluSentCtrl.Delete).Name = "删除句子"
+					party.Get("/", r.NluSentCtrl.List).Name = "说法列表"
+					party.Get("/{id:uint}", r.NluSentCtrl.Get).Name = "说法详情"
+					party.Post("/", r.NluSentCtrl.Create).Name = "创建说法"
+					party.Put("/{id:uint}", r.NluSentCtrl.Update).Name = "更新说法"
+					party.Delete("/{id:uint}", r.NluSentCtrl.Delete).Name = "删除说法"
 					party.Post("/{id:uint}/disable", r.NluSentCtrl.Disable).Name = "禁用/启动句子"
 				})
 				admin.PartyFunc("/slots", func(party iris.Party) {

@@ -14,6 +14,7 @@ const api = {
 
   tasks: `${prefix}/tasks`,
   intents: `${prefix}/intents`,
+  rules: `${prefix}/rules`,
   sents: `${prefix}/sents`,
   slots: `${prefix}/slots`,
   lookups: `${prefix}/lookups`,
@@ -254,6 +255,42 @@ export function wrapperIntents (intents, rootName) {
     root.children.push(item)
   })
   return [root]
+}
+
+export function listRule (params) {
+  return request({
+    url: api.rules,
+    method: 'get',
+    params: params
+  })
+}
+export function getRule (id) {
+  return request({
+    url: api.rules + '/' + id,
+    method: 'get',
+    params: {}
+  })
+}
+export function saveRule (model) {
+  return request({
+    url: !model.id ? api.rules : api.rules + '/' + model.id,
+    method: !model.id ? 'post' : 'put',
+    data: model
+  })
+}
+export function disableRule (model) {
+  return request({
+    url: api.rules + '/' + model.id + '/disable',
+    method: 'post',
+    params: { intentId: model.intentId }
+  })
+}
+export function removeRule (model) {
+  return request({
+    url: api.rules + '/' + model.id,
+    method: 'delete',
+    params: { intentId: model.intentId }
+  })
 }
 
 export function listSent (params) {

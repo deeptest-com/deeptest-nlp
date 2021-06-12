@@ -61,8 +61,8 @@
               <div class="left" :class="{'disabled':item.disabled}">{{ item.text }}</div>
               <div class="right">
                 <a-icon @click="editSent(item)" type="edit" class="icon"/> &nbsp;
-                <a-icon v-if="!item.disabled" @click="toDisableSent(item)" type="minus" class="icon"/>
-                <a-icon v-if="item.disabled" @click="toDisableSent(item)" type="plus" class="icon"/>
+                <a-icon v-if="!item.disabled" @click="disableSent(item)" type="minus" class="icon"/>
+                <a-icon v-if="item.disabled" @click="disableSent(item)" type="plus" class="icon"/>
                 &nbsp;
                 <a-icon @click="toDeleteSent(item)" type="delete" class="icon"/>
               </div>
@@ -82,10 +82,10 @@
           <div class="edit-inputs">
             <div class="left">
               <a-input
-                v-model="rule.expr"
+                v-model="rule.text"
                 @click="ruleInputClick"
-                ref="ruleExpr"
-                id="ruleExpr"
+                ref="ruleText"
+                id="ruleText"
                 type="text"
                 style="height: 40px;"></a-input>
             </div>
@@ -103,11 +103,11 @@
             <div v-for="item in ruleList" :key="item.id" ref="ruleList" class="sent-item">
               <div class="left" :class="{'disabled':item.disabled}">{{ item.text }}</div>
               <div class="right">
-                <a-icon @click="editSent(item)" type="edit" class="icon"/> &nbsp;
-                <a-icon v-if="!item.disabled" @click="toDisableSent(item)" type="minus" class="icon"/>
-                <a-icon v-if="item.disabled" @click="toDisableSent(item)" type="plus" class="icon"/>
+                <a-icon @click="editRule(item)" type="edit" class="icon"/> &nbsp;
+                <a-icon v-if="!item.disabled" @click="disableRule(item)" type="minus" class="icon"/>
+                <a-icon v-if="item.disabled" @click="disableRule(item)" type="plus" class="icon"/>
                 &nbsp;
-                <a-icon @click="toDeleteSent(item)" type="delete" class="icon"/>
+                <a-icon @click="deleteRule(item)" type="delete" class="icon"/>
               </div>
             </div>
           </div>
@@ -192,7 +192,8 @@
 <script>
 
 import { convertSelectedToSlots, genSent, genSentSlots } from '@/utils/markUtil'
-import { getIntent, updateIntent, loadDicts, getSent, saveSent, removeSent, disableSent } from '@/api/manage'
+import { getIntent, updateIntent, loadDicts, getSent, saveSent, removeSent, disableSent,
+  getRule, saveRule, removeRule, disableRule } from '@/api/manage'
 
 export default {
   name: 'IntentEdit',
@@ -216,7 +217,7 @@ export default {
       slotEditVisible: false,
 
       ruleList: [],
-      rule: { expr: '' },
+      rule: { text: '' },
       ruleSection: {},
       ruleInputIndex: -1,
       ruleSectionEditVisible: false,
@@ -256,6 +257,7 @@ export default {
         if (json.code === 200) {
           this.model = json.data
           this.sents = this.model.sents
+          this.ruleList = this.model.rules
         }
       })
     },
@@ -283,10 +285,65 @@ export default {
         this.$refs.editor.innerHTML = ''
       })
     },
+    deleteSent (item) {
+      console.log('deleteSent')
+
+      removeSent(item).then(json => {
+        this.sents = json.data
+        this.sent = {}
+        this.$refs.editor.innerHTML = ''
+      })
+    },
+    disableSent (item) {
+      console.log('disableSent')
+
+      disableSent(item).then(json => {
+        this.sents = json.data
+        this.sent = {}
+        this.$refs.editor.innerHTML = ''
+      })
+    },
     resetSent () {
       console.log('resetSent')
       this.rule = {}
       this.$refs.editor.innerHTML = ''
+    },
+
+    editRule (item) {
+      console.log('editRule')
+      getRule(item.id).then(json => {
+        this.rule = json.data
+      })
+    },
+    saveRule () {
+      this.rule.intentId = this.model.id
+      console.log('saveRule')
+
+      saveRule(this.rule).then(json => {
+        console.log(json)
+        this.ruleList = json.data
+        this.ruleInputIndex = this.rule.text.length
+      })
+    },
+    deleteRule (item) {
+      console.log('toDeleteRule')
+
+      removeRule(item).then(json => {
+        this.ruleList = json.data
+        this.rule = {}
+      })
+    },
+    disableRule (item) {
+      console.log('toDisableRule')
+
+      disableRule(item).then(json => {
+        this.ruleList = json.data
+        this.rule = {}
+      })
+    },
+    resetRule () {
+      console.log('resetRule')
+      this.rule = {}
     },
 
     useDict (dictType) {
@@ -302,8 +359,8 @@ export default {
       })
     },
     ruleInputClick () {
-      this.ruleInputIndex = this.$refs.ruleExpr.$el.selectionStart
-      console.log('this.ruleExpr', this.ruleInputIndex)
+      this.ruleInputIndex = this.$refs.ruleText.$el.selectionStart
+      console.log('this.ruleText', this.ruleInputIndex)
     },
     addRuleSection () {
       console.log('addRuleSection')
@@ -314,8 +371,8 @@ export default {
       } else {
         val = '{' + val + '}'
       }
-      this.rule.expr = this.rule.expr.substring(0, this.ruleInputIndex) + val +
-        this.rule.expr.substring(this.ruleInputIndex, this.rule.expr.length)
+      this.rule.text = this.rule.text.substring(0, this.ruleInputIndex) + val +
+        this.rule.text.substring(this.ruleInputIndex, this.rule.text.length)
 
       this.ruleSectionEditVisible = false
       this.ruleSection = {}
@@ -323,33 +380,6 @@ export default {
     cancelRuleSection () {
       console.log('cancelRuleSection')
       this.ruleSectionEditVisible = false
-    },
-    saveRule () {
-      console.log('saveRule')
-      this.ruleSectionEditVisible = false
-    },
-    resetRule () {
-      console.log('resetRule')
-      this.rule = {}
-    },
-
-    toDeleteSent (item) {
-      console.log('toDeleteSent')
-
-      removeSent(item).then(json => {
-        this.sents = json.data
-        this.sent = {}
-        this.$refs.editor.innerHTML = ''
-      })
-    },
-    toDisableSent (item) {
-      console.log('toDisableSent')
-
-      disableSent(item).then(json => {
-        this.sents = json.data
-        this.sent = {}
-        this.$refs.editor.innerHTML = ''
-      })
     },
 
     editTitle () {

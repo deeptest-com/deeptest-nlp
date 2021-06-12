@@ -93,23 +93,6 @@ func (r *NluSentRepo) Update(po *model.NluSent) (err error) {
 	return
 }
 
-func (r *NluSentRepo) SetDefault(id uint) (err error) {
-	r.DB.Transaction(func(tx *gorm.DB) error {
-		err = r.DB.Model(&model.NluSent{}).Where("id = ?", id).
-			Updates(map[string]interface{}{"is_default": true}).Error
-		if err != nil {
-			return err
-		}
-
-		err = r.DB.Model(&model.NluSent{}).Where("id != ?", id).
-			Updates(map[string]interface{}{"is_default": false}).Error
-
-		return nil
-	})
-
-	return
-}
-
 func (r *NluSentRepo) Disable(id uint) (err error) {
 	err = r.DB.Model(&model.NluSent{}).Where("id = ?", id).
 		Updates(map[string]interface{}{"disabled": gorm.Expr("NOT disabled")}).Error
@@ -119,13 +102,6 @@ func (r *NluSentRepo) Disable(id uint) (err error) {
 
 func (r *NluSentRepo) Delete(id uint) (err error) {
 	err = r.DB.Model(&model.NluSent{}).Where("id = ?", id).
-		Updates(map[string]interface{}{"deleted": true, "deleted_at": time.Now()}).Error
-
-	return
-}
-
-func (r *NluSentRepo) BatchDelete(ids []int) (err error) {
-	err = r.DB.Model(&model.NluSent{}).Where("id IN (?)", ids).
 		Updates(map[string]interface{}{"deleted": true, "deleted_at": time.Now()}).Error
 
 	return

@@ -5,6 +5,7 @@ type NluIntent struct {
 
 	Name   string    `json:"name"`
 	Sents  []NluSent `json:"sents" gorm:"-"`
+	Rules  []NluRule `json:"rules" gorm:"-"`
 	TaskId uint      `json:"taskId"`
 
 	Ordr int `json:"ordr"`

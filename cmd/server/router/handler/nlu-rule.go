@@ -8,17 +8,17 @@ import (
 	serverConst "github.com/utlai/utl/internal/server/utils/const"
 )
 
-type NluSentCtrl struct {
+type NluRuleCtrl struct {
 	BaseCtrl
 
-	SentService *service.NluSentService `inject:""`
+	RuleService *service.NluRuleService `inject:""`
 }
 
-func NewNluSentCtrl() *NluSentCtrl {
-	return &NluSentCtrl{}
+func NewNluRuleCtrl() *NluRuleCtrl {
+	return &NluRuleCtrl{}
 }
 
-func (c *NluSentCtrl) List(ctx iris.Context) {
+func (c *NluRuleCtrl) List(ctx iris.Context) {
 	keywords := ctx.URLParam("keywords")
 	status := ctx.URLParam("status")
 	pageNo, _ := ctx.URLParamInt("pageNo")
@@ -27,29 +27,29 @@ func (c *NluSentCtrl) List(ctx iris.Context) {
 		pageSize = serverConst.PageSize
 	}
 
-	sents, total := c.SentService.List(keywords, status, pageNo, pageSize)
+	sents, total := c.RuleService.List(keywords, status, pageNo, pageSize)
 
 	_, _ = ctx.JSON(_httpUtils.ApiResPage(200, "请求成功",
 		sents, pageNo, pageSize, total))
 }
 
-func (c *NluSentCtrl) Get(ctx iris.Context) {
+func (c *NluRuleCtrl) Get(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
-	model := c.SentService.Get(uint(id))
+	model := c.RuleService.Get(uint(id))
 
 	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", model))
 	return
 }
 
-func (c *NluSentCtrl) Create(ctx iris.Context) {
+func (c *NluRuleCtrl) Create(ctx iris.Context) {
 	ctx.StatusCode(iris.StatusOK)
 
-	model := model.NluSent{}
+	model := model.NluRule{}
 	if err := ctx.ReadJSON(&model); err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
@@ -59,35 +59,35 @@ func (c *NluSentCtrl) Create(ctx iris.Context) {
 		return
 	}
 
-	err := c.SentService.Save(&model)
+	err := c.RuleService.Save(&model)
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, "操作失败", nil))
 		return
 	}
 
-	sents := c.SentService.ListByIntent(model.IntentId)
+	sents := c.RuleService.ListByIntent(model.IntentId)
 	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", sents))
 	return
 }
 
-func (c *NluSentCtrl) Update(ctx iris.Context) {
-	model := model.NluSent{}
+func (c *NluRuleCtrl) Update(ctx iris.Context) {
+	model := model.NluRule{}
 	if err := ctx.ReadJSON(&model); err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
-	err := c.SentService.Update(&model)
+	err := c.RuleService.Update(&model)
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, "操作失败", nil))
 		return
 	}
 
-	sents := c.SentService.ListByIntent(model.IntentId)
+	sents := c.RuleService.ListByIntent(model.IntentId)
 	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", sents))
 }
 
-func (c *NluSentCtrl) Disable(ctx iris.Context) {
+func (c *NluRuleCtrl) Disable(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
 	intentId, err := ctx.URLParamInt("intentId")
 	if err != nil {
@@ -95,12 +95,12 @@ func (c *NluSentCtrl) Disable(ctx iris.Context) {
 		return
 	}
 
-	c.SentService.Disable(uint(id))
-	sents := c.SentService.ListByIntent(uint(intentId))
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", sents))
+	c.RuleService.Disable(uint(id))
+	rules := c.RuleService.ListByIntent(uint(intentId))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", rules))
 }
 
-func (c *NluSentCtrl) Delete(ctx iris.Context) {
+func (c *NluRuleCtrl) Delete(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
 	intentId, err := ctx.URLParamInt("intentId")
 	if err != nil {
@@ -108,7 +108,7 @@ func (c *NluSentCtrl) Delete(ctx iris.Context) {
 		return
 	}
 
-	c.SentService.Delete(uint(id))
-	sents := c.SentService.ListByIntent(uint(intentId))
+	c.RuleService.Delete(uint(id))
+	sents := c.RuleService.ListByIntent(uint(intentId))
 	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", sents))
 }

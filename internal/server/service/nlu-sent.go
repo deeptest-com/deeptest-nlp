@@ -45,12 +45,6 @@ func (s *NluSentService) Update(po *model.NluSent) (err error) {
 	return
 }
 
-func (s *NluSentService) SetDefault(id uint) (err error) {
-	err = s.NluSentRepo.SetDefault(id)
-
-	return
-}
-
 func (s *NluSentService) Disable(id uint) (err error) {
 	err = s.NluSentRepo.Disable(id)
 
@@ -59,12 +53,6 @@ func (s *NluSentService) Disable(id uint) (err error) {
 
 func (s *NluSentService) Delete(id uint) (err error) {
 	err = s.NluSentRepo.Delete(id)
-
-	return
-}
-
-func (s *NluSentService) BatchDelete(ids []int) (err error) {
-	err = s.NluSentRepo.BatchDelete(ids)
 
 	return
 }

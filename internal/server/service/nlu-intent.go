@@ -9,6 +9,7 @@ import (
 type NluIntentService struct {
 	NluIntentRepo *repo.NluIntentRepo `inject:""`
 	NluSentRepo   *repo.NluSentRepo   `inject:""`
+	NluRuleRepo   *repo.NluRuleRepo   `inject:""`
 }
 
 func NewNluIntentService() *NluIntentService {
@@ -27,8 +28,8 @@ func (s *NluIntentService) ListByTask(taskId uint) (pos []model.NluIntent) {
 func (s *NluIntentService) Get(id uint) (po model.NluIntent) {
 	po = s.NluIntentRepo.Get(id)
 
-	sents := s.NluSentRepo.ListByIntent(id)
-	po.Sents = sents
+	po.Sents = s.NluSentRepo.ListByIntent(id)
+	po.Rules = s.NluRuleRepo.ListByIntent(id)
 
 	return
 }
