@@ -322,7 +322,7 @@ export default {
       saveRule(this.rule).then(json => {
         console.log(json)
         this.ruleList = json.data
-        this.ruleInputIndex = this.rule.text.length
+        this.rule = {}
       })
     },
     deleteRule (item) {
@@ -376,6 +376,7 @@ export default {
 
       this.ruleSectionEditVisible = false
       this.ruleSection = {}
+      this.ruleInputIndex = this.rule.text.length
     },
     cancelRuleSection () {
       console.log('cancelRuleSection')
