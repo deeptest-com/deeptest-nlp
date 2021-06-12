@@ -174,10 +174,10 @@
     >
       <a-form-model ref="form" :model="ruleSection" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
         {{ ruleSection.slotType }}
-        <a-form-model-item prop="value" v-if="ruleSectionType === '_slot_'" :label="$t('form.slot')">
+        <a-form-model-item prop="value" v-if="ruleSection.type === '_slot_'" :label="$t('form.slot')">
           <a-input v-model="ruleSection.value" />
         </a-form-model-item>
-        <a-form-model-item prop="value" v-if="ruleSectionType !== '_slot_'" :label="$t('form.synonym')">
+        <a-form-model-item prop="value" v-if="ruleSection.type !== '_slot_'" :label="$t('form.synonym')">
           <a-select v-model="ruleSection.value">
             <a-select-option v-for="(item, index) in dicts" :key="index" :value="item.name">
               {{ item.name }}
@@ -219,7 +219,6 @@ export default {
       rule: { expr: '' },
       ruleSection: {},
       ruleInputIndex: -1,
-      ruleSectionType: '',
       ruleSectionEditVisible: false,
 
       labelCol: { span: 5 },
@@ -292,7 +291,7 @@ export default {
 
     useDict (dictType) {
       console.log('useDict', dictType)
-      this.ruleSectionType = dictType
+      this.ruleSection.type = dictType
       this.ruleSectionEditVisible = true
 
       if (dictType === '_slot_') return
@@ -310,7 +309,7 @@ export default {
       console.log('addRuleSection')
 
       let val = this.ruleSection.value
-      if (this.ruleSectionType === '_slot_') {
+      if (this.ruleSection.type === '_slot_') {
         val = '(' + val + ')'
       } else {
         val = '{' + val + '}'
@@ -319,7 +318,7 @@ export default {
         this.rule.expr.substring(this.ruleInputIndex, this.rule.expr.length)
 
       this.ruleSectionEditVisible = false
-      this.ruleSection.value = ''
+      this.ruleSection = {}
     },
     cancelRuleSection () {
       console.log('cancelRuleSection')
