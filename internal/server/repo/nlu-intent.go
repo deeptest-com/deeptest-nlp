@@ -83,7 +83,8 @@ func (r *NluIntentRepo) Save(po *model.NluIntent) (err error) {
 }
 
 func (r *NluIntentRepo) Update(po *model.NluIntent) (err error) {
-	err = r.DB.Omit("").Save(&po).Error
+	err = r.DB.Model(&model.NluIntent{}).Where("id = ?", po.ID).
+		Updates(map[string]interface{}{"name": po.Name}).Error
 	return
 }
 

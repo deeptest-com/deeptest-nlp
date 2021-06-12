@@ -1,7 +1,20 @@
 <template>
   <div v-show="model.id">
     <div class="header">
-      <div class="title">{{ model.name }}</div>
+      <div v-if="!isEditTitle" class="title">
+        <span>{{ model.name }}</span>&nbsp;&nbsp;
+        <a @click="editTitle()"><a-icon class="edit-icon" type="edit" /></a>
+      </div>
+      <div v-if="isEditTitle">
+        <a-form layout="inline">
+          <a-form-item>
+            <a-input v-model="model.name" type="text"></a-input>
+          </a-form-item>
+          <a-form-item>
+            <a @click="saveTitle()"><a-icon type="check" /></a>
+          </a-form-item>
+        </a-form>
+      </div>
       <div class="buttons"></div>
     </div>
 
@@ -110,7 +123,7 @@
 <script>
 
 import { convertSelectedToSlots, genSent, genSentSlots } from '@/utils/markUtil'
-import { getIntent, loadDicts, getSent, saveSent, removeSent, disableSent } from '@/api/manage'
+import { getIntent, updateIntent, loadDicts, getSent, saveSent, removeSent, disableSent } from '@/api/manage'
 
 export default {
   name: 'IntentEdit',
@@ -140,6 +153,7 @@ export default {
       selectedSlot: {},
       selectedIndex: -1,
       slot: {},
+      isEditTitle: false,
 
       dicts: [],
       rules: {
@@ -224,6 +238,15 @@ export default {
       })
     },
 
+    editTitle () {
+      this.isEditTitle = true
+    },
+    saveTitle () {
+      const data = { id: this.model.id, name: this.model.name }
+      updateIntent(data).then(json => {
+        this.isEditTitle = false
+      })
+    },
     back () {
       this.$router.push('/nlu/task/list')
     },
@@ -375,6 +398,10 @@ export default {
       }
     }
   }
+}
+
+.edit-icon {
+  color: gray;
 }
 
 </style>
