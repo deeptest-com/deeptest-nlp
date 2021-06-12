@@ -41,7 +41,12 @@
 export default {
   name: 'ChatMessage',
   props: {
-    msg: {}
+    msg: {
+      type: Object,
+      default: () => {
+        return {}
+      }
+    }
   },
   data () {
     return {

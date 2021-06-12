@@ -64,6 +64,7 @@ const locale = {
   'form.view': 'View',
   'form.create': 'Create',
   'form.edit': 'Edit',
+  'form.list': 'List',
   'form.design': 'Design',
   'form.maintain': 'Maintain',
   'form.remove': 'Delete',
@@ -102,8 +103,6 @@ const locale = {
   'form.opt': 'Operation',
   'form.opt.log': 'Operation Log',
 
-  'form.sent.edit': 'Edit Sentence',
-  'form.sent.list': 'List Sentence',
   'form.slot.type': 'Slot Type',
   'form.regex': 'Regular Expression',
   'form.synonym': 'Synonym',
@@ -113,6 +112,8 @@ const locale = {
   'form.select.to.mark': 'Please select text to mark, the original slots in selected area will be removed.',
   'form.input.sent': 'Please input your question',
   'form.nav.history': 'Use ↑ ↓ to navigate through history.',
+  'form.maintain.nlu.sent': 'Sentence',
+  'form.maintain.nlu.rule': 'Rule',
 
   'status.enable': 'Enable',
   'status.disable': 'Disable',

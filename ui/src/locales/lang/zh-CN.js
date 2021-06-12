@@ -66,6 +66,7 @@ const locale = {
   'form.view': '查看',
   'form.create': '新建',
   'form.edit': '编辑',
+  'form.list': '列表',
   'form.design': '设计',
   'form.maintain': '维护',
   'form.remove': '删除',
@@ -102,9 +103,6 @@ const locale = {
   'form.is.default': '是否默认',
   'form.opt': '操作',
   'form.opt.log': '操作日志',
-
-  'form.sent.edit': '编辑说法',
-  'form.sent.list': '说法列表',
   'form.slot.type': '插槽类型',
   'form.regex': '正则表达式',
   'form.synonym': '同义词',
@@ -114,6 +112,8 @@ const locale = {
   'form.select.to.mark': '请选择文本进行标记，选中内容中包括的原有语义槽将被移除。',
   'form.input.sent': '请输入您想说的话',
   'form.nav.history': '按键盘的↑ ↓键，切换历史说法.',
+  'form.maintain.nlu.sent': '说法',
+  'form.maintain.nlu.rule': '规则',
 
   'status.enable': '启用',
   'status.disable': '禁用',
