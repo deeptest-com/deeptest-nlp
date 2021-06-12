@@ -46,7 +46,7 @@ func (r *NluSynonymRepo) Query(keywords, status string, pageNo int, pageSize int
 
 func (r *NluSynonymRepo) ListByProjectId(projectId uint) (pos []model.NluSynonym) {
 	query := r.DB.Select("*").
-		Where("NOT deleted_at AND NOT disabled").
+		Where("NOT deleted AND NOT disabled").
 		//Where("project_id = ?", projectId).
 		Order("id ASC")
 

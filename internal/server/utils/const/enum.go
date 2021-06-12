@@ -6,6 +6,7 @@ const (
 	Synonym NluSlotType = "synonym"
 	Lookup  NluSlotType = "lookup"
 	Regex   NluSlotType = "regex"
+	Slot    NluSlotType = "_slot_"
 	Text    NluSlotType = "text"
 )
 

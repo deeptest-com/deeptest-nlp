@@ -21,10 +21,10 @@
           </div>
           <div class="response" :style="chatHeight" ref="rightContainer" v-if="viewMode!==''">
             <div class="result" v-if="viewMode==='result'">
-              result
+              <pre class="white-space: pre;">{{ detailResult }}</pre>
             </div>
             <div class="json" v-if="viewMode==='json'">
-              json
+              <pre>{{ jsonResult }}</pre>
             </div>
           </div>
         </div>
@@ -80,7 +80,10 @@ export default {
       historyIndex: 0,
 
       viewMode: '',
-      chatHeight: {}
+      chatHeight: {},
+      detailResult: '',
+      jsonResult: '',
+      answerMap: {}
     }
   },
   watch: {
@@ -92,8 +95,8 @@ export default {
   mounted () {
     this.chatHeight = {
       height: document.body.clientHeight - 330 + 'px',
-      overflow: 'auto'
-
+      'overflow-y': 'auto',
+      'overflow-x': 'hidden'
     }
     this.loadData()
   },
@@ -113,8 +116,11 @@ export default {
     loadData () {
       this.messages = [{ type: 'welcome' }]
     },
-    view (mode) {
-      console.log('view')
+    view (data) {
+      const mode = data.mode
+      const key = data.key
+
+      console.log('view', mode, key)
       if (mode === 'result') {
         this.viewMode = 'result'
       } else if (mode === 'json') {
@@ -122,6 +128,9 @@ export default {
       } else {
         this.viewMode = ''
       }
+
+      this.detailResult = this.answerMap[key].detail
+      this.jsonResult = this.answerMap[key].json
     },
     send () {
       console.log('send', this.question)
@@ -133,8 +142,28 @@ export default {
       nluRequest(this.id, this.question).then(json => {
         console.log('nluRequest', json)
         const data = json.data
+
         if (data.code === 1) { // success
-          this.messages.push({ type: 'answer', content: data.result })
+          const msg = data.result.intent.name
+
+          const slots = []
+          data.result.entities.forEach((item, index) => {
+            const name = item.entity
+            const value = data.result.text.substr(item.start, item.end - item.start)
+
+            slots.push('  ' + name + ' = ' + value)
+          })
+
+          let detailResult = this.$t('menu.intent') + ': ' + msg
+          detailResult += '\n' + this.$t('common.nlu.confidence') + ': ' + (data.result.intent.confidence * 100) + '%'
+          detailResult += '\n' + this.$t('common.nlu.slots') + ': ' + slots.length + '\n' + slots.join('\n')
+
+          const key = new Date().getTime() + data.result.intent.id
+          this.answerMap[key] = { detail: detailResult, json: JSON.stringify(data.result, null, 3) }
+          this.detailResult = this.answerMap[key].detail
+          this.jsonResult = this.answerMap[key].json
+
+          this.messages.push({ key: key, type: 'answer', content: msg })
         } else {
           this.messages.push({ type: 'pardon' })
         }
@@ -169,6 +198,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.ant-page-header {
+  padding-bottom: 0 !important;
+}
 
 .detail-layout {
   margin-left: 44px;

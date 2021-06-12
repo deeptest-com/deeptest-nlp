@@ -34,5 +34,5 @@ const (
 	Build_Command_Param_AppiumPort     = "${appiumPort}"
 	Build_Command_Param_SeleniumDriver = "${driverPath}"
 
-	PageSize = 15
+	PageSize = 10
 )

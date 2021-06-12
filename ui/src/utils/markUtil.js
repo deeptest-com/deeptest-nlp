@@ -8,12 +8,6 @@ export const convertSelectedToSlots = function (target, editor) {
   const slt = window.getSelection()
   if (slt.toString() === '' || slt.rangeCount !== 1) return {}
 
-  // console.log('startNode', slt.anchorNode)
-  // console.log('startOffset', slt.anchorOffset)
-  //
-  // console.log('endNode', slt.focusNode)
-  // console.log('endOffset', slt.focusOffset)
-
   const range = slt.getRangeAt(0)
   console.log('range', range, range.toString())
 
@@ -67,8 +61,10 @@ export const convertSelectedToSlots = function (target, editor) {
         allSlots.push(span3)
         selectedIndex = allSlots.length - 1
 
-        const span4 = genSpan(startText.substr(startRight1), item2)
-        allSlots.push(span4)
+        if (startRight1.length > 0) {
+          const span4 = genSpan(startText.substr(startRight1), item2)
+          allSlots.push(span4)
+        }
       } else {
         selectedText += rightSection1
       }
@@ -90,6 +86,7 @@ export const convertSelectedToSlots = function (target, editor) {
       selectedIndex = allSlots.length - 1
 
       // create part2 as span
+      console.log('rightSection2', rightSection2)
       if (rightSection2.length > 0) {
         const span5 = genSpan(rightSection2, item2)
         allSlots.push(span5)
@@ -108,8 +105,8 @@ export const genSent = function (allSlots, selectedIndex, slot) {
 
   allSlots.forEach((item3, index) => {
     const section = document.createElement('span')
-    let dataType = item3.getAttribute('data-type')
-    let dataValue = item3.getAttribute('data-value')
+    let dataType = getAttr(item3, 'data-type')
+    let dataValue = getAttr(item3, 'data-value')
 
     if (index === selectedIndex) {
       dataType = slot.slotType
@@ -142,10 +139,8 @@ export const genSentSlots = function (editor) {
     slotObj.id = item4.id
     slotObj.text = item4.innerText
 
-    if (item4.getAttribute) {
-      slotObj.type = item4.getAttribute('data-type')
-      slotObj.value = item4.getAttribute('data-value')
-    }
+    slotObj.type = getAttr(item4, 'data-type')
+    slotObj.value = getAttr(item4, 'data-value')
 
     slots.push(slotObj)
   })
@@ -166,11 +161,9 @@ export const genSpan = function (text, node) {
   const span7 = document.createElement('span')
   span7.innerText = text
 
-  const dataType = node.getAttribute('data-type')
-  if (node.getAttribute) {
-    span7.setAttribute('data-type', dataType === 'null' ? '' : dataType)
-    span7.setAttribute('data-value', node.getAttribute('data-value'))
-  }
+  span7.setAttribute('class', getAttr(node, 'class'))
+  span7.setAttribute('data-type', getAttr(node, 'data-type'))
+  span7.setAttribute('data-value', getAttr(node, 'data-value'))
 
   return span7
 }
@@ -181,6 +174,9 @@ export const textToSpan = function (node) {
     span8.innerText = node.nodeValue
     return span8
   } else {
+    node.setAttribute('class', getAttr(node, 'class'))
+    node.setAttribute('data-type', getAttr(node, 'data-type'))
+    node.setAttribute('data-value', getAttr(node, 'data-value'))
     return node
   }
 }
@@ -194,4 +190,11 @@ export const addCls = function (element, value) {
     newClassName += value
     element.className = newClassName
   }
+}
+
+export const getAttr = function (node, prop) {
+  if (!node.getAttribute) return ''
+
+  const v = node.getAttribute(prop)
+  return v === null || v === 'null' ? '' : v
 }

@@ -1,6 +1,7 @@
 package repo
 
 import (
+	_const "github.com/utlai/utl/internal/pkg/const"
 	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
 	"github.com/utlai/utl/internal/server/model"
 	"gorm.io/gorm"
@@ -20,7 +21,7 @@ func (r *NluHistoryRepo) ListByProjectId(projectId uint) (pos []model.NluHistory
 		Where("NOT deleted AND NOT disabled").
 		Where("project_id = ?", projectId).
 		Order("id DESC").
-		Limit(15)
+		Limit(_const.PageSize)
 
 	err := query.Find(&pos).Error
 	if err != nil {

@@ -67,10 +67,10 @@
 
           <span slot="action" slot-scope="text, record">
             <template>
-              <a @click="test(record)">{{ $t('form.test') }}</a>
+              <a @click="view(record)">{{ $t('form.view') }}</a>
               <a-divider type="vertical" />
 
-              <a @click="view(record)">{{ $t('form.view') }}</a>
+              <a @click="test(record)">{{ $t('form.test') }}</a>
               <a-divider type="vertical" />
 
               <a @click="edit(record)">{{ $t('form.edit') }}</a>

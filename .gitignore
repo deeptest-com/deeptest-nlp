@@ -15,5 +15,6 @@
 /res/server/*.conf
 /res/server/*.go
 access.log
+/project/*/models/
 /project/*/models_*/
 /project/*/nohup.out

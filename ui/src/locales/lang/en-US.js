@@ -146,6 +146,8 @@ const locale = {
   'common.view.result': 'View Result',
   'common.view.json': 'View JSON',
   'common.view.nothing': 'View Nothing',
+  'common.nlu.confidence': 'Confidence',
+  'common.nlu.slots': 'Slot',
 
   'status.start.training': 'Training Start',
   'status.end.training': 'Training End',

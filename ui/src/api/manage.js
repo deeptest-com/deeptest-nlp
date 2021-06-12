@@ -148,11 +148,11 @@ export function endService (model) {
 }
 
 // nul
-export function nluRequest (projectId, sent) {
+export function nluRequest (projectId, text) {
   return request({
     url: api.parse + '/' + projectId,
     method: 'post',
-    data: { sent: sent }
+    data: { text: text }
   })
 }
 

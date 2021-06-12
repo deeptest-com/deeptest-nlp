@@ -11,11 +11,14 @@
           <span v-else-if="msg.type==='answer'">{{ msg.content }}</span>
         </div>
         <div v-if="msg.type!=='welcome'" class="action">
-          <a @click="view('result')">{{ $t('common.view.result') }}</a>
+          <a @click="view('result', msg.key)">{{ $t('common.view.result') }}</a>
           &nbsp;&nbsp;&nbsp;  | &nbsp;&nbsp;&nbsp;
-          <a @click="view('json')">{{ $t('common.view.json') }}</a>
-          &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;
-          <a @click="view('')">{{ $t('common.view.nothing') }}</a>
+          <a @click="view('json', msg.key)">{{ $t('common.view.json') }}</a>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <a v-if="viewMode!==''" @click="view('', 0)">
+            |
+            {{ $t('common.view.nothing') }}
+          </a>
         </div>
       </div>
     </div>
@@ -42,7 +45,8 @@ export default {
   },
   data () {
     return {
-      typeMap: {}
+      typeMap: {},
+      viewMode: ''
     }
   },
   watch: {
@@ -67,8 +71,9 @@ export default {
     }
   },
   methods: {
-    view (mode) {
-      this.$emit('view', mode)
+    view (mode, key) {
+      this.viewMode = mode
+      this.$emit('view', { mode: mode, key: key })
     }
   }
 }
@@ -81,6 +86,7 @@ export default {
   display: flex;
   margin-bottom: 10px;
   padding: 0 20px;
+  width: calc(100% - 20px);
 
   .avatar {
     width: 30px;
@@ -99,13 +105,13 @@ export default {
   }
   .box{
     position: relative;
-    padding: 10px;
     min-width: 220px;
     background: #f2f4f5;
     top:0px;
     -moz-border-radius: 12px;
     -webkit-border-radius: 12px;
     border-radius: 12px;
+    padding: 10px;
 
     &.a {
       height: 60px;

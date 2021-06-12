@@ -7,6 +7,7 @@ import (
 	_domain "github.com/utlai/utl/internal/pkg/domain"
 	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
 	_vari "github.com/utlai/utl/internal/pkg/vari"
+	"github.com/utlai/utl/internal/server/domain"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -105,7 +106,49 @@ func Post(url string, params interface{}) (interface{}, bool) {
 	defer resp.Body.Close()
 
 	code := result.Code
+
 	return result, code == _const.ResultSuccess.Int()
+}
+
+func PostRasa(url string, params interface{}) (ret _domain.RpcResult, success bool) {
+	if _vari.Verbose {
+		_logUtils.Info(url)
+	}
+	client := &http.Client{}
+
+	paramStr, err := json.Marshal(params)
+	if err != nil {
+		_logUtils.Error(err.Error())
+		return
+	}
+
+	req, reqErr := http.NewRequest("POST", url, strings.NewReader(string(paramStr)))
+	if reqErr != nil {
+		_logUtils.Error(reqErr.Error())
+		return
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, respErr := client.Do(req)
+	if respErr != nil {
+		_logUtils.Error(respErr.Error())
+		return
+	}
+
+	bodyStr, _ := ioutil.ReadAll(resp.Body)
+	if _vari.Verbose {
+		_logUtils.PrintUnicode(bodyStr)
+	}
+	defer resp.Body.Close()
+
+	var rasaResp domain.RasaResp
+	json.Unmarshal(bodyStr, &rasaResp)
+
+	success = rasaResp.Intent.ID != 0
+	ret.Payload = rasaResp
+
+	return
 }
 
 func GenUrl(server string, path string) string {

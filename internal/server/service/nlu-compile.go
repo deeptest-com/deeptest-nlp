@@ -105,7 +105,7 @@ func (s *NluCompileService) convertSynonym(projectId uint, projectDir string, nl
 
 	synonyms := s.NluSynonymRepo.ListByProjectId(projectId)
 	for _, synonym := range synonyms {
-		nluDomain.Entities = append(nluDomain.Entities, synonym.Name)
+		//nluDomain.Entities = append(nluDomain.Entities, synonym.Name)
 
 		nluSynonym := domain.NluSynonym{Version: serverConst.NluVersion}
 		synonymDef := domain.NluSynonymDef{Synonym: fmt.Sprintf("%s_%s",
@@ -129,7 +129,7 @@ func (s *NluCompileService) convertLookup(projectId uint, projectDir string, nlu
 
 	lookups := s.NluLookupRepo.ListByProjectId(projectId)
 	for _, lookup := range lookups {
-		nluDomain.Entities = append(nluDomain.Entities, lookup.Name)
+		//nluDomain.Entities = append(nluDomain.Entities, lookup.Name)
 
 		nluLookup := domain.NluLookup{Version: serverConst.NluVersion}
 		lookupItem := domain.NluLookupItem{Lookup: fmt.Sprintf("%s_%s",
@@ -153,7 +153,7 @@ func (s *NluCompileService) convertRegex(projectId uint, projectDir string, nluD
 
 	regexes := s.NluRegexRepo.ListByProjectId(projectId)
 	for _, regex := range regexes {
-		nluDomain.Entities = append(nluDomain.Entities, regex.Name)
+		//nluDomain.Entities = append(nluDomain.Entities, regex.Name)
 
 		nluRegex := domain.NluRegex{Version: serverConst.NluVersion}
 		regexItem := domain.NluRegexItem{Regex: fmt.Sprintf("%s_%s",
@@ -178,7 +178,7 @@ func (s *NluCompileService) getSlotNameMap(sentId uint) (ret map[string]map[stri
 
 	slots := s.NluSlotRepo.ListBySentId(sentId)
 	for _, slot := range slots {
-		slotMap := s.getSlotTypeAndId(slot.Type, slot.Value)
+		slotMap := s.getSlotTypeAndVal(slot.Type, slot.Value)
 		if slotMap["name"] == "" {
 			continue
 		}
@@ -189,10 +189,10 @@ func (s *NluCompileService) getSlotNameMap(sentId uint) (ret map[string]map[stri
 	return
 }
 
-func (s *NluCompileService) getSlotTypeAndId(tp string, idStr string) (ret map[string]string) {
+func (s *NluCompileService) getSlotTypeAndVal(tp string, val string) (ret map[string]string) {
 	ret = map[string]string{}
 
-	id, _ := strconv.Atoi(idStr)
+	id, _ := strconv.Atoi(val)
 
 	if tp == string(serverConst.Synonym) {
 		entity := s.NluSynonymRepo.Get(uint(id))
@@ -208,6 +208,9 @@ func (s *NluCompileService) getSlotTypeAndId(tp string, idStr string) (ret map[s
 		entity := s.NluRegexRepo.Get(uint(id))
 		ret["code"] = entity.Code
 		ret["name"] = entity.Code
+	} else if tp == string(serverConst.Slot) {
+		ret["code"] = val
+		ret["name"] = val
 	}
 
 	return
@@ -217,11 +220,15 @@ func (s *NluCompileService) populateSlots(sentId uint, slotMap map[string]map[st
 	slots := s.NluSlotRepo.ListBySentId(sentId)
 	for _, slot := range slots {
 		slotCode := slotMap[fmt.Sprintf("%s-%s", slot.Type, slot.Value)]["code"]
-		if slotCode == "" || slotCode == "_slot_" || (*codeMap)[slotCode] {
+		if slotCode == "" || (*codeMap)[slotCode] {
 			continue
 		}
 
-		slotItem := domain.SlotItem{Type: "text", InfluenceConversation: false}
+		//if slot.Type == "_slot_" && !_stringUtils.StrInArr(slotCode, nluDomain.Entities) {
+		nluDomain.Entities = append(nluDomain.Entities, slotCode)
+		//}
+
+		slotItem := domain.SlotItem{Type: "unfeaturized", InfluenceConversation: false}
 		mapItem := yaml.MapItem{Key: slotCode, Value: slotItem}
 		nluDomain.Slots = append(nluDomain.Slots, mapItem)
 
