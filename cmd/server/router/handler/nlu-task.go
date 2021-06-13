@@ -3,7 +3,6 @@ package handler
 import (
 	"github.com/kataras/iris/v12"
 	_httpUtils "github.com/utlai/utl/internal/pkg/libs/http"
-	"github.com/utlai/utl/internal/server/biz/jwt"
 	"github.com/utlai/utl/internal/server/model"
 	"github.com/utlai/utl/internal/server/service"
 	serverConst "github.com/utlai/utl/internal/server/utils/const"
@@ -21,26 +20,11 @@ func NewNluTaskCtrl() *NluTaskCtrl {
 }
 
 func (c *NluTaskCtrl) List(ctx iris.Context) {
-	isInit, _ := ctx.URLParamBool("isInit")
 	projectId, _ := ctx.URLParamInt("projectId")
 	keywords := ctx.URLParam("keywords")
 	status := ctx.URLParam("status")
 	pageNo, _ := ctx.URLParamInt("pageNo")
 	pageSize, _ := ctx.URLParamInt("pageSize")
-
-	projectIdInSession := jwt.Get(ctx, "projectId")
-	if isInit && projectIdInSession != nil {
-		projectId = projectIdInSession.(int)
-	} else {
-		if projectIdInSession == nil || projectId != projectIdInSession.(int) {
-			cred := jwt.GetCredentials(ctx)
-			c.UserService.UpdateUserDefaultProject(cred.UserId, projectId)
-
-			jwt.Set(ctx, "projectId", projectId)
-		} else if projectId == 0 && projectIdInSession != nil && projectIdInSession.(int) > 0 {
-			projectId = projectIdInSession.(int)
-		}
-	}
 
 	if pageSize == 0 {
 		pageSize = serverConst.PageSize

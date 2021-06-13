@@ -18,7 +18,7 @@ func (s *NluRuleService) List(keywords, status string, pageNo int, pageSize int)
 	return
 }
 func (s *NluRuleService) ListByIntent(intentId uint) (pos []model.NluRule) {
-	pos = s.NluRuleRepo.ListByIntent(intentId)
+	pos = s.NluRuleRepo.ListByIntentId(intentId)
 	return
 }
 
@@ -36,23 +36,33 @@ func (s *NluRuleService) GetWithSlots(id uint) (po model.NluRule) {
 func (s *NluRuleService) Save(po *model.NluRule) (err error) {
 	err = s.NluRuleRepo.Save(po)
 
+	ProjectChanged.Store(po.ProjectId, true)
+
 	return
 }
 
 func (s *NluRuleService) Update(po *model.NluRule) (err error) {
 	err = s.NluRuleRepo.Update(po)
 
+	ProjectChanged.Store(po.ProjectId, true)
+
 	return
 }
 
 func (s *NluRuleService) Disable(id uint) (err error) {
 	err = s.NluRuleRepo.Disable(id)
+	po := s.NluRuleRepo.Get(id)
+
+	ProjectChanged.Store(po.ProjectId, true)
 
 	return
 }
 
 func (s *NluRuleService) Delete(id uint) (err error) {
 	err = s.NluRuleRepo.Delete(id)
+	po := s.NluRuleRepo.Get(id)
+
+	ProjectChanged.Store(po.ProjectId, true)
 
 	return
 }

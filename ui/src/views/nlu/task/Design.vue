@@ -22,7 +22,8 @@
           <intent-edit
             v-if="intentEditVisible"
             ref="intentEdit"
-            :modelId="intentId">
+            :modelId="intentId"
+            :projectId="model.projectId">
           </intent-edit>
         </div>
       </div>

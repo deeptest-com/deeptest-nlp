@@ -46,8 +46,21 @@ func (r *NluRuleRepo) Query(keywords, status string, pageNo int, pageSize int) (
 
 func (r *NluRuleRepo) ListByIntentId(intentId uint) (pos []model.NluRule) {
 	query := r.DB.Select("*").
-		Where("NOT deleted AND NOT disabled").
+		Where("NOT deleted").
 		Where("intent_id = ?", intentId).
+		Order("id ASC")
+
+	err := query.Find(&pos).Error
+	if err != nil {
+		_logUtils.Errorf("sql error %s", err.Error())
+	}
+
+	return
+}
+func (r *NluRuleRepo) ProjectId(projectId uint) (pos []model.NluRule) {
+	query := r.DB.Select("*").
+		Where("NOT deleted").
+		Where("project_id = ?", projectId).
 		Order("id ASC")
 
 	err := query.Find(&pos).Error
@@ -88,14 +101,6 @@ func (r *NluRuleRepo) Delete(id uint) (err error) {
 func (r *NluRuleRepo) Disable(id uint) (err error) {
 	err = r.DB.Model(&model.NluRule{}).Where("id = ?", id).
 		Updates(map[string]interface{}{"disabled": gorm.Expr("NOT disabled")}).Error
-
-	return
-}
-
-func (r *NluRuleRepo) ListByIntent(intentId uint) (pos []model.NluRule) {
-	r.DB.Where("intent_id = ?", intentId).
-		Where("NOT deleted").
-		Find(&pos)
 
 	return
 }

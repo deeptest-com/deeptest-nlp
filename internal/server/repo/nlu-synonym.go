@@ -63,8 +63,8 @@ func (r *NluSynonymRepo) Get(id uint) (po model.NluSynonym) {
 	r.DB.Where("id = ?", id).First(&po)
 	return
 }
-func (r *NluSynonymRepo) GetByName(code string) (po model.NluSynonym) {
-	r.DB.Where("name = ?", code).First(&po)
+func (r *NluSynonymRepo) GetByName(name string) (po model.NluSynonym) {
+	r.DB.Where("name = ?", name).First(&po)
 	return
 }
 

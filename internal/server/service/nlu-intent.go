@@ -29,7 +29,7 @@ func (s *NluIntentService) Get(id uint) (po model.NluIntent) {
 	po = s.NluIntentRepo.Get(id)
 
 	po.Sents = s.NluSentRepo.ListByIntent(id)
-	po.Rules = s.NluRuleRepo.ListByIntent(id)
+	po.Rules = s.NluRuleRepo.ListByIntentId(id)
 
 	return
 }

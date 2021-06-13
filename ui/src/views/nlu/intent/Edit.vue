@@ -63,8 +63,8 @@
                 <a-icon @click="editSent(item)" type="edit" class="icon"/> &nbsp;
                 <a-icon v-if="!item.disabled" @click="disableSent(item)" type="minus" class="icon"/>
                 <a-icon v-if="item.disabled" @click="disableSent(item)" type="plus" class="icon"/>
-                &nbsp;
-                <a-icon @click="toDeleteSent(item)" type="delete" class="icon"/>
+
+                <a-icon @click="deleteSent(item)" type="delete" class="icon"/>
               </div>
             </div>
           </div>
@@ -201,6 +201,10 @@ export default {
     modelId: {
       type: Number,
       default: () => 0
+    },
+    projectId: {
+      type: Number,
+      default: () => 0
     }
   },
   mounted () {
@@ -305,7 +309,7 @@ export default {
     },
     resetSent () {
       console.log('resetSent')
-      this.rule = {}
+      this.rule = { text: '' }
       this.$refs.editor.innerHTML = ''
     },
 
@@ -317,12 +321,13 @@ export default {
     },
     saveRule () {
       this.rule.intentId = this.model.id
-      console.log('saveRule')
+      this.rule.projectId = this.projectId
+      console.log('saveRule', this.rule)
 
       saveRule(this.rule).then(json => {
         console.log(json)
         this.ruleList = json.data
-        this.rule = {}
+        this.rule = { text: '' }
       })
     },
     deleteRule (item) {
@@ -330,7 +335,7 @@ export default {
 
       removeRule(item).then(json => {
         this.ruleList = json.data
-        this.rule = {}
+        this.rule = { text: '' }
       })
     },
     disableRule (item) {
@@ -338,12 +343,12 @@ export default {
 
       disableRule(item).then(json => {
         this.ruleList = json.data
-        this.rule = {}
+        this.rule = { text: '' }
       })
     },
     resetRule () {
       console.log('resetRule')
-      this.rule = {}
+      this.rule = { text: '' }
     },
 
     useDict (dictType) {
@@ -365,7 +370,7 @@ export default {
     addRuleSection () {
       console.log('addRuleSection')
 
-      let val = this.ruleSection.value
+      let val = this.ruleSection.value + ':' + this.ruleSection.type.substring(0, 1).toUpperCase()
       if (this.ruleSection.type === '_slot_') {
         val = '(' + val + ')'
       } else {
