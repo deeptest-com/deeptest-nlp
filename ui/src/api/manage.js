@@ -620,6 +620,13 @@ export function validProjectPath (value) {
     data: { method: 'validProjectPath', value: value }
   })
 }
+export function validDictName (code, id, type) {
+  return request({
+    url: api.valid,
+    method: 'post',
+    data: { method: 'validDictName', value: code, id: id, type: type }
+  })
+}
 
 export function getUserList (parameter) {
   return request({

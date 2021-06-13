@@ -3,7 +3,7 @@ package model
 type NluLookup struct {
 	BaseModel
 
-	Code  string          `json:"code"`
+	//Code  string          `json:"code"`
 	Name  string          `json:"name"`
 	Items []NluLookupItem `json:"items" gorm:"-"`
 

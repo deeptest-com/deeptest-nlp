@@ -52,9 +52,9 @@
           {{ index + 1 }}
         </span>
 
-        <span slot="code" slot-scope="text">
+<!--        <span slot="code" slot-scope="text">
           {{ text }}
-        </span>
+        </span>-->
         <span slot="name" slot-scope="text">
           <ellipsis :length="4" tooltip>{{ text }}</ellipsis>
         </span>
@@ -137,10 +137,10 @@ export default {
         title: this.$t('form.no'),
         scopedSlots: { customRender: 'serial' }
       },
-      {
-        title: this.$t('form.code'),
-        dataIndex: 'code'
-      },
+      // {
+      //   title: this.$t('form.code'),
+      //   dataIndex: 'code'
+      // },
       {
         title: this.$t('form.name'),
         dataIndex: 'name'

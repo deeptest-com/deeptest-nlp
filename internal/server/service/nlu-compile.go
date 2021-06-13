@@ -109,7 +109,7 @@ func (s *NluCompileService) convertSynonym(projectId uint, projectDir string, nl
 
 		nluSynonym := domain.NluSynonym{Version: serverConst.NluVersion}
 		synonymDef := domain.NluSynonymDef{Synonym: fmt.Sprintf("%s_%s",
-			synonym.Code, serverConst.SlotTypeAbbrMap["synonym"])}
+			synonym.Name, serverConst.SlotTypeAbbrMap["synonym"])}
 
 		synonymItems := s.NluSynonymItemRepo.ListBySynonymId(synonym.ID)
 		for _, item := range synonymItems {
@@ -118,7 +118,7 @@ func (s *NluCompileService) convertSynonym(projectId uint, projectDir string, nl
 		nluSynonym.SynonymDef = append(nluSynonym.SynonymDef, synonymDef)
 
 		yamlContent := changeArrToFlow(nluSynonym)
-		filePath := filepath.Join(projectDir, "data", "synonym", synonym.Code+".yml")
+		filePath := filepath.Join(projectDir, "data", "synonym", synonym.Name+".yml")
 		_fileUtils.WriteFile(filePath, yamlContent)
 	}
 
@@ -133,7 +133,7 @@ func (s *NluCompileService) convertLookup(projectId uint, projectDir string, nlu
 
 		nluLookup := domain.NluLookup{Version: serverConst.NluVersion}
 		lookupItem := domain.NluLookupItem{Lookup: fmt.Sprintf("%s_%s",
-			lookup.Code, serverConst.SlotTypeAbbrMap["lookup"])}
+			lookup.Name, serverConst.SlotTypeAbbrMap["lookup"])}
 
 		lookupItems := s.NluLookupItemRepo.ListByLookupId(lookup.ID)
 		for _, item := range lookupItems {
@@ -142,7 +142,7 @@ func (s *NluCompileService) convertLookup(projectId uint, projectDir string, nlu
 		nluLookup.Items = append(nluLookup.Items, lookupItem)
 
 		yamlContent := changeArrToFlow(nluLookup)
-		filePath := filepath.Join(projectDir, "data", "lookup", lookup.Code+".yml")
+		filePath := filepath.Join(projectDir, "data", "lookup", lookup.Name+".yml")
 		_fileUtils.WriteFile(filePath, yamlContent)
 	}
 
@@ -157,7 +157,7 @@ func (s *NluCompileService) convertRegex(projectId uint, projectDir string, nluD
 
 		nluRegex := domain.NluRegex{Version: serverConst.NluVersion}
 		regexItem := domain.NluRegexItem{Regex: fmt.Sprintf("%s_%s",
-			regex.Code, serverConst.SlotTypeAbbrMap["regex"])}
+			regex.Name, serverConst.SlotTypeAbbrMap["regex"])}
 
 		regexItems := s.NluRegexItemRepo.ListByRegexId(regex.ID)
 		for _, item := range regexItems {
@@ -166,7 +166,7 @@ func (s *NluCompileService) convertRegex(projectId uint, projectDir string, nluD
 		nluRegex.Items = append(nluRegex.Items, regexItem)
 
 		yamlContent := changeArrToFlow(nluRegex)
-		filePath := filepath.Join(projectDir, "data", "regex", regex.Code+".yml")
+		filePath := filepath.Join(projectDir, "data", "regex", regex.Name+".yml")
 		_fileUtils.WriteFile(filePath, yamlContent)
 	}
 
@@ -196,18 +196,18 @@ func (s *NluCompileService) getSlotTypeAndVal(tp string, val string) (ret map[st
 
 	if tp == string(serverConst.Synonym) {
 		entity := s.NluSynonymRepo.Get(uint(id))
-		ret["code"] = entity.Code
-		ret["name"] = entity.Code
+		ret["code"] = entity.Name
+		ret["name"] = entity.Name
 
 	} else if tp == string(serverConst.Lookup) {
 		entity := s.NluLookupRepo.Get(uint(id))
-		ret["code"] = entity.Code
-		ret["name"] = entity.Code
+		ret["code"] = entity.Name
+		ret["name"] = entity.Name
 
 	} else if tp == string(serverConst.Regex) {
 		entity := s.NluRegexRepo.Get(uint(id))
-		ret["code"] = entity.Code
-		ret["name"] = entity.Code
+		ret["code"] = entity.Name
+		ret["name"] = entity.Name
 	} else if tp == string(serverConst.Slot) {
 		ret["code"] = val
 		ret["name"] = val

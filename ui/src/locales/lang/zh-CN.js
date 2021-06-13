@@ -123,10 +123,11 @@ const locale = {
   'valid.required.name': '请输入名称',
   'valid.required.project': '请选择项目',
   'valid.required.path': '请输入路径',
-  'valid.project.path': '不是一个合法的项目路径',
   'valid.required.content': '请输入内容',
   'valid.select.dict': '请选择词典。',
   'valid.slot.type': '请选择类型。',
+  'valid.project.path': '不是一个合法的项目路径',
+  'valid.dict.code.unique': '编码必须唯一',
 
   'common.status': '状态',
   'common.info': '消息',

@@ -156,4 +156,5 @@ type ValidMethod string
 
 const (
 	ValidProjectPath ValidMethod = "validProjectPath"
+	ValidDictName    ValidMethod = "validDictName"
 )

@@ -124,9 +124,10 @@ const locale = {
   'valid.required.project': 'Please select project.',
   'valid.required.content': 'Please input content.',
   'valid.required.path': 'Path not exist.',
-  'valid.project.path': 'Not a valid project path.',
   'valid.select.dict': 'Please select dictionary.',
   'valid.slot.type': 'Please select the type.',
+  'valid.project.path': 'Not a valid project path.',
+  'valid.dict.code.unique': 'Code must be unique.',
 
   'common.status': '状态',
   'common.login': 'Login',

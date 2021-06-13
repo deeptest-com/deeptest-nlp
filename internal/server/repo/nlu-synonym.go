@@ -4,6 +4,7 @@ import (
 	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
 	"github.com/utlai/utl/internal/server/model"
 	"gorm.io/gorm"
+	"strings"
 	"time"
 )
 
@@ -62,13 +63,19 @@ func (r *NluSynonymRepo) Get(id uint) (po model.NluSynonym) {
 	r.DB.Where("id = ?", id).First(&po)
 	return
 }
+func (r *NluSynonymRepo) GetByName(code string) (po model.NluSynonym) {
+	r.DB.Where("name = ?", code).First(&po)
+	return
+}
 
 func (r *NluSynonymRepo) Save(po *model.NluSynonym) (err error) {
+	po.Name = strings.TrimSpace(po.Name)
 	err = r.DB.Model(&po).Omit("").Create(&po).Error
 	return
 }
 
 func (r *NluSynonymRepo) Update(po *model.NluSynonym) (err error) {
+	po.Name = strings.TrimSpace(po.Name)
 	err = r.DB.Omit("").Save(&po).Error
 	return
 }

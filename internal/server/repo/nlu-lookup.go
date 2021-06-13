@@ -4,6 +4,7 @@ import (
 	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
 	"github.com/utlai/utl/internal/server/model"
 	"gorm.io/gorm"
+	"strings"
 	"time"
 )
 
@@ -63,13 +64,19 @@ func (r *NluLookupRepo) Get(id uint) (po model.NluLookup) {
 	r.DB.Where("id = ?", id).First(&po)
 	return
 }
+func (r *NluLookupRepo) GetByName(code string) (po model.NluLookup) {
+	r.DB.Where("name = ?", code).First(&po)
+	return
+}
 
 func (r *NluLookupRepo) Save(po *model.NluLookup) (err error) {
+	po.Name = strings.TrimSpace(po.Name)
 	err = r.DB.Model(&po).Omit("").Create(&po).Error
 	return
 }
 
 func (r *NluLookupRepo) Update(po *model.NluLookup) (err error) {
+	po.Name = strings.TrimSpace(po.Name)
 	err = r.DB.Omit("").Save(&po).Error
 	return
 }
