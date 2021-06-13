@@ -51,7 +51,8 @@ func (s *NluParseService) Parse(projectId int, req domain.NluReq) (ret domain.Nl
 	}
 
 	regexMap := s.GetRuleRegex(uint(projectId))
-	req.Text = s.ReplaceWithRegex(req.Text, regexMap)
+	originMap := map[int]string{}
+	req.Text, originMap = s.ReplaceWithRegex(req.Text, regexMap)
 
 	url := fmt.Sprintf("http://127.0.0.1:%d/%s", port, "model/parse")
 	resp, success := _httpUtils.PostRasa(url, req)
@@ -61,16 +62,43 @@ func (s *NluParseService) Parse(projectId int, req domain.NluReq) (ret domain.Nl
 		return
 	}
 
+	rasaResp := resp.Payload.(domain.RasaResp)
+	for key, oldVal := range originMap {
+		rasaResp.Entities[key].Value = oldVal
+	}
+
 	ret.Result = resp.Payload
 	ret.Code = 1
 
 	return
 }
 
-func (s *NluParseService) ReplaceWithRegex(sent string, regexMap []map[string]map[int][]string) (ret string) {
+func (s *NluParseService) ReplaceWithRegex(sent string, regexMap []map[string]map[int][]string) (
+	ret string, originMap map[int]string) {
+	originMap = map[int]string{}
+
 	for _, item := range regexMap {
 		for regex, slotMap := range item {
 			_logUtils.Infof("%s, %v", regex, slotMap)
+
+			re := regexp.MustCompile(regex)
+			items := re.FindAllStringSubmatch(sent, -1)
+
+			if len(items) > 0 {
+				for index, item := range items[0] {
+					if index == 0 {
+						continue
+					}
+
+					strs, ok := slotMap[index-1]
+					if ok {
+						ret += strs[0]
+						originMap[index-1] = item
+					} else {
+						ret += item
+					}
+				}
+			}
 		}
 	}
 
