@@ -51,6 +51,7 @@ copy_files:
 	@for subdir in `ls ${BIN_OUT}`; \
 		do cp -r utl.db "${BIN_OUT}$${subdir}/utl-server"; done
 
+	@rm -rf project/demo/models*
 	@for subdir in `ls ${BIN_OUT}`; \
 		do cp -r project "${BIN_OUT}$${subdir}/utl-server"; done
 
