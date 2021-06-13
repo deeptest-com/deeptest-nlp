@@ -56,6 +56,9 @@ import { baseMixin } from '@/store/app-mixin'
 import ChatMessage from './component/Message'
 import { nluRequest } from '@/api/manage'
 
+import storage from 'store'
+import { TEST_HISTORIES } from '@/utils/const'
+
 export default {
   name: 'ProjectEdit',
   components: {
@@ -76,7 +79,6 @@ export default {
       model: {},
       question: '',
       messages: [],
-      histories: [],
       historyIndex: 0,
 
       viewMode: '',
@@ -135,8 +137,11 @@ export default {
     send () {
       console.log('send', this.question)
 
-      this.histories.push(this.question)
-      this.historyIndex = this.histories.length
+      const histories = storage.get(TEST_HISTORIES, [])
+      histories.push(this.question)
+      storage.set(TEST_HISTORIES, histories)
+
+      this.historyIndex = histories.length
       this.messages.push({ type: 'question', content: this.question })
 
       nluRequest(this.id, this.question).then(json => {
@@ -175,12 +180,16 @@ export default {
     up () {
       console.log('up')
       if (this.historyIndex > 0) this.historyIndex--
-      this.question = this.histories[this.historyIndex]
+
+      const histories = storage.get(TEST_HISTORIES, [])
+      this.question = histories[this.historyIndex]
     },
     down () {
       console.log('down')
       if (this.historyIndex < this.histories.length - 1) this.historyIndex++
-      this.question = this.histories[this.historyIndex]
+
+      const histories = storage.get(TEST_HISTORIES, [])
+      this.question = histories[this.historyIndex]
     },
     scroll () {
       setTimeout(() => {

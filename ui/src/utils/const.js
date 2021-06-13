@@ -1,4 +1,6 @@
 
+const TEST_HISTORIES = 'Test-Histories'
+
 const labelCol = { lg: { span: 7 }, sm: { span: 7 } }
 const wrapperCol = { lg: { span: 10 }, sm: { span: 17 } }
 const wrapperFull = { span: 24 }
@@ -19,4 +21,4 @@ const noLabel = { offset: 4 }
 
 export { labelCol, wrapperCol, wrapperFull, labelColLarge, wrapperColLarge,
     colsFull, colsHalf, labelColFull, wrapperColFull, labelColHalf, labelColHalf2, wrapperColHalf,
-    noLabel }
+    noLabel, TEST_HISTORIES }
