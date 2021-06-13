@@ -33,6 +33,7 @@
           <div class="left">
             <a-input
               v-model="question"
+              ref="question"
               @keydown.down="down"
               @keydown.up="up"
               @keyup.enter="send"
@@ -58,6 +59,7 @@ import { nluRequest } from '@/api/manage'
 
 import storage from 'store'
 import { TEST_HISTORIES } from '@/utils/const'
+import { setSelectionRange } from '@/utils/domUtil'
 
 export default {
   name: 'ProjectEdit',
@@ -186,12 +188,14 @@ export default {
       if (this.historyIndex > 0) this.historyIndex--
 
       this.question = this.histories[this.historyIndex]
+      setSelectionRange(this.$refs.question.$el, this.question.length)
     },
     down () {
       console.log('down')
       if (this.historyIndex < this.histories.length - 1) this.historyIndex++
 
       this.question = this.histories[this.historyIndex]
+      setSelectionRange(this.$refs.question.$el, this.question.length)
     },
     scroll () {
       setTimeout(() => {
