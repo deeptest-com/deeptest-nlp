@@ -4,6 +4,7 @@ import (
 	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
 	"github.com/utlai/utl/internal/server/model"
 	"gorm.io/gorm"
+	"strings"
 	"time"
 )
 
@@ -69,6 +70,8 @@ func (r *NluSentRepo) GetWithSlots(id uint) (po model.NluSent) {
 }
 
 func (r *NluSentRepo) Save(po *model.NluSent) (err error) {
+	po.Html = strings.TrimSpace(po.Html)
+
 	err = r.DB.Omit("Slots").Create(&po).Error
 
 	for i := 0; i < len(po.Slots); i++ {
@@ -80,6 +83,8 @@ func (r *NluSentRepo) Save(po *model.NluSent) (err error) {
 }
 
 func (r *NluSentRepo) Update(po *model.NluSent) (err error) {
+	po.Html = strings.TrimSpace(po.Html)
+
 	err = r.DB.Omit("Slots").Updates(&po).Error
 
 	for i := 0; i < len(po.Slots); i++ {

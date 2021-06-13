@@ -8,14 +8,14 @@ responses:
 intents:
 - 打印日志
 entities:
-- print
-- loglevel
+- 打印
+- 日志级别
 - content
 slots:
-  print:
+  打印:
     type: unfeaturized
     influence_conversation: false
-  loglevel:
+  日志级别:
     type: unfeaturized
     influence_conversation: false
   content:
