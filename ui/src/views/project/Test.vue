@@ -79,6 +79,7 @@ export default {
       model: {},
       question: '',
       messages: [],
+      histories: [],
       historyIndex: 0,
 
       viewMode: '',
@@ -103,6 +104,9 @@ export default {
     this.loadData()
   },
   created () {
+    this.histories = storage.get(TEST_HISTORIES, [])
+    this.historyIndex = this.histories.length
+
     this.statusMap = {
       true: {
         type: 'processing',
@@ -137,11 +141,11 @@ export default {
     send () {
       console.log('send', this.question)
 
-      const histories = storage.get(TEST_HISTORIES, [])
-      histories.push(this.question)
-      storage.set(TEST_HISTORIES, histories)
+      this.histories.push(this.question)
+      if (this.histories.length > 30) this.histories = this.histories.slice(this.histories.length - 30)
+      storage.set(TEST_HISTORIES, this.histories)
 
-      this.historyIndex = histories.length
+      this.historyIndex = this.histories.length
       this.messages.push({ type: 'question', content: this.question })
 
       nluRequest(this.id, this.question).then(json => {
@@ -181,15 +185,13 @@ export default {
       console.log('up')
       if (this.historyIndex > 0) this.historyIndex--
 
-      const histories = storage.get(TEST_HISTORIES, [])
-      this.question = histories[this.historyIndex]
+      this.question = this.histories[this.historyIndex]
     },
     down () {
       console.log('down')
       if (this.historyIndex < this.histories.length - 1) this.historyIndex++
 
-      const histories = storage.get(TEST_HISTORIES, [])
-      this.question = histories[this.historyIndex]
+      this.question = this.histories[this.historyIndex]
     },
     scroll () {
       setTimeout(() => {
