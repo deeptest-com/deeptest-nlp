@@ -51,7 +51,8 @@ func (s *NluParseService) Parse(projectId int, req domain.NluReq) (ret domain.Nl
 	}
 
 	regexMap := s.GetRuleRegex(uint(projectId))
-	originMap := map[int]string{}
+	originMap := map[string]string{}
+	req.TextOrigin = req.Text
 	req.Text, originMap = s.ReplaceWithRegex(req.Text, regexMap)
 
 	url := fmt.Sprintf("http://127.0.0.1:%d/%s", port, "model/parse")
@@ -63,19 +64,23 @@ func (s *NluParseService) Parse(projectId int, req domain.NluReq) (ret domain.Nl
 	}
 
 	rasaResp := resp.Payload.(domain.RasaResp)
-	for key, oldVal := range originMap {
-		rasaResp.Entities[key].Value = oldVal
+	rasaResp.Text = req.TextOrigin
+	for index, entity := range rasaResp.Entities {
+		str, ok := originMap[entity.Entity]
+		if ok {
+			rasaResp.Entities[index].Value = str
+		}
 	}
 
-	ret.Result = resp.Payload
+	ret.Result = rasaResp
 	ret.Code = 1
 
 	return
 }
 
 func (s *NluParseService) ReplaceWithRegex(sent string, regexMap []map[string]map[int][]string) (
-	ret string, originMap map[int]string) {
-	originMap = map[int]string{}
+	ret string, originMap map[string]string) {
+	originMap = map[string]string{}
 
 	for _, item := range regexMap {
 		for regex, slotMap := range item {
@@ -93,7 +98,7 @@ func (s *NluParseService) ReplaceWithRegex(sent string, regexMap []map[string]ma
 					strs, ok := slotMap[index-1]
 					if ok {
 						ret += strs[0]
-						originMap[index-1] = item
+						originMap[strs[1]] = item
 					} else {
 						ret += item
 					}
@@ -168,9 +173,9 @@ func (s *NluParseService) GenRegexStr(ruleText string) (regex string, slotMap ma
 			for _, i := range dictItems {
 				list = append(list, i.Content)
 			}
-		} else if tag == "_" {
+		} else {
 			list = append(list, ".*")
-			slotMap[index] = []string{text}
+			slotMap[index] = []string{text, tag}
 		}
 
 		regex += "(" + strings.Join(list, "|") + ")"

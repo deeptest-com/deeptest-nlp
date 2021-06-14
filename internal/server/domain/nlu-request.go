@@ -3,7 +3,8 @@ package domain
 import "encoding/json"
 
 type NluReq struct {
-	Text string `json:"text"`
+	Text       string `json:"text"`
+	TextOrigin string `json:"textOrigin"`
 }
 
 type NluResp struct {

@@ -92,6 +92,7 @@ const locale = {
   'form.no': 'NO',
   'form.code': 'Code',
   'form.name': 'Name',
+  'form.placeholder': 'Placeholder',
   'form.path': 'Path',
   'form.content': 'Content',
   'form.status': 'Status',

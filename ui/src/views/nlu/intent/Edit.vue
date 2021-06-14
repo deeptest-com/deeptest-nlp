@@ -173,11 +173,16 @@
       @ok="() => addRuleSection()"
     >
       <a-form-model ref="form" :model="ruleSection" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
-        {{ ruleSection.slotType }}
-        <a-form-model-item prop="value" v-if="ruleSection.type === '_slot_'" :label="$t('form.slot')">
-          <a-input v-model="ruleSection.value" />
-        </a-form-model-item>
-        <a-form-model-item prop="value" v-if="ruleSection.type !== '_slot_'" :label="$t('form.synonym')">
+        <template v-if="ruleSection.type === '_slot_'">
+          <a-form-model-item prop="value" :label="$t('form.name')">
+            <a-input v-model="ruleSection.value" />
+          </a-form-model-item>
+          <a-form-model-item prop="value" :label="$t('form.placeholder')">
+            <a-input v-model="ruleSection.placeholder" />
+          </a-form-model-item>
+        </template>
+
+        <a-form-model-item prop="value" v-if="ruleSection.type !== '_slot_'" :label="$t('form.name')">
           <a-select v-model="ruleSection.value">
             <a-select-option v-for="(item, index) in dicts" :key="index" :value="item.name">
               {{ item.name }}
@@ -370,7 +375,7 @@ export default {
     addRuleSection () {
       console.log('addRuleSection')
 
-      let val = this.ruleSection.value + ':' + this.ruleSection.type.substring(0, 1).toUpperCase()
+      let val = this.ruleSection.value + ':' + this.ruleSection.placeholder
       if (this.ruleSection.type === '_slot_') {
         val = '(' + val + ')'
       } else {

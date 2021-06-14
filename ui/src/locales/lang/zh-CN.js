@@ -93,6 +93,7 @@ const locale = {
   'form.no': '序号',
   'form.code': '编码',
   'form.name': '名称',
+  'form.placeholder': '占位符',
   'form.path': '路径',
   'form.content': '内容',
   'form.status': '状态',
