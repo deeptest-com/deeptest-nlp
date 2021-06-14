@@ -1,7 +1,5 @@
 package domain
 
-import "encoding/json"
-
 type NluReq struct {
 	Text       string `json:"text"`
 	TextOrigin string `json:"textOrigin"`
@@ -53,7 +51,9 @@ type RasaResp struct {
 	TextOrigin string `json:"textOrigin"`
 }
 
-func (resp *NluResp) SetResult(msg map[string]string) {
-	bytes, _ := json.Marshal(msg)
-	resp.Result = string(bytes)
+func (resp *NluResp) SetResult(result interface{}) {
+	//bytes, _ := json.Marshal(msg)
+	//resp.Result = string(bytes)
+
+	resp.Result = result
 }

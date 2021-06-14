@@ -79,7 +79,7 @@ func (s *NluTrainingService) ExecTraining(project model.Project) {
 	_shellUtils.KillProcess(pName)
 
 	// stop service
-	s.NluServiceService.Stop(project)
+	//s.NluServiceService.Stop(project)
 
 	// rm models
 	cmdStr := "rm -rf models_*"

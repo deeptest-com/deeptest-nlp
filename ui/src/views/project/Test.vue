@@ -129,6 +129,7 @@ export default {
       const key = data.key
 
       console.log('view', mode, key)
+
       if (mode === 'result') {
         this.viewMode = 'result'
       } else if (mode === 'json') {
@@ -154,6 +155,7 @@ export default {
         console.log('nluRequest', json)
         const data = json.data
 
+        const key = new Date().getTime()
         if (data.code === 1) { // success
           const msg = data.result.intent.name
 
@@ -173,14 +175,18 @@ export default {
           detailResult += '\n' + this.$t('common.nlu.confidence') + ': ' + (data.result.intent.confidence * 100) + '%'
           detailResult += '\n' + this.$t('common.nlu.slots') + ': ' + slots.length + '\n' + slots.join('\n')
 
-          const key = new Date().getTime() + data.result.intent.id
           this.answerMap[key] = { detail: detailResult, json: JSON.stringify(data.result, null, 3) }
           this.detailResult = this.answerMap[key].detail
           this.jsonResult = this.answerMap[key].json
 
           this.messages.push({ key: key, type: 'answer', content: msg })
         } else {
-          this.messages.push({ type: 'pardon' })
+          const msg = this.$t('msg.' + data.result.i118, { 'content': data.result.content })
+          this.answerMap[key] = { detail: msg, json: data.result }
+          this.detailResult = this.answerMap[key].detail
+          this.jsonResult = this.answerMap[key].json
+
+          this.messages.push({ key: key, type: 'pardon' })
         }
 
         this.question = ''
@@ -255,6 +261,13 @@ export default {
       flex: 1;
       padding: 10px 20px;
       border-left: 1px solid #e8e8e8;
+
+      .result {
+        height: 100%;
+        pre {
+          height: 100%;
+        }
+      }
     }
   }
 

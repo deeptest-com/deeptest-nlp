@@ -165,6 +165,8 @@ const locale = {
   'msg.training.start': 'Training started.',
   'msg.service.start': 'Service started.',
   'msg.service.stop': 'Service stopped.',
+  'msg.service.not.start': 'Service not started',
+  'msg.rasa.request.failed': 'Rasa request failed, response %s.',
 
   'msg.testing.welcome': 'Can I help you?',
   'msg.testing.pardon': 'Could you please say it again?',

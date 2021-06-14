@@ -45,7 +45,8 @@ func (s *NluParseService) Parse(projectId int, req domain.NluReq) (ret domain.Nl
 	port := project.ServicePort
 
 	if serviceStatus != serverConst.StartService {
-		msg["msg"] = "service not started"
+		msg["i118"] = "service.not.start"
+		msg["content"] = ""
 		ret.SetResult(msg)
 		return
 	}
@@ -58,7 +59,8 @@ func (s *NluParseService) Parse(projectId int, req domain.NluReq) (ret domain.Nl
 	url := fmt.Sprintf("http://127.0.0.1:%d/%s", port, "model/parse")
 	resp, success := _httpUtils.PostRasa(url, req)
 	if !success {
-		msg["msg"] = fmt.Sprintf("rasa request failed, response %v", resp)
+		msg["i118"] = "rasa.request.failed"
+		msg["content"] = fmt.Sprintf("%#v", resp)
 		ret.SetResult(msg)
 		return
 	}
@@ -72,7 +74,7 @@ func (s *NluParseService) Parse(projectId int, req domain.NluReq) (ret domain.Nl
 		}
 	}
 
-	ret.Result = rasaResp
+	ret.SetResult(rasaResp)
 	ret.Code = 1
 
 	return

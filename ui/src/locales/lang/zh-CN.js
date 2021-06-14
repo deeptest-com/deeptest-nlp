@@ -163,6 +163,8 @@ const locale = {
   'msg.training.start': '成功发起训练。',
   'msg.service.start': '成功启动服务。',
   'msg.service.stop': '成功停止服务。',
+  'msg.service.not.start': '服务未启动',
+  'msg.rasa.request.failed': 'Rasa请求失败，响应{content}。',
 
   'msg.testing.welcome': '请问有什么可以帮您？',
   'msg.testing.pardon': '我听不懂您说了什么，请再说一遍。',
