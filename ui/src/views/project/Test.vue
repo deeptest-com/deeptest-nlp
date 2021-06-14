@@ -268,6 +268,12 @@ export default {
           height: 100%;
         }
       }
+      .json {
+        height: 100%;
+        pre {
+          height: 100%;
+        }
+      }
     }
   }
 
