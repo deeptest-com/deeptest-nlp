@@ -64,11 +64,11 @@ func (s *NluParseService) Parse(projectId int, req domain.NluReq) (ret domain.Nl
 	}
 
 	rasaResp := resp.Payload.(domain.RasaResp)
-	rasaResp.Text = req.TextOrigin
+	rasaResp.TextOrigin = req.TextOrigin
 	for index, entity := range rasaResp.Entities {
 		str, ok := originMap[entity.Entity]
 		if ok {
-			rasaResp.Entities[index].Value = str
+			rasaResp.Entities[index].ValueOrigin = str
 		}
 	}
 

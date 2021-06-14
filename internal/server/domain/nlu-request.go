@@ -22,6 +22,7 @@ type RasaResp struct {
 		Processors       []string `json:"processors"`
 		Start            int64    `json:"start"`
 		Value            string   `json:"value"`
+		ValueOrigin      string   `json:"valueOrigin"`
 	} `json:"entities"`
 	Intent struct {
 		Confidence float32 `json:"confidence"`
@@ -48,7 +49,8 @@ type RasaResp struct {
 			} `json:"response"`
 		} `json:"default"`
 	} `json:"response_selector"`
-	Text string `json:"text"`
+	Text       string `json:"text"`
+	TextOrigin string `json:"textOrigin"`
 }
 
 func (resp *NluResp) SetResult(msg map[string]string) {

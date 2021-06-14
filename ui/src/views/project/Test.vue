@@ -161,8 +161,8 @@ export default {
           data.result.entities.forEach((item, index) => {
             const name = item.entity
 
-            let value = item.value
-            if (value.indexOf('_syn') > -1 || value.indexOf('_lkp') > -1 || value.indexOf('_rgx') > -1) {
+            let value = item.valueOrigin
+            if (value === '') {
               value = data.result.text.substr(item.start, item.end - item.start)
             }
 
