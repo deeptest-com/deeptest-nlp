@@ -1,7 +1,5 @@
 version: "2.0"
-
 nlu:
-
-- regex: rgx_xpath
+- regex: xpath_rgx
   examples: |
-    - \d{3}
+    - //.*

@@ -52,6 +52,7 @@
             </div>
           </div>
         </div>
+
         <div class="sent-list">
           <div class="sent-title">
             {{ $t('form.list') }}
@@ -410,17 +411,19 @@ export default {
     },
 
     textSelected (event) {
+      console.log('==== textSelected')
       const mp = convertSelectedToSlots(event.target, document.getElementById('editor'))
+
       if (!mp.allSlots) return
-      // if (!mp.selectedIndex) return
+
       mp.allSlots.forEach((item, index) => {
-        console.log('=' + index + '=', index, item)
+        console.log('--' + index + '--', item)
       })
 
       this.allSlots = mp.allSlots
       this.selectedIndex = mp.selectedIndex
       this.selectedSlot = this.allSlots[this.selectedIndex]
-      console.log('=curr=', this.selectedSlot)
+      console.log('--curr--', this.selectedSlot)
 
       const dataType = this.selectedSlot.getAttribute('data-type')
       let dataValue = this.selectedSlot.getAttribute('data-value')

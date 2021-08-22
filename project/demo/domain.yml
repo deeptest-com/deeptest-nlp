@@ -7,10 +7,24 @@ responses:
   - text: fine
 intents:
 - 打印日志
+- 断言
+- 导航
+- 加载
+- 操作
+- Cookie设置
+- Cookie获取
 entities:
 - 打印
 - 日志级别
 - content
+- 断言
+- 浏览操作
+- 页面访问
+- 网址
+- 弹窗处理
+- 变量存取
+- name
+- var
 slots:
   打印:
     type: unfeaturized
@@ -19,5 +33,29 @@ slots:
     type: unfeaturized
     influence_conversation: false
   content:
+    type: unfeaturized
+    influence_conversation: false
+  断言:
+    type: unfeaturized
+    influence_conversation: false
+  浏览操作:
+    type: unfeaturized
+    influence_conversation: false
+  页面访问:
+    type: unfeaturized
+    influence_conversation: false
+  网址:
+    type: unfeaturized
+    influence_conversation: false
+  弹窗处理:
+    type: unfeaturized
+    influence_conversation: false
+  变量存取:
+    type: unfeaturized
+    influence_conversation: false
+  name:
+    type: unfeaturized
+    influence_conversation: false
+  var:
     type: unfeaturized
     influence_conversation: false

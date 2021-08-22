@@ -1,0 +1,10 @@
+version: ""
+nlu:
+- intent: 加载
+  examples: |
+    - [加载]{"entity":"页面访问", "value":"页面访问_lkp"}[网址](content)
+    - [打开]{"entity":"页面访问", "value":"页面访问_lkp"}[网址](网址)
+    - [访问]{"entity":"页面访问", "value":"页面访问_lkp"}[网址](content)
+    - [加载]{"entity":"页面访问", "value":"页面访问_lkp"}页面[网址](content)
+    - [打开]{"entity":"页面访问", "value":"页面访问_lkp"}页面[网址](content)
+    - [访问]{"entity":"页面访问", "value":"页面访问_lkp"}页面[网址](content)

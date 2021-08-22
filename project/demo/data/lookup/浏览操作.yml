@@ -1,0 +1,9 @@
+version: "2.0"
+nlu:
+- lookup: 浏览操作_lkp
+  examples: |
+    - 刷新
+    - 重载
+    - 前进
+    - 后退
+    - 返回

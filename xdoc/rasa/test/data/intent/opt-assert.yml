@@ -4,5 +4,5 @@ nlu:
 
 - intent: opt_assert
   examples: | # with regex
-    - [断言]{"entity":"assert", "value":"syn_assert"}[true](expr)
-    - [断言]{"entity":"assert", "value":"syn_assert"}表达式[#](expr)
+    - [断言]{"entity":"assert", "value":"syn_assert"}[内容](expr)
+    - [断言]{"entity":"assert", "value":"syn_assert"}表达式[内容](expr)

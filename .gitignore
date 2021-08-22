@@ -9,7 +9,6 @@
 /rasa/temp/
 /rasa/spacy/models/*.gz
 /rasa/spacy/res/*.gz
-/project/demo/data/
 /log/
 /res/server/*.yml
 /res/server/*.conf
@@ -17,4 +16,5 @@
 access.log
 /project/*/models/
 /project/*/models_*/
-/project/*/nohup.out
+/project/*/nohup.*
+/project/*/*.log

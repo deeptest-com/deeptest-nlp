@@ -1,0 +1,10 @@
+version: "2.0"
+nlu:
+- lookup: 浏览器类型_lkp
+  examples: |
+    - Chrome
+    - Firefox
+    - 火狐
+    - Edge
+    - IE
+    - Safari

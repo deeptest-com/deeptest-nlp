@@ -18,7 +18,7 @@ func NewNluRegexItemRepo() *NluRegexItemRepo {
 
 func (r *NluRegexItemRepo) Query(regexId int, keywords, status string, pageNo int, pageSize int) (pos []model.NluRegexItem, total int64) {
 	query := r.DB.Select("*").Order("id ASC")
-	query = query.Where("regex_id = ?", regexId)
+	query = query.Where("regex_id = ?", regexId).Where("NOT deleted")
 
 	if status == "true" {
 		query = query.Where("NOT disabled")
@@ -32,13 +32,13 @@ func (r *NluRegexItemRepo) Query(regexId int, keywords, status string, pageNo in
 	if pageNo > 0 {
 		query = query.Offset((pageNo - 1) * pageSize).Limit(pageSize)
 	}
-	query = query.Where("NOT deleted")
 
 	err := query.Find(&pos).Error
 	if err != nil {
 		_logUtils.Errorf("sql error %s", err.Error())
 	}
-	err = r.DB.Model(&model.NluRegexItem{}).Count(&total).Error
+
+	err = query.Count(&total).Error
 	if err != nil {
 		_logUtils.Errorf("sql error %s", err.Error())
 	}

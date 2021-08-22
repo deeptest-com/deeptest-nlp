@@ -9,7 +9,7 @@
 
     <a-card :body-style="{padding: '24px 32px'}" :bordered="false">
       <a-form-model ref="form" :model="model" :rules="rules">
-<!--        <a-form-model-item
+      <!-- <a-form-model-item
           :label="$t('form.code')"
           prop="code"
           :labelCol="labelCol"
@@ -59,6 +59,10 @@ export default {
   data () {
     let checkPending
     const checkName = (rule, value, callback) => {
+      if (this.model.id) {
+        callback()
+      }
+
       clearTimeout(checkPending)
       checkPending = setTimeout(() => {
         validDictName(value, this.model.id, 'lookup').then(json => {

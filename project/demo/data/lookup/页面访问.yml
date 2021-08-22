@@ -1,0 +1,7 @@
+version: "2.0"
+nlu:
+- lookup: 页面访问_lkp
+  examples: |
+    - 加载
+    - 访问
+    - 打开

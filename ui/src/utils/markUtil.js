@@ -1,4 +1,6 @@
 export const convertSelectedToSlots = function (target, editor) {
+  console.log('convertSelectedToSlots')
+
   const allSlots = []
   let selectedIndex = 0
 
@@ -24,12 +26,12 @@ export const convertSelectedToSlots = function (target, editor) {
     const item1 = getParentSpanNodeIfNeeded(editor.childNodes[i])
 
     if (item1 === startContainer) {
-      console.log('start')
       start = i
+      console.log('start', start)
     }
     if (item1 === endContainer) {
-      console.log('end')
       end = i
+      console.log('end', end)
     }
   }
 
@@ -40,10 +42,10 @@ export const convertSelectedToSlots = function (target, editor) {
   for (let j = 0; j < editor.childNodes.length; j++) {
     const item2 = getParentSpanNodeIfNeeded(editor.childNodes[j])
 
-    if (j < start || j > end) {
+    if (j < start || j > end) { // selected child is on the left or right
       const span1 = textToSpan(item2)
       allSlots.push(span1)
-    } else if (j === start) {
+    } else if (j === start) { //  selected child is current one
       const startLeft1 = range.startOffset
       const startRight1 = isSame ? range.endOffset : startContainer.textContent.length
       const leftSection1 = startText.substr(0, startLeft1)
@@ -56,13 +58,14 @@ export const convertSelectedToSlots = function (target, editor) {
       }
       // put part2 to cache
       if (isSame) {
-        selectedText += startText.substr(startLeft1, startRight1 - startLeft1)
+        selectedText += rightSection1
         const span3 = genSpan(selectedText, item2)
         allSlots.push(span3)
         selectedIndex = allSlots.length - 1
 
-        if (startRight1.length > 0) {
-          const span4 = genSpan(startText.substr(startRight1), item2)
+        const leftContent = startText.substr(startRight1) // 右侧剩余的字符
+        if (leftContent.length > 0) {
+          const span4 = genSpan(leftContent, item2)
           allSlots.push(span4)
         }
       } else {

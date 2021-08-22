@@ -44,7 +44,8 @@ func (r *NluTaskRepo) Query(projectId int, keywords, status string, pageNo int, 
 	if err != nil {
 		_logUtils.Errorf("sql error %s", err.Error())
 	}
-	err = r.DB.Model(&model.NluTask{}).Count(&total).Error
+
+	err = r.DB.Raw(sql).Count(&total).Error
 	if err != nil {
 		_logUtils.Errorf("sql error %s", err.Error())
 	}

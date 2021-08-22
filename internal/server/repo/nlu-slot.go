@@ -17,7 +17,7 @@ func NewNluSlotRepo() *NluSlotRepo {
 }
 
 func (r *NluSlotRepo) Query(keywords, status string, pageNo int, pageSize int) (pos []model.NluSlot, total int64) {
-	query := r.DB.Select("*").Order("id ASC")
+	query := r.DB.Select("*").Where("NOT deleted").Order("id ASC")
 	if status == "true" {
 		query = query.Where("NOT disabled")
 	} else if status == "false" {
@@ -30,13 +30,13 @@ func (r *NluSlotRepo) Query(keywords, status string, pageNo int, pageSize int) (
 	if pageNo > 0 {
 		query = query.Offset((pageNo - 1) * pageSize).Limit(pageSize)
 	}
-	query = query.Where("NOT deleted")
 
 	err := query.Find(&pos).Error
 	if err != nil {
 		_logUtils.Errorf("sql error %s", err.Error())
 	}
-	err = r.DB.Model(&model.NluSlot{}).Count(&total).Error
+
+	err = query.Count(&total).Error
 	if err != nil {
 		_logUtils.Errorf("sql error %s", err.Error())
 	}

@@ -59,6 +59,10 @@ export default {
   data () {
     let checkPending
     const checkName = (rule, value, callback) => {
+      if (this.model.id) {
+        callback()
+      }
+
       clearTimeout(checkPending)
       checkPending = setTimeout(() => {
         validDictName(value, this.model.id, 'regex').then(json => {

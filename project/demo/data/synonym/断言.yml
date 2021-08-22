@@ -1,0 +1,8 @@
+version: "2.0"
+nlu:
+- synonym: 断言_syn
+  examples: |
+    - 断言
+    - 判断
+    - 检查
+    - 验证
