@@ -32,11 +32,6 @@ intents:
 - 悬停
 - 拖拽
 - 新意图
-- 新意图
-- 新意图
-- 新意图
-- 新意图
-- 新意图
 entities:
 - 打印
 - 日志级别
@@ -45,7 +40,7 @@ entities:
 - 浏览操作
 - 页面访问
 - 弹窗处理
-- 变量存储
+- 赋值
 - name
 - 取值
 - variable
@@ -57,7 +52,6 @@ entities:
 - 继续
 - 等待
 - 时间单位
-- 赋值
 - element
 - property
 - 点击
@@ -90,7 +84,7 @@ slots:
   弹窗处理:
     type: unfeaturized
     influence_conversation: false
-  变量存储:
+  赋值:
     type: unfeaturized
     influence_conversation: false
   name:
@@ -124,9 +118,6 @@ slots:
     type: unfeaturized
     influence_conversation: false
   时间单位:
-    type: unfeaturized
-    influence_conversation: false
-  赋值:
     type: unfeaturized
     influence_conversation: false
   element:
