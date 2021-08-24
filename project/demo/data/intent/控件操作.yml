@@ -114,7 +114,7 @@ nlu:
     - [悬停]{"entity":"按键", "value":"按键_lkp"}按[类名]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
     - [悬停]{"entity":"按键", "value":"按键_lkp"}按[样式]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
     - [悬停]{"entity":"按键", "value":"按键_lkp"}按[路径]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
-- intent: 拖拽
+- intent: 拖动
   examples: |
     - [拖拽]{"entity":"拖动", "value":"拖动_lkp"}按[编号]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)到[编号]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression2)
     - [拖拽]{"entity":"拖动", "value":"拖动_lkp"}按[名称]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)到[名称]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression2)
