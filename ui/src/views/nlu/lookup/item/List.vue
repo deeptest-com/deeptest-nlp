@@ -1,6 +1,13 @@
 <template>
   <div>
     <page-header-wrapper>
+      <div class="toolbar-edit">
+        <div class="left"></div>
+        <div class="right">
+          <a-button @click="back()" type="primary">{{ $t('common.back') }}</a-button>
+        </div>
+      </div>
+
       <a-card :bordered="false">
         <div class="table-page-search-wrapper">
           <a-form layout="inline">
@@ -248,6 +255,9 @@ export default {
       this.queryParam = {
         date: moment(new Date())
       }
+    },
+    back () {
+      this.$router.push('/nlu/lookup/list')
     }
   }
 }

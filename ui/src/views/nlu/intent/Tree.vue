@@ -92,6 +92,13 @@ export default {
     }
   },
   created () {
+    this.$global.EventBus.$on(this.$global.intentUpdateEvent, (json) => {
+      console.log('IntentUpdateEvent in tree page', json)
+      this.loadData()
+    })
+  },
+  destroyed () {
+    this.$global.EventBus.$destroy()
   },
   mounted () {
   },
@@ -200,9 +207,15 @@ export default {
       })
     },
     updateCallback (json) {
-      this.treeData = wrapperIntents(json.data, this.$t('menu.intent'))
+      console.log(json.data)
+
+      this.treeData = wrapperIntents(json.data.models, this.$t('menu.intent'))
       this.getOpenKeys(this.treeData[0])
-      // this.selectedKeys = [json.model.id]
+
+      if (json.data && json.data.model) {
+        this.selectedKeys = [json.data.model.id]
+        this.$emit('selected', json.data.model.id)
+      }
     },
     disableNode () {
       console.log('disableNode', this.targetId)

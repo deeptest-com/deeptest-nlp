@@ -18,7 +18,7 @@ func NewNluSynonymRepo() *NluSynonymRepo {
 }
 
 func (r *NluSynonymRepo) Query(keywords, status string, pageNo int, pageSize int) (pos []model.NluSynonym, total int64) {
-	query := r.DB.Select("*").Where("NOT deleted").Order("id ASC")
+	query := r.DB.Model(&model.NluSynonym{}).Where("NOT deleted").Order("id ASC")
 	if status == "true" {
 		query = query.Where("NOT disabled")
 	} else if status == "false" {
@@ -37,7 +37,7 @@ func (r *NluSynonymRepo) Query(keywords, status string, pageNo int, pageSize int
 		_logUtils.Errorf("sql error %s", err.Error())
 	}
 
-	err = query.Count(&total).Error
+	err = query.Offset(-1).Limit(-1).Count(&total).Error
 	if err != nil {
 		_logUtils.Errorf("sql error %s", err.Error())
 	}
@@ -64,7 +64,7 @@ func (r *NluSynonymRepo) Get(id uint) (po model.NluSynonym) {
 	return
 }
 func (r *NluSynonymRepo) GetByName(name string) (po model.NluSynonym) {
-	r.DB.Where("name = ?", name).First(&po)
+	r.DB.Where("name = ? AND NOT deleted", name).First(&po)
 	return
 }
 

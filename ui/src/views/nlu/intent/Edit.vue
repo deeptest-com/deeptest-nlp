@@ -57,9 +57,18 @@
           <div class="sent-title">
             {{ $t('form.list') }}
           </div>
-          <div class="sent-items">
-            <div v-for="item in sents" :key="item.id" ref="sentList" class="sent-item">
-              <div class="left" :class="{'disabled':item.disabled}">{{ item.text }}</div>
+          <div class="sent-items" :style="styl">
+            <div
+              v-for="(item, index) in sents"
+              @mouseover="mouseover(index)"
+              :class="{'mouse-over': index == mouseLocation}"
+              :key="item.id"
+              ref="sentList"
+              class="sent-item">
+              <div @click="editSent(item)" class="no link">{{ index + 1 }}</div>
+              <div @click="editSent(item)" class="left link" :class="{'disabled':item.disabled}">
+                <span v-html="item.html"></span>
+              </div>
               <div class="right">
                 <a-icon @click="editSent(item)" type="edit" class="icon"/> &nbsp;
                 <a-icon v-if="!item.disabled" @click="disableSent(item)" type="minus" class="icon"/>
@@ -220,6 +229,7 @@ export default {
     console.log('destroyed')
   },
   data () {
+    const styl = 'overflow-y: auto; height: ' + (document.documentElement.clientHeight - 330) + 'px;'
     return {
       model: {},
       sents: [],
@@ -241,12 +251,14 @@ export default {
       slot: {},
       isEditTitle: false,
       tabKey: 'maintainSent',
+      mouseLocation: -1,
 
       dicts: [],
       rules: {
         slotType: [{ required: true, message: this.$t('valid.slot.type'), trigger: 'change' }],
         value: [{ required: true, message: this.$t('valid.select.dict'), trigger: 'change' }]
-      }
+      },
+      styl: styl
     }
   },
   watch: {
@@ -401,6 +413,8 @@ export default {
       const data = { id: this.model.id, name: this.model.name }
       updateIntent(data).then(json => {
         this.isEditTitle = false
+
+        this.$global.EventBus.$emit(this.$global.intentUpdateEvent, { 'id': this.model.id })
       })
     },
     tabClick (key) {
@@ -465,6 +479,10 @@ export default {
       console.log('cancelSlot')
       this.slotEditVisible = false
       window.getSelection().removeAllRanges()
+    },
+    mouseover (index) {
+      console.log('mouseover')
+      this.mouseLocation = index
     }
   }
 }
@@ -543,9 +561,11 @@ export default {
   .sent-items {
     .sent-item {
       display: flex;
-      margin-bottom: 8px;
-      line-height: 22px;
-
+      padding: 8px;
+      line-height: 30px;
+      .no {
+        width: 50px;
+      }
       .left {
         flex: 1;
         border-bottom: 1px solid #e9f2fb;
@@ -564,6 +584,9 @@ export default {
 
 .edit-icon {
   color: gray;
+}
+.mouse-over {
+  background-color: #f5f5f5;
 }
 
 </style>

@@ -23,7 +23,9 @@ func (c *NluIntentCtrl) List(ctx iris.Context) {
 
 	intents := c.IntentService.ListByTask(uint(taskId))
 
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "请求成功", intents))
+	ret := map[string]interface{}{"models": intents}
+
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "请求成功", ret))
 }
 
 func (c *NluIntentCtrl) Get(ctx iris.Context) {
@@ -54,8 +56,9 @@ func (c *NluIntentCtrl) Create(ctx iris.Context) {
 	}
 
 	intents := c.IntentService.ListByTask(po.TaskId)
+	ret := map[string]interface{}{"model": po, "models": intents}
 
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", intents))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", ret))
 	return
 }
 
@@ -96,8 +99,9 @@ func (c *NluIntentCtrl) Disable(ctx iris.Context) {
 
 	c.IntentService.Disable(uint(id))
 	intents := c.IntentService.ListByTask(uint(taskId))
+	ret := map[string]interface{}{"models": intents}
 
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", intents))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", ret))
 }
 
 func (c *NluIntentCtrl) Delete(ctx iris.Context) {
@@ -110,8 +114,9 @@ func (c *NluIntentCtrl) Delete(ctx iris.Context) {
 
 	c.IntentService.Delete(uint(id))
 	intents := c.IntentService.ListByTask(uint(taskId))
+	ret := map[string]interface{}{"models": intents}
 
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", intents))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", ret))
 }
 
 func (c *NluIntentCtrl) Move(ctx iris.Context) {
@@ -132,6 +137,7 @@ func (c *NluIntentCtrl) Move(ctx iris.Context) {
 	}
 
 	intents := c.IntentService.ListByTask(taskId)
+	ret := map[string]interface{}{"models": intents}
 
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", intents))
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", ret))
 }

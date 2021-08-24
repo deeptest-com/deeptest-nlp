@@ -18,7 +18,7 @@
             @selected="select">
           </intent-tree>
         </div>
-        <div class="right" :style="styl">
+        <div class="right">
           <intent-edit
             v-if="intentEditVisible"
             ref="intentEdit"
@@ -56,7 +56,7 @@ export default {
     }
   },
   data () {
-    const styl = 'height: ' + (document.documentElement.clientHeight - 56) + 'px;'
+    const styl = 'overflow-y: auto; height: ' + (document.documentElement.clientHeight - 56) + 'px;'
     return {
       model: {},
       intentId: 0,

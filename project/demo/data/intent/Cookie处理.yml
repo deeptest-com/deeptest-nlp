@@ -2,13 +2,8 @@ version: ""
 nlu:
 - intent: Cookie设置
   examples: |
-    - [设置]{"entity":"变量存取", "value":"变量存取_lkp"}甜饼[name](name)为[内容](content)
-    - [设置]{"entity":"变量存取", "value":"变量存取_lkp"}甜饼[name](name)为值[内容](content)
-    - [设置]{"entity":"变量存取", "value":"变量存取_lkp"}甜饼[name](name)为变量[var](var)的值
-    - [设置]{"entity":"变量存取", "value":"变量存取_lkp"}甜饼[name](name)为变量[var](var)
+    - [设置]{"entity":"变量存储", "value":"变量存储_lkp"}甜饼[name](name)为[expression](expression)
 - intent: Cookie获取
   examples: |
-    - [获取]{"entity":"变量存取", "value":"变量存取_lkp"}甜饼[name](name)为变量[var](var)
-    - [获取]{"entity":"变量存取", "value":"变量存取_lkp"}甜饼[name](name)的值为变量[var](var)
-    - [赋予]{"entity":"变量存取", "value":"变量存取_lkp"}变量[var](var)为甜饼[name](name)的值
-    - [赋予]{"entity":"变量存取", "value":"变量存取_lkp"}变量[var](var)为甜饼[name](name)
+    - [获取]{"entity":"取值", "value":"取值_syn"}甜饼[name](name)为[variable](variable)
+    - [获得]{"entity":"取值", "value":"取值_syn"}甜饼[name](name)为[variable](variable)

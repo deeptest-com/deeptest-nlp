@@ -69,3 +69,8 @@ cd ~/utl-server && nohup ./utl-server 2>&1 &
 
 rasa train --out models_3
 rasa run -p 55005 -m models_3 --enable-api --log-file out.log
+
+delete from nlu_slot where sent_refer IN (
+    select id from nlu_sent where deleted
+);
+delete from nlu_sent where deleted;

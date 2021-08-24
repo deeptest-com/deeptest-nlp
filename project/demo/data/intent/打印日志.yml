@@ -2,9 +2,9 @@ version: ""
 nlu:
 - intent: 打印日志
   examples: |
-    - [打印]{"entity":"打印", "value":"打印_syn"}[消息]{"entity":"日志级别", "value":"日志级别_lkp"}[内容](content)
-    - [输出]{"entity":"打印", "value":"打印_syn"}[消息]{"entity":"日志级别", "value":"日志级别_lkp"}[内容](content)
-    - [打印]{"entity":"打印", "value":"打印_syn"}[警告]{"entity":"日志级别", "value":"日志级别_lkp"}[内容](content)
-    - [输出]{"entity":"打印", "value":"打印_syn"}[警告]{"entity":"日志级别", "value":"日志级别_lkp"}[内容](content)
-    - [打印]{"entity":"打印", "value":"打印_syn"}[错误]{"entity":"日志级别", "value":"日志级别_lkp"}[内容](content)
-    - [输出]{"entity":"打印", "value":"打印_syn"}[错误]{"entity":"日志级别", "value":"日志级别_lkp"}[内容](content)
+    - [打印]{"entity":"打印", "value":"打印_syn"}[消息]{"entity":"日志级别", "value":"日志级别_lkp"}[expression](expression)
+    - [输出]{"entity":"打印", "value":"打印_syn"}[消息]{"entity":"日志级别", "value":"日志级别_lkp"}[expression](expression)
+    - [打印]{"entity":"打印", "value":"打印_syn"}[警告]{"entity":"日志级别", "value":"日志级别_lkp"}[expression](expression)
+    - [输出]{"entity":"打印", "value":"打印_syn"}[警告]{"entity":"日志级别", "value":"日志级别_lkp"}[expression](expression)
+    - [打印]{"entity":"打印", "value":"打印_syn"}[错误]{"entity":"日志级别", "value":"日志级别_lkp"}[expression](expression)
+    - [输出]{"entity":"打印", "value":"打印_syn"}[错误]{"entity":"日志级别", "value":"日志级别_lkp"}[expression](expression)

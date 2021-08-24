@@ -17,7 +17,7 @@ func NewNluLookupItemRepo() *NluLookupItemRepo {
 }
 
 func (r *NluLookupItemRepo) Query(lookupId int, keywords, status string, pageNo int, pageSize int) (pos []model.NluLookupItem, total int64) {
-	query := r.DB.Select("*").Order("id ASC")
+	query := r.DB.Model(&model.NluLookupItem{}).Order("id ASC")
 	query = query.Where("NOT deleted").Where("lookup_id = ?", lookupId)
 
 	if status == "true" {
@@ -38,7 +38,7 @@ func (r *NluLookupItemRepo) Query(lookupId int, keywords, status string, pageNo 
 		_logUtils.Errorf("sql error %s", err.Error())
 	}
 
-	err = query.Count(&total).Error
+	err = query.Offset(-1).Limit(-1).Count(&total).Error
 	if err != nil {
 		_logUtils.Errorf("sql error %s", err.Error())
 	}

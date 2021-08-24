@@ -18,7 +18,7 @@ func NewNluLookupRepo() *NluLookupRepo {
 }
 
 func (r *NluLookupRepo) Query(keywords, status string, pageNo int, pageSize int) (pos []model.NluLookup, total int64) {
-	query := r.DB.Select("*").Where("NOT deleted").Order("id ASC")
+	query := r.DB.Model(&model.NluLookup{}).Where("NOT deleted").Order("id ASC")
 
 	if status == "true" {
 		query = query.Where("NOT disabled")
@@ -38,7 +38,7 @@ func (r *NluLookupRepo) Query(keywords, status string, pageNo int, pageSize int)
 		_logUtils.Errorf("sql error %s", err.Error())
 	}
 
-	err = query.Count(&total).Error
+	err = query.Offset(-1).Limit(-1).Count(&total).Error
 	if err != nil {
 		_logUtils.Errorf("sql error %s", err.Error())
 	}
@@ -65,7 +65,7 @@ func (r *NluLookupRepo) Get(id uint) (po model.NluLookup) {
 	return
 }
 func (r *NluLookupRepo) GetByName(code string) (po model.NluLookup) {
-	r.DB.Where("name = ?", code).First(&po)
+	r.DB.Where("name = ? AND NOT deleted", code).First(&po)
 	return
 }
 

@@ -13,18 +13,61 @@ intents:
 - 操作
 - Cookie设置
 - Cookie获取
+- 判断
+- 迭代永久
+- 迭代次数
+- 迭代数据
+- 迭代退出
+- 迭代继续
+- 等待
+- 变量取值
+- 变量赋值
+- 点击
+- 双击
+- 右击
+- 输入
+- 清除
+- 按下
+- 抬起
+- 悬停
+- 拖拽
+- 新意图
+- 新意图
+- 新意图
+- 新意图
+- 新意图
+- 新意图
 entities:
 - 打印
 - 日志级别
-- content
+- expression
 - 断言
 - 浏览操作
 - 页面访问
-- 网址
 - 弹窗处理
-- 变量存取
+- 变量存储
 - name
-- var
+- 取值
+- variable
+- 如果
+- 迭代
+- value
+- data
+- 退出
+- 继续
+- 等待
+- 时间单位
+- 赋值
+- element
+- property
+- 点击
+- 选择器
+- 输入
+- expresssion
+- expression2
+- 按键
+- expresstion
+- 拖动
 slots:
   打印:
     type: unfeaturized
@@ -32,7 +75,7 @@ slots:
   日志级别:
     type: unfeaturized
     influence_conversation: false
-  content:
+  expression:
     type: unfeaturized
     influence_conversation: false
   断言:
@@ -44,18 +87,75 @@ slots:
   页面访问:
     type: unfeaturized
     influence_conversation: false
-  网址:
-    type: unfeaturized
-    influence_conversation: false
   弹窗处理:
     type: unfeaturized
     influence_conversation: false
-  变量存取:
+  变量存储:
     type: unfeaturized
     influence_conversation: false
   name:
     type: unfeaturized
     influence_conversation: false
-  var:
+  取值:
+    type: unfeaturized
+    influence_conversation: false
+  variable:
+    type: unfeaturized
+    influence_conversation: false
+  如果:
+    type: unfeaturized
+    influence_conversation: false
+  迭代:
+    type: unfeaturized
+    influence_conversation: false
+  value:
+    type: unfeaturized
+    influence_conversation: false
+  data:
+    type: unfeaturized
+    influence_conversation: false
+  退出:
+    type: unfeaturized
+    influence_conversation: false
+  继续:
+    type: unfeaturized
+    influence_conversation: false
+  等待:
+    type: unfeaturized
+    influence_conversation: false
+  时间单位:
+    type: unfeaturized
+    influence_conversation: false
+  赋值:
+    type: unfeaturized
+    influence_conversation: false
+  element:
+    type: unfeaturized
+    influence_conversation: false
+  property:
+    type: unfeaturized
+    influence_conversation: false
+  点击:
+    type: unfeaturized
+    influence_conversation: false
+  选择器:
+    type: unfeaturized
+    influence_conversation: false
+  输入:
+    type: unfeaturized
+    influence_conversation: false
+  expresssion:
+    type: unfeaturized
+    influence_conversation: false
+  expression2:
+    type: unfeaturized
+    influence_conversation: false
+  按键:
+    type: unfeaturized
+    influence_conversation: false
+  expresstion:
+    type: unfeaturized
+    influence_conversation: false
+  拖动:
     type: unfeaturized
     influence_conversation: false

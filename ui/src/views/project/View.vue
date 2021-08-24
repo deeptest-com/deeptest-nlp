@@ -75,7 +75,7 @@
             {{ $t('common.' + record.action) }}
           </span>
           <span slot="createdTime" slot-scope="text, record">
-            {{ record.createdTime | moment }}
+            {{ record.createdAt | moment }}
           </span>
         </a-table>
       </div>

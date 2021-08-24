@@ -1,7 +1,6 @@
 package repo
 
 import (
-	"fmt"
 	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
 	"github.com/utlai/utl/internal/server/model"
 	"gorm.io/gorm"
@@ -18,37 +17,35 @@ func NewNluTaskRepo() *NluTaskRepo {
 }
 
 func (r *NluTaskRepo) Query(projectId int, keywords, status string, pageNo int, pageSize int) (pos []model.NluTask, total int64) {
-	sql := "SELECT t.*, p.name project_name FROM nlu_task t" +
-		" LEFT JOIN biz_project p ON t.project_id = p.id" +
-		" WHERE NOT t.deleted"
-
+	query := r.DB.Model(&model.NluTask{}).Where("NOT deleted").Order("id ASC")
 	if projectId > 0 {
-		sql += fmt.Sprintf(" AND t.project_id = %d", projectId)
+		query = query.Where("project_id = %d", projectId)
 	}
 
 	if status == "true" {
-		sql += " AND NOT t.disabled"
+		query = query.Where("NOT disabled")
 	} else if status == "false" {
-		sql += " AND t.disabled"
+		query = query.Where("disabled")
 	}
 
 	if keywords != "" {
-		sql += " AND t.name LIKE '%" + keywords + "%'"
+		query = query.Where("name LIKE ?", "%"+keywords+"%")
 	}
-	sql += " ORDER BY t.id ASC"
 	if pageNo > 0 {
-		sql += fmt.Sprintf(" LIMIT %d OFFSET %d", pageSize, (pageNo-1)*pageSize)
+		query = query.Offset((pageNo - 1) * pageSize).Limit(pageSize)
 	}
 
-	err := r.DB.Raw(sql).Find(&pos).Error
+	err := query.Find(&pos).Error
 	if err != nil {
 		_logUtils.Errorf("sql error %s", err.Error())
 	}
 
-	err = r.DB.Raw(sql).Count(&total).Error
+	err = query.Offset(-1).Limit(-1).Count(&total).Error
 	if err != nil {
 		_logUtils.Errorf("sql error %s", err.Error())
 	}
+
+	return
 
 	return
 }

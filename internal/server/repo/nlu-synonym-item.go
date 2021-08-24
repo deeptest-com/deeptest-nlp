@@ -17,7 +17,7 @@ func NewNluSynonymItemRepo() *NluSynonymItemRepo {
 }
 
 func (r *NluSynonymItemRepo) Query(synonymId int, keywords, status string, pageNo int, pageSize int) (pos []model.NluSynonymItem, total int64) {
-	query := r.DB.Select("*").Where("NOT deleted").Order("id ASC")
+	query := r.DB.Model(&model.NluSynonymItem{}).Where("NOT deleted").Order("id ASC")
 	query = query.Where("synonym_id = ?", synonymId)
 
 	if status == "true" {
@@ -38,7 +38,7 @@ func (r *NluSynonymItemRepo) Query(synonymId int, keywords, status string, pageN
 		_logUtils.Errorf("sql error %s", err.Error())
 	}
 
-	err = query.Count(&total).Error
+	err = query.Offset(-1).Limit(-1).Count(&total).Error
 	if err != nil {
 		_logUtils.Errorf("sql error %s", err.Error())
 	}

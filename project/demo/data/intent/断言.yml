@@ -2,10 +2,7 @@ version: ""
 nlu:
 - intent: 断言
   examples: |
-    - [断言]{"entity":"断言", "value":"断言_syn"}[内容](content)
-    - [断言]{"entity":"断言", "value":"断言_syn"}表达式[内容](content)
-    - [判断]{"entity":"断言", "value":"断言_syn"}[内容](content)
-    - [判断]{"entity":"断言", "value":"断言_syn"}表达式[内容](content)
-    - [检查]{"entity":"断言", "value":"断言_syn"}[内容](content)
-    - [检查]{"entity":"断言", "value":"断言_syn"}表达式[内容](content)
-    - [验证]{"entity":"断言", "value":"断言_syn"}[内容](content)
+    - [断言]{"entity":"断言", "value":"断言_syn"}[expression](expression)
+    - [判断]{"entity":"断言", "value":"断言_syn"}[expression](expression)
+    - [检查]{"entity":"断言", "value":"断言_syn"}[expression](expression)
+    - [验证]{"entity":"断言", "value":"断言_syn"}[expression](expression)
