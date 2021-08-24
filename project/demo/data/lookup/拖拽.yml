@@ -1,0 +1,6 @@
+version: "2.0"
+nlu:
+- lookup: 拖拽_lkp
+  examples: |
+    - 拖拽
+    - 拖动
