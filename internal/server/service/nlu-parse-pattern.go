@@ -5,8 +5,11 @@ import (
 	"github.com/utlai/utl/internal/server/domain"
 	"github.com/utlai/utl/internal/server/model"
 	"github.com/utlai/utl/internal/server/repo"
+	serverConst "github.com/utlai/utl/internal/server/utils/const"
 	serverVari "github.com/utlai/utl/internal/server/utils/var"
 	"regexp"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -15,6 +18,7 @@ type NluParsePatternService struct {
 	NluTaskRepo   *repo.NluTaskRepo   `inject:""`
 	NluIntentRepo *repo.NluIntentRepo `inject:""`
 	NluSentRepo   *repo.NluSentRepo   `inject:""`
+	NluSlotRepo   *repo.NluSlotRepo   `inject:""`
 	NluRuleRepo   *repo.NluRuleRepo   `inject:""`
 
 	NluSynonymRepo *repo.NluSynonymRepo `inject:""`
@@ -53,9 +57,9 @@ OuterLoop:
 			for _, sent := range intent.Sents {
 				rgx := regexp.MustCompile(sent.Example)
 
-				arr := rgx.FindStringSubmatch(text)
+				sections := rgx.FindStringSubmatch(text)
 
-				if len(arr) > 0 { // matched
+				if len(sections) > 0 { // matched
 					sent := s.NluSentRepo.Get(sent.Id)
 					intent := s.NluIntentRepo.Get(intent.Id)
 
@@ -66,7 +70,7 @@ OuterLoop:
 						Name: sent.Text,
 					}
 
-					s.popEntities(sent, rasaResp)
+					s.popEntities(sections, sent, rasaResp)
 
 					break OuterLoop
 				}
@@ -81,9 +85,46 @@ OuterLoop:
 	return
 }
 
-func (s *NluParsePatternService) popEntities(sent model.NluSent, resp domain.RasaResp) {
+func (s *NluParsePatternService) popEntities(sections []string, sent model.NluSent, resp domain.RasaResp) {
+	slotMap := s.getSlotMap(sent.ID)
 
-	resp.Entities = []domain.Entity{
-		{Extractor: consts.Pattern.ToString()},
+	slots := s.NluSlotRepo.ListBySentId(sent.ID)
+
+	for _, slot := range slots {
+		slotType := slot.Type
+		slotId := slot.ID
+
+		if slotType == serverConst.Synonym {
+			slot := slotMap[slotId]
+
+		} else if slotType == serverConst.Lookup {
+			slot := slotMap[slotId]
+
+		} else if slotType == serverConst.Regex {
+			slot := slotMap[slotId]
+
+		} else if slotType == serverConst.Slot {
+
+		} else if slotType == "" {
+
+		}
+
+		entity := domain.Entity{
+			Value:     "",
+			Start:     0,
+			End:       1,
+			Extractor: consts.Pattern.ToString(),
+		}
+
+		resp.Entities = append(resp.Entities, entity)
 	}
+}
+
+func (s *NluParsePatternService) getSlotMap(sentId uint) (ret map[uint]model.NluSlot) {
+	slots := s.NluSlotRepo.ListBySentId(sentId)
+	for _, slot := range slots {
+		ret[slot.ID] = slot
+	}
+
+	return
 }
