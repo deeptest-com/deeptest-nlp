@@ -8,6 +8,7 @@ import (
 	"github.com/utlai/utl/internal/server/model"
 	"github.com/utlai/utl/internal/server/repo"
 	serverConst "github.com/utlai/utl/internal/server/utils/const"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
@@ -59,7 +60,7 @@ func (s *NluServiceService) Start(project model.Project) (result string, err err
 		port, project.ID)
 	_logUtils.Infof("--- start service project %s---", cmdStr)
 
-	result, err, _ = _shellUtils.ExeShell(cmdStr, project.Path)
+	result, err, _ = _shellUtils.ExeShell(cmdStr, filepath.Join(project.Path, "rasa"))
 
 	s.ProjectRepo.StartService(project.ID, port)
 

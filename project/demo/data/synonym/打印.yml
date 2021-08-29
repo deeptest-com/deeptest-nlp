@@ -1,6 +1,0 @@
-version: "2.0"
-nlu:
-- synonym: 打印_syn
-  examples: |
-    - 打印
-    - 输出

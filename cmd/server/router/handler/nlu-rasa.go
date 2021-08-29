@@ -13,6 +13,7 @@ type NluRasaCtrl struct {
 	NluCompileService  *service.NluCompileService  `inject:""`
 	NluTrainingService *service.NluTrainingService `inject:""`
 	NluServiceService  *service.NluServiceService  `inject:""`
+	NluPatternService  *service.NluPatternService  `inject:""`
 
 	NluHistoryService *service.NluHistoryService `inject:""`
 }
@@ -53,6 +54,23 @@ func (c *NluRasaCtrl) Training(ctx iris.Context) {
 	c.NluHistoryService.Add(_stringUtils.ParseUint(cred.UserId), uint(id), serverConst.StartTraining)
 
 	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "请求成功", project))
+}
+
+func (c *NluRasaCtrl) ReloadRes(ctx iris.Context) {
+	ctx.StatusCode(iris.StatusOK)
+
+	id, err := ctx.Params().GetInt("id")
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		return
+	}
+
+	c.NluPatternService.Reload(uint(id))
+
+	cred := jwt.GetCredentials(ctx)
+	c.NluHistoryService.Add(_stringUtils.ParseUint(cred.UserId), uint(id), serverConst.StartTraining)
+
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "请求成功", nil))
 }
 
 func (c *NluRasaCtrl) Start(ctx iris.Context) {

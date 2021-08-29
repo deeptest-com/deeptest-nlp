@@ -1,7 +1,0 @@
-version: "2.0"
-nlu:
-- lookup: 日志级别_lkp
-  examples: |
-    - 消息
-    - 警告
-    - 错误

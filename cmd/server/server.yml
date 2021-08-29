@@ -4,7 +4,7 @@ binData: false
 https: false
 host: 0.0.0.0
 port: 8085
-Analyzer: pattern
+analyzer: pattern
 
 adapter:
   vmPlatform: pve

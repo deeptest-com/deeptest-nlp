@@ -1,9 +1,0 @@
-version: "2.0"
-nlu:
-- intent: 导航
-  examples: |
-    - [前进]{"entity":"浏览操作", "value":"浏览操作_lkp"}
-    - [返回]{"entity":"浏览操作", "value":"浏览操作_lkp"}
-    - [后退]{"entity":"浏览操作", "value":"浏览操作_lkp"}
-    - [刷新]{"entity":"浏览操作", "value":"浏览操作_lkp"}
-    - [重载]{"entity":"浏览操作", "value":"浏览操作_lkp"}

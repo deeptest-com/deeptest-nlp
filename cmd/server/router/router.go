@@ -118,6 +118,9 @@ func (r *Router) App() {
 				admin.PartyFunc("/rasa/stop/{id:uint}", func(party iris.Party) {
 					party.Post("/", r.NluRasaCtrl.Stop).Name = "停止服务"
 				})
+				admin.PartyFunc("/rasa/reloadRes/{id:uint}", func(party iris.Party) {
+					party.Post("/", r.NluRasaCtrl.ReloadRes).Name = "刷新资源"
+				})
 				admin.PartyFunc("/rasa/parse/{id:uint}", func(party iris.Party) {
 					party.Post("/", r.NluParseCtrl.Parse).Name = "启动项目"
 				})

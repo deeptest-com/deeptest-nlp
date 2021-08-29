@@ -142,6 +142,7 @@ const locale = {
   'common.compile': '编译',
   'common.start_service': '启动服务',
   'common.stop_service': '停止服务',
+  'common.reload.pattern': '重载资源',
   'common.start_training': '训练开始',
   'common.end_training': '训练结束',
   'common.view.result': '显示结果',

@@ -144,6 +144,7 @@ const locale = {
   'common.compile': 'Compile',
   'common.start_service': 'Start Service',
   'common.stop_service': 'Stop Service',
+  'common.reload.pattern': 'Reload Resource',
   'common.start_training': 'Training Start',
   'common.end_training': 'Training End',
   'common.view.result': 'View Result',

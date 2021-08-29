@@ -18,20 +18,35 @@
       <a-button-group style="margin-right: 4px;">
         <a-button @click="compile()">{{ $t('common.compile') }}</a-button>
 
-        <a-button
-          @click="training()"
-          :disabled="model.trainingStatus === 'start_training'">
-            {{ $t('common.training') }}
-        </a-button>
-
-        <template v-if="model.serviceStatus !== 'start_service'">
-          <a-button @click="startService()" :disabled="model.trainingStatus !== 'end_training'">
-            {{ $t('common.start_service') }}
+        <template v-if="analyzer == 'pattern'">
+          <a-button
+            @click="reloadRes()">
+            {{ $t('common.reload.pattern') }}
           </a-button>
         </template>
-        <a-button @click="endService()" v-if="model.serviceStatus === 'start_service'">{{ $t('common.stop_service') }}</a-button>
+
+        <template v-if="analyzer == 'rasa'">
+          <a-button
+            @click="training()"
+            :disabled="model.trainingStatus === 'start_training'">
+            {{ $t('common.training') }}
+          </a-button>
+
+          <a-button
+            v-if="model.serviceStatus !== 'start_service'"
+            @click="startService()"
+            :disabled="model.trainingStatus !== 'end_training'">
+            {{ $t('common.start_service') }}
+          </a-button>
+          <a-button
+            v-if="model.serviceStatus === 'start_service'"
+            @click="endService()">
+            {{ $t('common.stop_service') }}
+          </a-button>
+        </template>
 
       </a-button-group>
+
       <a-button @click="back()" type="primary">{{ $t('common.back') }}</a-button>
     </template>
 
@@ -95,7 +110,7 @@
 
 <script>
 import moment from 'moment'
-import { getProject, compileProject, trainingProject, startService, endService } from '@/api/manage'
+import { getProject, compileProject, trainingProject, startService, endService, reloadRes } from '@/api/manage'
 
 import { baseMixin } from '@/store/app-mixin'
 
@@ -119,6 +134,7 @@ export default {
       outputModel: '',
 
       model: {},
+      analyzer: '',
       moment,
 
       historyColumns: [
@@ -214,7 +230,8 @@ export default {
       }
       if (this.id) {
         getProject(this.id).then(json => {
-          this.model = json.data
+          this.model = json.data.model
+          this.analyzer = json.data.analyzer
         })
       } else {
         this.reset()
@@ -287,6 +304,23 @@ export default {
         }
       })
     },
+    reloadRes () {
+      console.log('reloadRes')
+      reloadRes(this.model).then(json => {
+        console.log('reload', json)
+        if (json.code === 200) {
+          this.$notification['success']({
+            message: this.$root.$t('common.tips'),
+            description: this.$root.$t('msg.service.start'),
+            // placement: 'bottomRight',
+            duration: 8
+          })
+
+          this.loadData()
+        }
+      })
+    },
+
     back () {
       this.$router.push('/project/list')
     }

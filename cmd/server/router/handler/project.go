@@ -5,6 +5,7 @@ import (
 	_httpUtils "github.com/utlai/utl/internal/pkg/libs/http"
 	_stringUtils "github.com/utlai/utl/internal/pkg/libs/string"
 	"github.com/utlai/utl/internal/server/biz/jwt"
+	serverConf "github.com/utlai/utl/internal/server/cfg"
 	"github.com/utlai/utl/internal/server/model"
 	"github.com/utlai/utl/internal/server/service"
 	serverConst "github.com/utlai/utl/internal/server/utils/const"
@@ -57,7 +58,10 @@ func (c *ProjectCtrl) Get(ctx iris.Context) {
 	}
 
 	model := c.ProjectService.GetDetail(uint(id))
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", model))
+
+	data := map[string]interface{}{"model": model, "analyzer": serverConf.Config.Analyzer}
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", data))
+
 	return
 }
 

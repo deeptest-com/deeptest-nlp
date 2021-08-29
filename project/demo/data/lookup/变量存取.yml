@@ -1,9 +1,0 @@
-version: "2.0"
-nlu:
-- lookup: 变量存取_lkp
-  examples: |
-    - 设置
-    - 赋值
-    - 获取
-    - 取值
-    - 赋予

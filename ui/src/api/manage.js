@@ -10,6 +10,7 @@ const api = {
   training: `${prefix}/rasa/training`,
   start: `${prefix}/rasa/start`,
   stop: `${prefix}/rasa/stop`,
+  reloadRes: `${prefix}/rasa/reloadRes`,
   parse: `${prefix}/rasa/parse`,
 
   tasks: `${prefix}/tasks`,
@@ -136,6 +137,13 @@ export function trainingProject (model) {
 export function startService (model) {
   return request({
     url: api.start + '/' + model.id,
+    method: 'post',
+    params: { }
+  })
+}
+export function reloadRes (model) {
+  return request({
+    url: api.reloadRes + '/' + model.id,
     method: 'post',
     params: { }
   })

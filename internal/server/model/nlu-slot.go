@@ -1,13 +1,15 @@
 package model
 
+import serverConst "github.com/utlai/utl/internal/server/utils/const"
+
 type NluSlot struct {
 	BaseModel
 
-	Name  string `json:"name"`
-	Seq   int    `json:"seq"`
-	Type  string `json:"type"`
-	Value string `json:"value"`
-	Text  string `json:"text"`
+	Name  string                  `json:"name"`
+	Seq   int                     `json:"seq"`
+	Type  serverConst.NluSlotType `json:"type"`
+	Value string                  `json:"value"`
+	Text  string                  `json:"text"`
 
 	SentRefer uint `json:"sentRefer"`
 }

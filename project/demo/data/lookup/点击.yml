@@ -1,8 +1,0 @@
-version: "2.0"
-nlu:
-- lookup: 点击_lkp
-  examples: |
-    - 点击
-    - 左击
-    - 双击
-    - 右击
