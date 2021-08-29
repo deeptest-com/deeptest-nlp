@@ -4,29 +4,25 @@ import (
 	"fmt"
 	"github.com/jinzhu/configor"
 	logger "github.com/sirupsen/logrus"
+	consts "github.com/utlai/utl/internal/comm/const"
 	_commonUtils "github.com/utlai/utl/internal/pkg/libs/common"
 	_fileUtils "github.com/utlai/utl/internal/pkg/libs/file"
 	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
-	serverConst "github.com/utlai/utl/internal/server/utils/const"
 	serverRes "github.com/utlai/utl/res/server"
 	"path/filepath"
 	"strings"
 )
 
 var Config = struct {
-	LogLevel string `yaml:"logLevel" env:"LogLevel" default:"info"`
-	Debug    bool   `yaml:"debug" env:"Debug" default:"false"`
-	//BinData  bool   `yaml:"binData" default:"false" env:"BinData"`
-	Https    bool   `default:"false" env:"Https"`
-	CertPath string `default:"" env:"CertPath"`
-	CertKey  string `default:"" env:"CertKey"`
-	Port     int    `default:"8085" env:"Port"`
-	Host     string `default:"0.0.0.0" env:"HostId"`
-	Adapter  struct {
-		VmPlatform        serverConst.VmPlatform        `yaml:"vmPlatform" env:"VmPlatform" default:"pve"`
-		ContainerPlatform serverConst.ContainerPlatform `yaml:"containerPlatform" env:"ContainerPlatform" default:"portainer"`
-	} `yaml:"adapter,flow"`
-	Admin struct {
+	LogLevel string              `yaml:"logLevel" env:"LogLevel" default:"info"`
+	Debug    bool                `yaml:"debug" env:"Debug" default:"false"`
+	Https    bool                `default:"false" env:"Https"`
+	CertPath string              `default:"" env:"CertPath"`
+	CertKey  string              `default:"" env:"CertKey"`
+	Port     int                 `default:"8085" env:"Port"`
+	Host     string              `default:"0.0.0.0" env:"HostId"`
+	Analyzer consts.AnalyzerType `default:"rasa" env:"analyzer"`
+	Admin    struct {
 		UserName        string `env:"AdminUserName" default:"admin"`
 		Name            string `env:"AdminName" default:"admin"`
 		Password        string `env:"AdminPassword" default:"P2ssw0rd"`
@@ -45,13 +41,6 @@ var Config = struct {
 		Disable bool    `env:"LimitDisable" default:"true"`
 		Limit   float64 `env:"LimitLimit" default:"1"`
 		Burst   int     `env:"LimitBurst" default:"5"`
-	}
-	Qiniu struct {
-		Enable    bool   `env:"QiniuEnable" default:"false"`
-		Host      string `env:"QiniuHost" default:""`
-		Accesskey string `env:"QiniuAccesskey" default:""`
-		Secretkey string `env:"QiniuSecretkey" default:""`
-		Bucket    string `env:"QiniuBucket" default:""`
 	}
 	Options struct {
 		UploadMaxSize int64 `env:"uploadMaxSize" default:"100"`

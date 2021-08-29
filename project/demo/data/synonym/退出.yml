@@ -3,7 +3,5 @@ nlu:
 - synonym: 退出_syn
   examples: |
     - 跳出
-    - 停止
     - 退出
     - 结束
-    - 返回

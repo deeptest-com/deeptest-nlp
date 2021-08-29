@@ -2,7 +2,9 @@ package service
 
 import (
 	"fmt"
+	consts "github.com/utlai/utl/internal/comm/const"
 	_fileUtils "github.com/utlai/utl/internal/pkg/libs/file"
+	serverConf "github.com/utlai/utl/internal/server/cfg"
 	"github.com/utlai/utl/internal/server/domain"
 	"github.com/utlai/utl/internal/server/model"
 	"github.com/utlai/utl/internal/server/repo"
@@ -33,7 +35,17 @@ func NewNluCompileService() *NluCompileService {
 	return &NluCompileService{}
 }
 
-func (s *NluCompileService) CompileProject(id uint) (files []string) {
+func (s *NluCompileService) CompileProject(id uint) {
+	if serverConf.Config.Analyzer == consts.Rasa {
+		s.RasaCompile(id)
+	} else if serverConf.Config.Analyzer == consts.Pattern {
+
+	}
+
+	return
+}
+
+func (s *NluCompileService) RasaCompile(id uint) {
 	project := s.ProjectRepo.Get(id)
 	projectDir := project.Path
 
@@ -50,8 +62,6 @@ func (s *NluCompileService) CompileProject(id uint) (files []string) {
 
 	yamlStr := changeArrToFlow(nluDomain)
 	_fileUtils.WriteFile(filepath.Join(projectDir, "domain.yml"), yamlStr)
-
-	return
 }
 
 func (s *NluCompileService) parserDomain(projectDir string) (nluDomain domain.NluDomain) {
@@ -72,7 +82,7 @@ func (s *NluCompileService) convertIntent(projectId uint, projectDir string, nlu
 	for _, task := range tasks {
 		intents := s.NluIntentRepo.ListByTaskIdNoDisabled(task.ID)
 
-		nluTask := domain.NluTask{}
+		nluTask := domain.NluTask{Version: serverConst.NluVersion}
 		for _, intent := range intents {
 			nluDomain.Intents = append(nluDomain.Intents, intent.Name)
 
@@ -228,7 +238,7 @@ func (s *NluCompileService) populateSlots(sentId uint, slotMap map[string]map[st
 		nluDomain.Entities = append(nluDomain.Entities, slotCode)
 		//}
 
-		slotItem := domain.SlotItem{Type: "unfeaturized", InfluenceConversation: false}
+		slotItem := domain.SlotItem{Type: "text", InfluenceConversation: false}
 		mapItem := yaml.MapItem{Key: slotCode, Value: slotItem}
 		nluDomain.Slots = append(nluDomain.Slots, mapItem)
 

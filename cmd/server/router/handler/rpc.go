@@ -2,7 +2,6 @@ package handler
 
 import (
 	"github.com/kataras/iris/v12"
-	"github.com/mitchellh/mapstructure"
 	_domain "github.com/utlai/utl/internal/pkg/domain"
 	_httpUtils "github.com/utlai/utl/internal/pkg/libs/http"
 	"github.com/utlai/utl/internal/server/service"
@@ -26,11 +25,6 @@ func (c *RpcCtrl) Request(ctx iris.Context) {
 	}
 
 	var obj interface{}
-	if rpcReq.ApiPath == "vm" {
-		var vm _domain.Vm
-		err = mapstructure.Decode(rpcReq.Data, &vm)
-		obj = interface{}(vm)
-	}
 
 	rpcResult := c.RpcService.Request(rpcReq.ComputerIp, rpcReq.ComputerPort, rpcReq.ApiPath, rpcReq.ApiMethod, &obj)
 

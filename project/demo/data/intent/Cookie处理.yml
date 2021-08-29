@@ -1,4 +1,4 @@
-version: ""
+version: "2.0"
 nlu:
 - intent: Cookie设置
   examples: |

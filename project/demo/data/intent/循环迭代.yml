@@ -1,4 +1,4 @@
-version: ""
+version: "2.0"
 nlu:
 - intent: 迭代永久
   examples: |
@@ -20,8 +20,8 @@ nlu:
     - [退出]{"entity":"退出", "value":"退出_syn"}
     - [结束]{"entity":"退出", "value":"退出_syn"}
     - [跳出]{"entity":"退出", "value":"退出_syn"}
-    - [返回]{"entity":"退出", "value":"退出_syn"}
-    - [停止]{"entity":"退出", "value":"退出_syn"}
 - intent: 迭代继续
   examples: |
+    - [继续]{"entity":"继续", "value":"继续_syn"}循环
+    - [继续]{"entity":"继续", "value":"继续_syn"}迭代
     - [继续]{"entity":"继续", "value":"继续_syn"}
