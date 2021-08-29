@@ -40,16 +40,19 @@ func (s *NluCompilePatternService) PatternCompile(id uint) {
 	lookupMap := s.getLookupMap(id)
 	regexMap := s.getRegexMap(id)
 
-	tasks := s.NluTaskRepo.ListByProjectId(id)
-	for _, task := range tasks {
-		nluTask := domain.NluPatternTask{Version: serverConst.NluVersion, Name: task.Name}
+	taskPos := s.NluTaskRepo.ListByProjectId(id)
+	for _, taskPo := range taskPos {
+		task := domain.NluTaskForPattern{Version: serverConst.NluVersion, Name: taskPo.Name}
 
-		intents := s.NluIntentRepo.ListByTaskIdNoDisabled(task.ID)
-		for _, intent := range intents {
-			lines := make([]string, 0)
+		intents := s.NluIntentRepo.ListByTaskIdNoDisabled(taskPo.ID)
+		for _, intentPo := range intents {
 			lineMap := map[string]bool{}
+			intent := domain.NluIntentPattern{
+				Id:   intentPo.ID,
+				Name: intentPo.Name,
+			}
 
-			sents := s.NluSentRepo.ListByIntentId(intent.ID)
+			sents := s.NluSentRepo.ListByIntentId(intentPo.ID)
 			for _, sent := range sents {
 				slots := s.NluSlotRepo.ListBySentId(sent.ID)
 
@@ -91,17 +94,20 @@ func (s *NluCompilePatternService) PatternCompile(id uint) {
 
 				line = strings.TrimSpace(line)
 				if line != "" && !lineMap[line] {
-					lines = append(lines, line)
+					sent := domain.NluSentPattern{
+						Id:      sent.ID,
+						Example: line,
+					}
+					intent.Sents = append(intent.Sents, sent)
+
 					lineMap[line] = true
 				}
 			}
 
-			pattern := domain.NluPattern{Id: intent.ID, Name: intent.Name}
-			pattern.Examples = strings.Join(lines, "\n")
-			nluTask.Intents = append(nluTask.Intents, pattern)
+			task.Intents = append(task.Intents, intent)
 		}
 
-		yamlContent := s.NluCompileService.ChangeArrToFlow(nluTask)
+		yamlContent := s.NluCompileService.ChangeArrToFlow(task)
 
 		patternFilePath := filepath.Join(projectDir, consts.Pattern.ToString(), task.Name+".yml")
 		_fileUtils.WriteFile(patternFilePath, yamlContent)

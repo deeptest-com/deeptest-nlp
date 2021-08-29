@@ -1,0 +1,8 @@
+version: "2.0"
+name: 页面访问
+intents:
+- id: 5
+  name: 加载
+  examples:
+  - id: 25
+    example: (加载|访问|打开)((?U:.+))

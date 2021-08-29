@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"github.com/kataras/iris/v12/websocket"
 	consts "github.com/utlai/utl/internal/comm/const"
 	_fileUtils "github.com/utlai/utl/internal/pkg/libs/file"
@@ -12,7 +11,6 @@ import (
 	serverVari "github.com/utlai/utl/internal/server/utils/var"
 	"gopkg.in/yaml.v3"
 	"path/filepath"
-	"strings"
 )
 
 type NluPatternService struct {
@@ -27,12 +25,8 @@ func NewNluPatternService() *NluPatternService {
 	return &NluPatternService{Namespace: serverConst.WsNamespace}
 }
 
-func (s *NluPatternService) Reload(id uint) (project model.Project) {
-	if serverVari.PatternData[id] == nil {
-		serverVari.PatternData[id] = map[string][]string{}
-	}
-
-	project = s.ProjectRepo.GetDetail(id)
+func (s *NluPatternService) Reload(projectId uint) (project model.Project) {
+	project = s.ProjectRepo.GetDetail(projectId)
 
 	dir := filepath.Join(project.Path, consts.Pattern.ToString())
 	files, _ := _fileUtils.ListDir(dir)
@@ -40,24 +34,10 @@ func (s *NluPatternService) Reload(id uint) (project model.Project) {
 	for _, f := range files {
 		content := _fileUtils.ReadFileBuf(f)
 
-		task := domain.NluPatternTask{}
+		task := domain.NluTaskForPattern{}
 		yaml.Unmarshal(content, &task)
 
-		for _, pattern := range task.Intents {
-			for _, line := range strings.Split(pattern.Examples, "\n") {
-				key := fmt.Sprintf("%d-%s", pattern.Id, pattern.Name)
-				idx := strings.Index(line, "-")
-				if idx < 0 {
-					idx = 0
-				}
-				str := line[idx:]
-
-				value := strings.TrimSpace(str)
-				if value != "" {
-					serverVari.PatternData[id][key] = append(serverVari.PatternData[id][key], value)
-				}
-			}
-		}
+		serverVari.PatternData[projectId] = append(serverVari.PatternData[projectId], task)
 	}
 
 	return

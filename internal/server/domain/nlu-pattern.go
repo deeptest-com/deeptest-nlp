@@ -1,14 +1,19 @@
 package domain
 
-type NluPatternTask struct {
-	Version string       `yaml:"version" default:"2.0"`
-	Name    string       `yaml:"name"`
-	Intents []NluPattern `yaml:"intents,flow"`
+type NluTaskForPattern struct {
+	Version string             `yaml:"version" default:"2.0"`
+	Name    string             `yaml:"name"`
+	Intents []NluIntentPattern `yaml:"intents,flow"`
 }
 
-type NluPattern struct {
+type NluIntentPattern struct {
 	Id   uint   `yaml:"id"`
 	Name string `yaml:"name"`
 
-	Examples string `yaml:"examples"`
+	Sents []NluSentPattern `yaml:"examples"`
+}
+
+type NluSentPattern struct {
+	Id      uint   `yaml:"id"`
+	Example string `yaml:"example"`
 }

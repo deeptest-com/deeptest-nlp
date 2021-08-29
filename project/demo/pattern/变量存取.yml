@@ -1,0 +1,10 @@
+version: "2.0"
+name: 变量存取
+intents:
+- id: 17
+  name: 变量赋值
+  examples:
+  - id: 75
+    example: (赋值|赋予|设置)((?U:.+))为((?U:.+))
+  - id: 76
+    example: (赋值|赋予|设置)((?U:.+))为((?U:.+))的((?U:.+))属性

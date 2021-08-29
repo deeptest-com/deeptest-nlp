@@ -5,14 +5,14 @@ import (
 	"github.com/utlai/utl/internal/server/repo"
 	serverVari "github.com/utlai/utl/internal/server/utils/var"
 	"regexp"
-	"strconv"
-	"strings"
+	"time"
 )
 
 type NluParsePatternService struct {
 	ProjectRepo   *repo.ProjectRepo   `inject:""`
 	NluTaskRepo   *repo.NluTaskRepo   `inject:""`
 	NluIntentRepo *repo.NluIntentRepo `inject:""`
+	NluSentRepo   *repo.NluSentRepo   `inject:""`
 	NluRuleRepo   *repo.NluRuleRepo   `inject:""`
 
 	NluSynonymRepo *repo.NluSynonymRepo `inject:""`
@@ -36,32 +36,42 @@ func (s *NluParsePatternService) Parse(projectId uint, req domain.NluReq) (ret d
 		Entities: make([]domain.Entity, 0),
 		Intent: domain.Intent{
 			Confidence: 1,
-		}}
+		},
+		StartTime: time.Now(),
+	}
 
 	text := req.Text
 	if serverVari.PatternData[projectId] == nil {
 		s.NluPatternService.Reload(projectId)
 	}
-	patternMap := serverVari.PatternData[projectId]
+	tasks := serverVari.PatternData[projectId]
 
-	for key, patterns := range patternMap {
-		for _, p := range patterns {
-			rgx := regexp.MustCompile(p)
+OuterLoop:
+	for _, task := range tasks {
+		for _, intent := range task.Intents {
+			for _, sent := range intent.Sents {
+				rgx := regexp.MustCompile(sent.Example)
 
-			arr := rgx.FindStringSubmatch(text)
+				arr := rgx.FindStringSubmatch(text)
 
-			if len(arr) > 0 {
-				idStr := strings.Split(key, "-")[0]
-				id, _ := strconv.Atoi(idStr)
+				if len(arr) > 0 { // matched
+					sent := s.NluSentRepo.Get(sent.Id)
+					intent := s.NluIntentRepo.Get(intent.Id)
 
-				intent := s.NluIntentRepo.Get(uint(id))
+					rasaResp.Intent.ID = int64(intent.ID)
+					rasaResp.Intent.Name = intent.Name
+					rasaResp.Intent.Sent = domain.Sent{
+						ID:   int64(sent.ID),
+						Name: sent.Text,
+					}
 
-				rasaResp.Intent.ID = int64(intent.ID)
-				rasaResp.Intent.Name = intent.Name
+					break OuterLoop
+				}
 			}
 		}
 	}
 
+	rasaResp.EndTime = time.Now()
 	ret.SetResult(rasaResp)
 	ret.Code = 1
 

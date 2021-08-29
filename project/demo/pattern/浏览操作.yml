@@ -1,0 +1,8 @@
+version: "2.0"
+name: 浏览操作
+intents:
+- id: 4
+  name: 导航
+  examples:
+  - id: 22
+    example: (刷新|重载|前进|后退|返回)

@@ -1,5 +1,7 @@
 package domain
 
+import "time"
+
 type NluReq struct {
 	Text       string `json:"text"`
 	TextOrigin string `json:"textOrigin"`
@@ -18,6 +20,9 @@ type RasaResp struct {
 	ResponseSelector ResponseSelector `json:"response_selector"`
 	Text             string           `json:"text"`
 	TextOrigin       string           `json:"textOrigin"`
+
+	StartTime time.Time `json:"startTime,omitempty"`
+	EndTime   time.Time `json:"endTime,omitempty"`
 }
 
 type Entity struct {
@@ -35,6 +40,11 @@ type Intent struct {
 	Confidence float32 `json:"confidence"`
 	ID         int64   `json:"id"`
 	Name       string  `json:"name"`
+	Sent       Sent    `json:"sent,omitempty"`
+}
+type Sent struct {
+	ID   int64  `json:"id,omitempty"`
+	Name string `json:"name,omitempty"`
 }
 type IntentRanking struct {
 	Confidence int64  `json:"confidence"`

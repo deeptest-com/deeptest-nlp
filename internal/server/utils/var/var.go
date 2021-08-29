@@ -1,7 +1,7 @@
 package serverVari
 
-var (
-	PatternData = map[uint]map[string][]string{}
+import "github.com/utlai/utl/internal/server/domain"
 
-	PatternCompiled = map[uint]map[string][]string{}
+var (
+	PatternData = map[uint][]domain.NluTaskForPattern{}
 )
