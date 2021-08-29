@@ -1,0 +1,7 @@
+version: "2.0"
+nlu:
+- intent: 操作
+  examples: |
+    - [确定]{"entity":"弹窗处理", "value":"弹窗处理_lkp"}
+    - [取消]{"entity":"弹窗处理", "value":"弹窗处理_lkp"}
+    - [关闭]{"entity":"弹窗处理", "value":"弹窗处理_lkp"}

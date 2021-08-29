@@ -1,0 +1,15 @@
+version: "2.0"
+nlu:
+- intent: 等待
+  examples: |
+    - [等待]{"entity":"等待", "value":"等待_syn"}[5](value)[秒]{"entity":"时间单位", "value":"时间单位_lkp"}
+    - [等待]{"entity":"等待", "value":"等待_syn"}[10](value)[分钟]{"entity":"时间单位", "value":"时间单位_lkp"}
+    - [暂停]{"entity":"等待", "value":"等待_syn"}[3](value)[小时]{"entity":"时间单位", "value":"时间单位_lkp"}
+    - [停止]{"entity":"等待", "value":"等待_syn"}[5](value)[分]{"entity":"时间单位", "value":"时间单位_lkp"}
+    - [等待]{"entity":"等待", "value":"等待_syn"}[1](value)[小时]{"entity":"时间单位", "value":"时间单位_lkp"}
+    - [暂停]{"entity":"等待", "value":"等待_syn"}[3](value)[秒]{"entity":"时间单位", "value":"时间单位_lkp"}
+    - [暂停]{"entity":"等待", "value":"等待_syn"}[10](value)[分]{"entity":"时间单位", "value":"时间单位_lkp"}
+    - [停止]{"entity":"等待", "value":"等待_syn"}[1](value)[分钟]{"entity":"时间单位", "value":"时间单位_lkp"}
+    - [停止]{"entity":"等待", "value":"等待_syn"}[3](value)[小时]{"entity":"时间单位", "value":"时间单位_lkp"}
+    - [等待]{"entity":"等待", "value":"等待_syn"}[1](value)[时]{"entity":"时间单位", "value":"时间单位_lkp"}
+    - [暂停]{"entity":"等待", "value":"等待_syn"}[10](value)[时]{"entity":"时间单位", "value":"时间单位_lkp"}

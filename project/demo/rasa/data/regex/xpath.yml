@@ -1,0 +1,5 @@
+version: "2.0"
+nlu:
+- regex: xpath_rgx
+  examples: |
+    - //.*

@@ -1,0 +1,7 @@
+version: "2.0"
+nlu:
+- lookup: 层级关系_lkp
+  examples: |
+    - 根
+    - 父
+    - 子

@@ -1,0 +1,10 @@
+version: "2.0"
+nlu:
+- intent: 变量赋值
+  examples: |
+    - [设置]{"entity":"赋值", "value":"赋值_syn"}[variable](variable)为[expression](expression)
+    - [设置]{"entity":"赋值", "value":"赋值_syn"}[variable](variable)为[element](element)的[property](property)属性
+    - [赋值]{"entity":"赋值", "value":"赋值_syn"}[variable](variable)为[expression](expression)
+    - [赋值]{"entity":"赋值", "value":"赋值_syn"}[variable](variable)为[element](element)的[property](property)属性
+    - [赋于]{"entity":"赋值", "value":"赋值_syn"}[variable](variable)为[expression](expression)
+    - [赋于]{"entity":"赋值", "value":"赋值_syn"}[variable](variable)为[element](element)的[property](property)属性
