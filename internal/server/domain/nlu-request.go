@@ -19,7 +19,7 @@ type RasaResp struct {
 	IntentRanking    []IntentRanking  `json:"intent_ranking"`
 	ResponseSelector ResponseSelector `json:"response_selector"`
 	Text             string           `json:"text"`
-	TextOrigin       string           `json:"textOrigin"`
+	TextOrigin       string           `json:"textOrigin,omitempty"`
 
 	StartTime time.Time `json:"startTime,omitempty"`
 	EndTime   time.Time `json:"endTime,omitempty"`
@@ -33,7 +33,7 @@ type Entity struct {
 	Processors       []string `json:"processors"`
 	Start            int64    `json:"start"`
 	Value            string   `json:"value"`
-	ValueOrigin      string   `json:"valueOrigin"`
+	ValueOrigin      string   `json:"valueOrigin,omitempty"`
 }
 
 type Intent struct {

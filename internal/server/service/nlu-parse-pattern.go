@@ -1,7 +1,9 @@
 package service
 
 import (
+	consts "github.com/utlai/utl/internal/comm/const"
 	"github.com/utlai/utl/internal/server/domain"
+	"github.com/utlai/utl/internal/server/model"
 	"github.com/utlai/utl/internal/server/repo"
 	serverVari "github.com/utlai/utl/internal/server/utils/var"
 	"regexp"
@@ -33,7 +35,6 @@ func NewNluParsePatternService() *NluParsePatternService {
 func (s *NluParsePatternService) Parse(projectId uint, req domain.NluReq) (ret domain.NluResp) {
 	ret.Code = -1
 	rasaResp := domain.RasaResp{
-		Entities: make([]domain.Entity, 0),
 		Intent: domain.Intent{
 			Confidence: 1,
 		},
@@ -65,6 +66,8 @@ OuterLoop:
 						Name: sent.Text,
 					}
 
+					s.popEntities(sent, rasaResp)
+
 					break OuterLoop
 				}
 			}
@@ -76,4 +79,11 @@ OuterLoop:
 	ret.Code = 1
 
 	return
+}
+
+func (s *NluParsePatternService) popEntities(sent model.NluSent, resp domain.RasaResp) {
+
+	resp.Entities = []domain.Entity{
+		{Extractor: consts.Pattern.ToString()},
+	}
 }
