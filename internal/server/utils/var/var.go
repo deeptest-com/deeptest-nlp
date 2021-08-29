@@ -1,5 +1,7 @@
 package serverVari
 
 var (
-	PatternData = map[string][]string{}
+	PatternData = map[uint]map[string][]string{}
+
+	PatternCompiled = map[uint]map[string][]string{}
 )

@@ -28,6 +28,10 @@ func NewNluPatternService() *NluPatternService {
 }
 
 func (s *NluPatternService) Reload(id uint) (project model.Project) {
+	if serverVari.PatternData[id] == nil {
+		serverVari.PatternData[id] = map[string][]string{}
+	}
+
 	project = s.ProjectRepo.GetDetail(id)
 
 	dir := filepath.Join(project.Path, consts.Pattern.ToString())
@@ -49,7 +53,7 @@ func (s *NluPatternService) Reload(id uint) (project model.Project) {
 				}
 
 				value := strings.TrimSpace(arr[1])
-				serverVari.PatternData[key] = append(serverVari.PatternData[key], value)
+				serverVari.PatternData[id][key] = append(serverVari.PatternData[id][key], value)
 			}
 		}
 	}

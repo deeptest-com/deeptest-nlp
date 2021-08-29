@@ -122,7 +122,7 @@ func (r *Router) App() {
 					party.Post("/", r.NluRasaCtrl.ReloadRes).Name = "刷新资源"
 				})
 				admin.PartyFunc("/rasa/parse/{id:uint}", func(party iris.Party) {
-					party.Post("/", r.NluParseCtrl.Parse).Name = "启动项目"
+					party.Post("/", r.NluParseCtrl.Parse).Name = "解析说法"
 				})
 
 				admin.PartyFunc("/tasks", func(party iris.Party) {
