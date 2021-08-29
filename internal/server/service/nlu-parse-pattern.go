@@ -34,7 +34,7 @@ func NewNluParsePatternService() *NluParsePatternService {
 func (s *NluParsePatternService) Parse(projectId uint, req domain.NluReq) (ret domain.NluResp) {
 	ret.Code = -1
 
-	text := req.TextOrigin
+	text := req.Text
 	if serverVari.PatternData[projectId] == nil {
 		s.NluPatternService.Reload(projectId)
 	}
@@ -42,22 +42,16 @@ func (s *NluParsePatternService) Parse(projectId uint, req domain.NluReq) (ret d
 
 	for key, patterns := range patternMap {
 		for _, p := range patterns {
-			rgx, err := regexp.Compile(p)
-
-			if err != nil {
-				_logUtils.Error(err.Error())
-				continue
-			}
+			rgx := regexp.MustCompile(p)
 
 			arr := rgx.FindStringSubmatch(text)
-			_logUtils.Infof("%s, %#v", key, arr)
 
 			if len(arr) > 0 {
 				idStr := strings.Split(key, "-")[0]
 				id, _ := strconv.Atoi(idStr)
 
 				intent := s.NluIntentRepo.Get(uint(id))
-				_logUtils.Infof("intent %s", intent.Name)
+				_logUtils.Infof("intent %s, '%s'", intent.Name, p)
 			}
 		}
 	}

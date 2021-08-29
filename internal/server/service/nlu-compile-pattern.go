@@ -46,7 +46,8 @@ func (s *NluCompilePatternService) PatternCompile(id uint) {
 
 		intents := s.NluIntentRepo.ListByTaskIdNoDisabled(task.ID)
 		for _, intent := range intents {
-			pattern := domain.NluPattern{Id: intent.ID, Name: intent.Name}
+			lines := make([]string, 0)
+			lineMap := map[string]bool{}
 
 			sents := s.NluSentRepo.ListByIntentId(intent.ID)
 			for _, sent := range sents {
@@ -80,14 +81,23 @@ func (s *NluCompilePatternService) PatternCompile(id uint) {
 						line += "(" + section + ")"
 
 					} else if slotType == serverConst.Slot {
-						line += slotVale
+						line += "((?U:.+))"
+
 					} else if slotType == "" {
 						line += slotText
+
 					}
 				}
-				pattern.Examples += "- " + line + "\n"
+
+				line = strings.TrimSpace(line)
+				if line != "" && !lineMap[line] {
+					lines = append(lines, line)
+					lineMap[line] = true
+				}
 			}
 
+			pattern := domain.NluPattern{Id: intent.ID, Name: intent.Name}
+			pattern.Examples = strings.Join(lines, "\n")
 			nluTask.Intents = append(nluTask.Intents, pattern)
 		}
 

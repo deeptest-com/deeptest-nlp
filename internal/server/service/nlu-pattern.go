@@ -46,14 +46,16 @@ func (s *NluPatternService) Reload(id uint) (project model.Project) {
 		for _, pattern := range task.Intents {
 			for _, line := range strings.Split(pattern.Examples, "\n") {
 				key := fmt.Sprintf("%d-%s", pattern.Id, pattern.Name)
-				arr := strings.Split(line, "-")
-
-				if len(arr) == 1 {
-					continue
+				idx := strings.Index(line, "-")
+				if idx < 0 {
+					idx = 0
 				}
+				str := line[idx:]
 
-				value := strings.TrimSpace(arr[1])
-				serverVari.PatternData[id][key] = append(serverVari.PatternData[id][key], value)
+				value := strings.TrimSpace(str)
+				if value != "" {
+					serverVari.PatternData[id][key] = append(serverVari.PatternData[id][key], value)
+				}
 			}
 		}
 	}
