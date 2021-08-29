@@ -8,8 +8,6 @@ import (
 	serverConst "github.com/utlai/utl/internal/server/utils/const"
 	serverVari "github.com/utlai/utl/internal/server/utils/var"
 	"regexp"
-	"strconv"
-	"strings"
 	"time"
 )
 
@@ -57,9 +55,9 @@ OuterLoop:
 			for _, sent := range intent.Sents {
 				rgx := regexp.MustCompile(sent.Example)
 
-				sections := rgx.FindStringSubmatch(text)
+				indexArr := rgx.FindStringSubmatchIndex(text)
 
-				if len(sections) > 0 { // matched
+				if len(indexArr) > 0 { // matched
 					sent := s.NluSentRepo.Get(sent.Id)
 					intent := s.NluIntentRepo.Get(intent.Id)
 
@@ -70,7 +68,7 @@ OuterLoop:
 						Name: sent.Text,
 					}
 
-					s.popEntities(sections, sent, rasaResp)
+					s.popEntities(indexArr, rgx, sent, rasaResp)
 
 					break OuterLoop
 				}
@@ -85,23 +83,22 @@ OuterLoop:
 	return
 }
 
-func (s *NluParsePatternService) popEntities(sections []string, sent model.NluSent, resp domain.RasaResp) {
-	slotMap := s.getSlotMap(sent.ID)
-
+func (s *NluParsePatternService) popEntities(indexArr []int, rgx *regexp.Regexp, sent model.NluSent, resp domain.RasaResp) {
+	//slotMap := s.getSlotMap(sent.ID)
 	slots := s.NluSlotRepo.ListBySentId(sent.ID)
 
 	for _, slot := range slots {
 		slotType := slot.Type
-		slotId := slot.ID
+		//slotId := slot.ID
 
 		if slotType == serverConst.Synonym {
-			slot := slotMap[slotId]
+			//slot := slotMap[slotId]
 
 		} else if slotType == serverConst.Lookup {
-			slot := slotMap[slotId]
+			//slot := slotMap[slotId]
 
 		} else if slotType == serverConst.Regex {
-			slot := slotMap[slotId]
+			//slot := slotMap[slotId]
 
 		} else if slotType == serverConst.Slot {
 
