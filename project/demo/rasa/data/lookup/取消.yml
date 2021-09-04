@@ -1,0 +1,6 @@
+version: "2.0"
+nlu:
+- lookup: 取消_lkp
+  examples: |
+    - 取消
+    - 关闭

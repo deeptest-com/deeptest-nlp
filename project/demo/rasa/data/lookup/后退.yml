@@ -1,0 +1,6 @@
+version: "2.0"
+nlu:
+- lookup: 后退_lkp
+  examples: |
+    - 后退
+    - 返回

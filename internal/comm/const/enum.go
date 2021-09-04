@@ -22,12 +22,12 @@ func (e AgentStatus) ToString() string {
 	return string(e)
 }
 
-type SeleniumOpt string
+type SeleniumIntent string
 
 const (
-	Navigation SeleniumOpt = "navigation"
+	Navigation SeleniumIntent = "navigation"
 )
 
-func (e SeleniumOpt) ToString() string {
+func (e SeleniumIntent) ToString() string {
 	return string(e)
 }

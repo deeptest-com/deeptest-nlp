@@ -1,0 +1,5 @@
+version: "2.0"
+nlu:
+- lookup: 前进_lkp
+  examples: |
+    - 前进

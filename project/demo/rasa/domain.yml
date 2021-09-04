@@ -7,9 +7,12 @@ responses:
 intents:
 - 打印日志
 - 断言
-- 导航
+- 前进
+- 后退
+- 刷新
 - 加载
-- 操作
+- 确定
+- 取消
 - Cookie设置
 - Cookie获取
 - 判断
@@ -19,7 +22,8 @@ intents:
 - 迭代退出
 - 迭代继续
 - 等待
-- 变量赋值
+- 设置变量为表达式
+- 设置变量为元素属性
 - 点击
 - 双击
 - 右击
@@ -36,9 +40,12 @@ entities:
 - 日志级别
 - expression
 - 断言
-- 浏览操作
+- 前进
+- 后退
+- 刷新
 - 页面访问
-- 弹窗处理
+- 确定
+- 取消
 - 赋值
 - name
 - 取值
@@ -75,13 +82,22 @@ slots:
   断言:
     type: text
     influence_conversation: false
-  浏览操作:
+  前进:
+    type: text
+    influence_conversation: false
+  后退:
+    type: text
+    influence_conversation: false
+  刷新:
     type: text
     influence_conversation: false
   页面访问:
     type: text
     influence_conversation: false
-  弹窗处理:
+  确定:
+    type: text
+    influence_conversation: false
+  取消:
     type: text
     influence_conversation: false
   赋值:
