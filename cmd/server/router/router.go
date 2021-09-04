@@ -32,7 +32,8 @@ type Router struct {
 	RoleCtrl *handler.RoleCtrl `inject:""`
 	UserCtrl *handler.UserCtrl `inject:""`
 
-	RpcCtrl *handler.RpcCtrl `inject:""`
+	RpcCtrl   *handler.RpcCtrl   `inject:""`
+	AgentCtrl *handler.AgentCtrl `inject:""`
 
 	ProjectCtrl        *handler.ProjectCtrl        `inject:""`
 	NluTaskCtrl        *handler.NluTaskCtrl        `inject:""`
@@ -83,7 +84,7 @@ func (r *Router) App() {
 				party.Post("/request", r.RpcCtrl.Request).Name = "转发RPC请求"
 			})
 			v1.PartyFunc("/client", func(party iris.Party) {
-				party.Post("/agent/register", r.RpcCtrl.Request).Name = "转发RPC请求"
+				party.Post("/agent/register", r.AgentCtrl.Register).Name = "注册代理"
 			})
 
 			v1.PartyFunc("/admin", func(admin iris.Party) {

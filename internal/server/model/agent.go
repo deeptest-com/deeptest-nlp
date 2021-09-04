@@ -11,7 +11,7 @@ type Agent struct {
 	Name             string             `json:"name"`
 	Desc             string             `json:"desc"`
 	Status           consts.AgentStatus `json:"status"`
-	LastRegisterTime *time.Time         `json:"lastRegisterTime"`
+	LastRegisterTime time.Time          `json:"lastRegisterTime"`
 
 	Ip         string `json:"nodeIp"`
 	Port       int    `json:"nodePort"`

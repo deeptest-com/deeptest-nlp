@@ -24,12 +24,12 @@ func (r AgentRepo) Register(to domain.Agent) (err error) {
 		LastRegisterTime: time.Now(),
 	}
 
-	if po.ID != 0 {
+	if po.ID == 0 {
+		r.DB.Model(&model.Agent{}).Create(&po)
+	} else {
 		r.DB.Model(&model.Agent{}).
 			Where("mac_address=?", to.MacAddress).
 			Updates(&po)
-	} else {
-		r.DB.Model(&model.Agent{}).Create(&po)
 	}
 
 	return
