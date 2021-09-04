@@ -69,6 +69,7 @@ entities:
 - 停止
 - 输入
 - expresssion
+- 清除
 slots:
   打印:
     type: text
@@ -167,5 +168,8 @@ slots:
     type: text
     influence_conversation: false
   expresssion:
+    type: text
+    influence_conversation: false
+  清除:
     type: text
     influence_conversation: false
