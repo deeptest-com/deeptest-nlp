@@ -1,0 +1,86 @@
+version: "2.0"
+nlu:
+- intent: 点击
+  examples: |
+    - [点击]{"entity":"点击", "value":"点击_lkp"}按[编号]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [左击]{"entity":"点击", "value":"点击_lkp"}按[编号]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [单击]{"entity":"点击", "value":"点击_lkp"}按[编号]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [点击]{"entity":"点击", "value":"点击_lkp"}按[名称]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [左击]{"entity":"点击", "value":"点击_lkp"}按[名称]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [单击]{"entity":"点击", "value":"点击_lkp"}按[名称]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [点击]{"entity":"点击", "value":"点击_lkp"}按[内容]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [左击]{"entity":"点击", "value":"点击_lkp"}按[内容]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [单击]{"entity":"点击", "value":"点击_lkp"}按[内容]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [点击]{"entity":"点击", "value":"点击_lkp"}按[标签]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [左击]{"entity":"点击", "value":"点击_lkp"}按[标签]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [单击]{"entity":"点击", "value":"点击_lkp"}按[标签]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [点击]{"entity":"点击", "value":"点击_lkp"}按[类名]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [左击]{"entity":"点击", "value":"点击_lkp"}按[类名]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [单击]{"entity":"点击", "value":"点击_lkp"}按[类名]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [点击]{"entity":"点击", "value":"点击_lkp"}按[样式]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [左击]{"entity":"点击", "value":"点击_lkp"}按[样式]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [单击]{"entity":"点击", "value":"点击_lkp"}按[样式]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [点击]{"entity":"点击", "value":"点击_lkp"}按[路径]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [左击]{"entity":"点击", "value":"点击_lkp"}按[路径]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [单击]{"entity":"点击", "value":"点击_lkp"}按[路径]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+- intent: 双击
+  examples: |
+    - [双击]{"entity":"点击", "value":"点击_lkp"}按[编号]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [双击]{"entity":"点击", "value":"点击_lkp"}按[名称]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [双击]{"entity":"点击", "value":"点击_lkp"}按[内容]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [双击]{"entity":"点击", "value":"点击_lkp"}按[标签]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [双击]{"entity":"点击", "value":"点击_lkp"}按[类名]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [双击]{"entity":"点击", "value":"点击_lkp"}按[样式]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [双击]{"entity":"点击", "value":"点击_lkp"}按[路径]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+- intent: 右击
+  examples: |
+    - [右击]{"entity":"点击", "value":"点击_lkp"}按[编号]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [右击]{"entity":"点击", "value":"点击_lkp"}按[名称]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [右击]{"entity":"点击", "value":"点击_lkp"}按[内容]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [右击]{"entity":"点击", "value":"点击_lkp"}按[标签]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [右击]{"entity":"点击", "value":"点击_lkp"}按[类名]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [右击]{"entity":"点击", "value":"点击_lkp"}按[样式]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [右击]{"entity":"点击", "value":"点击_lkp"}按[路径]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+- intent: 按下
+  examples: |
+    - [按下]{"entity":"按键", "value":"按键_lkp"}按[编号]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [按下]{"entity":"按键", "value":"按键_lkp"}按[名称]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [按下]{"entity":"按键", "value":"按键_lkp"}按[内容]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [按下]{"entity":"按键", "value":"按键_lkp"}按[标签]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - 按下按类名expression
+    - [按下]{"entity":"按键", "value":"按键_lkp"}按[样式]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [按下]{"entity":"按键", "value":"按键_lkp"}按[路径]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+- intent: 抬起
+  examples: |
+    - [抬起]{"entity":"按键", "value":"按键_lkp"}按[编号]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [抬起]{"entity":"按键", "value":"按键_lkp"}按[名称]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [抬起]{"entity":"按键", "value":"按键_lkp"}按[内容]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [抬起]{"entity":"按键", "value":"按键_lkp"}按[标签]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [抬起]{"entity":"按键", "value":"按键_lkp"}按[类名]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [抬起]{"entity":"按键", "value":"按键_lkp"}按[样式]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [抬起]{"entity":"按键", "value":"按键_lkp"}按[路径]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+- intent: 悬停
+  examples: |
+    - [悬停]{"entity":"按键", "value":"按键_lkp"}按[编号]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [悬停]{"entity":"按键", "value":"按键_lkp"}按[名称]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [悬停]{"entity":"按键", "value":"按键_lkp"}按[内容]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [悬停]{"entity":"按键", "value":"按键_lkp"}按[标签]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [悬停]{"entity":"按键", "value":"按键_lkp"}按[类名]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [悬停]{"entity":"按键", "value":"按键_lkp"}按[样式]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [悬停]{"entity":"按键", "value":"按键_lkp"}按[路径]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+- intent: 拖动
+  examples: |
+    - [拖拽]{"entity":"拖动", "value":"拖动_lkp"}按[编号]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)到[编号]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression2)
+    - [拖拽]{"entity":"拖动", "value":"拖动_lkp"}按[名称]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)到[名称]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression2)
+    - [拖拽]{"entity":"拖动", "value":"拖动_lkp"}按[内容]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)到[内容]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression2)
+    - [拖拽]{"entity":"拖动", "value":"拖动_lkp"}按[标签]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)到[标签]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)
+    - [拖拽]{"entity":"拖动", "value":"拖动_lkp"}按[类名]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)到[类名]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression2)
+    - [拖拽]{"entity":"拖动", "value":"拖动_lkp"}按[样式]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)到[样式]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression2)
+    - [拖拽]{"entity":"拖动", "value":"拖动_lkp"}按[路径]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)到[路径]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression2)
+    - [拖动]{"entity":"拖动", "value":"拖动_lkp"}按[编号]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)到[编号]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression2)
+    - [拖动]{"entity":"拖动", "value":"拖动_lkp"}按[名称]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)到[名称]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression2)
+    - [拖动]{"entity":"拖动", "value":"拖动_lkp"}按[内容]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)到[内容]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression2)
+    - [拖动]{"entity":"拖动", "value":"拖动_lkp"}按[标签]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)到[标签]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression2)
+    - [拖动]{"entity":"拖动", "value":"拖动_lkp"}按[类名]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)到[类名]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression2)
+    - [拖动]{"entity":"拖动", "value":"拖动_lkp"}按[样式]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)到[样式]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression2)
+    - [拖动]{"entity":"拖动", "value":"拖动_lkp"}按[路径]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression)到[路径]{"entity":"选择器", "value":"选择器_lkp"}[expression](expression2)
