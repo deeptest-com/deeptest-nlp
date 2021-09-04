@@ -1,6 +1,9 @@
 package consts
 
 const (
-	AppName = "utl"
-	Version = "2.0"
+	AppNameServer = "utl"
+	AppNameAgent  = "agent"
+
+	WebCheckInterval   = 30 // sec
+	AgentCheckInterval = 30 // sec
 )

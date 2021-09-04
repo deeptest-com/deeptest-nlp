@@ -4,16 +4,16 @@ import (
 	"fmt"
 	"github.com/casbin/casbin/v2"
 	"github.com/sirupsen/logrus"
+	_db "github.com/utlai/utl/internal/pkg/db"
 	_commonUtils "github.com/utlai/utl/internal/pkg/libs/common"
 	_fileUtils "github.com/utlai/utl/internal/pkg/libs/file"
 	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
-	"github.com/utlai/utl/internal/server/db"
 	serverRes "github.com/utlai/utl/res/server"
 	"path/filepath"
 )
 
 func NewEnforcer() *casbin.Enforcer {
-	adapter, err := NewAdapterByDB(db.GetInst().DB())
+	adapter, err := NewAdapterByDB(_db.GetInst().DB())
 	if err != nil {
 		logrus.Println(fmt.Sprintf("NewAdapter 错误: %v", err))
 	}

@@ -1,4 +1,4 @@
-package domain
+package serverDomain
 
 import _const "github.com/utlai/utl/internal/pkg/const"
 

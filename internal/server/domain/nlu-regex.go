@@ -1,4 +1,4 @@
-package domain
+package serverDomain
 
 type NluRegex struct {
 	Version string         `yaml:"version"`

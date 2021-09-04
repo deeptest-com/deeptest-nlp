@@ -1,4 +1,4 @@
-package domain
+package serverDomain
 
 type NluConfig struct {
 	Language string     `json:"language"`

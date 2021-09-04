@@ -13,7 +13,7 @@ import (
 	"strings"
 )
 
-var Config = struct {
+var Inst = struct {
 	LogLevel string              `yaml:"logLevel" env:"LogLevel" default:"info"`
 	Debug    bool                `yaml:"debug" env:"Debug" default:"false"`
 	Https    bool                `default:"false" env:"Https"`
@@ -71,20 +71,20 @@ func Init() {
 	}
 
 	_logUtils.Infof("从文件%s加载server配置", configPath)
-	if err := configor.Load(&Config, configPath); err != nil {
-		logger.Println(fmt.Sprintf("Config Path:%s ,Error:%s", configPath, err.Error()))
+	if err := configor.Load(&Inst, configPath); err != nil {
+		logger.Println(fmt.Sprintf("Inst Path:%s ,Error:%s", configPath, err.Error()))
 		return
 	}
 
-	if Config.Debug {
-		fmt.Println(fmt.Sprintf("配置项：%+v", Config))
+	if Inst.Debug {
+		fmt.Println(fmt.Sprintf("配置项：%+v", Inst))
 	}
 }
 
 func GetRedisUris() []string {
 	addrs := make([]string, 0, 0)
-	hosts := strings.Split(Config.Redis.Host, ";")
-	ports := strings.Split(Config.Redis.Port, ";")
+	hosts := strings.Split(Inst.Redis.Host, ";")
+	ports := strings.Split(Inst.Redis.Port, ";")
 	for _, h := range hosts {
 		for _, p := range ports {
 			addrs = append(addrs, fmt.Sprintf("%s:%s", h, p))

@@ -1,10 +1,10 @@
-package db
+package _db
 
 import (
 	"fmt"
 	_fileUtils "github.com/utlai/utl/internal/pkg/libs/file"
-	"github.com/utlai/utl/internal/pkg/libs/log"
-	"github.com/utlai/utl/internal/server/cfg"
+	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
+	serverConf "github.com/utlai/utl/internal/server/cfg"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
@@ -15,7 +15,6 @@ import (
 	"strings"
 	"time"
 
-	_ "gorm.io/driver/postgres"
 	_ "gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -27,40 +26,41 @@ var (
 )
 
 func GetInst() *Instance {
-	if inst == nil {
-		InitDB()
-	}
-
 	return inst
 }
 
-func InitDB() {
+func InitDB(model string) {
 	var dialector gorm.Dialector
 
-	if serverConf.Config.DB.Adapter == "sqlite3" {
-		conn := DBFile()
+	if model == "agent" || serverConf.Inst.DB.Adapter == "sqlite3" {
+		conn := DBFile(model)
 		dialector = sqlite.Open(conn)
 
-	} else if serverConf.Config.DB.Adapter == "mysql" {
+	} else if serverConf.Inst.DB.Adapter == "mysql" {
 		conn := fmt.Sprintf("%v:%v@tcp(%v:%v)/%v?parseTime=True&loc=Local",
-			serverConf.Config.DB.User, serverConf.Config.DB.Password, serverConf.Config.DB.Host, serverConf.Config.DB.Port, serverConf.Config.DB.Name)
+			serverConf.Inst.DB.User, serverConf.Inst.DB.Password, serverConf.Inst.DB.Host, serverConf.Inst.DB.Port, serverConf.Inst.DB.Name)
 		dialector = mysql.Open(conn)
 
-	} else if serverConf.Config.DB.Adapter == "postgres" {
+	} else if serverConf.Inst.DB.Adapter == "postgres" {
 		conn := fmt.Sprintf("postgres://%v:%v@%v/%v?sslmode=disable",
-			serverConf.Config.DB.User, serverConf.Config.DB.Password, serverConf.Config.DB.Host, serverConf.Config.DB.Name)
+			serverConf.Inst.DB.User, serverConf.Inst.DB.Password, serverConf.Inst.DB.Host, serverConf.Inst.DB.Name)
 		dialector = postgres.Open(conn)
 
 	} else {
 		_logUtils.Info("not supported database adapter")
 	}
 
+	prefix := ""
+	if model == "server" {
+		prefix = serverConf.Inst.DB.Prefix
+	}
+
 	DB, err := gorm.Open(dialector, &gorm.Config{
 		SkipDefaultTransaction: false,
 		Logger:                 logger.Default.LogMode(logger.Info),
 		NamingStrategy: schema.NamingStrategy{
-			TablePrefix:   serverConf.Config.DB.Prefix, // 表名前缀，`User` 的表名应该是 `t_users`
-			SingularTable: false,                       // 使用单数表名，启用该选项，此时，`User` 的表名应该是 `t_user`
+			TablePrefix:   prefix,
+			SingularTable: false,
 		},
 	})
 
@@ -81,7 +81,6 @@ func InitDB() {
 
 	inst = &Instance{}
 	inst.db = DB
-	inst.config = &serverConf.Config.DB
 }
 
 func (*Instance) DB() *gorm.DB {
@@ -89,8 +88,8 @@ func (*Instance) DB() *gorm.DB {
 }
 
 type Instance struct {
-	config *serverConf.DBConfig
-	db     *gorm.DB
+	//config *serverConf.DBConfig
+	db *gorm.DB
 }
 
 func (i *Instance) Close() error {
@@ -101,7 +100,11 @@ func (i *Instance) Close() error {
 	return nil
 }
 
-func DBFile() string {
-	path := filepath.Join(_fileUtils.GetExeDir(), strings.ToLower(serverConf.Config.DB.Name+".db"))
+func DBFile(mode string) string {
+	if mode != "agent" {
+		mode = serverConf.Inst.DB.Name
+	}
+
+	path := filepath.Join(_fileUtils.GetExeDir(), strings.ToLower(mode+".db"))
 	return path
 }

@@ -1,4 +1,4 @@
-package domain
+package serverDomain
 
 type NluSynonym struct {
 	Version    string          `yaml:"version"`

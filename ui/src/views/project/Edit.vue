@@ -101,7 +101,7 @@ export default {
       }
       if (this.id) {
         this.getModel().then(json => {
-          this.model = json.data
+          this.model = json.data.model
         })
       } else {
         this.reset()

@@ -1,8 +1,10 @@
-package service
+package serverService
 
 import (
+	consts "github.com/utlai/utl/internal/comm/const"
 	_const "github.com/utlai/utl/internal/pkg/const"
 	_fileUtils "github.com/utlai/utl/internal/pkg/libs/file"
+	serverConf "github.com/utlai/utl/internal/server/cfg"
 	"github.com/utlai/utl/internal/server/domain"
 	"github.com/utlai/utl/internal/server/repo"
 	"path/filepath"
@@ -19,7 +21,7 @@ func NewValidService() *ValidService {
 	return &ValidService{}
 }
 
-func (s *ValidService) Valid(model domain.ValidRequest) (result domain.ValidResp) {
+func (s *ValidService) Valid(model serverDomain.ValidRequest) (result serverDomain.ValidResp) {
 	if model.Method == _const.ValidProjectPath {
 		result = s.ValidProjectPath(model.Value)
 	} else if model.Method == _const.ValidDictName {
@@ -29,14 +31,14 @@ func (s *ValidService) Valid(model domain.ValidRequest) (result domain.ValidResp
 	return
 }
 
-func (s *ValidService) ValidProjectPath(value string) (result domain.ValidResp) {
+func (s *ValidService) ValidProjectPath(value string) (result serverDomain.ValidResp) {
 	if !_fileUtils.FileExist(value) {
 		result.Pass = false
 		return
 	}
 
 	configFile := filepath.Join(value, "config.yml")
-	if !_fileUtils.FileExist(configFile) {
+	if serverConf.Inst.Analyzer == consts.Rasa && !_fileUtils.FileExist(configFile) {
 		result.Pass = false
 		return
 	}
@@ -45,7 +47,7 @@ func (s *ValidService) ValidProjectPath(value string) (result domain.ValidResp) 
 	return
 }
 
-func (s *ValidService) ValidDictName(value string, id uint, tp string) (result domain.ValidResp) {
+func (s *ValidService) ValidDictName(value string, id uint, tp string) (result serverDomain.ValidResp) {
 	if tp == "synonym" {
 		po := s.NluSynonymRepo.GetByName(value)
 		if po.ID == id {

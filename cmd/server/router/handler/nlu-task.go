@@ -11,8 +11,8 @@ import (
 type NluTaskCtrl struct {
 	BaseCtrl
 
-	NluTaskService *service.NluTaskService `inject:""`
-	UserService    *service.UserService    `inject:""`
+	NluTaskService *serverService.NluTaskService `inject:""`
+	UserService    *serverService.UserService    `inject:""`
 }
 
 func NewNluTaskCtrl() *NluTaskCtrl {

@@ -2,7 +2,7 @@ package serverCron
 
 import (
 	"fmt"
-	_const "github.com/utlai/utl/internal/pkg/const"
+	consts "github.com/utlai/utl/internal/comm/const"
 	_cronUtils "github.com/utlai/utl/internal/pkg/libs/cron"
 )
 
@@ -16,9 +16,9 @@ func NewServerCron() *ServerCron {
 }
 
 func (s *ServerCron) Init() {
-	_cronUtils.AddTaskFuc(
+	_cronUtils.AddTask(
 		"check",
-		fmt.Sprintf("@every %ds", _const.WebCheckQueueInterval),
+		fmt.Sprintf("@every %ds", consts.WebCheckInterval),
 		func() {
 
 		},

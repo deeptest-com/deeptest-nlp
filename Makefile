@@ -46,7 +46,7 @@ copy_files:
 	@echo 'start copy files ${BIN_OUT}'
 
 	@sqlite3 utl.db ".backup '${BIN_DIR}/utl.db'"
-	@sqlite3 '${BIN_DIR}/utl.db' ".read 'xdoc/clear-data.txt'"
+	#@sqlite3 '${BIN_DIR}/utl.db' ".read 'xdoc/clear-data.txt'"
 
 	@for subdir in `ls ${BIN_OUT}`; \
 		do cp -r utl.db "${BIN_OUT}$${subdir}/utl-server"; done

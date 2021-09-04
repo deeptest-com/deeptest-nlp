@@ -142,7 +142,7 @@ func PostRasa(url string, params interface{}) (ret _domain.RpcResult, success bo
 	}
 	defer resp.Body.Close()
 
-	var rasaResp domain.RasaResp
+	var rasaResp serverDomain.RasaResp
 	json.Unmarshal(bodyStr, &rasaResp)
 
 	success = rasaResp.Intent.ID != 0

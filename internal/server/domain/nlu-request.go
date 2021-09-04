@@ -1,6 +1,8 @@
-package domain
+package serverDomain
 
-import "time"
+import (
+	"time"
+)
 
 type NluReq struct {
 	Text       string `json:"text"`
@@ -14,12 +16,15 @@ type NluResp struct {
 }
 
 type RasaResp struct {
-	Entities         []Entity         `json:"entities"`
-	Intent           Intent           `json:"intent"`
-	IntentRanking    []IntentRanking  `json:"intent_ranking"`
+	RasaRespForPattern
 	ResponseSelector ResponseSelector `json:"response_selector"`
-	Text             string           `json:"text"`
 	TextOrigin       string           `json:"textOrigin,omitempty"`
+}
+type RasaRespForPattern struct {
+	Entities      []Entity        `json:"entities"`
+	Intent        Intent          `json:"intent"`
+	IntentRanking []IntentRanking `json:"intent_ranking"`
+	Text          string          `json:"text"`
 
 	StartTime time.Time `json:"startTime,omitempty"`
 	EndTime   time.Time `json:"endTime,omitempty"`

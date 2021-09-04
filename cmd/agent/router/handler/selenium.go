@@ -1,22 +1,22 @@
-package handler
+package agentHandler
 
 import (
-	"fmt"
-	testService "github.com/utlai/utl/internal/agent/service/test"
+	agentService "github.com/utlai/utl/internal/agent/service"
+	"github.com/utlai/utl/internal/comm/domain"
 	_domain "github.com/utlai/utl/internal/pkg/domain"
 	"golang.org/x/net/context"
 )
 
-type SeleniumAction struct{}
+type SeleniumCtrl struct {
+	SeleniumService *agentService.SeleniumService `inject:""`
+}
 
-func (t *SeleniumAction) SeleniumTest(ctx context.Context, task _domain.BuildTo, reply *_domain.RpcResult) error {
-	size := testService.GetTaskSize()
-	if size == 0 {
-		testService.AddTask(task)
-		reply.Success("Success to add job.")
-	} else {
-		reply.Fail(fmt.Sprintf("already has %d jobs to be done.", size))
-	}
+func NewSeleniumCtrl() *SeleniumCtrl {
+	return &SeleniumCtrl{}
+}
+
+func (c *SeleniumCtrl) ExecInstruct(ctx context.Context, instruct *domain.InstructSelenium, reply *_domain.Reply) error {
+	c.SeleniumService.ExecInstruct(instruct)
 
 	return nil
 }

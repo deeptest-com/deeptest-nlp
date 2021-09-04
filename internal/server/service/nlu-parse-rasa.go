@@ -1,4 +1,4 @@
-package service
+package serverService
 
 import (
 	"fmt"
@@ -30,7 +30,7 @@ func NewNluParseRasaService() *NluParseRasaService {
 	return &NluParseRasaService{}
 }
 
-func (s *NluParseRasaService) Parse(projectId uint, req domain.NluReq) (ret domain.NluResp) {
+func (s *NluParseRasaService) Parse(projectId uint, req serverDomain.NluReq) (ret serverDomain.NluResp) {
 	ret.Code = -1
 	msg := map[string]string{}
 
@@ -59,7 +59,7 @@ func (s *NluParseRasaService) Parse(projectId uint, req domain.NluReq) (ret doma
 		return
 	}
 
-	rasaResp := resp.Payload.(domain.RasaResp)
+	rasaResp := resp.Payload.(serverDomain.RasaResp)
 	rasaResp.TextOrigin = req.TextOrigin
 	for index, entity := range rasaResp.Entities {
 		str, ok := originMap[entity.Entity]

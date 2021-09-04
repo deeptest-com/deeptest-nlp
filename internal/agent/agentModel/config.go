@@ -1,12 +1,10 @@
 package agentModel
 
-import _const "github.com/utlai/utl/internal/pkg/const"
-
 type Config struct {
-	Server   string              `yaml:"Server"`
-	Ip       string              `yaml:"ip"`
-	Port     int                 `yaml:"port"`
-	Platform _const.WorkPlatform `yaml:"platform"`
+	Server     string `json:"server" yaml:"Server"`
+	Ip         string `json:"ip" yaml:"ip"`
+	Port       int    `json:"port" yaml:"port"`
+	MacAddress string `json:"macAddress" yaml:"macAddress"`
 
 	Language string
 	HostName string

@@ -5,4 +5,4 @@ intents:
   name: 打印日志
   examples:
   - id: 9
-    example: (打印|输出)(消息|警告|错误)((?U:.+))
+    example: ^(打印|输出)(消息|警告|错误)(.+)$

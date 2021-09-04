@@ -11,7 +11,7 @@ import (
 type NluIntentCtrl struct {
 	BaseCtrl
 
-	IntentService *service.NluIntentService `inject:""`
+	IntentService *serverService.NluIntentService `inject:""`
 }
 
 func NewNluIntentCtrl() *NluIntentCtrl {

@@ -1,4 +1,4 @@
-package domain
+package serverDomain
 
 import "gopkg.in/yaml.v2"
 

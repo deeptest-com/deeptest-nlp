@@ -11,7 +11,7 @@ import (
 type NluSlotCtrl struct {
 	BaseCtrl
 
-	SlotService *service.NluSlotService `inject:""`
+	SlotService *serverService.NluSlotService `inject:""`
 }
 
 func NewNluSlotCtrl() *NluSlotCtrl {

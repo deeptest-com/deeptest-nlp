@@ -7,16 +7,12 @@
     },
 
     {
-      "id": "invalid_actions",
-      "translation": "无效的动作%s在%q中。"
+      "id": "start_server",
+      "translation": "启动服务器于%s"
     },
     {
-      "id": "launch_in_terminal",
-      "translation": "从终端启动。"
-    },
-    {
-      "id": "launch_in_service",
-      "translation": "从系统服务启动。"
+      "id": "fail_to_start_server",
+      "translation": "启动服务器失败%s，错误%s。"
     },
     {
       "id": "running",
@@ -32,11 +28,11 @@
     },
     {
       "id": "success_to_register",
-      "translation": "成功注册虚拟机到服务器%s."
+      "translation": "成功注册代理到服务器%s."
     },
     {
       "id": "fail_to_register",
-      "translation": "失败注册虚拟机到服务器%s，响应为%#v."
+      "translation": "失败注册代理到服务器%s，响应为%#v."
     }
   ]
 }

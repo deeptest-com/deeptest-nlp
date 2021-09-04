@@ -1,4 +1,4 @@
-package service
+package serverService
 
 import (
 	consts "github.com/utlai/utl/internal/comm/const"
@@ -42,12 +42,12 @@ func (s *NluCompilePatternService) PatternCompile(id uint) {
 
 	taskPos := s.NluTaskRepo.ListByProjectId(id)
 	for _, taskPo := range taskPos {
-		task := domain.NluTaskForPattern{Version: serverConst.NluVersion, Name: taskPo.Name}
+		task := serverDomain.NluTaskForPattern{Version: serverConst.NluVersion, Name: taskPo.Name}
 
 		intents := s.NluIntentRepo.ListByTaskIdNoDisabled(taskPo.ID)
 		for _, intentPo := range intents {
 			lineMap := map[string]bool{}
-			intent := domain.NluIntentPattern{
+			intent := serverDomain.NluIntentPattern{
 				Id:   intentPo.ID,
 				Name: intentPo.Name,
 			}
@@ -84,7 +84,7 @@ func (s *NluCompilePatternService) PatternCompile(id uint) {
 						line += "(" + section + ")"
 
 					} else if slotType == serverConst.Slot {
-						line += "((?U:.+))"
+						line += "(.+)" // "((?U:.+))"
 
 					} else if slotType == "" {
 						line += slotText
@@ -92,9 +92,9 @@ func (s *NluCompilePatternService) PatternCompile(id uint) {
 					}
 				}
 
-				line = strings.TrimSpace(line)
+				line = "^" + strings.TrimSpace(line) + "$"
 				if line != "" && !lineMap[line] {
-					sent := domain.NluSentPattern{
+					sent := serverDomain.NluSentPattern{
 						Id:      sent.ID,
 						Example: line,
 					}

@@ -1,4 +1,4 @@
-package service
+package serverService
 
 import (
 	"github.com/kataras/iris/v12/websocket"
@@ -34,7 +34,7 @@ func (s *NluPatternService) Reload(projectId uint) (project model.Project) {
 	for _, f := range files {
 		content := _fileUtils.ReadFileBuf(f)
 
-		task := domain.NluTaskForPattern{}
+		task := serverDomain.NluTaskForPattern{}
 		yaml.Unmarshal(content, &task)
 
 		serverVari.PatternData[projectId] = append(serverVari.PatternData[projectId], task)

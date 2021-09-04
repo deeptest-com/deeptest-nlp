@@ -22,7 +22,7 @@ func (r *RoleRepo) NewRole() *model.Role {
 }
 
 // GetRole get role
-func (r *RoleRepo) GetRole(search *domain.Search) (*model.Role, error) {
+func (r *RoleRepo) GetRole(search *serverDomain.Search) (*model.Role, error) {
 	t := r.NewRole()
 	//err := r.Found(search).First(t).Error
 	//if !r.IsNotFound(err) {
@@ -59,7 +59,7 @@ func (r *RoleRepo) DeleteRoleById(id uint) error {
 }
 
 // GetAllRoles get all roles
-func (r *RoleRepo) GetAllRoles(s *domain.Search) ([]*model.Role, int64, error) {
+func (r *RoleRepo) GetAllRoles(s *serverDomain.Search) ([]*model.Role, int64, error) {
 	var roles []*model.Role
 	var count int64
 	//all := r.GetAll(&models.Role{}, s)

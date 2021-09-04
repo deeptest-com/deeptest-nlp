@@ -9,7 +9,7 @@ import (
 
 type RpcCtrl struct {
 	Ctx        iris.Context
-	RpcService *service.RpcService `inject:""`
+	RpcService *serverService.RpcService `inject:""`
 }
 
 func NewRpcCtrl() *RpcCtrl {

@@ -9,7 +9,7 @@ import (
 type NluDictCtrl struct {
 	BaseCtrl
 
-	DictService *service.NluDictService `inject:""`
+	DictService *serverService.NluDictService `inject:""`
 }
 
 func NewNluDictCtrl() *NluDictCtrl {

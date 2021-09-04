@@ -1,4 +1,4 @@
-package service
+package serverService
 
 import (
 	"fmt"
@@ -55,7 +55,7 @@ func (s *NluCompileRasaService) RasaCompile(id uint) {
 	_fileUtils.WriteFile(filepath.Join(projectDir, consts.Rasa.ToString(), "domain.yml"), yamlStr)
 }
 
-func (s *NluCompileRasaService) parserDomain(projectDir string) (nluDomain domain.NluDomain) {
+func (s *NluCompileRasaService) parserDomain(projectDir string) (nluDomain serverDomain.NluDomain) {
 	domainFilePath := filepath.Join(projectDir, consts.Rasa.ToString(), "domain.yml")
 	content := _fileUtils.ReadFileBuf(domainFilePath)
 
@@ -64,7 +64,7 @@ func (s *NluCompileRasaService) parserDomain(projectDir string) (nluDomain domai
 	return
 }
 
-func (s *NluCompileRasaService) convertIntent(projectId uint, projectDir string, nluDomain *domain.NluDomain) (files []string) {
+func (s *NluCompileRasaService) convertIntent(projectId uint, projectDir string, nluDomain *serverDomain.NluDomain) (files []string) {
 	_fileUtils.RmDir(filepath.Join(projectDir, "intent"))
 
 	existSlotCodeMap := map[string]bool{}
@@ -73,11 +73,11 @@ func (s *NluCompileRasaService) convertIntent(projectId uint, projectDir string,
 	for _, task := range tasks {
 		intents := s.NluIntentRepo.ListByTaskIdNoDisabled(task.ID)
 
-		nluTask := domain.NluTask{Version: serverConst.NluVersion}
+		nluTask := serverDomain.NluTask{Version: serverConst.NluVersion}
 		for _, intent := range intents {
 			nluDomain.Intents = append(nluDomain.Intents, intent.Name)
 
-			nluIntent := domain.NluIntent{Intent: intent.Name}
+			nluIntent := serverDomain.NluIntent{Intent: intent.Name}
 
 			sents := s.NluSentRepo.ListByIntentId(intent.ID)
 			for _, sent := range sents {
@@ -101,15 +101,15 @@ func (s *NluCompileRasaService) convertIntent(projectId uint, projectDir string,
 	return
 }
 
-func (s *NluCompileRasaService) convertSynonym(projectId uint, projectDir string, nluDomain *domain.NluDomain) {
+func (s *NluCompileRasaService) convertSynonym(projectId uint, projectDir string, nluDomain *serverDomain.NluDomain) {
 	_fileUtils.RmDir(filepath.Join(projectDir, "synonym"))
 
 	synonyms := s.NluSynonymRepo.ListByProjectId(projectId)
 	for _, synonym := range synonyms {
 		//nluDomain.Entities = append(nluDomain.Entities, synonym.Name)
 
-		nluSynonym := domain.NluSynonym{Version: serverConst.NluVersion}
-		synonymDef := domain.NluSynonymDef{Synonym: fmt.Sprintf("%s_%s",
+		nluSynonym := serverDomain.NluSynonym{Version: serverConst.NluVersion}
+		synonymDef := serverDomain.NluSynonymDef{Synonym: fmt.Sprintf("%s_%s",
 			synonym.Name, serverConst.SlotTypeAbbrMap["synonym"])}
 
 		synonymItems := s.NluSynonymItemRepo.ListBySynonymId(synonym.ID)
@@ -125,15 +125,15 @@ func (s *NluCompileRasaService) convertSynonym(projectId uint, projectDir string
 
 	return
 }
-func (s *NluCompileRasaService) convertLookup(projectId uint, projectDir string, nluDomain *domain.NluDomain) {
+func (s *NluCompileRasaService) convertLookup(projectId uint, projectDir string, nluDomain *serverDomain.NluDomain) {
 	_fileUtils.RmDir(filepath.Join(projectDir, "lookup"))
 
 	lookups := s.NluLookupRepo.ListByProjectId(projectId)
 	for _, lookup := range lookups {
 		//nluDomain.Entities = append(nluDomain.Entities, lookup.Name)
 
-		nluLookup := domain.NluLookup{Version: serverConst.NluVersion}
-		lookupItem := domain.NluLookupItem{Lookup: fmt.Sprintf("%s_%s",
+		nluLookup := serverDomain.NluLookup{Version: serverConst.NluVersion}
+		lookupItem := serverDomain.NluLookupItem{Lookup: fmt.Sprintf("%s_%s",
 			lookup.Name, serverConst.SlotTypeAbbrMap["lookup"])}
 
 		lookupItems := s.NluLookupItemRepo.ListByLookupId(lookup.ID)
@@ -149,15 +149,15 @@ func (s *NluCompileRasaService) convertLookup(projectId uint, projectDir string,
 
 	return
 }
-func (s *NluCompileRasaService) convertRegex(projectId uint, projectDir string, nluDomain *domain.NluDomain) {
+func (s *NluCompileRasaService) convertRegex(projectId uint, projectDir string, nluDomain *serverDomain.NluDomain) {
 	_fileUtils.RmDir(filepath.Join(projectDir, "regex"))
 
 	regexes := s.NluRegexRepo.ListByProjectId(projectId)
 	for _, regex := range regexes {
 		//nluDomain.Entities = append(nluDomain.Entities, regex.Name)
 
-		nluRegex := domain.NluRegex{Version: serverConst.NluVersion}
-		regexItem := domain.NluRegexItem{Regex: fmt.Sprintf("%s_%s",
+		nluRegex := serverDomain.NluRegex{Version: serverConst.NluVersion}
+		regexItem := serverDomain.NluRegexItem{Regex: fmt.Sprintf("%s_%s",
 			regex.Name, serverConst.SlotTypeAbbrMap["regex"])}
 
 		regexItems := s.NluRegexItemRepo.ListByRegexId(regex.ID)
@@ -217,7 +217,7 @@ func (s *NluCompileRasaService) getSlotTypeAndVal(tp serverConst.NluSlotType, va
 	return
 }
 
-func (s *NluCompileRasaService) populateSlots(sentId uint, slotMap map[string]map[string]string, codeMap *map[string]bool, nluDomain *domain.NluDomain) {
+func (s *NluCompileRasaService) populateSlots(sentId uint, slotMap map[string]map[string]string, codeMap *map[string]bool, nluDomain *serverDomain.NluDomain) {
 	slots := s.NluSlotRepo.ListBySentId(sentId)
 	for _, slot := range slots {
 		slotCode := slotMap[fmt.Sprintf("%s-%s", slot.Type, slot.Value)]["code"]
@@ -229,7 +229,7 @@ func (s *NluCompileRasaService) populateSlots(sentId uint, slotMap map[string]ma
 		nluDomain.Entities = append(nluDomain.Entities, slotCode)
 		//}
 
-		slotItem := domain.SlotItem{Type: "text", InfluenceConversation: false}
+		slotItem := serverDomain.SlotItem{Type: "text", InfluenceConversation: false}
 		mapItem := yaml.MapItem{Key: slotCode, Value: slotItem}
 		nluDomain.Slots = append(nluDomain.Slots, mapItem)
 

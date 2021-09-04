@@ -1,4 +1,4 @@
-package domain
+package serverDomain
 
 type SumRes struct {
 	Total int64 `json:"total"`

@@ -1,4 +1,4 @@
-package service
+package serverService
 
 import (
 	"bytes"
@@ -21,7 +21,7 @@ func (s *RpcService) DoSomething() (result _domain.RpcResult) {
 	//obj := interface{}(appiumTestTo)
 	//s.Request(build.ComputerIp, build.ComputerPort, "appium", "AppiumTest", &obj)
 
-	result.Success(fmt.Sprintf("success to send rpc build request %#v."))
+	result.Pass(fmt.Sprintf("success to send rpc build request %#v."))
 	return
 }
 

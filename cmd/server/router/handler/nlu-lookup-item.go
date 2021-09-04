@@ -11,7 +11,7 @@ import (
 type NluLookupItemCtrl struct {
 	BaseCtrl
 
-	LookupItemService *service.NluLookupItemService `inject:""`
+	LookupItemService *serverService.NluLookupItemService `inject:""`
 }
 
 func NewNluLookupItemCtrl() *NluLookupItemCtrl {

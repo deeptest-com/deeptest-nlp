@@ -9,7 +9,7 @@ import (
 )
 
 type NluParseCtrl struct {
-	NluParseService *service.NluParseService `inject:""`
+	NluParseService *serverService.NluParseService `inject:""`
 }
 
 func NewNluParseCtrl() *NluParseCtrl {
@@ -20,7 +20,7 @@ func (c *NluParseCtrl) Parse(ctx iris.Context) {
 	ctx.StatusCode(iris.StatusOK)
 
 	projectId, _ := ctx.Params().GetInt("id")
-	req := domain.NluReq{}
+	req := serverDomain.NluReq{}
 	if err := ctx.ReadJSON(&req); err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return

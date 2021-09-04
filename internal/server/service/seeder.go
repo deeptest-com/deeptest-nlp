@@ -1,4 +1,4 @@
-package service
+package serverService
 
 import (
 	"fmt"
@@ -66,7 +66,7 @@ func (s *SeederService) init() {
 	}
 	filePaths, _ := filepath.Glob(pth)
 
-	if serverConf.Config.Debug {
+	if serverConf.Inst.Debug {
 		fmt.Println(fmt.Sprintf("数据填充YML文件路径：%+v\n", filePaths))
 	}
 	if err := configor.Load(&Seeds, filePaths...); err != nil {
@@ -84,13 +84,13 @@ func (s *SeederService) AddPerms() {
 
 // CreatePerms 新建权限
 func (s *SeederService) CreatePerms() {
-	if serverConf.Config.Debug {
+	if serverConf.Inst.Debug {
 		fmt.Println(fmt.Sprintf("填充权限：%+v\n", Seeds))
 	}
 
 	for _, m := range Seeds.Perms {
-		search := &domain.Search{
-			Fields: []*domain.Filed{
+		search := &serverDomain.Search{
+			Fields: []*serverDomain.Filed{
 				{
 					Key:       "name",
 					Condition: "=",
@@ -121,23 +121,23 @@ func (s *SeederService) CreatePerms() {
 
 // CreateAdminRole 新建管理角色
 func (s *SeederService) CreateAdminRole() {
-	search := &domain.Search{
-		Fields: []*domain.Filed{
+	search := &serverDomain.Search{
+		Fields: []*serverDomain.Filed{
 			{
 				Key:       "name",
 				Condition: "=",
-				Value:     serverConf.Config.Admin.RoleName,
+				Value:     serverConf.Inst.Admin.RoleName,
 			},
 		},
 	}
 	role, err := s.RoleRepo.GetRole(search)
 	var permIds []uint
-	ss := &domain.Search{
+	ss := &serverDomain.Search{
 		Limit:  -1,
 		Offset: -1,
 	}
 	perms, _, err := s.PermRepo.GetAllPermissions(ss)
-	if serverConf.Config.Debug {
+	if serverConf.Inst.Debug {
 		if err != nil {
 			fmt.Println(fmt.Sprintf("权限获取失败：%+v\n", err))
 		}
@@ -151,9 +151,9 @@ func (s *SeederService) CreateAdminRole() {
 	if err == nil {
 		if role.ID == 0 {
 			role = &model.Role{
-				Name:        serverConf.Config.Admin.RoleName,
-				DisplayName: serverConf.Config.Admin.RoleDisplayName,
-				Description: serverConf.Config.Admin.RoleDisplayName,
+				Name:        serverConf.Inst.Admin.RoleName,
+				DisplayName: serverConf.Inst.Admin.RoleDisplayName,
+				Description: serverConf.Inst.Admin.RoleDisplayName,
 			}
 			role.PermIds = permIds
 			if err := s.RoleService.CreateRole(role); err != nil {
@@ -165,7 +165,7 @@ func (s *SeederService) CreateAdminRole() {
 			}
 		}
 	}
-	if serverConf.Config.Debug {
+	if serverConf.Inst.Debug {
 		fmt.Println(fmt.Sprintf("填充角色数据：%+v\n", role))
 		fmt.Println(fmt.Sprintf("填充角色权限：%+v\n", role.PermIds))
 	}
@@ -174,12 +174,12 @@ func (s *SeederService) CreateAdminRole() {
 
 // CreateAdminUser 新建管理员
 func (s *SeederService) CreateAdminUser() {
-	search := &domain.Search{
-		Fields: []*domain.Filed{
+	search := &serverDomain.Search{
+		Fields: []*serverDomain.Filed{
 			{
 				Key:       "username",
 				Condition: "=",
-				Value:     serverConf.Config.Admin.UserName,
+				Value:     serverConf.Inst.Admin.UserName,
 			},
 		},
 	}
@@ -189,12 +189,12 @@ func (s *SeederService) CreateAdminUser() {
 	}
 
 	var roleIds []uint
-	ss := &domain.Search{
+	ss := &serverDomain.Search{
 		Limit:  -1,
 		Offset: -1,
 	}
 	roles, _, err := s.RoleRepo.GetAllRoles(ss)
-	if serverConf.Config.Debug {
+	if serverConf.Inst.Debug {
 		if err != nil {
 			fmt.Println(fmt.Sprintf("角色获取失败：%+v\n", err))
 		}
@@ -207,9 +207,9 @@ func (s *SeederService) CreateAdminUser() {
 
 	if admin.ID == 0 {
 		admin = &model.User{
-			Username: serverConf.Config.Admin.UserName,
-			Name:     serverConf.Config.Admin.Name,
-			Password: serverConf.Config.Admin.Password,
+			Username: serverConf.Inst.Admin.UserName,
+			Name:     serverConf.Inst.Admin.Name,
+			Password: serverConf.Inst.Admin.Password,
 			Avatar:   "https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIPbZRufW9zPiaGpfdXgU7icRL1licKEicYyOiace8QQsYVKvAgCrsJx1vggLAD2zJMeSXYcvMSkw9f4pw/132",
 			Intro:    "檀越",
 		}
@@ -219,14 +219,14 @@ func (s *SeederService) CreateAdminUser() {
 			logger.Println(fmt.Sprintf("管理员填充错误：%+v\n", err))
 		}
 	} else {
-		admin.Password = serverConf.Config.Admin.Password
+		admin.Password = serverConf.Inst.Admin.Password
 		if err := s.UserService.UpdateUserById(admin.ID, admin); err != nil {
 			logger.Println(fmt.Sprintf("管理员填充错误：%+v\n", err))
 		}
 	}
 
-	if serverConf.Config.Debug {
-		fmt.Println(fmt.Sprintf("管理员密码：%s\n", serverConf.Config.Admin.Password))
+	if serverConf.Inst.Debug {
+		fmt.Println(fmt.Sprintf("管理员密码：%s\n", serverConf.Inst.Admin.Password))
 		fmt.Println(fmt.Sprintf("填充管理员数据：%+v", admin))
 	}
 }

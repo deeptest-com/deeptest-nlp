@@ -1,4 +1,4 @@
-package domain
+package serverDomain
 
 type NluTaskForPattern struct {
 	Version string             `yaml:"version" default:"2.0"`

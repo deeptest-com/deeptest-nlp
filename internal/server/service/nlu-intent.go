@@ -1,4 +1,4 @@
-package service
+package serverService
 
 import (
 	_stringUtils "github.com/utlai/utl/internal/pkg/libs/string"

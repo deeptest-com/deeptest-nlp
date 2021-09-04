@@ -11,7 +11,7 @@ import (
 type NluSynonymCtrl struct {
 	BaseCtrl
 
-	SynonymService *service.NluSynonymService `inject:""`
+	SynonymService *serverService.NluSynonymService `inject:""`
 }
 
 func NewNluSynonymCtrl() *NluSynonymCtrl {

@@ -8,7 +8,7 @@ import (
 )
 
 type ValidCtrl struct {
-	ValidService *service.ValidService `inject:""`
+	ValidService *serverService.ValidService `inject:""`
 }
 
 func NewValidCtrl() *ValidCtrl {
@@ -18,7 +18,7 @@ func NewValidCtrl() *ValidCtrl {
 func (c *ValidCtrl) Valid(ctx iris.Context) {
 	ctx.StatusCode(iris.StatusOK)
 
-	model := domain.ValidRequest{}
+	model := serverDomain.ValidRequest{}
 	if err := ctx.ReadJSON(&model); err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return

@@ -11,7 +11,7 @@ import (
 type NluRegexItemCtrl struct {
 	BaseCtrl
 
-	RegexItemService *service.NluRegexItemService `inject:""`
+	RegexItemService *serverService.NluRegexItemService `inject:""`
 }
 
 func NewNluRegexItemCtrl() *NluRegexItemCtrl {

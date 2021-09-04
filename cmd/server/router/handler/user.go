@@ -18,10 +18,10 @@ import (
 )
 
 type UserCtrl struct {
-	UserService *service.UserService `inject:""`
-	RoleService *service.RoleService `inject:""`
-	UserRepo    *repo.UserRepo       `inject:""`
-	RoleRepo    *repo.RoleRepo       `inject:""`
+	UserService *serverService.UserService `inject:""`
+	RoleService *serverService.RoleService `inject:""`
+	UserRepo    *repo.UserRepo             `inject:""`
+	RoleRepo    *repo.RoleRepo             `inject:""`
 }
 
 func NewUserCtrl() *UserCtrl {
@@ -49,8 +49,8 @@ func (c *UserCtrl) GetProfile(ctx iris.Context) {
 	}
 
 	idInt, _ := strconv.Atoi(cred.UserId)
-	s := &domain.Search{
-		Fields: []*domain.Filed{
+	s := &serverDomain.Search{
+		Fields: []*serverDomain.Filed{
 			{
 				Key:       "id",
 				Condition: "=",

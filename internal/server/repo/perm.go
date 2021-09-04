@@ -26,7 +26,7 @@ func (r *PermRepo) NewPermission() *model.Permission {
 }
 
 // GetPermission get permission
-func (r *PermRepo) GetPermission(search *domain.Search) (*model.Permission, error) {
+func (r *PermRepo) GetPermission(search *serverDomain.Search) (*model.Permission, error) {
 	t := r.NewPermission()
 	err := r.Found(search).First(t).Error
 	if !r.IsNotFound(err) {
@@ -47,7 +47,7 @@ func (r *PermRepo) DeletePermissionById(id uint) error {
 }
 
 // GetAllPermissions get all permissions
-func (r *PermRepo) GetAllPermissions(s *domain.Search) ([]*model.Permission, int64, error) {
+func (r *PermRepo) GetAllPermissions(s *serverDomain.Search) ([]*model.Permission, int64, error) {
 	var permissions []*model.Permission
 	var count int64
 	all := r.GetAll(&model.Permission{}, s)

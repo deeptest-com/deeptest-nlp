@@ -5,4 +5,4 @@ intents:
   name: 操作
   examples:
   - id: 33
-    example: (确定|取消|关闭)
+    example: ^(确定|取消|关闭)$

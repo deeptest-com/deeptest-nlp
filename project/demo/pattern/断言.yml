@@ -5,4 +5,4 @@ intents:
   name: 断言
   examples:
   - id: 15
-    example: (断言|判断|检查|验证)((?U:.+))
+    example: ^(断言|判断|检查|验证)(.+)$

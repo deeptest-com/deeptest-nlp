@@ -5,4 +5,4 @@ intents:
   name: 导航
   examples:
   - id: 22
-    example: (刷新|重载|前进|后退|返回)
+    example: ^(刷新|重载|前进|后退|返回)$

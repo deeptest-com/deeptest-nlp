@@ -1,4 +1,4 @@
-package domain
+package serverDomain
 
 type NluIntent struct {
 	Intent   string `yaml:"intent"`

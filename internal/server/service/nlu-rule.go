@@ -1,4 +1,4 @@
-package service
+package serverService
 
 import (
 	"github.com/utlai/utl/internal/server/model"

@@ -11,7 +11,7 @@ import (
 type NluRuleCtrl struct {
 	BaseCtrl
 
-	RuleService *service.NluRuleService `inject:""`
+	RuleService *serverService.NluRuleService `inject:""`
 }
 
 func NewNluRuleCtrl() *NluRuleCtrl {

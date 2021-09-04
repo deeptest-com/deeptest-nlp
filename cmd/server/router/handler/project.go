@@ -14,7 +14,7 @@ import (
 type ProjectCtrl struct {
 	BaseCtrl
 
-	ProjectService *service.ProjectService `inject:""`
+	ProjectService *serverService.ProjectService `inject:""`
 }
 
 func NewProjectCtrl() *ProjectCtrl {
@@ -59,7 +59,7 @@ func (c *ProjectCtrl) Get(ctx iris.Context) {
 
 	model := c.ProjectService.GetDetail(uint(id))
 
-	data := map[string]interface{}{"model": model, "analyzer": serverConf.Config.Analyzer}
+	data := map[string]interface{}{"model": model, "analyzer": serverConf.Inst.Analyzer}
 	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", data))
 
 	return

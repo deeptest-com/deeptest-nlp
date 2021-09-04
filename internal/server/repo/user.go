@@ -30,7 +30,7 @@ func (r *UserRepo) Get(id uint) (po model.User, err error) {
 }
 
 // GetUser get user
-func (r *UserRepo) GetUser(search *domain.Search) (*model.User, error) {
+func (r *UserRepo) GetUser(search *serverDomain.Search) (*model.User, error) {
 	t := r.NewUser()
 	err := r.Found(search).First(t).Error
 	if !r.IsNotFound(err) {
@@ -41,8 +41,8 @@ func (r *UserRepo) GetUser(search *domain.Search) (*model.User, error) {
 
 // DeleteUser del user . if user's username is username ,can't del it.
 func (r *UserRepo) DeleteUser(id uint) error {
-	s := &domain.Search{
-		Fields: []*domain.Filed{
+	s := &serverDomain.Search{
+		Fields: []*serverDomain.Filed{
 			{
 				Key:       "id",
 				Condition: "=",
@@ -66,7 +66,7 @@ func (r *UserRepo) DeleteUser(id uint) error {
 }
 
 // GetAllUsers get all users
-func (r *UserRepo) GetAllUsers(s *domain.Search) ([]*model.User, int64, error) {
+func (r *UserRepo) GetAllUsers(s *serverDomain.Search) ([]*model.User, int64, error) {
 	var users []*model.User
 	var count int64
 	q := r.GetAll(&model.User{}, s)

@@ -1,10 +1,10 @@
-package service
+package serverService
 
 import (
 	"fmt"
 	"github.com/fatih/color"
+	_db "github.com/utlai/utl/internal/pkg/db"
 	_commonUtils "github.com/utlai/utl/internal/pkg/libs/common"
-	"github.com/utlai/utl/internal/server/db"
 	"github.com/utlai/utl/internal/server/model"
 )
 
@@ -17,7 +17,7 @@ func NewInitService() {
 
 func (s *InitService) Init() {
 	if !_commonUtils.IsRelease() {
-		err := db.GetInst().DB().AutoMigrate(
+		err := _db.GetInst().DB().AutoMigrate(
 			model.Models...,
 		)
 		if err != nil {

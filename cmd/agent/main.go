@@ -2,14 +2,14 @@ package main
 
 import (
 	"flag"
+	"github.com/fatih/color"
+	"github.com/utlai/utl/cmd/agent/agent"
 	"github.com/utlai/utl/cmd/agent/router"
 	agentConf "github.com/utlai/utl/internal/agent/conf"
-	"github.com/utlai/utl/internal/agent/cron"
 	agentUntils "github.com/utlai/utl/internal/agent/utils/common"
-	agentConst "github.com/utlai/utl/internal/agent/utils/const"
+	consts "github.com/utlai/utl/internal/comm/const"
 	_const "github.com/utlai/utl/internal/pkg/const"
 	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
-	"github.com/fatih/color"
 	"os"
 	"os/signal"
 	"syscall"
@@ -34,9 +34,8 @@ func main() {
 
 	flagSet.StringVar(&agentConf.Inst.Server, "s", "", "")
 	flagSet.StringVar(&agentConf.Inst.Ip, "i", "", "")
-	flagSet.IntVar(&agentConf.Inst.Port, "p", 10, "")
+	flagSet.IntVar(&agentConf.Inst.Port, "p", _const.RpcPort, "")
 	flagSet.StringVar(&agentConf.Inst.Language, "l", "zh", "")
-	flagSet.StringVar(&platform, "t", string(_const.Vm), "")
 
 	flagSet.BoolVar(&help, "h", false, "")
 
@@ -44,27 +43,16 @@ func main() {
 		os.Args = append(os.Args, "-h")
 	}
 
-	switch os.Args[1] {
-	case "start":
-		start()
+	_logUtils.Init(consts.AppNameServer)
 
+	switch os.Args[1] {
 	case "help", "-h":
 		agentUntils.PrintUsage()
 
 	default:
-		start()
-	}
-}
-
-func start() {
-	_logUtils.Init(agentConst.AppName)
-	agentConf.Init()
-
-	if err := flagSet.Parse(os.Args[1:]); err == nil {
-		agentConf.Inst.Platform = _const.WorkPlatform(platform)
-
-		agentCron.Init()
-		router.App()
+		if err := flagSet.Parse(os.Args[1:]); err == nil {
+			agent.Launch(agentRouter.NewRouter())
+		}
 	}
 }
 

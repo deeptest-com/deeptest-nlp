@@ -5,6 +5,15 @@
       "id": "for_example",
       "translation": "e.g. %s"
     },
+
+    {
+      "id": "start_server",
+      "translation": "start server on %s."
+    },
+    {
+      "id": "fail_to_start_server",
+      "translation": "fail to start server on %s, err is %s."
+    },
     {
       "id": "invalid_actions",
       "translation": "Invalid action %s in %q."

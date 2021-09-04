@@ -2,8 +2,8 @@ package _i118Utils
 
 import (
 	"encoding/json"
-	_commonUtils "github.com/utlai/utl/internal/pkg/libs/common"
-	agentRes "github.com/utlai/utl/res/agent"
+	"fmt"
+	_resUtils "github.com/utlai/utl/internal/pkg/libs/res"
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
 	"io/ioutil"
@@ -18,13 +18,8 @@ func InitI118(lang string, app string) {
 
 	langRes := filepath.Join("res", app, lang, "messages.json")
 
-	isRelease := _commonUtils.IsRelease()
-	if isRelease {
-		data, _ := agentRes.Asset(langRes)
-		InitResFromAsset(data)
-	} else {
-		InitRes(langRes)
-	}
+	bytes, _ := _resUtils.ReadRes(langRes)
+	InitResFromAsset(bytes)
 
 	if lang == "zh" {
 		I118Prt = message.NewPrinter(language.SimplifiedChinese)
@@ -55,20 +50,6 @@ func ReadI18nJson(file string) string {
 	Check(err)
 	str := string(b)
 	return str
-
-}
-
-func InitRes(jsonPath string) {
-	var i18n I18n
-	str := ReadI18nJson(jsonPath)
-	json.Unmarshal([]byte(str), &i18n)
-
-	msgArr := i18n.Messages
-	tag := language.MustParse(i18n.Language)
-
-	for _, e := range msgArr {
-		message.SetString(tag, e.Id, e.Translation)
-	}
 }
 
 func InitResFromAsset(bytes []byte) {
@@ -80,5 +61,13 @@ func InitResFromAsset(bytes []byte) {
 
 	for _, e := range msgArr {
 		message.SetString(tag, e.Id, e.Translation)
+	}
+}
+
+func Sprintf(key message.Reference, a ...interface{}) string {
+	if I118Prt == nil {
+		return fmt.Sprintf("%s, %#v", key.(string), a)
+	} else {
+		return I118Prt.Sprintf(key, a...)
 	}
 }

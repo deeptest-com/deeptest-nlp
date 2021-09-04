@@ -11,7 +11,7 @@ import (
 type NluSentCtrl struct {
 	BaseCtrl
 
-	SentService *service.NluSentService `inject:""`
+	SentService *serverService.NluSentService `inject:""`
 }
 
 func NewNluSentCtrl() *NluSentCtrl {

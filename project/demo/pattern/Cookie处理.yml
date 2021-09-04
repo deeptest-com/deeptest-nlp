@@ -5,9 +5,9 @@ intents:
   name: Cookie设置
   examples:
   - id: 37
-    example: (赋值|赋予|设置)甜饼((?U:.+))为((?U:.+))
+    example: ^(赋值|赋予|设置)甜饼(.+)为(.+)$
 - id: 8
   name: Cookie获取
   examples:
   - id: 82
-    example: (获取|获得)甜饼((?U:.+))为((?U:.+))
+    example: ^(获取|获得)甜饼(.+)为(.+)$

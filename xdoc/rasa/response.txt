@@ -1,0 +1,30 @@
+{
+    'text': 'rasa nlu examples',
+    'intent': {'name': 'out_of_scope', 'confidence': 0.4313829839229584},
+    'entities': [
+        {
+            'entity': 'proglang',
+            'start': 0,
+            'end': 4,
+            'confidence_entity': 0.42326217889785767,
+            'value': 'rasa',
+            'extractor': 'DIETClassifier'
+        }
+    ],
+    'text_tokens': ['rasa', 'nlu', 'examples'],
+    'intent_ranking': [
+        {'name': 'out_of_scope', 'confidence': 0.4313829839229584},
+        {'name': 'goodbye', 'confidence': 0.2445288747549057},
+        {'name': 'bot_challenge', 'confidence': 0.23958507180213928},
+        {'name': 'greet', 'confidence': 0.04896979033946991},
+        {'name': 'talk_code', 'confidence': 0.035533301532268524}
+    ],
+    'dense': {
+        'sequence': {'shape': (3, 25), 'dtype': dtype('float32')},
+        'sentence': {'shape': (1, 25), 'dtype': dtype('float32')}
+    },
+    'sparse': {
+        'sequence': {'shape': (3, 1780), 'dtype': dtype('float64'), 'stored_elements': 67},
+        'sentence': {'shape': (1, 1756), 'dtype': dtype('int64'), 'stored_elements': 32}
+    }
+}

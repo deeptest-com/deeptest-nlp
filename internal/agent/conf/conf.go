@@ -2,8 +2,7 @@ package agentConf
 
 import (
 	"github.com/utlai/utl/internal/agent/agentModel"
-	agentConst "github.com/utlai/utl/internal/agent/utils/const"
-	_const "github.com/utlai/utl/internal/pkg/const"
+	consts "github.com/utlai/utl/internal/comm/const"
 	_commonUtils "github.com/utlai/utl/internal/pkg/libs/common"
 	_fileUtils "github.com/utlai/utl/internal/pkg/libs/file"
 	_httpUtils "github.com/utlai/utl/internal/pkg/libs/http"
@@ -17,28 +16,18 @@ var (
 )
 
 func Init() {
-	_i118Utils.InitI118(Inst.Language, agentConst.AppName)
+	_i118Utils.InitI118(Inst.Language, consts.AppNameAgent)
 
-	ip, _, hostName := _commonUtils.GetIp()
+	ip, mac, hostName := _commonUtils.GetIp()
 	Inst.HostName = hostName
-	Inst.Ip = ip.String()
-	Inst.Port = _const.RpcPort
+	if Inst.Ip == "" {
+		Inst.Ip = ip.String()
+	}
+	if Inst.MacAddress == "" {
+		Inst.MacAddress = mac.String()
+	}
 
 	usr, _ := user.Current()
 	Inst.WorkDir = _fileUtils.AddPathSepIfNeeded(filepath.Join(usr.HomeDir, "utl"))
 	Inst.Server = _httpUtils.UpdateUrl(Inst.Server)
-}
-
-func IsVmAgent() bool {
-	return Inst.Platform == _const.Vm
-}
-func IsDeviceAgent() bool {
-	return IsIosAgent() || IsAndroidAgent()
-}
-func IsAndroidAgent() bool {
-	return Inst.Platform == _const.Android
-}
-
-func IsIosAgent() bool {
-	return Inst.Platform == _const.Ios
 }

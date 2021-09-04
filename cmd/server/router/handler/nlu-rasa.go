@@ -10,12 +10,12 @@ import (
 )
 
 type NluRasaCtrl struct {
-	NluCompileService  *service.NluCompileService  `inject:""`
-	NluTrainingService *service.NluTrainingService `inject:""`
-	NluServiceService  *service.NluServiceService  `inject:""`
-	NluPatternService  *service.NluPatternService  `inject:""`
+	NluCompileService  *serverService.NluCompileService  `inject:""`
+	NluTrainingService *serverService.NluTrainingService `inject:""`
+	NluServiceService  *serverService.NluServiceService  `inject:""`
+	NluPatternService  *serverService.NluPatternService  `inject:""`
 
-	NluHistoryService *service.NluHistoryService `inject:""`
+	NluHistoryService *serverService.NluHistoryService `inject:""`
 }
 
 func NewNluRasaCtrl() *NluRasaCtrl {

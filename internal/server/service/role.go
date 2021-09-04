@@ -1,4 +1,4 @@
-package service
+package serverService
 
 import (
 	"fmt"
@@ -32,8 +32,8 @@ func (s *RoleService) RolePermissions(role *model.Role) []*model.Permission {
 	var ps []*model.Permission
 	for _, perm := range perms {
 		if len(perm) >= 3 && len(perm[1]) > 0 && len(perm[2]) > 0 {
-			search := &domain.Search{
-				Fields: []*domain.Filed{
+			search := &serverDomain.Search{
+				Fields: []*serverDomain.Filed{
 					{
 						Key:       "name",
 						Condition: "=",

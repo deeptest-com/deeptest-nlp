@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/fatih/color"
-	"github.com/utlai/utl/internal/server/db"
+	_db "github.com/utlai/utl/internal/pkg/db"
 	"github.com/utlai/utl/internal/server/domain"
 	"gorm.io/gorm"
 	"strings"
@@ -27,8 +27,8 @@ func (r *CommonRepo) Defer(tx *gorm.DB, code *int) {
 }
 
 // GetAll 批量查询
-func (r *CommonRepo) GetAll(model interface{}, s *domain.Search) *gorm.DB {
-	db := db.GetInst().DB().Model(model)
+func (r *CommonRepo) GetAll(model interface{}, s *serverDomain.Search) *gorm.DB {
+	db := _db.GetInst().DB().Model(model)
 	sort := "desc"
 	orderBy := "created_at"
 	if len(s.Sort) > 0 {
@@ -46,8 +46,8 @@ func (r *CommonRepo) GetAll(model interface{}, s *domain.Search) *gorm.DB {
 }
 
 // Found 查询条件
-func (r *CommonRepo) Found(s *domain.Search) *gorm.DB {
-	return db.GetInst().DB().Scopes(r.Relation(s.Relations), r.FoundByWhere(s.Fields))
+func (r *CommonRepo) Found(s *serverDomain.Search) *gorm.DB {
+	return _db.GetInst().DB().Scopes(r.Relation(s.Relations), r.FoundByWhere(s.Fields))
 }
 
 // IsNotFound 判断是否是查询不存在错误
@@ -61,7 +61,7 @@ func (r *CommonRepo) IsNotFound(err error) bool {
 
 // UpdateObj 更新
 func (r *CommonRepo) UpdateObj(v, d interface{}, id uint) error {
-	if err := db.GetInst().DB().Model(v).Where("id = ?", id).Updates(d).Error; err != nil {
+	if err := _db.GetInst().DB().Model(v).Where("id = ?", id).Updates(d).Error; err != nil {
 		color.Red(fmt.Sprintf("UpdateObj %+v to %+v\n", v, d))
 		return err
 	}
@@ -69,7 +69,7 @@ func (r *CommonRepo) UpdateObj(v, d interface{}, id uint) error {
 }
 
 // Relation 加载关联关系
-func (r *CommonRepo) Relation(relates []*domain.Relate) func(db *gorm.DB) *gorm.DB {
+func (r *CommonRepo) Relation(relates []*serverDomain.Relate) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if len(relates) > 0 {
 			for _, re := range relates {
@@ -88,7 +88,7 @@ func (r *CommonRepo) Relation(relates []*domain.Relate) func(db *gorm.DB) *gorm.
 }
 
 // FoundByWhere 查询条件
-func (r *CommonRepo) FoundByWhere(fields []*domain.Filed) func(db *gorm.DB) *gorm.DB {
+func (r *CommonRepo) FoundByWhere(fields []*serverDomain.Filed) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if len(fields) > 0 {
 			for _, field := range fields {
@@ -127,12 +127,12 @@ func (r *CommonRepo) FoundByWhere(fields []*domain.Filed) func(db *gorm.DB) *gor
 }
 
 // GetRelations 转换前端获取关联关系为 []*Relate
-func (r *CommonRepo) GetRelations(relation string, fs map[string]interface{}) []*domain.Relate {
-	var relates []*domain.Relate
+func (r *CommonRepo) GetRelations(relation string, fs map[string]interface{}) []*serverDomain.Relate {
+	var relates []*serverDomain.Relate
 	if len(relation) > 0 {
 		arr := strings.Split(relation, ";")
 		for _, item := range arr {
-			relate := &domain.Relate{
+			relate := &serverDomain.Relate{
 				Value: item,
 			}
 			// 增加关联过滤
@@ -150,7 +150,7 @@ func (r *CommonRepo) GetRelations(relation string, fs map[string]interface{}) []
 }
 
 // GetSearch 转换前端查询关系为 *Filed
-func (r *CommonRepo) GetSearch(key, search string) *domain.Filed {
+func (r *CommonRepo) GetSearch(key, search string) *serverDomain.Filed {
 	if len(search) > 0 {
 		if strings.Contains(search, ":") {
 			searches := strings.Split(search, ":")
@@ -160,21 +160,21 @@ func (r *CommonRepo) GetSearch(key, search string) *domain.Filed {
 					value = fmt.Sprintf("%%%s%%", searches[0])
 				}
 
-				return &domain.Filed{
+				return &serverDomain.Filed{
 					Condition: searches[1],
 					Key:       key,
 					Value:     value,
 				}
 
 			} else if len(searches) == 1 {
-				return &domain.Filed{
+				return &serverDomain.Filed{
 					Condition: "=",
 					Key:       key,
 					Value:     searches[0],
 				}
 			}
 		} else {
-			return &domain.Filed{
+			return &serverDomain.Filed{
 				Condition: "=",
 				Key:       key,
 				Value:     search,

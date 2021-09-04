@@ -69,6 +69,7 @@ require (
 	github.com/snowlyg/gotransformer v0.1.0
 	github.com/stretchr/testify v1.6.1
 	github.com/tdewolff/parse/v2 v2.5.6 // indirect
+	github.com/tebeka/selenium v0.9.9
 	github.com/vmihailenco/msgpack/v5 v5.0.0 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
 	github.com/yudai/pp v2.0.1+incompatible // indirect

@@ -8,7 +8,7 @@ type RpcResult struct {
 	Payload interface{} `json:"payload"`
 }
 
-func (result *RpcResult) Success(msg string) {
+func (result *RpcResult) Pass(msg string) {
 	result.Code = _const.ResultSuccess.Int()
 	result.Msg = msg
 }

@@ -20,10 +20,10 @@ import (
 type Router struct {
 	api *iris.Application
 
-	InitService   *service.InitService     `inject:""`
-	JwtService    *jwt.JwtService          `inject:""`
-	TokenService  *jwt.TokenService        `inject:""`
-	CasbinService *bizCasbin.CasbinService `inject:""`
+	InitService   *serverService.InitService `inject:""`
+	JwtService    *jwt.JwtService            `inject:""`
+	TokenService  *jwt.TokenService          `inject:""`
+	CasbinService *bizCasbin.CasbinService   `inject:""`
 
 	AccountCtrl *handler.AccountCtrl `inject:""`
 	FileCtrl    *handler.FileCtrl    `inject:""`
@@ -65,13 +65,13 @@ func NewRouter(app *iris.Application) *Router {
 }
 
 func (r *Router) App() {
-	iris.LimitRequestBodySize(serverConf.Config.Options.UploadMaxSize)
+	iris.LimitRequestBodySize(serverConf.Inst.Options.UploadMaxSize)
 	r.api.UseRouter(_httpUtils.CrsAuth())
 
 	app := r.api.Party("/api").AllowMethods(iris.MethodOptions)
 	{
 		// 二进制模式 ， 启用项目入口
-		//if serverConf.Config.BinData {
+		//if serverConf.Inst.BinData {
 		//	app.GetDetail("/", func(ctx iris.Context) { // 首页模块
 		//		_ = ctx.View("index.html")
 		//	})
@@ -81,6 +81,9 @@ func (r *Router) App() {
 		{
 			v1.PartyFunc("/rpc", func(party iris.Party) {
 				party.Post("/request", r.RpcCtrl.Request).Name = "转发RPC请求"
+			})
+			v1.PartyFunc("/client", func(party iris.Party) {
+				party.Post("/agent/register", r.RpcCtrl.Request).Name = "转发RPC请求"
 			})
 
 			v1.PartyFunc("/admin", func(admin iris.Party) {

@@ -16,7 +16,7 @@ import (
 )
 
 type AccountCtrl struct {
-	UserService *service.UserService `inject:""`
+	UserService *serverService.UserService `inject:""`
 
 	UserRepo  *repo.UserRepo  `inject:""`
 	TokenRepo *repo.TokenRepo `inject:""`
@@ -64,8 +64,8 @@ func (c *AccountCtrl) UserLogin(ctx iris.Context) {
 
 	ctx.Application().Logger().Infof("%s 登录系统", req.Username)
 
-	search := &domain.Search{
-		Fields: []*domain.Filed{
+	search := &serverDomain.Search{
+		Fields: []*serverDomain.Filed{
 			{
 				Key:       "username",
 				Condition: "=",
@@ -104,7 +104,7 @@ func (c *AccountCtrl) UserLogout(ctx iris.Context) {
 		credentials *bizConst.UserCredentials
 		err         error
 	)
-	if serverConf.Config.Redis.Enable {
+	if serverConf.Inst.Redis.Enable {
 		conn := redisUtils.GetRedisClusterClient()
 		defer conn.Close()
 

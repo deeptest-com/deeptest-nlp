@@ -1,6 +1,7 @@
-package service
+package serverService
 
 import (
+	"fmt"
 	consts "github.com/utlai/utl/internal/comm/const"
 	"github.com/utlai/utl/internal/server/domain"
 	"github.com/utlai/utl/internal/server/model"
@@ -8,6 +9,7 @@ import (
 	serverConst "github.com/utlai/utl/internal/server/utils/const"
 	serverVari "github.com/utlai/utl/internal/server/utils/var"
 	"regexp"
+	"strconv"
 	"time"
 )
 
@@ -34,10 +36,10 @@ func NewNluParsePatternService() *NluParsePatternService {
 	return &NluParsePatternService{}
 }
 
-func (s *NluParsePatternService) Parse(projectId uint, req domain.NluReq) (ret domain.NluResp) {
+func (s *NluParsePatternService) Parse(projectId uint, req serverDomain.NluReq) (ret serverDomain.NluResp) {
 	ret.Code = -1
-	rasaResp := domain.RasaResp{
-		Intent: domain.Intent{
+	rasaResp := serverDomain.RasaRespForPattern{
+		Intent: serverDomain.Intent{
 			Confidence: 1,
 		},
 		StartTime: time.Now(),
@@ -56,6 +58,8 @@ OuterLoop:
 				rgx := regexp.MustCompile(sent.Example)
 
 				indexArr := rgx.FindStringSubmatchIndex(text)
+				//contentArr := rgx.FindStringSubmatch(text)
+				//_logUtils.Infof("%v", contentArr)
 
 				if len(indexArr) > 0 { // matched
 					sent := s.NluSentRepo.Get(sent.Id)
@@ -63,12 +67,17 @@ OuterLoop:
 
 					rasaResp.Intent.ID = int64(intent.ID)
 					rasaResp.Intent.Name = intent.Name
-					rasaResp.Intent.Sent = domain.Sent{
+					rasaResp.IntentRanking = append(rasaResp.IntentRanking, serverDomain.IntentRanking{
+						Name:       intent.Name,
+						Confidence: 1,
+					})
+					rasaResp.Text = text
+					rasaResp.Intent.Sent = serverDomain.Sent{
 						ID:   int64(sent.ID),
 						Name: sent.Text,
 					}
 
-					s.popEntities(indexArr, rgx, sent, rasaResp)
+					s.popEntities(indexArr, text, sent, &rasaResp)
 
 					break OuterLoop
 				}
@@ -83,37 +92,48 @@ OuterLoop:
 	return
 }
 
-func (s *NluParsePatternService) popEntities(indexArr []int, rgx *regexp.Regexp, sent model.NluSent, resp domain.RasaResp) {
-	//slotMap := s.getSlotMap(sent.ID)
+func (s *NluParsePatternService) popEntities(indexArr []int, text string, sent model.NluSent, resp *serverDomain.RasaRespForPattern) {
 	slots := s.NluSlotRepo.ListBySentId(sent.ID)
 
-	for _, slot := range slots {
-		slotType := slot.Type
-		//slotId := slot.ID
+	index := 2
+	for _, item := range slots {
+		if item.Type == "" {
+			continue
+		}
 
-		if slotType == serverConst.Synonym {
-			//slot := slotMap[slotId]
+		entity := serverDomain.Entity{Extractor: consts.Pattern.ToString(), ConfidenceEntity: 1}
 
-		} else if slotType == serverConst.Lookup {
-			//slot := slotMap[slotId]
+		if item.Type == serverConst.Synonym {
+			synonymId, _ := strconv.Atoi(item.Value)
+			synonym := s.NluSynonymRepo.Get(uint(synonymId))
+			entity.Entity = fmt.Sprintf("%d-%s-%s", synonym.ID, item.Type, synonym.Name)
+			//entity.Value = item.Text
 
-		} else if slotType == serverConst.Regex {
-			//slot := slotMap[slotId]
+		} else if item.Type == serverConst.Lookup {
+			lookupId, _ := strconv.Atoi(item.Value)
+			lookup := s.NluLookupRepo.Get(uint(lookupId))
+			entity.Entity = fmt.Sprintf("%d-%s-%s", lookup.ID, item.Type, lookup.Name)
+			//entity.Value = item.Text
 
-		} else if slotType == serverConst.Slot {
+		} else if item.Type == serverConst.Regex {
+			regexId, _ := strconv.Atoi(item.Value)
+			regex := s.NluRegexRepo.Get(uint(regexId))
+			entity.Entity = fmt.Sprintf("%d-%s-%s", regex.ID, item.Type, regex.Name)
+			//entity.Value = item.Text
 
-		} else if slotType == "" {
+		} else if item.Type == serverConst.Slot {
+			entity.Entity = item.Value
+			//entity.Value = item.Text
 
 		}
 
-		entity := domain.Entity{
-			Value:     "",
-			Start:     0,
-			End:       1,
-			Extractor: consts.Pattern.ToString(),
-		}
+		entity.Start = int64(indexArr[index])
+		entity.End = int64(indexArr[index+1])
+		entity.Value = text[entity.Start:entity.End]
 
 		resp.Entities = append(resp.Entities, entity)
+
+		index += 2
 	}
 }
 

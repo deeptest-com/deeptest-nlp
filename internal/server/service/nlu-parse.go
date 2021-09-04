@@ -1,4 +1,4 @@
-package service
+package serverService
 
 import (
 	consts "github.com/utlai/utl/internal/comm/const"
@@ -35,11 +35,11 @@ func NewNluParseService() *NluParseService {
 	return &NluParseService{}
 }
 
-func (s *NluParseService) Parse(projectId int, req domain.NluReq) (ret domain.NluResp) {
-	if serverConf.Config.Analyzer == consts.Rasa {
+func (s *NluParseService) Parse(projectId int, req serverDomain.NluReq) (ret serverDomain.NluResp) {
+	if serverConf.Inst.Analyzer == consts.Rasa {
 		ret = s.NluParseRasaService.Parse(uint(projectId), req)
 
-	} else if serverConf.Config.Analyzer == consts.Pattern {
+	} else if serverConf.Inst.Analyzer == consts.Pattern {
 		ret = s.NluParsePatternService.Parse(uint(projectId), req)
 	}
 

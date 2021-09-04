@@ -62,7 +62,7 @@ SET sql_mode = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZER
 show variables like 'sql_mode';
 
 scp -r bin/utl-server/0.8/linux/utl-server 139.224.8.129:~
-scp -r bin/utl-server/0.8/linux/utl-server/utl-server 139.224.8.129:~/utl-server
+scp -r bin/utl-server/0.8/linux/utl-server/utl-server 139.224.8.129:~/utl-server/utl-server
 
 ps -ef | grep utl | grep -v grep | awk '{print $2}' | xargs kill -9
 cd ~/utl-server && nohup ./utl-server 2>&1 &
@@ -74,3 +74,5 @@ delete from nlu_slot where sent_refer IN (
     select id from nlu_sent where deleted
 );
 delete from nlu_sent where deleted;
+
+java -Dwebdriver.chrome.driver=~/driver/chrome_mac_92 -jar ~/driver/selenium-server-standalone-3.141.59.jar

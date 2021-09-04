@@ -10,3 +10,14 @@ const (
 func (e AnalyzerType) ToString() string {
 	return string(e)
 }
+
+type AgentStatus string
+
+const (
+	AgentBusy  AgentStatus = "busy"
+	AgentReady AgentStatus = "ready"
+)
+
+func (e AgentStatus) ToString() string {
+	return string(e)
+}

@@ -4,15 +4,15 @@ package tests
 
 import (
 	"flag"
+	"github.com/bxcodec/faker/v3"
+	"github.com/iris-contrib/httpexpect/v2"
+	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/httptest"
 	server2 "github.com/utlai/utl/cmd/server/server"
 	"github.com/utlai/utl/cmd/server/tests/mock"
 	"github.com/utlai/utl/internal/server/cfg"
 	"github.com/utlai/utl/internal/server/model"
 	"github.com/utlai/utl/internal/server/service"
-	"github.com/bxcodec/faker/v3"
-	"github.com/iris-contrib/httpexpect/v2"
-	"github.com/kataras/iris/v12"
-	"github.com/kataras/iris/v12/httptest"
 	"net/http"
 	"os"
 	"testing"
@@ -30,7 +30,7 @@ func TestMain(m *testing.M) {
 	s := server2.NewServer(nil) // 初始化app
 	s.NewApp(nil, nil, nil, nil)
 	app = s.App
-	service.Run()
+	serverService.Run()
 
 	exitCode := m.Run()
 
@@ -193,8 +193,8 @@ func GetOauthToken(e *httpexpect.Expect) string {
 	}
 
 	oj := map[string]string{
-		"username": serverConf.Config.Admin.UserName,
-		"password": serverConf.Config.Admin.Pwd,
+		"username": serverConf.Inst.Admin.UserName,
+		"password": serverConf.Inst.Admin.Pwd,
 	}
 	r := e.POST("login").WithJSON(oj).
 		Expect().

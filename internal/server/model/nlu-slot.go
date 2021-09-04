@@ -5,7 +5,6 @@ import serverConst "github.com/utlai/utl/internal/server/utils/const"
 type NluSlot struct {
 	BaseModel
 
-	Name  string                  `json:"name"`
 	Seq   int                     `json:"seq"`
 	Type  serverConst.NluSlotType `json:"type"`
 	Value string                  `json:"value"`
