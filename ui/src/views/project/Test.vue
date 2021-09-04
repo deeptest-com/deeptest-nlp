@@ -3,7 +3,16 @@
     :title="model.name"
   >
     <template v-slot:content>
-      <span class="title">{{$t('form.exec.selenium.on.agent')}}</span>
+      <a-row class="agents">
+        <a-col class="label">{{$t('form.exec.selenium.on.agent')}}</a-col>
+        <a-col class="content">
+          <a-select v-model="ip" class="select">
+            <a-select-option v-for="(item, index) in agents" :value="item.ip" :key="index">
+              {{ item.ip }}
+            </a-select-option>
+          </a-select>
+        </a-col>
+      </a-row>
     </template>
 
     <template v-slot:extra>
@@ -81,6 +90,7 @@ export default {
     return {
       model: {},
       agents: [],
+      ip: '',
       question: '',
       messages: [],
       histories: [],
@@ -307,6 +317,19 @@ export default {
 .title {
   font-weight: bolder;
   font-size: 16px;
+}
+.agents {
+  display: flex;
+  .label {
+    width: 110px;
+    line-height: 28px;
+  }
+  .content {
+    flex: 1;
+    .select {
+      width: 200px;
+    }
+  }
 }
 
 </style>

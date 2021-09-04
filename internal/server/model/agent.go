@@ -13,8 +13,8 @@ type Agent struct {
 	Status           consts.AgentStatus `json:"status"`
 	LastRegisterTime time.Time          `json:"lastRegisterTime"`
 
-	Ip         string `json:"nodeIp"`
-	Port       int    `json:"nodePort"`
+	Ip         string `json:"ip"`
+	Port       int    `json:"port"`
 	MacAddress string `json:"macAddress"`
 	RpcPort    int    `json:"rpcPort"`
 	SshPort    int    `json:"sshPort"`

@@ -39,7 +39,7 @@ func (r AgentRepo) Register(to domain.Agent) (err error) {
 }
 
 func (r AgentRepo) Query() (agents []model.Agent) {
-	r.DB.Model(&model.Agent{}).Where("NOT deletedAND NOT disabled").Find(&agents)
+	r.DB.Model(&model.Agent{}).Where("NOT deleted AND NOT disabled").Find(&agents)
 	return
 }
 
