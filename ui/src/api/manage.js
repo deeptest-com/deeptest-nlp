@@ -92,6 +92,14 @@ export function getProject (id) {
     params: {}
   })
 }
+export function testProject (id) {
+  return request({
+    url: api.projects + '/' + id + '/test',
+    method: 'get',
+    params: {}
+  })
+}
+
 export function saveProject (model) {
   return request({
     url: !model.id ? api.projects : api.projects + '/' + model.id,

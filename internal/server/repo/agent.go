@@ -17,7 +17,7 @@ func NewAgentRepo() *AgentRepo {
 }
 
 func (r AgentRepo) Register(to domain.Agent) (err error) {
-	po := model.Agent{
+	agent := model.Agent{
 		Ip:               to.Ip,
 		Port:             to.Port,
 		MacAddress:       to.MacAddress,
@@ -25,23 +25,30 @@ func (r AgentRepo) Register(to domain.Agent) (err error) {
 		LastRegisterTime: time.Now(),
 	}
 
+	po := r.GetByMac(to.MacAddress)
+
 	if po.ID == 0 {
-		r.DB.Model(&model.Agent{}).Create(&po)
+		r.DB.Model(&model.Agent{}).Create(&agent)
 	} else {
 		r.DB.Model(&model.Agent{}).
 			Where("mac_address=?", to.MacAddress).
-			Updates(&po)
+			Updates(&agent)
 	}
 
 	return
 }
 
-func (r AgentRepo) GetById(id uint) (vm model.Agent) {
-	r.DB.Model(&model.Agent{}).Where("ID=?", id).First(&vm)
+func (r AgentRepo) Query() (agents []model.Agent) {
+	r.DB.Model(&model.Agent{}).Where("NOT deletedAND NOT disabled").Find(&agents)
 	return
 }
-func (r AgentRepo) GetByMac(mac string) (vm model.Agent) {
-	r.DB.Model(&model.Agent{}).Where("mac=?", mac).First(&vm)
+
+func (r AgentRepo) GetById(id uint) (agent model.Agent) {
+	r.DB.Model(&model.Agent{}).Where("ID=?", id).First(&agent)
+	return
+}
+func (r AgentRepo) GetByMac(mac string) (agent model.Agent) {
+	r.DB.Model(&model.Agent{}).Where("mac_address=? AND NOT deleted", mac).First(&agent)
 	return
 }
 

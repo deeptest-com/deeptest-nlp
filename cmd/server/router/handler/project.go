@@ -15,6 +15,7 @@ type ProjectCtrl struct {
 	BaseCtrl
 
 	ProjectService *serverService.ProjectService `inject:""`
+	AgentService   *serverService.AgentService   `inject:""`
 }
 
 func NewProjectCtrl() *ProjectCtrl {
@@ -60,6 +61,21 @@ func (c *ProjectCtrl) Get(ctx iris.Context) {
 	model := c.ProjectService.GetDetail(uint(id))
 
 	data := map[string]interface{}{"model": model, "analyzer": serverConf.Inst.Analyzer}
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", data))
+
+	return
+}
+func (c *ProjectCtrl) Test(ctx iris.Context) {
+	id, err := ctx.Params().GetInt("id")
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		return
+	}
+
+	model := c.ProjectService.GetDetail(uint(id))
+	agents := c.AgentService.List()
+
+	data := map[string]interface{}{"model": model, "agents": agents}
 	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", data))
 
 	return

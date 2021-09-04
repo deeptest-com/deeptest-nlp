@@ -116,6 +116,8 @@ const locale = {
   'form.maintain.nlu.sent': 'Sentence',
   'form.maintain.nlu.rule': 'Rule',
 
+  'form.exec.selenium.on.agent': 'Exec command on agent',
+
   'status.enable': 'Enable',
   'status.disable': 'Disable',
 

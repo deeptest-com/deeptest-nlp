@@ -116,6 +116,8 @@ const locale = {
   'form.maintain.nlu.sent': '说法',
   'form.maintain.nlu.rule': '规则',
 
+  'form.exec.selenium.on.agent': '执行指令于代理',
+
   'status.enable': '启用',
   'status.disable': '禁用',
 

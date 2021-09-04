@@ -100,6 +100,7 @@ func (r *Router) App() {
 				admin.PartyFunc("/projects", func(party iris.Party) {
 					party.Get("/", r.ProjectCtrl.List).Name = "项目列表"
 					party.Get("/{id:uint}", r.ProjectCtrl.Get).Name = "项目详情"
+					party.Get("/{id:uint}/test", r.ProjectCtrl.Test).Name = "项目测试"
 					party.Post("/", r.ProjectCtrl.Create).Name = "创建项目"
 					party.Put("/{id:uint}", r.ProjectCtrl.Update).Name = "更新项目"
 					party.Delete("/{id:uint}", r.ProjectCtrl.Delete).Name = "删除项目"

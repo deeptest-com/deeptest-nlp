@@ -3,6 +3,7 @@
     :title="model.name"
   >
     <template v-slot:content>
+      <span class="title">{{$t('form.exec.selenium.on.agent')}}</span>
     </template>
 
     <template v-slot:extra>
@@ -55,7 +56,7 @@
 
 import { baseMixin } from '@/store/app-mixin'
 import ChatMessage from './component/Message'
-import { nluRequest } from '@/api/manage'
+import { testProject, nluRequest } from '@/api/manage'
 
 import storage from 'store'
 import { TEST_HISTORIES } from '@/utils/const'
@@ -79,6 +80,7 @@ export default {
   data () {
     return {
       model: {},
+      agents: [],
       question: '',
       messages: [],
       histories: [],
@@ -123,6 +125,10 @@ export default {
   methods: {
     loadData () {
       this.messages = [{ type: 'welcome' }]
+
+      testProject(this.id).then(json => {
+        this.agents = json.data.agents
+      })
     },
     view (data) {
       const mode = data.mode
@@ -296,6 +302,11 @@ export default {
   .tips {
     margin-left: 10px;
   }
+}
+
+.title {
+  font-weight: bolder;
+  font-size: 16px;
 }
 
 </style>
