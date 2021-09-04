@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/tebeka/selenium"
 	agentConf "github.com/utlai/utl/internal/agent/conf"
+	seleniumOpt "github.com/utlai/utl/internal/agent/service/selenium"
+	consts "github.com/utlai/utl/internal/comm/const"
 	"github.com/utlai/utl/internal/comm/domain"
 	_domain "github.com/utlai/utl/internal/pkg/domain"
 	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
@@ -13,11 +15,14 @@ import (
 )
 
 const (
-	keySelenium = "selenium"
+	keySeleniumDriver = "selenium-driver"
 )
 
 type SeleniumService struct {
 	syncMap sync.Map
+
+	SeleniumBrowser    *seleniumOpt.SeleniumBrowser    `inject:""`
+	SeleniumNavigation *seleniumOpt.SeleniumNavigation `inject:""`
 }
 
 func NewSeleniumService() *RegisterService {
@@ -35,14 +40,22 @@ func (s *SeleniumService) StartService(driverType, driverVersion string, port in
 		selenium.ChromeDriver(driverPath),
 		selenium.Output(os.Stderr),
 	}
-	srv, err := selenium.NewSeleniumService(seleniumPath, port, opts...)
-	s.syncMap.Store(keySelenium, srv)
+	_, err := selenium.NewSeleniumService(seleniumPath, port, opts...)
 	if err != nil {
-		msg := fmt.Sprintf("start selenium service failed, err %s", err.Error())
-
+		msg := fmt.Sprintf("fail to start selenium service, err %s", err.Error())
 		_logUtils.Errorf(msg)
-		s.syncMap.Store(keySelenium, srv)
+		result.Fail(msg)
+		return
+	}
 
+	caps := selenium.Capabilities{"browserName": driverType}
+	driver, err := selenium.NewRemote(caps, fmt.Sprintf("http://localhost:%d/wd/hub", port))
+
+	s.syncMap.Store(keySeleniumDriver, driver)
+
+	if err != nil {
+		msg := fmt.Sprintf("fail to create selenium driver, err %s", err.Error())
+		_logUtils.Errorf(msg)
 		result.Fail(msg)
 		return
 	}
@@ -52,6 +65,19 @@ func (s *SeleniumService) StartService(driverType, driverVersion string, port in
 }
 
 func (s *SeleniumService) ExecInstruct(instruct *domain.InstructSelenium) (result _domain.RpcResult) {
+	driverCache, ok := s.syncMap.Load(keySeleniumDriver)
+	if !ok {
+		msg := "fail to get selenium driver"
+		_logUtils.Errorf(msg)
+		result.Fail(msg)
+		return
+	}
+
+	driver := driverCache.(selenium.WebDriver)
+
+	if instruct.Opt == consts.Navigation {
+		s.SeleniumNavigation.Open(instruct, driver)
+	}
 
 	result.Pass("")
 	return

@@ -21,3 +21,13 @@ const (
 func (e AgentStatus) ToString() string {
 	return string(e)
 }
+
+type SeleniumOpt string
+
+const (
+	Navigation SeleniumOpt = "navigation"
+)
+
+func (e SeleniumOpt) ToString() string {
+	return string(e)
+}
