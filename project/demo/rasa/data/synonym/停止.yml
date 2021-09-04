@@ -1,0 +1,6 @@
+version: "2.0"
+nlu:
+- synonym: 停止_syn
+  examples: |
+    - 停止
+    - 关闭
