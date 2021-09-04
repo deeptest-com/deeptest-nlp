@@ -3,7 +3,7 @@ package vmCron
 import (
 	"fmt"
 	"github.com/kataras/iris/v12"
-	checkService "github.com/utlai/utl/internal/agent/service/check"
+	agentService "github.com/utlai/utl/internal/agent/service"
 	consts "github.com/utlai/utl/internal/comm/const"
 	_cronUtils "github.com/utlai/utl/internal/pkg/libs/cron"
 	_dateUtils "github.com/utlai/utl/internal/pkg/libs/date"
@@ -14,7 +14,7 @@ import (
 
 type CronService struct {
 	syncMap      sync.Map
-	CheckService *checkService.CheckService `inject:""`
+	CheckService *agentService.CheckService `inject:""`
 }
 
 func NewAgentCron() *CronService {
