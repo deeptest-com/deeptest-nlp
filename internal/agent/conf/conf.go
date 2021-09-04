@@ -1,7 +1,6 @@
 package agentConf
 
 import (
-	"github.com/utlai/utl/internal/agent/agentModel"
 	consts "github.com/utlai/utl/internal/comm/const"
 	_commonUtils "github.com/utlai/utl/internal/pkg/libs/common"
 	_fileUtils "github.com/utlai/utl/internal/pkg/libs/file"
@@ -12,7 +11,7 @@ import (
 )
 
 var (
-	Inst = agentModel.Config{}
+	Inst = Config{}
 )
 
 func Init() {
@@ -30,4 +29,16 @@ func Init() {
 	usr, _ := user.Current()
 	Inst.WorkDir = _fileUtils.AddPathSepIfNeeded(filepath.Join(usr.HomeDir, "utl"))
 	Inst.Server = _httpUtils.UpdateUrl(Inst.Server)
+}
+
+type Config struct {
+	Server     string `json:"server" yaml:"Server"`
+	Ip         string `json:"ip" yaml:"ip"`
+	Port       int    `json:"port" yaml:"port"`
+	MacAddress string `json:"macAddress" yaml:"macAddress"`
+
+	Language string
+	HostName string
+	WorkDir  string
+	LogDir   string
 }

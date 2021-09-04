@@ -1,0 +1,17 @@
+version: "2.0"
+name: Selenium服务
+intents:
+- id: 38
+  name: 启动服务
+  examples:
+  - id: 206
+    example: ^(启动|运行)Selenium服务$
+  - id: 210
+    example: ^(启动|运行)Selenium$
+- id: 39
+  name: 停止服务
+  examples:
+  - id: 207
+    example: ^(停止|关闭)Selenium服务$
+  - id: 212
+    example: ^(停止|关闭)Selenium$
