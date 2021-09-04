@@ -5,6 +5,7 @@ import (
 )
 
 type NluReq struct {
+	AgentId    int    `json:"agentId"`
 	Text       string `json:"text"`
 	TextOrigin string `json:"textOrigin"`
 }
@@ -22,7 +23,7 @@ type RasaResp struct {
 }
 type RasaRespForPattern struct {
 	Entities      []Entity        `json:"entities"`
-	Intent        Intent          `json:"intent"`
+	Intent        *Intent         `json:"intent"`
 	IntentRanking []IntentRanking `json:"intent_ranking"`
 	Text          string          `json:"text"`
 

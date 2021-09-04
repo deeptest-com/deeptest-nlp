@@ -43,7 +43,7 @@ func (r AgentRepo) Query() (agents []model.Agent) {
 	return
 }
 
-func (r AgentRepo) GetById(id uint) (agent model.Agent) {
+func (r AgentRepo) Get(id uint) (agent model.Agent) {
 	r.DB.Model(&model.Agent{}).Where("ID=?", id).First(&agent)
 	return
 }

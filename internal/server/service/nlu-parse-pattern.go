@@ -39,7 +39,7 @@ func NewNluParsePatternService() *NluParsePatternService {
 func (s *NluParsePatternService) Parse(projectId uint, req serverDomain.NluReq) (ret serverDomain.NluResp) {
 	ret.Code = -1
 	rasaResp := serverDomain.RasaRespForPattern{
-		Intent: serverDomain.Intent{
+		Intent: &serverDomain.Intent{
 			Confidence: 1,
 		},
 		StartTime: time.Now(),
@@ -51,17 +51,21 @@ func (s *NluParsePatternService) Parse(projectId uint, req serverDomain.NluReq) 
 	}
 	tasks := serverVari.PatternData[projectId]
 
+	found := false
+
 OuterLoop:
 	for _, task := range tasks {
 		for _, intent := range task.Intents {
 			for _, sent := range intent.Sents {
-				rgx := regexp.MustCompile(sent.Example)
+				rgx := regexp.MustCompile("(?i)" + sent.Example)
 
 				indexArr := rgx.FindStringSubmatchIndex(text)
 				//contentArr := rgx.FindStringSubmatch(text)
 				//_logUtils.Infof("%v", contentArr)
 
 				if len(indexArr) > 0 { // matched
+					found = true
+
 					sent := s.NluSentRepo.Get(sent.Id)
 					intent := s.NluIntentRepo.Get(intent.Id)
 
@@ -86,6 +90,11 @@ OuterLoop:
 	}
 
 	rasaResp.EndTime = time.Now()
+	if !found {
+		rasaResp.Intent.Confidence = 0
+		rasaResp.Entities = make([]serverDomain.Entity, 0)
+	}
+
 	ret.SetResult(rasaResp)
 	ret.Code = 1
 

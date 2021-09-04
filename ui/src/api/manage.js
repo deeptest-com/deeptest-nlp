@@ -165,11 +165,11 @@ export function endService (model) {
 }
 
 // nul
-export function nluRequest (projectId, text) {
+export function nluRequest (projectId, text, agentId) {
   return request({
     url: api.parse + '/' + projectId,
     method: 'post',
-    data: { text: text }
+    data: { text: text, agentId: agentId }
   })
 }
 

@@ -6,8 +6,8 @@
       <a-row class="agents">
         <a-col class="label">{{$t('form.exec.selenium.on.agent')}}</a-col>
         <a-col class="content">
-          <a-select v-model="ip" class="select">
-            <a-select-option v-for="(item, index) in agents" :value="item.ip" :key="index">
+          <a-select v-model="agentId" class="select">
+            <a-select-option v-for="(item, index) in agents" :value="item.id" :key="index">
               {{ item.ip }}
             </a-select-option>
           </a-select>
@@ -90,7 +90,7 @@ export default {
     return {
       model: {},
       agents: [],
-      ip: '',
+      agentId: 0,
       question: '',
       messages: [],
       histories: [],
@@ -167,7 +167,7 @@ export default {
       this.historyIndex = this.histories.length
       this.messages.push({ type: 'question', content: this.question })
 
-      nluRequest(this.id, this.question).then(json => {
+      nluRequest(this.id, this.question, this.agentId).then(json => {
         console.log('nluRequest', json)
         const data = json.data
 

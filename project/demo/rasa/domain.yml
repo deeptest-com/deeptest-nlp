@@ -29,6 +29,8 @@ intents:
 - 抬起
 - 悬停
 - 拖动
+- 启动服务
+- 停止服务
 entities:
 - 打印
 - 日志级别
@@ -58,6 +60,8 @@ entities:
 - expression2
 - 按键
 - 拖动
+- 启动
+- 停止
 slots:
   打印:
     type: text
@@ -141,5 +145,11 @@ slots:
     type: text
     influence_conversation: false
   拖动:
+    type: text
+    influence_conversation: false
+  启动:
+    type: text
+    influence_conversation: false
+  停止:
     type: text
     influence_conversation: false
