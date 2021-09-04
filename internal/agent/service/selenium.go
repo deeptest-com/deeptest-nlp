@@ -8,8 +8,8 @@ import (
 type SeleniumService struct {
 }
 
-func NewSeleniumService() *CheckService {
-	return &CheckService{}
+func NewSeleniumService() *RegisterService {
+	return &RegisterService{}
 }
 
 func (s *SeleniumService) ExecInstruct(instruct *domain.InstructSelenium) (result _domain.RpcResult) {

@@ -9,7 +9,7 @@ import (
 	jwt2 "github.com/utlai/utl/internal/server/biz/jwt"
 	"github.com/utlai/utl/internal/server/biz/redis"
 	"github.com/utlai/utl/internal/server/biz/validate"
-	"github.com/utlai/utl/internal/server/cfg"
+	"github.com/utlai/utl/internal/server/conf"
 	"github.com/utlai/utl/internal/server/domain"
 	"github.com/utlai/utl/internal/server/repo"
 	"github.com/utlai/utl/internal/server/service"
@@ -28,20 +28,6 @@ func NewAccountCtrl() *AccountCtrl {
 	return &AccountCtrl{}
 }
 
-/**
-* @api {post} /admin/login 用户登陆
-* @apiName 用户登陆
-* @apiGroup Users
-* @apiVersion 1.0.0
-* @apiDescription 用户登陆
-* @apiSampleRequest /admin/login
-* @apiParam {string} username 用户名
-* @apiParam {string} password 密码
-* @apiSuccess {String} msg 消息
-* @apiSuccess {bool} state 状态
-* @apiSuccess {String} data 返回数据
-* @apiPermission null
- */
 func (c *AccountCtrl) UserLogin(ctx iris.Context) {
 	ctx.StatusCode(iris.StatusOK)
 	req := new(validate.LoginRequest)

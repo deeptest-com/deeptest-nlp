@@ -20,6 +20,7 @@ func (r AgentRepo) Register(to domain.Agent) (err error) {
 	po := model.Agent{
 		Ip:               to.Ip,
 		Port:             to.Port,
+		MacAddress:       to.MacAddress,
 		Status:           to.Status,
 		LastRegisterTime: time.Now(),
 	}

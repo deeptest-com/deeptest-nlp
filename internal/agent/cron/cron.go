@@ -14,7 +14,7 @@ import (
 
 type CronService struct {
 	syncMap      sync.Map
-	CheckService *agentService.CheckService `inject:""`
+	CheckService *agentService.RegisterService `inject:""`
 }
 
 func NewAgentCron() *CronService {

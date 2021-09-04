@@ -8,7 +8,7 @@ import (
 	_httpUtils "github.com/utlai/utl/internal/pkg/libs/http"
 	bizConst "github.com/utlai/utl/internal/server/biz/const"
 	"github.com/utlai/utl/internal/server/biz/redis"
-	"github.com/utlai/utl/internal/server/cfg"
+	"github.com/utlai/utl/internal/server/conf"
 	"github.com/utlai/utl/internal/server/repo"
 	"net/http"
 	"strconv"

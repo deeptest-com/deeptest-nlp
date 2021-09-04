@@ -2,7 +2,7 @@ package serverService
 
 import (
 	consts "github.com/utlai/utl/internal/comm/const"
-	serverConf "github.com/utlai/utl/internal/server/cfg"
+	serverConf "github.com/utlai/utl/internal/server/conf"
 	"github.com/utlai/utl/internal/server/domain"
 	"github.com/utlai/utl/internal/server/repo"
 	"sync"

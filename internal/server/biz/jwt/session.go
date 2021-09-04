@@ -4,7 +4,7 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/kataras/iris/v12/sessions"
 	bizConst "github.com/utlai/utl/internal/server/biz/const"
-	"github.com/utlai/utl/internal/server/cfg"
+	"github.com/utlai/utl/internal/server/conf"
 )
 
 var (

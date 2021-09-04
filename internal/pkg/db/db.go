@@ -4,7 +4,7 @@ import (
 	"fmt"
 	_fileUtils "github.com/utlai/utl/internal/pkg/libs/file"
 	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
-	serverConf "github.com/utlai/utl/internal/server/cfg"
+	serverConf "github.com/utlai/utl/internal/server/conf"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"

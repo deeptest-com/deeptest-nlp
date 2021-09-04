@@ -31,6 +31,7 @@ var (
 		&NluRegex{},
 		&NluRegexItem{},
 		&NluHistory{},
+		&Agent{},
 
 		&User{},
 		&Role{},

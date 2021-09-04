@@ -11,7 +11,7 @@ import (
 	bizConst "github.com/utlai/utl/internal/server/biz/const"
 	jwt2 "github.com/utlai/utl/internal/server/biz/jwt"
 	"github.com/utlai/utl/internal/server/biz/redis"
-	"github.com/utlai/utl/internal/server/cfg"
+	"github.com/utlai/utl/internal/server/conf"
 	"github.com/utlai/utl/internal/server/model"
 	"github.com/utlai/utl/internal/server/repo"
 	"strconv"

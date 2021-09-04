@@ -10,22 +10,23 @@ import (
 	"time"
 )
 
-type CheckService struct {
+type RegisterService struct {
 	TimeStamp int64
 }
 
-func NewCheckService() *CheckService {
-	s := CheckService{}
+func NewRegisterService() *RegisterService {
+	s := RegisterService{}
 	s.TimeStamp = time.Now().Unix()
 
 	return &s
 }
 
-func (s *CheckService) Register() {
+func (s *RegisterService) Register() {
 	agent := domain.Agent{
 		MacAddress: agentConf.Inst.MacAddress,
 		Ip:         agentConf.Inst.Ip,
 		Port:       agentConf.Inst.Port,
+		WorkDir:    agentConf.Inst.WorkDir,
 		Status:     consts.AgentReady,
 	}
 

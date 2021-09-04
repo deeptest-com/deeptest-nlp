@@ -6,6 +6,7 @@ type Agent struct {
 	MacAddress string `json:"macAddress"`
 	Ip         string `json:"ip"`
 	Port       int    `json:"port"`
+	WorkDir    string `json:"workDir"`
 
 	Status consts.AgentStatus `json:"status"`
 }

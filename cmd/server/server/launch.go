@@ -12,7 +12,7 @@ import (
 	bizCasbin "github.com/utlai/utl/internal/server/biz/casbin"
 	"github.com/utlai/utl/internal/server/biz/jwt"
 	"github.com/utlai/utl/internal/server/biz/redis"
-	"github.com/utlai/utl/internal/server/cfg"
+	"github.com/utlai/utl/internal/server/conf"
 	serverCron "github.com/utlai/utl/internal/server/cron"
 	"github.com/utlai/utl/internal/server/model"
 	"github.com/utlai/utl/internal/server/service"

@@ -11,7 +11,7 @@ import (
 	_httpUtils "github.com/utlai/utl/internal/pkg/libs/http"
 	bizCasbin "github.com/utlai/utl/internal/server/biz/casbin"
 	"github.com/utlai/utl/internal/server/biz/jwt"
-	"github.com/utlai/utl/internal/server/cfg"
+	"github.com/utlai/utl/internal/server/conf"
 	"github.com/utlai/utl/internal/server/repo"
 	"github.com/utlai/utl/internal/server/service"
 	"net/http"

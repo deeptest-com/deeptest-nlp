@@ -5,7 +5,7 @@ import (
 	_httpUtils "github.com/utlai/utl/internal/pkg/libs/http"
 	_stringUtils "github.com/utlai/utl/internal/pkg/libs/string"
 	"github.com/utlai/utl/internal/server/biz/jwt"
-	serverConf "github.com/utlai/utl/internal/server/cfg"
+	serverConf "github.com/utlai/utl/internal/server/conf"
 	"github.com/utlai/utl/internal/server/model"
 	"github.com/utlai/utl/internal/server/service"
 	serverConst "github.com/utlai/utl/internal/server/utils/const"

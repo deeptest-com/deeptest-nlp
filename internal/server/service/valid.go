@@ -4,7 +4,7 @@ import (
 	consts "github.com/utlai/utl/internal/comm/const"
 	_const "github.com/utlai/utl/internal/pkg/const"
 	_fileUtils "github.com/utlai/utl/internal/pkg/libs/file"
-	serverConf "github.com/utlai/utl/internal/server/cfg"
+	serverConf "github.com/utlai/utl/internal/server/conf"
 	"github.com/utlai/utl/internal/server/domain"
 	"github.com/utlai/utl/internal/server/repo"
 	"path/filepath"
