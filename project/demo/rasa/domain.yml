@@ -67,6 +67,7 @@ entities:
 - expression2
 - 启动
 - 浏览器类型
+- version
 - 停止
 - 输入
 - expresssion
@@ -163,6 +164,9 @@ slots:
     type: text
     influence_conversation: false
   浏览器类型:
+    type: text
+    influence_conversation: false
+  version:
     type: text
     influence_conversation: false
   停止:

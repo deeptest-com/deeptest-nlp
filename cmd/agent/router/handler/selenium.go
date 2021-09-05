@@ -16,7 +16,7 @@ func NewSeleniumCtrl() *SeleniumCtrl {
 
 func (c *SeleniumCtrl) Exec(
 	ctx context.Context, instruction *domain.RasaResp, reply *domain.InstructionResp) (err error) {
-	reply = c.SeleniumService.Exec(instruction)
+	reply = c.SeleniumService.Exec(*instruction)
 
 	return
 }

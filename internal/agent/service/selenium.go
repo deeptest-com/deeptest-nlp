@@ -30,29 +30,34 @@ func NewSeleniumService() *RegisterService {
 	return &RegisterService{}
 }
 
-func (s *SeleniumService) Exec(instruction *domain.RasaResp) (resp *domain.InstructionResp) {
+func (s *SeleniumService) Exec(instruction domain.RasaResp) (resp *domain.InstructionResp) {
+	if instruction.Intent == nil || instruction.Intent.Name == "" {
+		resp.Pass("no instruction")
+		return
+	}
+
+	cmd := instruction.Intent.Name
+
+	// init driver
+	if cmd == consts.SeleniumStart.ToString() {
+		s.start(instruction)
+		return
+	}
+
+	// exec command
 	_, ok1 := s.syncMap.Load(keySeleniumService)
 	driverCache, ok2 := s.syncMap.Load(keySeleniumDriver)
 	if !ok1 || !ok2 {
 		msg := "fail to get selenium driver"
 		_logUtils.Errorf(msg)
-		(*resp).Fail(msg)
-		return
-	}
-
-	if instruction.Intent == nil || instruction.Intent.Name == "" {
-		(*resp).Pass("no instruction")
+		resp.Fail(msg)
 		return
 	}
 
 	//srv := driverCache.(selenium.Service)
 	driver := driverCache.(selenium.WebDriver)
 
-	cmd := instruction.Intent.Name
 	switch cmd {
-	case consts.SeleniumStart.ToString():
-		s.Start(*instruction.Intent, driver)
-
 	case consts.SeleniumStop.ToString():
 		s.Stop(*instruction.Intent, driver)
 
@@ -67,8 +72,8 @@ func (s *SeleniumService) Exec(instruction *domain.RasaResp) (resp *domain.Instr
 	return
 }
 
-func (s *SeleniumService) Start(domain.Intent, selenium.WebDriver) (result _domain.RpcResult) {
-	driverType := ""
+func (s *SeleniumService) start(instruction domain.RasaResp) (result _domain.RpcResult) {
+	driverType := instruction.Entities[1].Value
 	driverVersion := ""
 	port := 0
 

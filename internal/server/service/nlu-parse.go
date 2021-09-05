@@ -40,7 +40,8 @@ func NewNluParseService() *NluParseService {
 	return &NluParseService{}
 }
 
-func (s *NluParseService) Parse(projectId int, req serverDomain.NluReq) (nluResp serverDomain.NluResp) {
+func (s *NluParseService) Parse(projectId int, req serverDomain.NluReq) (
+	nluResp serverDomain.NluResp) {
 	if serverConf.Inst.Analyzer == consts.Rasa {
 		nluResp = s.NluParseRasaService.Parse(uint(projectId), req)
 
@@ -54,7 +55,7 @@ func (s *NluParseService) Parse(projectId int, req serverDomain.NluReq) (nluResp
 	}
 
 	agent := s.AgentRepo.Get(uint(req.AgentId))
-	_logUtils.Infof("exec on agent %s", agent.Ip)
+	_logUtils.Infof("exec instruction on agent %s", agent.Ip)
 
 	rpcResp := s.RpcService.ExecInstruction(nluResp, agent)
 	instructionResp := rpcResp.Payload.(domain.InstructionResp)

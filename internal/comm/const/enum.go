@@ -25,8 +25,8 @@ func (e AgentStatus) ToString() string {
 type SeleniumIntent string
 
 const (
-	SeleniumStart SeleniumIntent = "启动服务"
-	SeleniumStop  SeleniumIntent = "停止服务"
+	SeleniumStart SeleniumIntent = "启动浏览器"
+	SeleniumStop  SeleniumIntent = "停止浏览器"
 
 	Load SeleniumIntent = "加载"
 

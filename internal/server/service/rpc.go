@@ -54,7 +54,11 @@ func (s *RpcService) Request(ip string, port int, apiPath string, method string,
 	if err != nil {
 		_logUtils.Errorf("fail to call: %#v.", err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		if resp != nil {
+			resp.Body.Close()
+		}
+	}()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {

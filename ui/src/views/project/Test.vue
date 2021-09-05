@@ -7,6 +7,7 @@
         <a-col class="label">{{$t('form.exec.selenium.on.agent')}}</a-col>
         <a-col class="content">
           <a-select v-model="agentId" class="select">
+            <a-select-option value="">{{$t('form.pls.select')}}</a-select-option>
             <a-select-option v-for="(item, index) in agents" :value="item.id" :key="index">
               {{ item.ip }}
             </a-select-option>
@@ -90,7 +91,7 @@ export default {
     return {
       model: {},
       agents: [],
-      agentId: 0,
+      agentId: '',
       question: '',
       messages: [],
       histories: [],

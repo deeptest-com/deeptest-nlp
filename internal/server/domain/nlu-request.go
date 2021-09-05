@@ -16,7 +16,7 @@ type NluResp struct {
 	Code _const.ResultCode `json:"code"`
 
 	RasaResult *domain.RasaResp        `json:"result,omitempty"`
-	ExecResult *domain.InstructionResp `json:"result,omitempty"`
+	ExecResult *domain.InstructionResp `json:"execResult,omitempty"`
 	Msg        *map[string]string      `json:"msg,omitempty"`
 }
 

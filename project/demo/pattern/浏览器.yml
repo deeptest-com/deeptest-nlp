@@ -5,7 +5,7 @@ intents:
   name: 启动浏览器
   examples:
   - id: 206
-    example: ^(启动|运行)(Chrome|Firefox|火狐|Edge|IE|Safari)$
+    example: ^(启动|运行)(Chrome|Firefox|火狐|Edge|IE|Safari)(.+)$
   - id: 230
     example: ^(启动|运行)(Chrome|Firefox|火狐|Edge|IE|Safari)浏览器$
 - id: 39
