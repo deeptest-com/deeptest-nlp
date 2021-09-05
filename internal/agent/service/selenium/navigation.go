@@ -17,7 +17,7 @@ func NewSeleniumNavigation() *SeleniumNavigation {
 	return &SeleniumNavigation{}
 }
 
-func (s *SeleniumNavigation) Open(*domain.InstructSelenium, selenium.WebDriver) (result _domain.RpcResult) {
+func (s *SeleniumNavigation) Load(domain.Intent, selenium.WebDriver) (result _domain.RpcResult) {
 
 	return
 }

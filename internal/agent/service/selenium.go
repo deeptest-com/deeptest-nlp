@@ -15,7 +15,8 @@ import (
 )
 
 const (
-	keySeleniumDriver = "selenium-driver"
+	keySeleniumService = "selenium-service"
+	keySeleniumDriver  = "selenium-driver"
 )
 
 type SeleniumService struct {
@@ -29,8 +30,49 @@ func NewSeleniumService() *RegisterService {
 	return &RegisterService{}
 }
 
-func (s *SeleniumService) StartService(driverType, driverVersion string, port int) (result _domain.RpcResult) {
-	seleniumPath := filepath.Join(agentConf.Inst.WorkDir, "driver", "selenium")
+func (s *SeleniumService) Exec(instruction *domain.RasaResp) (resp *domain.InstructionResp) {
+	_, ok1 := s.syncMap.Load(keySeleniumService)
+	driverCache, ok2 := s.syncMap.Load(keySeleniumDriver)
+	if !ok1 || !ok2 {
+		msg := "fail to get selenium driver"
+		_logUtils.Errorf(msg)
+		(*resp).Fail(msg)
+		return
+	}
+
+	if instruction.Intent == nil || instruction.Intent.Name == "" {
+		(*resp).Pass("no instruction")
+		return
+	}
+
+	//srv := driverCache.(selenium.Service)
+	driver := driverCache.(selenium.WebDriver)
+
+	cmd := instruction.Intent.Name
+	switch cmd {
+	case consts.SeleniumStart.ToString():
+		s.Start(*instruction.Intent, driver)
+
+	case consts.SeleniumStop.ToString():
+		s.Stop(*instruction.Intent, driver)
+
+	case consts.Load.ToString():
+		s.SeleniumNavigation.Load(*instruction.Intent, driver)
+
+	default:
+		_logUtils.Infof("unknown instruction %s.", cmd)
+	}
+
+	resp.Pass("")
+	return
+}
+
+func (s *SeleniumService) Start(domain.Intent, selenium.WebDriver) (result _domain.RpcResult) {
+	driverType := ""
+	driverVersion := ""
+	port := 0
+
+	seleniumPath := filepath.Join(agentConf.Inst.WorkDir, "driver", "selenium", driverVersion)
 
 	driverPath := "" // download if needed
 
@@ -40,7 +82,9 @@ func (s *SeleniumService) StartService(driverType, driverVersion string, port in
 		selenium.ChromeDriver(driverPath),
 		selenium.Output(os.Stderr),
 	}
-	_, err := selenium.NewSeleniumService(seleniumPath, port, opts...)
+
+	srv, err := selenium.NewSeleniumService(seleniumPath, port, opts...)
+	s.syncMap.Store(keySeleniumService, srv)
 	if err != nil {
 		msg := fmt.Sprintf("fail to start selenium service, err %s", err.Error())
 		_logUtils.Errorf(msg)
@@ -64,21 +108,8 @@ func (s *SeleniumService) StartService(driverType, driverVersion string, port in
 	return
 }
 
-func (s *SeleniumService) ExecInstruct(instruct *domain.InstructSelenium) (result _domain.RpcResult) {
-	driverCache, ok := s.syncMap.Load(keySeleniumDriver)
-	if !ok {
-		msg := "fail to get selenium driver"
-		_logUtils.Errorf(msg)
-		result.Fail(msg)
-		return
-	}
+func (s *SeleniumService) Stop(intent domain.Intent, driver selenium.WebDriver) (result _domain.RpcResult) {
+	driver.Quit()
 
-	driver := driverCache.(selenium.WebDriver)
-
-	if instruct.Opt == consts.Navigation {
-		s.SeleniumNavigation.Open(instruct, driver)
-	}
-
-	result.Pass("")
 	return
 }

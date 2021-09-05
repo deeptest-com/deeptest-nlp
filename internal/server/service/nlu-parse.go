@@ -31,6 +31,8 @@ type NluParseService struct {
 
 	NluParseRasaService    *NluParseRasaService    `inject:""`
 	NluParsePatternService *NluParsePatternService `inject:""`
+
+	RpcService *RpcService `inject:""`
 }
 
 func NewNluParseService() *NluParseService {
@@ -46,12 +48,14 @@ func (s *NluParseService) Parse(projectId int, req serverDomain.NluReq) (ret ser
 
 	}
 
-	if req.AgentId == 0 {
+	if req.AgentId == 0 || ret.Result == nil {
 		return
 	}
 
 	agent := s.AgentRepo.Get(uint(req.AgentId))
 	_logUtils.Infof("exec on agent %s", agent.Ip)
+
+	s.RpcService.ExecInstruction(&ret, agent)
 
 	return
 }

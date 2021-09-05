@@ -28,11 +28,13 @@ const (
 	SeleniumStart SeleniumIntent = "启动服务"
 	SeleniumStop  SeleniumIntent = "停止服务"
 
+	Load SeleniumIntent = "加载"
+
 	CookieSet SeleniumIntent = "Cookie设置"
 	CookieGet SeleniumIntent = "Cookie获取"
 
-	设置变量为表达式
-	设置变量为元素属性
+	VariableSetToExpression         SeleniumIntent = "设置变量为表达式"
+	VariableSetSetToElementProperty SeleniumIntent = "设置变量为元素属性"
 
 	WindowsConfirm SeleniumIntent = "确定"
 	WindowsCancel  SeleniumIntent = "取消"
@@ -64,8 +66,6 @@ const (
 	Refresh SeleniumIntent = "刷新"
 
 	Wait SeleniumIntent = "等待"
-
-	Load SeleniumIntent = "加载"
 )
 
 func (e SeleniumIntent) ToString() string {

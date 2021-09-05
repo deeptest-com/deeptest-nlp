@@ -3,11 +3,11 @@ package _httpUtils
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/utlai/utl/internal/comm/domain"
 	_const "github.com/utlai/utl/internal/pkg/const"
 	_domain "github.com/utlai/utl/internal/pkg/domain"
 	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
 	_vari "github.com/utlai/utl/internal/pkg/vari"
-	"github.com/utlai/utl/internal/server/domain"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -56,7 +56,7 @@ func GetObj(url string, requestTo string) (interface{}, bool) {
 			}
 		}
 		code := bodyJson.Code
-		return bodyJson.Payload, code == _const.ResultSuccess.Int()
+		return bodyJson.Payload, code == _const.ResultSuccess
 	} else {
 		var bodyJson map[string]interface{}
 		jsonErr := json.Unmarshal(bodyStr, &bodyJson)
@@ -107,7 +107,7 @@ func Post(url string, params interface{}) (interface{}, bool) {
 
 	code := result.Code
 
-	return result, code == _const.ResultSuccess.Int()
+	return result, code == _const.ResultSuccess
 }
 
 func PostRasa(url string, params interface{}) (ret _domain.RpcResult, success bool) {
@@ -142,7 +142,7 @@ func PostRasa(url string, params interface{}) (ret _domain.RpcResult, success bo
 	}
 	defer resp.Body.Close()
 
-	var rasaResp serverDomain.RasaResp
+	var rasaResp domain.RasaResp
 	json.Unmarshal(bodyStr, &rasaResp)
 
 	success = rasaResp.Intent.ID != 0

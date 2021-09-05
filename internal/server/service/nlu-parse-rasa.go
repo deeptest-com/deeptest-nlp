@@ -2,7 +2,9 @@ package serverService
 
 import (
 	"fmt"
+	"github.com/utlai/utl/internal/comm/domain"
 	_httpUtils "github.com/utlai/utl/internal/pkg/libs/http"
+	_i118Utils "github.com/utlai/utl/internal/pkg/libs/i118"
 	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
 	"github.com/utlai/utl/internal/server/domain"
 	"github.com/utlai/utl/internal/server/repo"
@@ -39,13 +41,13 @@ func (s *NluParseRasaService) Parse(projectId uint, req serverDomain.NluReq) (re
 	port := project.ServicePort
 
 	if serviceStatus != serverConst.StartService {
-		msg["i118"] = "service.not.start"
+		msg["msg"] = _i118Utils.Sprintf("service.not.start")
 		msg["content"] = ""
-		ret.SetResult(msg)
+		ret.SetMsg(msg)
 		return
 	}
 
-	regexMap := s.GetRuleRegex(uint(projectId))
+	regexMap := s.GetRuleRegex(projectId)
 	originMap := map[string]string{}
 	req.TextOrigin = req.Text
 	req.Text, originMap = s.ReplaceWithRegex(req.Text, regexMap)
@@ -53,13 +55,13 @@ func (s *NluParseRasaService) Parse(projectId uint, req serverDomain.NluReq) (re
 	url := fmt.Sprintf("http://127.0.0.1:%d/%s", port, "model/parse")
 	resp, success := _httpUtils.PostRasa(url, req)
 	if !success {
-		msg["i118"] = "rasa.request.failed"
+		msg["msg"] = _i118Utils.Sprintf("rasa.request.fail")
 		msg["content"] = fmt.Sprintf("%#v", resp)
-		ret.SetResult(msg)
+		ret.SetMsg(msg)
 		return
 	}
 
-	rasaResp := resp.Payload.(serverDomain.RasaResp)
+	rasaResp := resp.Payload.(domain.RasaResp)
 	rasaResp.TextOrigin = req.TextOrigin
 	for index, entity := range rasaResp.Entities {
 		str, ok := originMap[entity.Entity]

@@ -7,6 +7,8 @@ import (
 	"github.com/smallnest/rpcx/codec"
 	_domain "github.com/utlai/utl/internal/pkg/domain"
 	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
+	"github.com/utlai/utl/internal/server/domain"
+	"github.com/utlai/utl/internal/server/model"
 	"io/ioutil"
 	"net/http"
 )
@@ -17,11 +19,15 @@ func NewRpcService() *RpcService {
 	return &RpcService{}
 }
 
-func (s *RpcService) DoSomething() (result _domain.RpcResult) {
-	//obj := interface{}(appiumTestTo)
-	//s.Request(build.ComputerIp, build.ComputerPort, "appium", "AppiumTest", &obj)
+func (s *RpcService) ExecInstruction(resp *serverDomain.NluResp, agent model.Agent) (result _domain.RpcResult) {
+	if resp.Result == nil {
+		_logUtils.Infof("no intent to exec")
+	}
 
-	result.Pass(fmt.Sprintf("success to send rpc build request %#v."))
+	obj := interface{}(resp.Result)
+	result = s.Request(agent.Ip, agent.Port, "selenium", "Exec", &obj)
+
+	result.Pass(fmt.Sprintf("success to send rpc build request %#v.", result))
 	return
 }
 

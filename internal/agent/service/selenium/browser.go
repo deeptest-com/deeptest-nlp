@@ -1,7 +1,5 @@
 package seleniumOpt
 
-import ()
-
 const ()
 
 type SeleniumBrowser struct {

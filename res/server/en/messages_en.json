@@ -4,6 +4,14 @@
     {
       "id": "for_example",
       "translation": "e.g. %s"
+    },
+    {
+      "id": "service.not.start",
+      "translation": "RASA service not start."
+    },
+    {
+      "id": "rasa.request.fail",
+      "translation": "RASA request failed."
     }
   ]
 }

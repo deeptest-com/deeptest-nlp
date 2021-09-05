@@ -3,6 +3,7 @@ package serverService
 import (
 	"fmt"
 	consts "github.com/utlai/utl/internal/comm/const"
+	"github.com/utlai/utl/internal/comm/domain"
 	"github.com/utlai/utl/internal/server/domain"
 	"github.com/utlai/utl/internal/server/model"
 	"github.com/utlai/utl/internal/server/repo"
@@ -38,8 +39,8 @@ func NewNluParsePatternService() *NluParsePatternService {
 
 func (s *NluParsePatternService) Parse(projectId uint, req serverDomain.NluReq) (ret serverDomain.NluResp) {
 	ret.Code = -1
-	rasaResp := serverDomain.RasaRespForPattern{
-		Intent: &serverDomain.Intent{
+	rasaResp := domain.RasaResp{
+		Intent: &domain.Intent{
 			Confidence: 1,
 		},
 		StartTime: time.Now(),
@@ -71,12 +72,12 @@ OuterLoop:
 
 					rasaResp.Intent.ID = int64(intent.ID)
 					rasaResp.Intent.Name = intent.Name
-					rasaResp.IntentRanking = append(rasaResp.IntentRanking, serverDomain.IntentRanking{
+					rasaResp.IntentRanking = append(rasaResp.IntentRanking, domain.IntentRanking{
 						Name:       intent.Name,
 						Confidence: 1,
 					})
 					rasaResp.Text = text
-					rasaResp.Intent.Sent = serverDomain.Sent{
+					rasaResp.Intent.Sent = domain.Sent{
 						ID:   int64(sent.ID),
 						Name: sent.Text,
 					}
@@ -92,7 +93,7 @@ OuterLoop:
 	rasaResp.EndTime = time.Now()
 	if !found {
 		rasaResp.Intent.Confidence = 0
-		rasaResp.Entities = make([]serverDomain.Entity, 0)
+		rasaResp.Entities = make([]domain.Entity, 0)
 	}
 
 	ret.SetResult(rasaResp)
@@ -101,7 +102,7 @@ OuterLoop:
 	return
 }
 
-func (s *NluParsePatternService) popEntities(indexArr []int, text string, sent model.NluSent, resp *serverDomain.RasaRespForPattern) {
+func (s *NluParsePatternService) popEntities(indexArr []int, text string, sent model.NluSent, resp *domain.RasaResp) {
 	slots := s.NluSlotRepo.ListBySentId(sent.ID)
 
 	index := 2
@@ -110,7 +111,7 @@ func (s *NluParsePatternService) popEntities(indexArr []int, text string, sent m
 			continue
 		}
 
-		entity := serverDomain.Entity{Extractor: consts.Pattern.ToString(), ConfidenceEntity: 1}
+		entity := domain.Entity{Extractor: consts.Pattern.ToString(), ConfidenceEntity: 1}
 
 		if item.Type == serverConst.Synonym {
 			synonymId, _ := strconv.Atoi(item.Value)
