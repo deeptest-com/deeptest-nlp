@@ -12,7 +12,7 @@ import (
 
 func TestUpload(t *testing.T) {
 	_logUtils.Init(consts.AppNameAgent)
-	result := domain.TestResult{Name: "Result Name"}
+	result := domain.TestResult{Name: "RasaResult Name"}
 
 	zipFile := "/Users/aaron/testResult.zip"
 

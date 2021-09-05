@@ -15,12 +15,13 @@ type NluResp struct {
 	Text string            `json:"text"`
 	Code _const.ResultCode `json:"code"`
 
-	Result *domain.RasaResp   `json:"result,omitempty"`
-	Msg    *map[string]string `json:"msg,omitempty"`
+	RasaResult *domain.RasaResp        `json:"result,omitempty"`
+	ExecResult *domain.InstructionResp `json:"result,omitempty"`
+	Msg        *map[string]string      `json:"msg,omitempty"`
 }
 
 func (resp *NluResp) SetResult(result domain.RasaResp) {
-	resp.Result = &result
+	resp.RasaResult = &result
 }
 
 func (resp *NluResp) SetMsg(msg map[string]string) {

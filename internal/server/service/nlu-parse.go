@@ -2,6 +2,7 @@ package serverService
 
 import (
 	consts "github.com/utlai/utl/internal/comm/const"
+	"github.com/utlai/utl/internal/comm/domain"
 	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
 	serverConf "github.com/utlai/utl/internal/server/conf"
 	"github.com/utlai/utl/internal/server/domain"
@@ -39,23 +40,26 @@ func NewNluParseService() *NluParseService {
 	return &NluParseService{}
 }
 
-func (s *NluParseService) Parse(projectId int, req serverDomain.NluReq) (ret serverDomain.NluResp) {
+func (s *NluParseService) Parse(projectId int, req serverDomain.NluReq) (nluResp serverDomain.NluResp) {
 	if serverConf.Inst.Analyzer == consts.Rasa {
-		ret = s.NluParseRasaService.Parse(uint(projectId), req)
+		nluResp = s.NluParseRasaService.Parse(uint(projectId), req)
 
 	} else if serverConf.Inst.Analyzer == consts.Pattern {
-		ret = s.NluParsePatternService.Parse(uint(projectId), req)
+		nluResp = s.NluParsePatternService.Parse(uint(projectId), req)
 
 	}
 
-	if req.AgentId == 0 || ret.Result == nil {
+	if req.AgentId == 0 || nluResp.RasaResult == nil {
 		return
 	}
 
 	agent := s.AgentRepo.Get(uint(req.AgentId))
 	_logUtils.Infof("exec on agent %s", agent.Ip)
 
-	s.RpcService.ExecInstruction(&ret, agent)
+	rpcResp := s.RpcService.ExecInstruction(nluResp, agent)
+	instructionResp := rpcResp.Payload.(domain.InstructionResp)
+
+	nluResp.ExecResult = &instructionResp
 
 	return
 }

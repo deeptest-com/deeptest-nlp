@@ -19,12 +19,12 @@ func NewRpcService() *RpcService {
 	return &RpcService{}
 }
 
-func (s *RpcService) ExecInstruction(resp *serverDomain.NluResp, agent model.Agent) (result _domain.RpcResult) {
-	if resp.Result == nil {
+func (s *RpcService) ExecInstruction(resp serverDomain.NluResp, agent model.Agent) (result _domain.RpcResult) {
+	if resp.RasaResult == nil {
 		_logUtils.Infof("no intent to exec")
 	}
 
-	obj := interface{}(resp.Result)
+	obj := interface{}(resp.RasaResult)
 	result = s.Request(agent.Ip, agent.Port, "selenium", "Exec", &obj)
 
 	result.Pass(fmt.Sprintf("success to send rpc build request %#v.", result))
