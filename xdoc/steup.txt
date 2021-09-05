@@ -70,9 +70,20 @@ cd ~/utl-server && nohup ./utl-server 2>&1 &
 rasa train --out models_3
 rasa run -p 55005 -m models_3 --enable-api --log-file out.log
 
+java -Dwebdriver.chrome.driver=~/driver/chrome_mac_92 -jar ~/driver/selenium-server-standalone-3.141.59.jar
+
 delete from nlu_slot where sent_refer IN (
     select id from nlu_sent where deleted
 );
 delete from nlu_sent where deleted;
 
-java -Dwebdriver.chrome.driver=~/driver/chrome_mac_92 -jar ~/driver/selenium-server-standalone-3.141.59.jar
+delete from nlu_slot where sent_refer IN (
+    select id from nlu_sent where intent_id IN (
+        select id from nlu_intent where deleted
+    )
+);
+delete from nlu_sent where intent_id IN (
+    select id from nlu_intent where deleted
+);
+delete from nlu_intent where deleted;
+

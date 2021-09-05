@@ -31,8 +31,8 @@ intents:
 - 抬起
 - 悬停
 - 拖动
-- 启动服务
-- 停止服务
+- 启动浏览器
+- 停止浏览器
 - 输入
 - 清除
 entities:
@@ -66,6 +66,7 @@ entities:
 - 拖动
 - expression2
 - 启动
+- 浏览器类型
 - 停止
 - 输入
 - expresssion
@@ -159,6 +160,9 @@ slots:
     type: text
     influence_conversation: false
   启动:
+    type: text
+    influence_conversation: false
+  浏览器类型:
     type: text
     influence_conversation: false
   停止:
