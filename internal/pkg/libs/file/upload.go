@@ -9,6 +9,7 @@ import (
 	"mime/multipart"
 	"net/http"
 	"os"
+	"path/filepath"
 )
 
 func Upload(url string, files []string, extraParams map[string]string) {
@@ -46,14 +47,20 @@ func Upload(url string, files []string, extraParams map[string]string) {
 	_logUtils.Info("upload status " + resp.Status + ", resp is " + string(respBody))
 }
 
-func Download(url string, dst string) {
+func Download(url string, dst string) (err error) {
 	fmt.Printf("DownloadToFile From: %s.\n", url)
-	if d, err := HTTPDownload(url); err == nil {
+
+	MkDirIfNeeded(filepath.Dir(dst))
+
+	var d []byte
+	if d, err = HTTPDownload(url); err == nil {
 		_logUtils.Info(fmt.Sprintf("downloaded %s.\n", url))
 		if WriteDownloadFile(dst, d) == nil {
 			_logUtils.Info(fmt.Sprintf("saved %s as %s\n", url, dst))
 		}
 	}
+
+	return
 }
 
 func HTTPDownload(uri string) ([]byte, error) {

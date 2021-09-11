@@ -47,7 +47,8 @@
               ref="question"
               @keydown.down="down"
               @keydown.up="up"
-              @keyup.enter="send"
+              @keydown.13="send"
+              @keydown.229="() => {}"
               :placeholder="$t('form.input.sent')"/>
           </div>
           <div class="right">
@@ -117,6 +118,7 @@ export default {
       const msg = JSON.parse(json.msg)
       if (msg.action === 'update_agent') {
         that.agents = JSON.parse(msg.agents)
+        if (this.agents.length > 0 && !this.agentId) this.agentId = this.agents[0].id
       }
     })
 
@@ -148,6 +150,7 @@ export default {
 
       testProject(this.id).then(json => {
         this.agents = json.data.agents
+        if (this.agents.length > 0) this.agentId = this.agents[0].id
       })
     },
     view (data) {
@@ -170,7 +173,7 @@ export default {
     send () {
       console.log('send', this.question)
 
-      this.histories.push(this.question)
+      if (this.question !== this.histories[this.histories.length - 1]) this.histories.push(this.question)
       if (this.histories.length > 30) this.histories = this.histories.slice(this.histories.length - 30)
       storage.set(TEST_HISTORIES, this.histories)
 

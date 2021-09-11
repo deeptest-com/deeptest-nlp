@@ -13,8 +13,8 @@ func Test(t *testing.T) {
 	// running).
 	const (
 		// These paths will be different on your system.
-		seleniumPath     = "/Users/aaron/driver/selenium-server-standalone-3.141.59.jar"
-		chromeDriverPath = "/Users/aaron/driver/chrome_mac_92"
+		seleniumPath     = "/Users/aaron/utl/driver/selenium/driver.jar"
+		chromeDriverPath = "/Users/aaron/utl/chrome/93/driver"
 		port             = 8080
 	)
 	opts := []selenium.ServiceOption{

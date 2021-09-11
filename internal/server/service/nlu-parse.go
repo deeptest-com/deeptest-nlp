@@ -1,6 +1,7 @@
 package serverService
 
 import (
+	"github.com/mitchellh/mapstructure"
 	consts "github.com/utlai/utl/internal/comm/const"
 	"github.com/utlai/utl/internal/comm/domain"
 	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
@@ -50,7 +51,7 @@ func (s *NluParseService) Parse(projectId int, req serverDomain.NluReq) (
 
 	}
 
-	if req.AgentId == 0 || nluResp.RasaResult == nil {
+	if req.AgentId == 0 || nluResp.RasaResult == nil || nluResp.RasaResult.Intent.Name == "" {
 		return
 	}
 
@@ -58,7 +59,10 @@ func (s *NluParseService) Parse(projectId int, req serverDomain.NluReq) (
 	_logUtils.Infof("exec instruction on agent %s", agent.Ip)
 
 	rpcResp := s.RpcService.ExecInstruction(nluResp, agent)
-	instructionResp := rpcResp.Payload.(domain.InstructionResp)
+	mp := rpcResp.Payload.(map[string]interface{})
+
+	var instructionResp domain.InstructionResp
+	mapstructure.Decode(mp, &instructionResp)
 
 	nluResp.ExecResult = &instructionResp
 

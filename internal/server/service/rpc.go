@@ -27,7 +27,6 @@ func (s *RpcService) ExecInstruction(resp serverDomain.NluResp, agent model.Agen
 	obj := interface{}(resp.RasaResult)
 	result = s.Request(agent.Ip, agent.Port, "selenium", "Exec", &obj)
 
-	result.Pass(fmt.Sprintf("success to send rpc build request %#v.", result))
 	return
 }
 

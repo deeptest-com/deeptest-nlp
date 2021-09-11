@@ -1,27 +1,16 @@
 package agentService
 
 import (
-	"fmt"
-	"github.com/tebeka/selenium"
-	agentConf "github.com/utlai/utl/internal/agent/conf"
 	seleniumOpt "github.com/utlai/utl/internal/agent/service/selenium"
 	consts "github.com/utlai/utl/internal/comm/const"
 	"github.com/utlai/utl/internal/comm/domain"
 	_domain "github.com/utlai/utl/internal/pkg/domain"
 	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
-	"os"
-	"path/filepath"
-	"sync"
 )
 
-const (
-	keySeleniumService = "selenium-service"
-	keySeleniumDriver  = "selenium-driver"
-)
+const ()
 
 type SeleniumService struct {
-	syncMap sync.Map
-
 	SeleniumBrowser    *seleniumOpt.SeleniumBrowser    `inject:""`
 	SeleniumNavigation *seleniumOpt.SeleniumNavigation `inject:""`
 }
@@ -30,11 +19,12 @@ func NewSeleniumService() *RegisterService {
 	return &RegisterService{}
 }
 
-func (s *SeleniumService) Exec(instruction domain.RasaResp) (resp *domain.InstructionResp) {
-	resp = &domain.InstructionResp{}
+func (s *SeleniumService) Exec(instruction *domain.RasaResp, reply *_domain.RpcResult) {
+	instructionResp := domain.InstructionResp{}
 
 	if instruction.Intent == nil || instruction.Intent.Name == "" {
-		resp.Pass("no instruction")
+		reply.Pass("no instruction")
+		reply.Payload = instructionResp
 		return
 	}
 
@@ -42,81 +32,29 @@ func (s *SeleniumService) Exec(instruction domain.RasaResp) (resp *domain.Instru
 
 	// init driver
 	if cmd == consts.SeleniumStart.ToString() {
-		s.start(instruction)
+		instructionResp = s.SeleniumBrowser.Restart(*instruction)
+		reply.Pass("")
+		reply.Payload = instructionResp
 		return
-	}
-
-	// exec command
-	_, ok1 := s.syncMap.Load(keySeleniumService)
-	driverCache, ok2 := s.syncMap.Load(keySeleniumDriver)
-	if !ok1 || !ok2 {
-		msg := "fail to get selenium driver"
-		_logUtils.Errorf(msg)
-		resp.Fail(msg)
+	} else if cmd == consts.SeleniumStop.ToString() {
+		instructionResp = s.SeleniumBrowser.Stop()
+		reply.Pass("")
+		reply.Payload = instructionResp
 		return
 	}
 
 	//srv := driverCache.(selenium.Service)
-	driver := driverCache.(selenium.WebDriver)
+	driver := s.SeleniumBrowser.GetDriver()
 
 	switch cmd {
-	case consts.SeleniumStop.ToString():
-		s.Stop(*instruction.Intent, driver)
-
 	case consts.Load.ToString():
-		s.SeleniumNavigation.Load(*instruction.Intent, driver)
+		instructionResp = s.SeleniumNavigation.Load(*instruction, driver)
 
 	default:
 		_logUtils.Infof("unknown instruction %s.", cmd)
 	}
 
-	resp.Pass("")
-	return
-}
-
-func (s *SeleniumService) start(instruction domain.RasaResp) (result _domain.RpcResult) {
-	driverType := instruction.Entities[1].Value
-	driverVersion := ""
-	port := 0
-
-	seleniumPath := filepath.Join(agentConf.Inst.WorkDir, "driver", "selenium", driverVersion)
-
-	driverPath := "" // download if needed
-
-	selenium.SetDebug(true)
-	opts := []selenium.ServiceOption{
-		//selenium.StartFrameBuffer(),
-		selenium.ChromeDriver(driverPath),
-		selenium.Output(os.Stderr),
-	}
-
-	srv, err := selenium.NewSeleniumService(seleniumPath, port, opts...)
-	s.syncMap.Store(keySeleniumService, srv)
-	if err != nil {
-		msg := fmt.Sprintf("fail to start selenium service, err %s", err.Error())
-		_logUtils.Errorf(msg)
-		result.Fail(msg)
-		return
-	}
-
-	caps := selenium.Capabilities{"browserName": driverType}
-	driver, err := selenium.NewRemote(caps, fmt.Sprintf("http://localhost:%d/wd/hub", port))
-
-	s.syncMap.Store(keySeleniumDriver, driver)
-
-	if err != nil {
-		msg := fmt.Sprintf("fail to create selenium driver, err %s", err.Error())
-		_logUtils.Errorf(msg)
-		result.Fail(msg)
-		return
-	}
-
-	result.Pass("")
-	return
-}
-
-func (s *SeleniumService) Stop(intent domain.Intent, driver selenium.WebDriver) (result _domain.RpcResult) {
-	driver.Quit()
-
+	reply.Pass("")
+	reply.Payload = instructionResp
 	return
 }
