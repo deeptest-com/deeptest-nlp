@@ -193,7 +193,8 @@ export default {
             data.nluResult.entities.forEach((item, index) => {
               const name = item.entity
 
-              let value = item.valueOrigin
+              let value = item.value
+              if (item.valueOrigin) value = item.valueOrigin
               if (value === '') {
                 value = data.nluResult.text.substr(item.start, item.end - item.start)
               }
