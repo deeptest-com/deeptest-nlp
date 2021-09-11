@@ -154,6 +154,7 @@ const locale = {
   'common.view.nothing': 'View Nothing',
   'common.nlu.confidence': 'Confidence',
   'common.nlu.slots': 'Slot',
+  'common.nlu.exec.result': 'Exec Result',
 
   'status.start.training': 'Training Start',
   'status.end.training': 'Training End',

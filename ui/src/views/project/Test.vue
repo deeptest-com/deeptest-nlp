@@ -186,32 +186,35 @@ export default {
 
         const key = new Date().getTime()
         if (data.code === 1) { // success
-          const msg = data.result.intent.name
+          const msg = data.nluResult.intent.name
 
           const slots = []
-          data.result.entities.forEach((item, index) => {
-            const name = item.entity
+          if (data.nluResult) {
+            data.nluResult.entities.forEach((item, index) => {
+              const name = item.entity
 
-            let value = item.valueOrigin
-            if (value === '') {
-              value = data.result.text.substr(item.start, item.end - item.start)
-            }
+              let value = item.valueOrigin
+              if (value === '') {
+                value = data.nluResult.text.substr(item.start, item.end - item.start)
+              }
 
-            slots.push('  ' + name + ' = ' + value)
-          })
+              slots.push('  ' + name + ' = ' + value)
+            })
+          }
 
           let detailResult = this.$t('menu.intent') + ': ' + msg
-          detailResult += '\n' + this.$t('common.nlu.confidence') + ': ' + (data.result.intent.confidence * 100) + '%'
+          detailResult += '\n' + this.$t('common.nlu.confidence') + ': ' + (data.nluResult.intent.confidence * 100) + '%'
           detailResult += '\n' + this.$t('common.nlu.slots') + ': ' + slots.length + '\n' + slots.join('\n')
+          detailResult += '\n' + this.$t('common.nlu.exec.result') + ':\n  ' + data.execResult.code + ' - ' + data.execResult.msg
 
-          this.answerMap[key] = { detail: detailResult, json: JSON.stringify(data.result, null, 3) }
+          this.answerMap[key] = { detail: detailResult, json: JSON.stringify(data, null, 3) }
           this.detailResult = this.answerMap[key].detail
           this.jsonResult = this.answerMap[key].json
 
           this.messages.push({ key: key, type: 'answer', content: msg })
         } else {
-          const msg = this.$t('msg.' + data.result.i118, { 'content': data.result.content })
-          this.answerMap[key] = { detail: msg, json: data.result }
+          const msg = this.$t('msg.' + data.nluResult.i118, { 'content': data.nluResult.content })
+          this.answerMap[key] = { detail: msg, json: data.nluResult }
           this.detailResult = this.answerMap[key].detail
           this.jsonResult = this.answerMap[key].json
 

@@ -6,6 +6,7 @@ nlu:
     - [运行]{"entity":"启动", "value":"启动_syn"}[Chrome]{"entity":"浏览器类型", "value":"浏览器类型_lkp"}[92](version)
     - [启动]{"entity":"启动", "value":"启动_syn"}[火狐]{"entity":"浏览器类型", "value":"浏览器类型_lkp"}浏览器
     - [运行]{"entity":"启动", "value":"启动_syn"}[Edge]{"entity":"浏览器类型", "value":"浏览器类型_lkp"}浏览器
+    - [启动]{"entity":"启动", "value":"启动_syn"}[Chrome]{"entity":"浏览器类型", "value":"浏览器类型_lkp"}版本[93](version)
 - intent: 停止浏览器
   examples: |
     - [关闭]{"entity":"停止", "value":"停止_syn"}浏览器

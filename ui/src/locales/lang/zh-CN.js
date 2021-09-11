@@ -152,6 +152,7 @@ const locale = {
   'common.view.nothing': '关闭显示',
   'common.nlu.confidence': '相似度',
   'common.nlu.slots': '语义槽',
+  'common.nlu.exec.result': '执行结果',
 
   'status.start.training': '训练开始',
   'status.end.training': '训练完成',
