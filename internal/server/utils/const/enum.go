@@ -30,4 +30,5 @@ const (
 	StartTraining  ServiceStatus = "start_training"
 	EndTraining    ServiceStatus = "end_training"
 	CancelTraining ServiceStatus = "cancel_training"
+	UpdateAgent    ServiceStatus = "update_agent"
 )

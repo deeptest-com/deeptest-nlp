@@ -8,7 +8,7 @@
 
     {
       "id": "start_server",
-      "translation": "start server on %s."
+      "translation": "start agent on %s."
     },
     {
       "id": "fail_to_start_server",

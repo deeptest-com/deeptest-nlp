@@ -31,6 +31,8 @@ func NewSeleniumService() *RegisterService {
 }
 
 func (s *SeleniumService) Exec(instruction domain.RasaResp) (resp *domain.InstructionResp) {
+	resp = &domain.InstructionResp{}
+
 	if instruction.Intent == nil || instruction.Intent.Name == "" {
 		resp.Pass("no instruction")
 		return

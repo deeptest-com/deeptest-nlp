@@ -8,7 +8,7 @@
 
     {
       "id": "start_server",
-      "translation": "启动服务器于%s"
+      "translation": "启动代理于%s"
     },
     {
       "id": "fail_to_start_server",

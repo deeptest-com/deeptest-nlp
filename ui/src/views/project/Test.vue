@@ -111,6 +111,15 @@ export default {
     }
   },
   mounted () {
+    const that = this
+    this.$global.EventBus.$on(this.$global.wsEventName, (json) => {
+      console.log('EventBus in test page', json)
+      const msg = JSON.parse(json.msg)
+      if (msg.action === 'update_agent') {
+        that.agents = msg.agents
+      }
+    })
+
     this.chatHeight = {
       height: document.body.clientHeight - 330 + 'px',
       'overflow-y': 'auto',

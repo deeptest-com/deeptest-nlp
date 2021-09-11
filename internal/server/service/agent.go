@@ -6,11 +6,13 @@ import (
 	_domain "github.com/utlai/utl/internal/pkg/domain"
 	"github.com/utlai/utl/internal/server/model"
 	"github.com/utlai/utl/internal/server/repo"
+	serverConst "github.com/utlai/utl/internal/server/utils/const"
 )
 
 type AgentService struct {
 	AgentRepo *repo.AgentRepo `inject:""`
 
+	AgentService     *AgentService     `inject:""`
 	WebSocketService *WebSocketService `inject:""`
 }
 
@@ -26,6 +28,10 @@ func (s AgentService) Register(agent domain.Agent) (result _domain.RpcResult) {
 	}
 
 	result.Pass("")
+
+	agents := s.AgentService.List()
+	data := map[string]interface{}{"agents": agents, "action": serverConst.UpdateAgent}
+	s.WebSocketService.Broadcast(serverConst.WsNamespace, serverConst.WsDefaultRoom, serverConst.WsEvent, data)
 
 	return
 }

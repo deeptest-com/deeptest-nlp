@@ -182,7 +182,7 @@ export default {
   created () {
     const that = this
     this.$global.EventBus.$on(this.$global.wsEventName, (json) => {
-      console.log('EventBus in page', json)
+      console.log('EventBus in view page', json)
       that.outputModel += json.room + ': ' + json.msg + '\n'
 
       const msg = JSON.parse(json.msg)

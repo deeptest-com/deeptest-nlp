@@ -52,7 +52,16 @@ func (s *RpcService) Request(ip string, port int, apiPath string, method string,
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		_logUtils.Errorf("fail to call: %#v.", err)
+		msg := fmt.Sprintf("fail to call rpc, error %s.", err.Error())
+		_logUtils.Error(msg)
+		rpcResult.Fail(msg)
+		return
+	}
+	if resp == nil {
+		msg := "fail to call rpc, response is nil."
+		_logUtils.Error(msg)
+		rpcResult.Fail(msg)
+		return
 	}
 	defer func() {
 		if resp != nil {
