@@ -1,6 +1,7 @@
 package serverService
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/utlai/utl/internal/comm/domain"
 	_domain "github.com/utlai/utl/internal/pkg/domain"
@@ -29,8 +30,8 @@ func (s AgentService) Register(agent domain.Agent) (result _domain.RpcResult) {
 
 	result.Pass("")
 
-	agents := s.AgentService.List()
-	data := map[string]interface{}{"agents": agents, "action": serverConst.UpdateAgent}
+	agents, _ := json.Marshal(s.AgentService.List()) // convert complex obj to string
+	data := map[string]interface{}{"agents": string(agents), "action": serverConst.UpdateAgent}
 	s.WebSocketService.Broadcast(serverConst.WsNamespace, serverConst.WsDefaultRoom, serverConst.WsEvent, data)
 
 	return

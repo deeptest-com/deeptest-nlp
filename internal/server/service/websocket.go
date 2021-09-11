@@ -18,6 +18,10 @@ func NewWebSocketService() *WebSocketService {
 }
 
 func (s *WebSocketService) Broadcast(namespace, room, event string, data interface{}) {
+	if wsConn == nil {
+		return
+	}
+
 	bytes, _ := json.Marshal(data)
 
 	wsConn.Server().Broadcast(nil, websocket.Message{
@@ -29,5 +33,7 @@ func (s *WebSocketService) Broadcast(namespace, room, event string, data interfa
 }
 
 func (s *WebSocketService) SetConn(conn *neffos.Conn) {
-	wsConn = conn
+	if wsConn == nil && conn != nil {
+		wsConn = conn
+	}
 }

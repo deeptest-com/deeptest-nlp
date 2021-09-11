@@ -116,7 +116,7 @@ export default {
       console.log('EventBus in test page', json)
       const msg = JSON.parse(json.msg)
       if (msg.action === 'update_agent') {
-        that.agents = msg.agents
+        that.agents = JSON.parse(msg.agents)
       }
     })
 
