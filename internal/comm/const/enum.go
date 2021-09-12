@@ -28,7 +28,8 @@ const (
 	SeleniumStart SeleniumIntent = "启动浏览器"
 	SeleniumStop  SeleniumIntent = "停止浏览器"
 
-	Load SeleniumIntent = "加载"
+	Load      SeleniumIntent = "加载"
+	GetSource SeleniumIntent = "获取源"
 
 	CookieSet SeleniumIntent = "Cookie设置"
 	CookieGet SeleniumIntent = "Cookie获取"

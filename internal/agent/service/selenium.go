@@ -5,6 +5,7 @@ import (
 	consts "github.com/utlai/utl/internal/comm/const"
 	"github.com/utlai/utl/internal/comm/domain"
 	_domain "github.com/utlai/utl/internal/pkg/domain"
+	_i118Utils "github.com/utlai/utl/internal/pkg/libs/i118"
 	_logUtils "github.com/utlai/utl/internal/pkg/libs/log"
 )
 
@@ -13,6 +14,7 @@ const ()
 type SeleniumService struct {
 	SeleniumBrowser    *seleniumOpt.SeleniumBrowser    `inject:""`
 	SeleniumNavigation *seleniumOpt.SeleniumNavigation `inject:""`
+	SeleniumPage       *seleniumOpt.SeleniumPage       `inject:""`
 }
 
 func NewSeleniumService() *RegisterService {
@@ -45,10 +47,18 @@ func (s *SeleniumService) Exec(instruction *domain.RasaResp, reply *_domain.RpcR
 
 	//srv := driverCache.(selenium.Service)
 	driver := s.SeleniumBrowser.GetDriver()
+	if driver == nil {
+		reply.Fail("")
+		instructionResp.Fail(_i118Utils.Sprintf("pls.start.selenium"))
+		reply.Payload = instructionResp
+		return
+	}
 
 	switch cmd {
 	case consts.Load.ToString():
 		instructionResp = s.SeleniumNavigation.Load(*instruction, driver)
+	case consts.GetSource.ToString():
+		instructionResp = s.SeleniumPage.GetPageSource(*instruction, driver)
 
 	default:
 		_logUtils.Infof("unknown instruction %s.", cmd)

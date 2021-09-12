@@ -32,6 +32,7 @@ func (c *NluRasaCtrl) Compile(ctx iris.Context) {
 	}
 
 	c.NluCompileService.CompileProject(uint(id))
+	c.NluPatternService.Reload(uint(id))
 
 	cred := jwt.GetCredentials(ctx)
 	c.NluHistoryService.Add(_stringUtils.ParseUint(cred.UserId), uint(id), serverConst.Compile)

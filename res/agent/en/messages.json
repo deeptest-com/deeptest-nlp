@@ -45,6 +45,10 @@
     {
       "id": "fail_to_register",
       "translation": "Fail to register vm to server %s, response is %#v."
+    },
+    {
+      "id": "pls.start.selenium",
+      "translation": "Please input '启动Selenium93' to start service firstly."
     }
   ]
 }

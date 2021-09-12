@@ -19,10 +19,10 @@
         <a-button @click="compile()">{{ $t('common.compile') }}</a-button>
 
         <template v-if="analyzer == 'pattern'">
-          <a-button
+<!--          <a-button
             @click="reloadRes()">
             {{ $t('common.reload.pattern') }}
-          </a-button>
+          </a-button>-->
         </template>
 
         <template v-if="analyzer == 'rasa'">

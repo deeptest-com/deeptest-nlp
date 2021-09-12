@@ -189,7 +189,7 @@ export default {
           const msg = data.nluResult.intent.name
 
           const slots = []
-          if (data.nluResult) {
+          if (data.nluResult && data.nluResult.entities) {
             data.nluResult.entities.forEach((item, index) => {
               const name = item.entity
 

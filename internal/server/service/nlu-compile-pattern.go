@@ -57,6 +57,10 @@ func (s *NluCompilePatternService) PatternCompile(id uint) {
 				slots := s.NluSlotRepo.ListBySentId(sent.ID)
 
 				line := ""
+				if len(slots) == 0 {
+					line = sent.Text
+				}
+
 				for _, slot := range slots {
 					slotType := slot.Type
 					slotVale := slot.Value

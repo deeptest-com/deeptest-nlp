@@ -145,7 +145,9 @@ export const genSentSlots = function (editor) {
     slotObj.type = getAttr(item4, 'data-type')
     slotObj.value = getAttr(item4, 'data-value')
 
-    slots.push(slotObj)
+    if (slotObj.text) {
+      slots.push(slotObj)
+    }
   })
 
   return slots

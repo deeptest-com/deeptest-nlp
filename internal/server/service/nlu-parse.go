@@ -51,7 +51,9 @@ func (s *NluParseService) Parse(projectId int, req serverDomain.NluReq) (
 
 	}
 
+	var instructionResp domain.InstructionResp
 	if req.AgentId == 0 || nluResp.RasaResult == nil || nluResp.RasaResult.Intent.Name == "" {
+		nluResp.ExecResult = &instructionResp
 		return
 	}
 
@@ -61,7 +63,6 @@ func (s *NluParseService) Parse(projectId int, req serverDomain.NluReq) (
 	rpcResp := s.RpcService.ExecInstruction(nluResp, agent)
 	mp := rpcResp.Payload.(map[string]interface{})
 
-	var instructionResp domain.InstructionResp
 	mapstructure.Decode(mp, &instructionResp)
 
 	nluResp.ExecResult = &instructionResp
