@@ -76,7 +76,7 @@
                   <a-icon v-if="item.disabled" @click="disableSent(item)" type="plus" class="icon"/>
 
                   <a-icon @click="deleteSent(item)" type="delete" class="icon"/>
-                  <a-icon type="drag" class="icon" style="cursor: move;" />
+                  <a-icon @click.stop="clickMove" type="drag" class="icon" style="cursor: move;" />
                 </div>
               </div>
             </draggable>
@@ -334,6 +334,9 @@ export default {
         this.sent = {}
         this.$refs.editor.innerHTML = ''
       })
+    },
+    clickMove (e) {
+      console.log('clickMove')
     },
     resetSent () {
       console.log('resetSent')
