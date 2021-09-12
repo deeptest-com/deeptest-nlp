@@ -21,12 +21,12 @@ func NewSeleniumService() *RegisterService {
 	return &RegisterService{}
 }
 
-func (s *SeleniumService) Exec(instruction *domain.RasaResp, reply *_domain.RpcResult) {
-	instructionResp := domain.InstructionResp{}
+func (s *SeleniumService) Exec(instruction *domain.RasaResp, rpcResult *_domain.RpcResult) {
+	instructionResult := domain.InstructionResult{}
 
 	if instruction.Intent == nil || instruction.Intent.Name == "" {
-		reply.Pass("no instruction")
-		reply.Payload = instructionResp
+		rpcResult.Pass("no instruction")
+		rpcResult.Payload = instructionResult
 		return
 	}
 
@@ -34,37 +34,37 @@ func (s *SeleniumService) Exec(instruction *domain.RasaResp, reply *_domain.RpcR
 
 	// init driver
 	if cmd == consts.SeleniumStart.ToString() {
-		instructionResp = s.SeleniumBrowser.Restart(*instruction)
-		reply.Pass("")
-		reply.Payload = instructionResp
+		instructionResult = s.SeleniumBrowser.Restart(*instruction)
+		rpcResult.Pass("")
+		rpcResult.Payload = instructionResult
 		return
 	} else if cmd == consts.SeleniumStop.ToString() {
-		instructionResp = s.SeleniumBrowser.Stop()
-		reply.Pass("")
-		reply.Payload = instructionResp
+		instructionResult = s.SeleniumBrowser.Stop()
+		rpcResult.Pass("")
+		rpcResult.Payload = instructionResult
 		return
 	}
 
 	//srv := driverCache.(selenium.Service)
 	driver := s.SeleniumBrowser.GetDriver()
 	if driver == nil {
-		reply.Fail("")
-		instructionResp.Fail(_i118Utils.Sprintf("pls.start.selenium"))
-		reply.Payload = instructionResp
+		rpcResult.Fail("")
+		instructionResult.Fail(_i118Utils.Sprintf("pls.start.selenium"))
+		rpcResult.Payload = instructionResult
 		return
 	}
 
 	switch cmd {
 	case consts.Load.ToString():
-		instructionResp = s.SeleniumNavigation.Load(*instruction, driver)
+		instructionResult = s.SeleniumNavigation.Load(*instruction, driver)
 	case consts.GetSource.ToString():
-		instructionResp = s.SeleniumPage.GetPageSource(*instruction, driver)
+		instructionResult = s.SeleniumPage.GetPageSource(*instruction, driver)
 
 	default:
 		_logUtils.Infof("unknown instruction %s.", cmd)
 	}
 
-	reply.Pass("")
-	reply.Payload = instructionResp
+	rpcResult.Pass("")
+	rpcResult.Payload = instructionResult
 	return
 }

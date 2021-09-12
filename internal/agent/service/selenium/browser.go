@@ -28,7 +28,7 @@ func NewSeleniumBrowser() *SeleniumBrowser {
 	return &SeleniumBrowser{}
 }
 
-func (s *SeleniumBrowser) Restart(instruction domain.RasaResp) (result domain.InstructionResp) {
+func (s *SeleniumBrowser) Restart(instruction domain.RasaResp) (result domain.InstructionResult) {
 	result = s.Stop()
 	if !result.IsSuccess() {
 		return
@@ -38,7 +38,7 @@ func (s *SeleniumBrowser) Restart(instruction domain.RasaResp) (result domain.In
 	return
 }
 
-func (s *SeleniumBrowser) Start(instruction domain.RasaResp) (result domain.InstructionResp) {
+func (s *SeleniumBrowser) Start(instruction domain.RasaResp) (instructionResult domain.InstructionResult) {
 	driverType := instruction.Entities[1].Value
 	driverVersion := instruction.Entities[2].Value
 	port := 8848
@@ -58,7 +58,7 @@ func (s *SeleniumBrowser) Start(instruction domain.RasaResp) (result domain.Inst
 	if err != nil {
 		msg := fmt.Sprintf("fail to start selenium service, err %s", err.Error())
 		_logUtils.Errorf(msg)
-		result.Fail(msg)
+		instructionResult.Fail(msg)
 		return
 	}
 
@@ -70,15 +70,15 @@ func (s *SeleniumBrowser) Start(instruction domain.RasaResp) (result domain.Inst
 	if err != nil {
 		msg := fmt.Sprintf("fail to create selenium driver, err %s", err.Error())
 		_logUtils.Errorf(msg)
-		result.Fail(msg)
+		instructionResult.Fail(msg)
 		return
 	}
 
-	result.Pass("")
+	instructionResult.Pass("")
 	return
 }
 
-func (s *SeleniumBrowser) Stop() (result domain.InstructionResp) {
+func (s *SeleniumBrowser) Stop() (result domain.InstructionResult) {
 	obj, ok := s.syncMap.Load(keySeleniumDriver)
 	if ok && obj != nil {
 		driver := obj.(selenium.WebDriver)

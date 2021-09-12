@@ -16,14 +16,14 @@ func NewSeleniumPage() *SeleniumPage {
 	return &SeleniumPage{}
 }
 
-func (s *SeleniumPage) GetPageSource(rasaRep domain.RasaResp, driver selenium.WebDriver) (result domain.InstructionResp) {
+func (s *SeleniumPage) GetPageSource(rasaRep domain.RasaResp, driver selenium.WebDriver) (instructionResult domain.InstructionResult) {
 	src, err := driver.PageSource()
 
 	if err != nil {
-		result.Fail(err.Error())
+		instructionResult.Fail(err.Error())
 	} else {
-		result.Pass("")
-		result.Payload = src
+		instructionResult.Pass("")
+		instructionResult.Payload = src
 	}
 
 	return

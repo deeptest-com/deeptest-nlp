@@ -17,14 +17,14 @@ func NewSeleniumNavigation() *SeleniumNavigation {
 	return &SeleniumNavigation{}
 }
 
-func (s *SeleniumNavigation) Load(rasaRep domain.RasaResp, driver selenium.WebDriver) (result domain.InstructionResp) {
+func (s *SeleniumNavigation) Load(rasaRep domain.RasaResp, driver selenium.WebDriver) (instructionResult domain.InstructionResult) {
 	url := rasaRep.Entities[1].Value
 	err := driver.Get(url)
 
 	if err != nil {
-		result.Fail(err.Error())
+		instructionResult.Fail(err.Error())
 	} else {
-		result.Pass(fmt.Sprintf("success to load %s", url))
+		instructionResult.Pass(fmt.Sprintf("success to load %s", url))
 	}
 
 	return

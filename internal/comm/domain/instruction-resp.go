@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type InstructionResp struct {
+type InstructionResult struct {
 	Code    _const.ResultCode `json:"code"`
 	Msg     string            `json:"msg"`
 	Payload interface{}       `json:"payload"`
@@ -14,7 +14,7 @@ type InstructionResp struct {
 	EndTime   time.Time `json:"endTime,omitempty"`
 }
 
-func (result *InstructionResp) Pass(msg string) {
+func (result *InstructionResult) Pass(msg string) {
 	result.Code = _const.ResultSuccess
 
 	if msg == "" {
@@ -23,11 +23,11 @@ func (result *InstructionResp) Pass(msg string) {
 	result.Msg = msg
 }
 
-func (result *InstructionResp) Fail(msg string) {
+func (result *InstructionResult) Fail(msg string) {
 	result.Code = _const.ResultFail
 	result.Msg = msg
 }
 
-func (result *InstructionResp) IsSuccess() bool {
+func (result *InstructionResult) IsSuccess() bool {
 	return result.Code == _const.ResultSuccess
 }

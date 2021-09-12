@@ -51,7 +51,7 @@ func (s *NluParseService) Parse(projectId int, req serverDomain.NluReq) (
 
 	}
 
-	var instructionResp domain.InstructionResp
+	var instructionResp domain.InstructionResult
 	if req.AgentId == 0 || nluResp.RasaResult == nil || nluResp.RasaResult.Intent.Name == "" {
 		nluResp.ExecResult = &instructionResp
 		return
