@@ -22,7 +22,8 @@ func (s *SeleniumPage) GetPageSource(rasaRep domain.RasaResp, driver selenium.We
 	if err != nil {
 		result.Fail(err.Error())
 	} else {
-		result.Pass(src)
+		result.Pass("")
+		result.Payload = src
 	}
 
 	return

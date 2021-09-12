@@ -8,7 +8,7 @@ import (
 type InstructionResp struct {
 	Code    _const.ResultCode `json:"code"`
 	Msg     string            `json:"msg"`
-	Content string            `json:"content,omitempty"`
+	Payload interface{}       `json:"payload"`
 
 	StartTime time.Time `json:"startTime,omitempty"`
 	EndTime   time.Time `json:"endTime,omitempty"`
@@ -16,6 +16,10 @@ type InstructionResp struct {
 
 func (result *InstructionResp) Pass(msg string) {
 	result.Code = _const.ResultSuccess
+
+	if msg == "" {
+		msg = "success"
+	}
 	result.Msg = msg
 }
 
