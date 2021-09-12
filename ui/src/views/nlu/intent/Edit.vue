@@ -58,7 +58,8 @@
             {{ $t('form.list') }}
           </div>
           <div class="sent-items" :style="styl">
-            <div
+            <draggable v-model="sents" group="sents" :move="resort" @start="drag" @end="drop()">
+              <div
               v-for="(item, index) in sents"
               @mouseover="mouseover(index)"
               :class="{'mouse-over': index == mouseLocation}"
@@ -77,6 +78,7 @@
                 <a-icon @click="deleteSent(item)" type="delete" class="icon"/>
               </div>
             </div>
+            </draggable>
           </div>
         </div>
       </a-tab-pane>
@@ -206,12 +208,16 @@
 
 <script>
 
+import draggable from 'vuedraggable'
 import { convertSelectedToSlots, genSent, genSentSlots } from '@/utils/markUtil'
 import { getIntent, updateIntent, loadDicts, getSent, saveSent, removeSent, disableSent,
   getRule, saveRule, removeRule, disableRule } from '@/api/manage'
 
 export default {
   name: 'IntentEdit',
+  components: {
+    draggable
+  },
   props: {
     modelId: {
       type: Number,
@@ -252,6 +258,7 @@ export default {
       isEditTitle: false,
       tabKey: 'maintainSent',
       mouseLocation: -1,
+      isDrag: false,
 
       dicts: [],
       rules: {
@@ -483,6 +490,18 @@ export default {
     mouseover (index) {
       console.log('mouseover')
       this.mouseLocation = index
+    },
+    resort (evt, originalEvent) {
+      console.log('resort', evt.draggedContext.element, evt.relatedContext.element)
+      return true
+    },
+    drag (index) {
+      console.log('drag')
+      this.isDrag = true
+    },
+    drop (index) {
+      console.log('drop')
+      this.isDrag = false
     }
   }
 }
