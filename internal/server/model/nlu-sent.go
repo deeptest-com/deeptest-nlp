@@ -5,6 +5,7 @@ type NluSent struct {
 
 	Html string `json:"html"`
 	Text string `json:"text"`
+	Ordr int    `json:"ordr"`
 
 	IntentId uint      `json:"intentId"`
 	Slots    []NluSlot `json:"slots" gorm:"foreignKey:SentRefer"`

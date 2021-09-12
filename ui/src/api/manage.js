@@ -344,6 +344,15 @@ export function removeSent (model) {
     params: { intentId: model.intentId }
   })
 }
+export function resortSent (srcId, targetId, intentId) {
+  const params = { srcId: srcId, targetId: targetId, intentId: intentId }
+
+  return request({
+    url: api.sents + '/' + intentId + '/resort',
+    method: 'post',
+    params: params
+  })
+}
 
 export function listSlot (params) {
   return request({

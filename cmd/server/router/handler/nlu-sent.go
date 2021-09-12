@@ -112,3 +112,31 @@ func (c *NluSentCtrl) Delete(ctx iris.Context) {
 	sents := c.SentService.ListByIntent(uint(intentId))
 	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", sents))
 }
+
+func (c *NluSentCtrl) Resort(ctx iris.Context) {
+	intentId, err := ctx.Params().GetInt("intentId")
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		return
+	}
+
+	srcId, err := ctx.URLParamInt("srcId")
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		return
+	}
+
+	targetId, err := ctx.URLParamInt("targetId")
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		return
+	}
+
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		return
+	}
+
+	c.SentService.Resort(srcId, targetId, intentId)
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", nil))
+}

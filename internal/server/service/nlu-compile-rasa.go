@@ -79,7 +79,7 @@ func (s *NluCompileRasaService) convertIntent(projectId uint, projectDir string,
 
 			nluIntent := serverDomain.NluIntent{Intent: intent.Name}
 
-			sents := s.NluSentRepo.ListByIntentId(intent.ID)
+			sents := s.NluSentRepo.ListByIntentId(intent.ID, "ordr")
 			for _, sent := range sents {
 				slotNameMap := s.getSlotNameMap(sent.ID)
 

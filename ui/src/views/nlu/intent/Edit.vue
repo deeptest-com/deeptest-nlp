@@ -58,26 +58,27 @@
             {{ $t('form.list') }}
           </div>
           <div class="sent-items" :style="styl">
-            <draggable v-model="sents" group="sents" :move="resort" @start="drag" @end="drop()">
+            <draggable v-model="sents" group="sents" @change="resort" @start="drag" @end="drop">
               <div
-              v-for="(item, index) in sents"
-              @mouseover="mouseover(index)"
-              :class="{'mouse-over': index == mouseLocation}"
-              :key="item.id"
-              ref="sentList"
-              class="sent-item">
-              <div @click="editSent(item)" class="no link">{{ index + 1 }}</div>
-              <div @click="editSent(item)" class="left link" :class="{'disabled':item.disabled}">
-                <span v-html="item.html"></span>
-              </div>
-              <div class="right">
-                <a-icon @click="editSent(item)" type="edit" class="icon"/> &nbsp;
-                <a-icon v-if="!item.disabled" @click="disableSent(item)" type="minus" class="icon"/>
-                <a-icon v-if="item.disabled" @click="disableSent(item)" type="plus" class="icon"/>
+                v-for="(item, index) in sents"
+                @mouseover="mouseover(index)"
+                :class="{'mouse-over': index == mouseLocation}"
+                :key="item.id"
+                ref="sentList"
+                class="sent-item">
+                <div @click="editSent(item)" class="no link">{{ index + 1 }}</div>
+                <div @click="editSent(item)" class="left link" :class="{'disabled':item.disabled}">
+                  <span v-html="item.html"></span>
+                </div>
+                <div class="right">
+                  <a-icon @click="editSent(item)" type="edit" class="icon"/> &nbsp;
+                  <a-icon v-if="!item.disabled" @click="disableSent(item)" type="minus" class="icon"/>
+                  <a-icon v-if="item.disabled" @click="disableSent(item)" type="plus" class="icon"/>
 
-                <a-icon @click="deleteSent(item)" type="delete" class="icon"/>
+                  <a-icon @click="deleteSent(item)" type="delete" class="icon"/>
+                  <a-icon type="drag" class="icon" style="cursor: move;" />
+                </div>
               </div>
-            </div>
             </draggable>
           </div>
         </div>
@@ -210,8 +211,10 @@
 
 import draggable from 'vuedraggable'
 import { convertSelectedToSlots, genSent, genSentSlots } from '@/utils/markUtil'
-import { getIntent, updateIntent, loadDicts, getSent, saveSent, removeSent, disableSent,
-  getRule, saveRule, removeRule, disableRule } from '@/api/manage'
+import {
+  getIntent, updateIntent, loadDicts, getSent, saveSent, removeSent, disableSent,
+  getRule, saveRule, removeRule, disableRule, resortSent
+} from '@/api/manage'
 
 export default {
   name: 'IntentEdit',
@@ -491,8 +494,16 @@ export default {
       console.log('mouseover')
       this.mouseLocation = index
     },
-    resort (evt, originalEvent) {
-      console.log('resort', evt.draggedContext.element, evt.relatedContext.element)
+    resort (evt) {
+      console.log('resort', evt.moved.newIndex, evt.moved.oldIndex, evt.moved.element)
+
+      const src = evt.moved.element
+      const target = this.sents[evt.moved.newIndex + 1]
+
+      resortSent(src.id, target.id, this.model.id).then(json => {
+        console.log('resort', json)
+      })
+
       return true
     },
     drag (index) {

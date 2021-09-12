@@ -163,6 +163,7 @@ func (r *Router) App() {
 					party.Put("/{id:uint}", r.NluSentCtrl.Update).Name = "更新说法"
 					party.Delete("/{id:uint}", r.NluSentCtrl.Delete).Name = "删除说法"
 					party.Post("/{id:uint}/disable", r.NluSentCtrl.Disable).Name = "禁用/启动句子"
+					party.Post("/{intentId:uint}/resort", r.NluSentCtrl.Resort).Name = "排序"
 				})
 				admin.PartyFunc("/slots", func(party iris.Party) {
 					party.Get("/", r.NluSlotCtrl.List).Name = "语义槽列表"

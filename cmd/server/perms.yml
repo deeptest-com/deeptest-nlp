@@ -176,6 +176,10 @@ perms:
     displayname: "说法禁用"
     description: ""
     act: "POST"
+  - name: "/api/v1/admin/sents/{id:uint}/resort"
+    displayname: "说法排序"
+    description: ""
+    act: "POST"
 
   - name: "/api/v1/admin/slots"
     displayname: "语义槽列表"

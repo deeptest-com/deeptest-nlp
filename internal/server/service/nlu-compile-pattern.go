@@ -52,7 +52,7 @@ func (s *NluCompilePatternService) PatternCompile(id uint) {
 				Name: intentPo.Name,
 			}
 
-			sents := s.NluSentRepo.ListByIntentId(intentPo.ID)
+			sents := s.NluSentRepo.ListByIntentId(intentPo.ID, "ordr")
 			for _, sent := range sents {
 				slots := s.NluSlotRepo.ListBySentId(sent.ID)
 

@@ -44,11 +44,14 @@ func (r *NluSentRepo) Query(keywords, status string, pageNo int, pageSize int) (
 	return
 }
 
-func (r *NluSentRepo) ListByIntentId(intentId uint) (pos []model.NluSent) {
+func (r *NluSentRepo) ListByIntentId(intentId uint, sort string) (pos []model.NluSent) {
+	if sort == "" {
+		sort = "id"
+	}
 	query := r.DB.Select("*").
 		Where("NOT deleted AND NOT disabled").
 		Where("intent_id = ?", intentId).
-		Order("id ASC")
+		Order(sort + " ASC")
 
 	err := query.Find(&pos).Error
 	if err != nil {
@@ -114,7 +117,30 @@ func (r *NluSentRepo) Delete(id uint) (err error) {
 func (r *NluSentRepo) ListByIntent(intentId uint) (pos []model.NluSent) {
 	r.DB.Where("intent_id = ?", intentId).
 		Where("NOT deleted").
+		Order("ordr ASC").
 		Find(&pos)
+
+	return
+}
+
+func (r *NluSentRepo) Resort(srcId, targetId, intentId int) (err error) {
+	target := r.Get(uint(targetId))
+
+	err = r.DB.Transaction(func(tx *gorm.DB) error {
+		err = r.DB.Model(&model.NluSent{}).Where("intent_id = ? AND ordr >= ?", intentId, target.Ordr).
+			Updates(map[string]interface{}{"ordr": gorm.Expr("ordr + 1")}).Error
+		if err != nil {
+			return err
+		}
+
+		err = r.DB.Model(&model.NluSent{}).Where("intent_id = ? AND id = ?", intentId, srcId).
+			Updates(map[string]interface{}{"ordr": target.Ordr}).Error
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
 
 	return
 }

@@ -56,3 +56,9 @@ func (s *NluSentService) Delete(id uint) (err error) {
 
 	return
 }
+
+func (s *NluSentService) Resort(srcId, targetId, intentId int) (err error) {
+	err = s.NluSentRepo.Resort(srcId, targetId, intentId)
+
+	return
+}
