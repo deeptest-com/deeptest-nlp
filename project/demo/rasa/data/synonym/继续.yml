@@ -1,0 +1,6 @@
+version: "2.0"
+nlu:
+- synonym: 继续_syn
+  examples: |
+    - 继续
+    - 继续迭代

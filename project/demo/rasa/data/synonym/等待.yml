@@ -1,0 +1,7 @@
+version: "2.0"
+nlu:
+- synonym: 等待_syn
+  examples: |
+    - 等待
+    - 暂停
+    - 停止

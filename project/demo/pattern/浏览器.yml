@@ -1,0 +1,15 @@
+version: "2.0"
+name: 浏览器
+intents:
+- id: 38
+  name: 打开浏览器
+  examples:
+  - id: 232
+    example: ^(启动|打开)(Chrome|Firefox|火狐|Edge|IE|Safari)版本(.+)$
+  - id: 225
+    example: ^(启动|打开)(Chrome|Firefox|火狐|Edge|IE|Safari)(.+)$
+- id: 39
+  name: 关闭浏览器
+  examples:
+  - id: 228
+    example: ^(停止|关闭)浏览器$

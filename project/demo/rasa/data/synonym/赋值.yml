@@ -1,0 +1,7 @@
+version: "2.0"
+nlu:
+- synonym: 赋值_syn
+  examples: |
+    - 赋值
+    - 赋予
+    - 设置

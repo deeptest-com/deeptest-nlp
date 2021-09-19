@@ -1,0 +1,6 @@
+version: "2.0"
+nlu:
+- synonym: 取值_syn
+  examples: |
+    - 获取
+    - 获得

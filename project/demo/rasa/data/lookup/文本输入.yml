@@ -1,0 +1,7 @@
+version: "2.0"
+nlu:
+- lookup: 文本输入_lkp
+  examples: |
+    - 输入
+    - 键入
+    - 填写

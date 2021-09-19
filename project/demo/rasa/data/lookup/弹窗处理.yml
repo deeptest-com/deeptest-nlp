@@ -1,0 +1,6 @@
+version: "2.0"
+nlu:
+- lookup: 弹窗处理_lkp
+  examples: |
+    - 确定
+    - 取消

@@ -1,0 +1,7 @@
+version: "2.0"
+nlu:
+- synonym: 迭代_syn
+  examples: |
+    - 迭代
+    - 循环
+    - 重复
