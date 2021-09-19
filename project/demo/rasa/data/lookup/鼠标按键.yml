@@ -1,0 +1,8 @@
+version: "2.0"
+nlu:
+- lookup: 鼠标按键_lkp
+  examples: |
+    - 按下
+    - 抬起
+    - 悬停
+    - 悬浮

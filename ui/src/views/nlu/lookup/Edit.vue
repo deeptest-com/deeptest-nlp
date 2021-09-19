@@ -115,9 +115,6 @@ export default {
   },
   methods: {
     loadData () {
-      if (!this.id) {
-        return
-      }
       if (this.id) {
         this.getModel().then(json => {
           this.model = json.data

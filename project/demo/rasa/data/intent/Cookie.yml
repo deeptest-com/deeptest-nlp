@@ -1,0 +1,11 @@
+version: "2.0"
+nlu:
+- intent: Cookie设置
+  examples: |
+    - [设置]{"entity":"赋值", "value":"赋值_syn"}甜饼[variable](variable)为[expression](expression)
+    - [赋值]{"entity":"赋值", "value":"赋值_syn"}甜饼[variable](variable)为[expression](expression)
+    - [赋予]{"entity":"赋值", "value":"赋值_syn"}甜饼[variable](variable)为[expression](expression)
+- intent: Cookie获取
+  examples: |
+    - [获取]{"entity":"取值", "value":"取值_syn"}甜饼[variable](variable)为[variable](variable)
+    - [获得]{"entity":"取值", "value":"取值_syn"}甜饼[variable](variable)为[variable](variable)

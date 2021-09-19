@@ -6,13 +6,17 @@ responses:
   utter_greate: []
 intents:
 - 打印日志
-- 断言
+- 打开浏览器
+- 关闭浏览器
 - 前进
 - 后退
 - 刷新
-- 加载
+- 等待
 - 确定
 - 取消
+- 获取源
+- 加载
+- 断言
 - Cookie设置
 - Cookie获取
 - 判断
@@ -21,7 +25,6 @@ intents:
 - 迭代数据
 - 迭代退出
 - 迭代继续
-- 等待
 - 设置变量为表达式
 - 设置变量为元素属性
 - 点击
@@ -31,48 +34,41 @@ intents:
 - 抬起
 - 悬停
 - 拖动
-- 启动浏览器
-- 停止浏览器
 - 输入
 - 清除
-- 获取源
 entities:
 - 打印
 - 日志级别
 - expression
-- 断言
-- 前进
-- 后退
-- 刷新
+- 打开
+- 浏览器类型
+- version
+- 关闭
+- 浏览导航
+- 等待
+- value
+- 时间单位
+- 弹窗处理
 - 页面访问
-- 确定
-- 取消
+- 断言
 - 赋值
-- name
-- 取值
 - variable
+- 取值
 - 如果
 - 迭代
-- value
 - data
 - 退出
 - 继续
-- 等待
-- 时间单位
 - element
 - property
-- 点击
+- 鼠标点击
 - 选择器
-- 按键
-- 拖动
+- 鼠标按键
+- 鼠标拖动
 - expression2
-- 启动
-- 浏览器类型
-- version
-- 停止
-- 输入
+- 文本输入
 - expresssion
-- 清除
+- 文本清除
 slots:
   打印:
     type: text
@@ -83,46 +79,52 @@ slots:
   expression:
     type: text
     influence_conversation: false
-  断言:
+  打开:
     type: text
     influence_conversation: false
-  前进:
+  浏览器类型:
     type: text
     influence_conversation: false
-  后退:
+  version:
     type: text
     influence_conversation: false
-  刷新:
+  关闭:
+    type: text
+    influence_conversation: false
+  浏览导航:
+    type: text
+    influence_conversation: false
+  等待:
+    type: text
+    influence_conversation: false
+  value:
+    type: text
+    influence_conversation: false
+  时间单位:
+    type: text
+    influence_conversation: false
+  弹窗处理:
     type: text
     influence_conversation: false
   页面访问:
     type: text
     influence_conversation: false
-  确定:
-    type: text
-    influence_conversation: false
-  取消:
+  断言:
     type: text
     influence_conversation: false
   赋值:
     type: text
     influence_conversation: false
-  name:
+  variable:
     type: text
     influence_conversation: false
   取值:
-    type: text
-    influence_conversation: false
-  variable:
     type: text
     influence_conversation: false
   如果:
     type: text
     influence_conversation: false
   迭代:
-    type: text
-    influence_conversation: false
-  value:
     type: text
     influence_conversation: false
   data:
@@ -134,51 +136,33 @@ slots:
   继续:
     type: text
     influence_conversation: false
-  等待:
-    type: text
-    influence_conversation: false
-  时间单位:
-    type: text
-    influence_conversation: false
   element:
     type: text
     influence_conversation: false
   property:
     type: text
     influence_conversation: false
-  点击:
+  鼠标点击:
     type: text
     influence_conversation: false
   选择器:
     type: text
     influence_conversation: false
-  按键:
+  鼠标按键:
     type: text
     influence_conversation: false
-  拖动:
+  鼠标拖动:
     type: text
     influence_conversation: false
   expression2:
     type: text
     influence_conversation: false
-  启动:
-    type: text
-    influence_conversation: false
-  浏览器类型:
-    type: text
-    influence_conversation: false
-  version:
-    type: text
-    influence_conversation: false
-  停止:
-    type: text
-    influence_conversation: false
-  输入:
+  文本输入:
     type: text
     influence_conversation: false
   expresssion:
     type: text
     influence_conversation: false
-  清除:
+  文本清除:
     type: text
     influence_conversation: false

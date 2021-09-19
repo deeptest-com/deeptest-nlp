@@ -1,0 +1,7 @@
+version: "2.0"
+nlu:
+- lookup: 文本清除_lkp
+  examples: |
+    - 清除
+    - 清空
+    - 删除

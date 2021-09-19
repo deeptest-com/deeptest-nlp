@@ -1,0 +1,7 @@
+version: "2.0"
+nlu:
+- intent: 判断
+  examples: |
+    - [如果]{"entity":"如果", "value":"如果_syn"}[expression](expression)
+    - [假如]{"entity":"如果", "value":"如果_syn"}[expression](expression)
+    - [倘若]{"entity":"如果", "value":"如果_syn"}[expression](expression)
