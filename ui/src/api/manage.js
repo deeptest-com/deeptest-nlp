@@ -18,10 +18,11 @@ const api = {
   rules: `${prefix}/rules`,
   sents: `${prefix}/sents`,
   slots: `${prefix}/slots`,
-  lookups: `${prefix}/lookups`,
-  lookupItems: `${prefix}/lookupItems`,
+  placeholders: `${prefix}/placeholders`,
   synonyms: `${prefix}/synonyms`,
   synonymItems: `${prefix}/synonymItems`,
+  lookups: `${prefix}/lookups`,
+  lookupItems: `${prefix}/lookupItems`,
   regexes: `${prefix}/regexes`,
   regexItems: `${prefix}/regexItems`,
   dicts: `${prefix}/dicts`,
@@ -390,6 +391,50 @@ export function removeSlot (model) {
   })
 }
 
+// 占位符
+export function listPlaceholder (params) {
+  return request({
+    url: api.placeholders,
+    method: 'get',
+    params: params
+  })
+}
+export function getPlaceholder (id) {
+  return request({
+    url: api.placeholders + '/' + id,
+    method: 'get',
+    params: {}
+  })
+}
+export function savePlaceholder (model) {
+  return request({
+    url: !model.id ? api.placeholders : api.placeholders + '/' + model.id,
+    method: !model.id ? 'post' : 'put',
+    data: model
+  })
+}
+export function disablePlaceholder (model) {
+  return request({
+    url: api.placeholders + '/' + model.id + '/disable',
+    method: 'post',
+    params: {}
+  })
+}
+export function removePlaceholder (model) {
+  return request({
+    url: api.placeholders + '/' + model.id,
+    method: 'delete',
+    params: {}
+  })
+}
+export function resortPlaceholder (srcId, targetId) {
+  return request({
+    url: api.placeholders + '/resort',
+    method: 'post',
+    params: { srcId: srcId, targetId: targetId }
+  })
+}
+
 // 同义词表
 export function listSynonym (params) {
   return request({
@@ -424,6 +469,13 @@ export function removeSynonym (model) {
     url: api.synonyms + '/' + model.id,
     method: 'delete',
     params: {}
+  })
+}
+export function resortSynonym (srcId, targetId) {
+  return request({
+    url: api.synonyms + '/resort',
+    method: 'post',
+    params: { srcId: srcId, targetId: targetId }
   })
 }
 // 同义词表项
@@ -469,6 +521,13 @@ export function batchRemoveSynonymItem (data) {
     data: data
   })
 }
+export function resortSynonymItem (srcId, targetId, parentId) {
+  return request({
+    url: api.synonymItems + '/' + parentId + '/resort',
+    method: 'post',
+    params: { srcId: srcId, targetId: targetId }
+  })
+}
 
 // 同类词表
 export function listLookup (params) {
@@ -504,6 +563,13 @@ export function removeLookup (model) {
     url: api.lookups + '/' + model.id,
     method: 'delete',
     params: {}
+  })
+}
+export function resortLookUp (srcId, targetId) {
+  return request({
+    url: api.lookups + '/resort',
+    method: 'post',
+    params: { srcId: srcId, targetId: targetId }
   })
 }
 // 同类词表项
@@ -549,6 +615,13 @@ export function batchRemoveLookupItem (data) {
     data: data
   })
 }
+export function resortLookupItem (srcId, targetId, parentId) {
+  return request({
+    url: api.lookupItems + '/' + parentId + '/resort',
+    method: 'post',
+    params: { srcId: srcId, targetId: targetId }
+  })
+}
 
 // 正则表达式
 export function listRegex (params) {
@@ -586,7 +659,13 @@ export function removeRegex (model) {
     params: {}
   })
 }
-
+export function resortRegex (srcId, targetId) {
+  return request({
+    url: api.regexes + '/resort',
+    method: 'post',
+    params: { srcId: srcId, targetId: targetId }
+  })
+}
 // 正则表达式项
 export function listRegexItem (params) {
   return request({
@@ -630,6 +709,13 @@ export function batchRemoveRegexItem (data) {
     data: data
   })
 }
+export function resortRegexItem (srcId, targetId, parentId) {
+  return request({
+    url: api.regexItems + '/' + parentId + '/resort',
+    method: 'post',
+    params: { srcId: srcId, targetId: targetId }
+  })
+}
 
 export function loadDicts (type) {
   return request({
@@ -645,11 +731,11 @@ export function validProjectPath (value) {
     data: { method: 'validProjectPath', value: value }
   })
 }
-export function validDictName (code, id, type) {
+export function validDictCode (code, id, type) {
   return request({
     url: api.valid,
     method: 'post',
-    data: { method: 'validDictName', value: code, id: id, type: type }
+    data: { method: 'validDictCode', value: code, id: id, type: type }
   })
 }
 

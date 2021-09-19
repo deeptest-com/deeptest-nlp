@@ -17,7 +17,7 @@ func NewNluSynonymItemRepo() *NluSynonymItemRepo {
 }
 
 func (r *NluSynonymItemRepo) Query(synonymId int, keywords, status string, pageNo int, pageSize int) (pos []model.NluSynonymItem, total int64) {
-	query := r.DB.Model(&model.NluSynonymItem{}).Where("NOT deleted").Order("id ASC")
+	query := r.DB.Model(&model.NluSynonymItem{}).Where("NOT deleted")
 	query = query.Where("synonym_id = ?", synonymId)
 
 	if status == "true" {
@@ -33,6 +33,7 @@ func (r *NluSynonymItemRepo) Query(synonymId int, keywords, status string, pageN
 		query = query.Offset((pageNo - 1) * pageSize).Limit(pageSize)
 	}
 
+	query.Order("ordr ASC")
 	err := query.Find(&pos).Error
 	if err != nil {
 		_logUtils.Errorf("sql error %s", err.Error())
@@ -66,6 +67,7 @@ func (r *NluSynonymItemRepo) Get(id uint) (po model.NluSynonymItem) {
 }
 
 func (r *NluSynonymItemRepo) Save(po *model.NluSynonymItem) (err error) {
+	po.Ordr = r.GetMaxOrder(po.SynonymId)
 	err = r.DB.Model(&po).Omit("").Create(&po).Error
 	return
 }
@@ -116,12 +118,48 @@ func (r *NluSynonymItemRepo) BatchDelete(ids []int) (err error) {
 func (r *NluSynonymItemRepo) List() (pos []map[string]interface{}) {
 	err := r.DB.Model(&model.NluSynonymItem{}).
 		Where("NOT deleted").
-		Order("id ASC").
+		Order("ordr ASC").
 		Find(&pos).
 		Error
 	if err != nil {
 		_logUtils.Errorf("sql error %s", err.Error())
 	}
 
+	return
+}
+
+func (r *NluSynonymItemRepo) Resort(srcId, targetId, parentId int) (err error) {
+	target := r.Get(uint(targetId))
+
+	err = r.DB.Transaction(func(tx *gorm.DB) error {
+		err = r.DB.Model(&model.NluSynonymItem{}).Where("synonym_id = ? AND ordr >= ?", parentId, target.Ordr).
+			Updates(map[string]interface{}{"ordr": gorm.Expr("ordr + 1")}).Error
+		if err != nil {
+			return err
+		}
+
+		err = r.DB.Model(&model.NluSynonymItem{}).Where("synonym_id = ? AND id = ?", parentId, srcId).
+			Updates(map[string]interface{}{"ordr": target.Ordr}).Error
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	return
+}
+
+func (r *NluSynonymItemRepo) GetMaxOrder(parentId uint) (order int) {
+	var po model.NluSynonymItem
+	r.DB.Model(&po).Where("synonym_id = ?", parentId).
+		Where("NOT deleted").
+		Order("ordr DESC").
+		Limit(1).
+		First(&po)
+
+	if po.ID > 0 {
+		order = po.Ordr + 1
+	}
 	return
 }

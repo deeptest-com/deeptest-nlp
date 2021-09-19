@@ -114,7 +114,7 @@ func (s *NluCompileRasaService) convertSynonym(projectId uint, projectDir string
 
 		synonymItems := s.NluSynonymItemRepo.ListBySynonymId(synonym.ID)
 		for _, item := range synonymItems {
-			synonymDef.Examples += "- " + item.Content + "\n"
+			synonymDef.Examples += "- " + item.Name + "\n"
 		}
 		nluSynonym.SynonymDef = append(nluSynonym.SynonymDef, synonymDef)
 
@@ -138,7 +138,7 @@ func (s *NluCompileRasaService) convertLookup(projectId uint, projectDir string,
 
 		lookupItems := s.NluLookupItemRepo.ListByLookupId(lookup.ID)
 		for _, item := range lookupItems {
-			lookupItem.Examples += "- " + item.Content + "\n"
+			lookupItem.Examples += "- " + item.Name + "\n"
 		}
 		nluLookup.Items = append(nluLookup.Items, lookupItem)
 
@@ -162,7 +162,7 @@ func (s *NluCompileRasaService) convertRegex(projectId uint, projectDir string, 
 
 		regexItems := s.NluRegexItemRepo.ListByRegexId(regex.ID)
 		for _, item := range regexItems {
-			regexItem.Examples += "- " + item.Content + "\n"
+			regexItem.Examples += "- " + item.Name + "\n"
 		}
 		nluRegex.Items = append(nluRegex.Items, regexItem)
 

@@ -58,3 +58,9 @@ func (s *NluRegexItemService) BatchDelete(ids []int) (err error) {
 
 	return
 }
+
+func (s *NluRegexItemService) Resort(srcId, targetId, parentId int) (err error) {
+	err = s.NluRegexItemRepo.Resort(srcId, targetId, parentId)
+
+	return
+}

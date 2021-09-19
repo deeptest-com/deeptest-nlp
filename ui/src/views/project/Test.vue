@@ -4,10 +4,10 @@
   >
     <template v-slot:content>
       <a-row class="agents">
-        <a-col class="label">{{$t('form.exec.selenium.on.agent')}}</a-col>
+        <a-col class="label">{{ $t('form.exec.selenium.on.agent') }}</a-col>
         <a-col class="content">
           <a-select v-model="agentId" class="select">
-            <a-select-option value="">{{$t('form.pls.select')}}</a-select-option>
+            <a-select-option value="">{{ $t('form.pls.select') }}</a-select-option>
             <a-select-option v-for="(item, index) in agents" :value="item.id" :key="index">
               {{ item.ip }}
             </a-select-option>

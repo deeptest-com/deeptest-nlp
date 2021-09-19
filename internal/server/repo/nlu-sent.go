@@ -73,6 +73,7 @@ func (r *NluSentRepo) GetWithSlots(id uint) (po model.NluSent) {
 
 func (r *NluSentRepo) Save(po *model.NluSent) (err error) {
 	po.Html = strings.TrimSpace(po.Html)
+	po.Ordr = r.GetMaxOrder(po.IntentId)
 
 	err = r.DB.Omit("Slots").Create(&po).Error
 
@@ -142,5 +143,19 @@ func (r *NluSentRepo) Resort(srcId, targetId, intentId int) (err error) {
 		return nil
 	})
 
+	return
+}
+
+func (r *NluSentRepo) GetMaxOrder(parentId uint) (order int) {
+	var po model.NluSent
+	r.DB.Model(&po).Where("intent_id = ?", parentId).
+		Where("NOT deleted").
+		Order("ordr DESC").
+		Limit(1).
+		First(&po)
+
+	if po.ID > 0 {
+		order = po.Ordr + 1
+	}
 	return
 }

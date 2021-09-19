@@ -132,3 +132,20 @@ func (c *NluSynonymCtrl) BatchRemove(ctx iris.Context) {
 
 	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", nil))
 }
+
+func (c *NluSynonymCtrl) Resort(ctx iris.Context) {
+	srcId, err := ctx.URLParamInt("srcId")
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		return
+	}
+
+	targetId, err := ctx.URLParamInt("targetId")
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		return
+	}
+
+	c.SynonymService.Resort(srcId, targetId)
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", nil))
+}

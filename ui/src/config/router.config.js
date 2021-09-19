@@ -1,6 +1,6 @@
 // eslint-disable-next-line
 import { UserLayout, BasicLayout } from '@/layouts'
-import { dashboard, project, task, lookup, synonym, regex, setting } from '@/core/icons'
+import { dashboard, project, task, placeholder, synonym, lookup, regex, setting } from '@/core/icons'
 
 const RouteView = {
   name: 'RouteView',
@@ -75,6 +75,28 @@ export const asyncRouterMap = [
             name: 'task-edit',
             component: () => import('@/views/nlu/task/Edit'),
             meta: { title: 'menu.task.edit', keepAlive: true }
+          }
+        ]
+      },
+      {
+        path: '/nlu/placeholder',
+        name: 'placeholder',
+        redirect: '/nlu/placeholder/list',
+        component: RouteView,
+        meta: { title: 'menu.placeholder', icon: placeholder, keepAlive: true },
+        hideChildrenInMenu: true,
+        children: [
+          {
+            path: '/nlu/placeholder/list',
+            name: 'placeholder-list',
+            component: () => import('@/views/nlu/placeholder/List'),
+            meta: { title: 'menu.placeholder.list', keepAlive: true }
+          },
+          {
+            path: '/nlu/placeholder/:id/edit',
+            name: 'placeholder-edit',
+            component: () => import('@/views/nlu/placeholder/Edit'),
+            meta: { title: 'menu.placeholder.edit', keepAlive: true }
           }
         ]
       },

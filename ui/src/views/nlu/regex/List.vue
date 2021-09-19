@@ -45,14 +45,16 @@
         rowKey="id"
         :columns="columns"
         :data="loadData"
+        :pageSize="40"
         :alert="true"
         showPagination="auto"
+        class="sort-table"
       >
         <span slot="serial" slot-scope="text, record, index">
           {{ index + 1 }}
         </span>
 
-<!--        <span slot="code" slot-scope="text">
+        <!-- <span slot="code" slot-scope="text">
           {{ text }}
         </span>-->
         <span slot="name" slot-scope="text">
@@ -95,7 +97,8 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { listRegex, disableRegex, removeRegex } from '@/api/manage'
+import { listRegex, disableRegex, removeRegex, resortRegex } from '@/api/manage'
+import Sortable from 'sortablejs'
 
 export default {
   name: 'RegexList',
@@ -112,10 +115,12 @@ export default {
       mdl: null,
       advanced: false,
       queryParam: { status: '' },
+      models: [],
       loadData: parameter => {
         const requestParameters = Object.assign({}, parameter, this.queryParam)
         return listRegex(requestParameters)
           .then(res => {
+            this.models = res.data
             return res
           })
       },
@@ -137,10 +142,10 @@ export default {
         title: this.$t('form.no'),
         scopedSlots: { customRender: 'serial' }
       },
-      // {
-      //   title: this.$t('form.code'),
-      //   dataIndex: 'code'
-      // },
+      {
+        title: this.$t('form.code'),
+        dataIndex: 'code'
+      },
       {
         title: this.$t('form.name'),
         dataIndex: 'name'
@@ -169,9 +174,35 @@ export default {
       }
     }
   },
+  mounted () {
+    this.initSortable()
+  },
   computed: {
   },
   methods: {
+    initSortable () {
+      const that = this
+      const el = this.$el.querySelector('.sort-table table tbody')
+      Sortable.create(el, {
+        handle: '.ant-table-row',
+        animation: 150,
+        onUpdate: function (evt) {
+          console.log(evt)
+          that.resort(evt)
+        }
+      })
+    },
+    resort (evt) {
+      if (evt.oldIndex === evt.newIndex) {
+        return
+      }
+
+      const src = this.models[evt.oldIndex]
+      const target = this.models[evt.newIndex]
+      resortRegex(src.id, target.id).then(json => {
+        this.$refs.table.refresh(false)
+      })
+    },
     create () {
       this.mdl = null
       this.visible = true

@@ -58,3 +58,9 @@ func (s *NluLookupService) BatchDelete(ids []int) (err error) {
 
 	return
 }
+
+func (s *NluLookupService) Resort(srcId, targetId int) (err error) {
+	err = s.NluLookupRepo.Resort(srcId, targetId)
+
+	return
+}

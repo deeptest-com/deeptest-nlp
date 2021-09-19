@@ -17,7 +17,7 @@ func NewNluLookupItemRepo() *NluLookupItemRepo {
 }
 
 func (r *NluLookupItemRepo) Query(lookupId int, keywords, status string, pageNo int, pageSize int) (pos []model.NluLookupItem, total int64) {
-	query := r.DB.Model(&model.NluLookupItem{}).Order("id ASC")
+	query := r.DB.Model(&model.NluLookupItem{})
 	query = query.Where("NOT deleted").Where("lookup_id = ?", lookupId)
 
 	if status == "true" {
@@ -33,6 +33,7 @@ func (r *NluLookupItemRepo) Query(lookupId int, keywords, status string, pageNo 
 		query = query.Offset((pageNo - 1) * pageSize).Limit(pageSize)
 	}
 
+	query.Order("ordr ASC")
 	err := query.Find(&pos).Error
 	if err != nil {
 		_logUtils.Errorf("sql error %s", err.Error())
@@ -65,7 +66,13 @@ func (r *NluLookupItemRepo) Get(id uint) (po model.NluLookupItem) {
 	return
 }
 
+func (r *NluLookupItemRepo) GetByCode(code string) (po model.NluLookupItem) {
+	r.DB.Where("code = ? AND NOT deleted", code).First(&po)
+	return
+}
+
 func (r *NluLookupItemRepo) Save(po *model.NluLookupItem) (err error) {
+	po.Ordr = r.GetMaxOrder(po.LookupId)
 	err = r.DB.Model(&po).Omit("").Create(&po).Error
 	return
 }
@@ -116,12 +123,48 @@ func (r *NluLookupItemRepo) BatchDelete(ids []int) (err error) {
 func (r *NluLookupItemRepo) List() (pos []map[string]interface{}) {
 	err := r.DB.Model(&model.NluLookupItem{}).
 		Where("NOT deleted").
-		Order("id ASC").
+		Order("ordr ASC").
 		Find(&pos).
 		Error
 	if err != nil {
 		_logUtils.Errorf("sql error %s", err.Error())
 	}
 
+	return
+}
+
+func (r *NluLookupItemRepo) Resort(srcId, targetId, parentId int) (err error) {
+	target := r.Get(uint(targetId))
+
+	err = r.DB.Transaction(func(tx *gorm.DB) error {
+		err = r.DB.Model(&model.NluLookupItem{}).Where("lookup_id = ? AND ordr >= ?", parentId, target.Ordr).
+			Updates(map[string]interface{}{"ordr": gorm.Expr("ordr + 1")}).Error
+		if err != nil {
+			return err
+		}
+
+		err = r.DB.Model(&model.NluLookupItem{}).Where("lookup_id = ? AND id = ?", parentId, srcId).
+			Updates(map[string]interface{}{"ordr": target.Ordr}).Error
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	return
+}
+
+func (r *NluLookupItemRepo) GetMaxOrder(parentId uint) (order int) {
+	var po model.NluLookupItem
+	r.DB.Model(&po).Where("lookup_id = ?", parentId).
+		Where("NOT deleted").
+		Order("ordr DESC").
+		Limit(1).
+		First(&po)
+
+	if po.ID > 0 {
+		order = po.Ordr + 1
+	}
 	return
 }

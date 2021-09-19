@@ -114,7 +114,7 @@ func (c *NluSentCtrl) Delete(ctx iris.Context) {
 }
 
 func (c *NluSentCtrl) Resort(ctx iris.Context) {
-	intentId, err := ctx.Params().GetInt("intentId")
+	parentId, err := ctx.Params().GetInt("parentId")
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
@@ -132,11 +132,6 @@ func (c *NluSentCtrl) Resort(ctx iris.Context) {
 		return
 	}
 
-	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
-		return
-	}
-
-	c.SentService.Resort(srcId, targetId, intentId)
+	c.SentService.Resort(srcId, targetId, parentId)
 	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", nil))
 }

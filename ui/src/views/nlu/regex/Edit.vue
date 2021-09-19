@@ -9,13 +9,13 @@
 
     <a-card :body-style="{padding: '24px 32px'}" :bordered="false">
       <a-form-model ref="form" :model="model" :rules="rules">
-<!--        <a-form-model-item
+        <a-form-model-item
           :label="$t('form.code')"
           prop="code"
           :labelCol="labelCol"
           :wrapperCol="wrapperCol">
           <a-input v-model="model.code" />
-        </a-form-model-item>-->
+        </a-form-model-item>
         <a-form-model-item
           :label="$t('form.name')"
           prop="name"
@@ -44,7 +44,7 @@
 
 <script>
 import { labelCol, wrapperCol, wrapperFull } from '@/utils/const'
-import { requestSuccess, getRegex, saveRegex, validDictName } from '@/api/manage'
+import { requestSuccess, getRegex, saveRegex, validDictCode } from '@/api/manage'
 
 export default {
   name: 'RegexEdit',
@@ -58,19 +58,20 @@ export default {
   },
   data () {
     let checkPending
-    const checkName = (rule, value, callback) => {
+    const checkCode = (rule, value, callback) => {
       if (this.model.id) {
         callback()
       }
 
       clearTimeout(checkPending)
+      const that = this
       checkPending = setTimeout(() => {
-        validDictName(value, this.model.id, 'regex').then(json => {
+        validDictCode(value, this.model.id, 'regex').then(json => {
           console.log('validDictCode', json)
           if (requestSuccess(json.code) && json.data.pass) {
             callback()
           } else {
-            callback(new Error(this.$t('valid.dict.code.unique')))
+            callback(new Error(that.$t('valid.dict.code.unique')))
           }
         })
       }, 500)
@@ -82,10 +83,10 @@ export default {
       wrapperFull: wrapperFull,
       model: {},
       rules: {
-        name: [{ required: true, message: this.$t('valid.required.name'), trigger: 'blur' },
-          { validator: checkName, trigger: 'change' }]
-        // code: [{ required: true, message: this.$t('valid.required.code'), trigger: 'blur' },
-        //   { pattern: /^[a-z][a-z0-9]*$/, message: this.$t('valid.format.code'), trigger: 'blur' }]
+        name: [{ required: true, message: this.$t('valid.required.name'), trigger: 'blur' }],
+        code: [{ required: true, message: this.$t('valid.required.code'), trigger: 'blur' },
+          { pattern: /^[a-z][_a-z0-9]*$/, message: this.$t('valid.format.code'), trigger: 'blur' },
+          { validator: checkCode, trigger: 'change' }]
       }
     }
   },

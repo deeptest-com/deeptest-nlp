@@ -26,6 +26,7 @@
     "neffos.js": "^0.1.25",
     "nprogress": "^0.2.0",
     "reconnecting-websocket": "^4.4.0",
+    "sortablejs": "^1.14.0",
     "store": "^2.0.12",
     "viser-vue": "^2.4.6",
     "vue": "^2.6.10",

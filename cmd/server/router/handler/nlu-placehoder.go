@@ -8,18 +8,17 @@ import (
 	serverConst "github.com/utlai/utl/internal/server/utils/const"
 )
 
-type NluSynonymItemCtrl struct {
+type NluPlaceholderCtrl struct {
 	BaseCtrl
 
-	SynonymItemService *serverService.NluSynonymItemService `inject:""`
+	PlaceholderService *serverService.NluPlaceholderService `inject:""`
 }
 
-func NewNluSynonymItemCtrl() *NluSynonymItemCtrl {
-	return &NluSynonymItemCtrl{}
+func NewNluPlaceholderCtrl() *NluPlaceholderCtrl {
+	return &NluPlaceholderCtrl{}
 }
 
-func (c *NluSynonymItemCtrl) List(ctx iris.Context) {
-	synonymId, _ := ctx.URLParamInt("synonymId")
+func (c *NluPlaceholderCtrl) List(ctx iris.Context) {
 	keywords := ctx.URLParam("keywords")
 	status := ctx.URLParam("status")
 	pageNo, _ := ctx.URLParamInt("pageNo")
@@ -28,28 +27,28 @@ func (c *NluSynonymItemCtrl) List(ctx iris.Context) {
 		pageSize = serverConst.PageSize
 	}
 
-	items, total := c.SynonymItemService.List(synonymId, keywords, status, pageNo, pageSize)
+	models, total := c.PlaceholderService.List(keywords, status, pageNo, pageSize)
 
 	_, _ = ctx.JSON(_httpUtils.ApiResPage(200, "请求成功",
-		items, pageNo, pageSize, total))
+		models, pageNo, pageSize, total))
 }
 
-func (c *NluSynonymItemCtrl) Get(ctx iris.Context) {
+func (c *NluPlaceholderCtrl) Get(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
-	model := c.SynonymItemService.Get(uint(id))
+	model := c.PlaceholderService.Get(uint(id))
 	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", model))
 	return
 }
 
-func (c *NluSynonymItemCtrl) Create(ctx iris.Context) {
+func (c *NluPlaceholderCtrl) Create(ctx iris.Context) {
 	ctx.StatusCode(iris.StatusOK)
 
-	model := model.NluSynonymItem{}
+	model := model.NluPlaceholder{}
 	if err := ctx.ReadJSON(&model); err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
@@ -59,7 +58,7 @@ func (c *NluSynonymItemCtrl) Create(ctx iris.Context) {
 		return
 	}
 
-	err := c.SynonymItemService.Save(&model)
+	err := c.PlaceholderService.Save(&model)
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, "操作失败", nil))
 		return
@@ -69,14 +68,14 @@ func (c *NluSynonymItemCtrl) Create(ctx iris.Context) {
 	return
 }
 
-func (c *NluSynonymItemCtrl) Update(ctx iris.Context) {
-	model := model.NluSynonymItem{}
+func (c *NluPlaceholderCtrl) Update(ctx iris.Context) {
+	model := model.NluPlaceholder{}
 	if err := ctx.ReadJSON(&model); err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
-	err := c.SynonymItemService.Update(&model)
+	err := c.PlaceholderService.Update(&model)
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, "操作失败", nil))
 		return
@@ -85,47 +84,36 @@ func (c *NluSynonymItemCtrl) Update(ctx iris.Context) {
 	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", model))
 }
 
-func (c *NluSynonymItemCtrl) SetDefault(ctx iris.Context) {
+func (c *NluPlaceholderCtrl) Disable(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
-	c.SynonymItemService.SetDefault(uint(id))
+	c.PlaceholderService.Disable(uint(id))
 	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", ""))
 }
 
-func (c *NluSynonymItemCtrl) Disable(ctx iris.Context) {
+func (c *NluPlaceholderCtrl) Delete(ctx iris.Context) {
 	id, err := ctx.Params().GetInt("id")
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
-	c.SynonymItemService.Disable(uint(id))
+	c.PlaceholderService.Delete(uint(id))
 	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", ""))
 }
 
-func (c *NluSynonymItemCtrl) Delete(ctx iris.Context) {
-	id, err := ctx.Params().GetInt("id")
-	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
-		return
-	}
-
-	c.SynonymItemService.Delete(uint(id))
-	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", ""))
-}
-
-func (c *NluSynonymItemCtrl) BatchRemove(ctx iris.Context) {
+func (c *NluPlaceholderCtrl) BatchRemove(ctx iris.Context) {
 	ids := make([]int, 0)
 	if err := ctx.ReadJSON(&ids); err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
 		return
 	}
 
-	err := c.SynonymItemService.BatchDelete(ids)
+	err := c.PlaceholderService.BatchDelete(ids)
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, "操作失败", nil))
 		return
@@ -134,13 +122,7 @@ func (c *NluSynonymItemCtrl) BatchRemove(ctx iris.Context) {
 	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", nil))
 }
 
-func (c *NluSynonymItemCtrl) Resort(ctx iris.Context) {
-	parentId, err := ctx.Params().GetInt("parentId")
-	if err != nil {
-		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
-		return
-	}
-
+func (c *NluPlaceholderCtrl) Resort(ctx iris.Context) {
 	srcId, err := ctx.URLParamInt("srcId")
 	if err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
@@ -153,6 +135,6 @@ func (c *NluSynonymItemCtrl) Resort(ctx iris.Context) {
 		return
 	}
 
-	c.SynonymItemService.Resort(srcId, targetId, parentId)
+	c.PlaceholderService.Resort(srcId, targetId)
 	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", nil))
 }

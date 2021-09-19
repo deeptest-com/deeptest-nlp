@@ -133,3 +133,26 @@ func (c *NluRegexItemCtrl) BatchRemove(ctx iris.Context) {
 
 	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", nil))
 }
+
+func (c *NluRegexItemCtrl) Resort(ctx iris.Context) {
+	parentId, err := ctx.Params().GetInt("parentId")
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		return
+	}
+
+	srcId, err := ctx.URLParamInt("srcId")
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		return
+	}
+
+	targetId, err := ctx.URLParamInt("targetId")
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		return
+	}
+
+	c.RegexItemService.Resort(srcId, targetId, parentId)
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", nil))
+}

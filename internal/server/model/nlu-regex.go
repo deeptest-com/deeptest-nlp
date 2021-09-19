@@ -3,8 +3,9 @@ package model
 type NluRegex struct {
 	BaseModel
 
-	//Code  string         `json:"code"`
+	Code  string         `json:"code"`
 	Name  string         `json:"name"`
+	Ordr  int            `json:"ordr"`
 	Items []NluRegexItem `json:"items" gorm:"-"`
 
 	ProjectId uint `json:"projectId"`
@@ -12,7 +13,8 @@ type NluRegex struct {
 type NluRegexItem struct {
 	BaseModel
 
-	Content string `json:"content"`
+	Name    string `json:"name"`
+	Ordr    int    `json:"ordr"`
 	RegexId uint   `json:"regexId"`
 }
 

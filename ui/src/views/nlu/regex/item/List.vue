@@ -54,15 +54,17 @@
           rowKey="id"
           :columns="columns"
           :data="loadData"
+          :pageSize="40"
           :alert="true"
           :rowSelection="rowSelection"
           showPagination="auto"
+          class="sort-table"
         >
           <span slot="serial" slot-scope="text, record, index">
             {{ index + 1 }}
           </span>
 
-          <span slot="content" slot-scope="text">
+          <span slot="name" slot-scope="text">
             <ellipsis :length="4" tooltip>{{ text }}</ellipsis>
           </span>
 
@@ -115,9 +117,16 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { listRegexItem, disableRegexItem, removeRegexItem, batchRemoveRegexItem } from '@/api/manage'
+import {
+  listRegexItem,
+  disableRegexItem,
+  removeRegexItem,
+  batchRemoveRegexItem,
+  resortRegexItem
+} from '@/api/manage'
 
 import RegexItemEdit from './Edit'
+import Sortable from 'sortablejs'
 
 export default {
   name: 'RegexItems',
@@ -143,10 +152,12 @@ export default {
       mdl: null,
       advanced: false,
       queryParam: {},
+      models: [],
       loadData: parameter => {
         const requestParameters = Object.assign({ regexId: this.regexId }, parameter, this.queryParam)
         return listRegexItem(requestParameters)
           .then(res => {
+            this.models = res.data
             return res
           })
       },
@@ -172,7 +183,7 @@ export default {
       },
       {
         title: this.$t('form.name'),
-        dataIndex: 'content'
+        dataIndex: 'name'
       },
       {
         title: this.$t('form.status'),
@@ -198,6 +209,9 @@ export default {
       }
     }
   },
+  mounted () {
+    this.initSortable()
+  },
   computed: {
     rowSelection () {
       return {
@@ -207,6 +221,29 @@ export default {
     }
   },
   methods: {
+    initSortable () {
+      const that = this
+      const el = this.$el.querySelector('.sort-table table tbody')
+      Sortable.create(el, {
+        handle: '.ant-table-row',
+        animation: 150,
+        onUpdate: function (evt) {
+          console.log(evt)
+          that.resort(evt)
+        }
+      })
+    },
+    resort (evt) {
+      if (evt.oldIndex === evt.newIndex) {
+        return
+      }
+
+      const src = this.models[evt.oldIndex]
+      const target = this.models[evt.newIndex]
+      resortRegexItem(src.id, target.id, this.regexId).then(json => {
+        this.$refs.table.refresh(false)
+      })
+    },
     create () {
       this.modelId = new Date().getTime() * -1
       this.editVisible = true

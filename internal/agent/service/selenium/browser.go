@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/tebeka/selenium"
 	agentConf "github.com/utlai/utl/internal/agent/conf"
+	"github.com/utlai/utl/internal/agent/service/comm"
 	consts "github.com/utlai/utl/internal/comm/const"
 	"github.com/utlai/utl/internal/comm/domain"
 	_commonUtils "github.com/utlai/utl/internal/pkg/libs/common"
@@ -21,7 +22,8 @@ const (
 )
 
 type SeleniumBrowser struct {
-	syncMap sync.Map
+	syncMap            sync.Map
+	InstructionService *comm.InstructionService `inject:""`
 }
 
 func NewSeleniumBrowser() *SeleniumBrowser {
@@ -39,8 +41,9 @@ func (s *SeleniumBrowser) Restart(instruction domain.RasaResp) (result domain.In
 }
 
 func (s *SeleniumBrowser) Start(instruction domain.RasaResp) (instructionResult domain.InstructionResult) {
-	driverType := instruction.Entities[1].Value
-	driverVersion := instruction.Entities[2].Value
+	mp := s.InstructionService.Parer(instruction)
+	driverType := mp["浏览器类型"].(string)
+	driverVersion := mp["version"].(string)
 	port := 8848
 
 	seleniumPath, _ := s.DownloadDriver("selenium", "")

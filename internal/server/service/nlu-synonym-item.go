@@ -58,3 +58,9 @@ func (s *NluSynonymItemService) BatchDelete(ids []int) (err error) {
 
 	return
 }
+
+func (s *NluSynonymItemService) Resort(srcId, targetId, parentId int) (err error) {
+	err = s.NluSynonymItemRepo.Resort(srcId, targetId, parentId)
+
+	return
+}

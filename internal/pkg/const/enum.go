@@ -27,7 +27,7 @@ type ValidMethod string
 
 const (
 	ValidProjectPath ValidMethod = "validProjectPath"
-	ValidDictName    ValidMethod = "validDictName"
+	ValidDictCode    ValidMethod = "validDictCode"
 )
 
 func (e ValidMethod) ToString() string {

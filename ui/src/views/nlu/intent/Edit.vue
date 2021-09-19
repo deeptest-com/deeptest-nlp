@@ -148,6 +148,11 @@
 
         <a-form-model-item prop="value" v-if="slot.slotType === '_slot_'" :label="$t('form.slot')">
           <a-input v-model="slot.value" />
+          <a-select v-model="slot.value">
+            <a-select-option v-for="(item, index) in dicts" :key="index" :value="item.name">
+              {{ item.name }}
+            </a-select-option>
+          </a-select>
         </a-form-model-item>
 
         <a-form-model-item prop="value" v-if="slot.slotType === 'synonym'" :label="$t('form.synonym')">
@@ -387,8 +392,6 @@ export default {
       this.ruleSection.type = dictType
       this.ruleSectionEditVisible = true
 
-      if (dictType === '_slot_') return
-
       loadDicts(dictType).then(json => {
         console.log(json)
         this.dicts = json.data
@@ -463,8 +466,6 @@ export default {
       this.slotTypeChanged()
     },
     slotTypeChanged () {
-      if (this.slot.slotType === '_slot_') return
-
       loadDicts(this.slot.slotType).then(json => {
         console.log(json)
         this.dicts = json.data

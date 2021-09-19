@@ -72,3 +72,35 @@ const (
 func (e SeleniumIntent) ToString() string {
 	return string(e)
 }
+
+type NluPlaceholder string
+
+const ()
+
+func (e NluPlaceholder) ToString() string {
+	return string(e)
+}
+
+type NluSynonym string
+
+const ()
+
+func (e NluSynonym) ToString() string {
+	return string(e)
+}
+
+type NluLookUp string
+
+const ()
+
+func (e NluLookUp) ToString() string {
+	return string(e)
+}
+
+type NluRegex string
+
+const ()
+
+func (e NluRegex) ToString() string {
+	return string(e)
+}

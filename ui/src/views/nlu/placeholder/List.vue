@@ -54,9 +54,9 @@
           {{ index + 1 }}
         </span>
 
-        <!-- <span slot="code" slot-scope="text">
-          {{ text }}
-        </span>-->
+        <!--        <span slot="code" slot-scope="text">
+                  {{ text }}
+                </span>-->
         <span slot="name" slot-scope="text">
           <ellipsis :length="4" tooltip>{{ text }}</ellipsis>
         </span>
@@ -97,11 +97,11 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { listSynonym, disableSynonym, removeSynonym, resortSynonym } from '@/api/manage'
+import { listPlaceholder, disablePlaceholder, removePlaceholder, resortPlaceholder } from '@/api/manage'
 import Sortable from 'sortablejs'
 
 export default {
-  name: 'SynonymList',
+  name: 'PlaceholderList',
   components: {
     STable,
     Ellipsis
@@ -118,7 +118,8 @@ export default {
       models: [],
       loadData: parameter => {
         const requestParameters = Object.assign({}, parameter, this.queryParam)
-        return listSynonym(requestParameters)
+        console.log(requestParameters)
+        return listPlaceholder(requestParameters)
           .then(res => {
             this.models = res.data
             return res
@@ -199,7 +200,7 @@ export default {
 
       const src = this.models[evt.oldIndex]
       const target = this.models[evt.newIndex]
-      resortSynonym(src.id, target.id).then(json => {
+      resortPlaceholder(src.id, target.id).then(json => {
         this.$refs.table.refresh(false)
       })
     },
@@ -207,29 +208,29 @@ export default {
       this.mdl = null
       this.visible = true
 
-      this.$router.push('/nlu/synonym/0/edit')
+      this.$router.push('/nlu/placeholder/0/edit')
     },
     edit (record) {
       this.visible = true
       this.mdl = { ...record }
 
-      this.$router.push('/nlu/synonym/' + record.id + '/edit')
+      this.$router.push('/nlu/placeholder/' + record.id + '/edit')
     },
     detail (record) {
       this.visible = true
       this.mdl = { ...record }
 
-      this.$router.push('/nlu/synonym/' + record.id + '/items')
+      this.$router.push('/nlu/placeholder/' + record.id + '/items')
     },
     disable (record) {
-      disableSynonym(record).then(json => {
-        console.log('disableSynonym', json)
+      disablePlaceholder(record).then(json => {
+        console.log('disablePlaceholder', json)
         this.$refs.table.refresh(false)
       })
     },
     confirmRemove (record) {
-      removeSynonym(record).then(json => {
-        console.log('removeSynonym', json)
+      removePlaceholder(record).then(json => {
+        console.log('removePlaceholder', json)
         this.$refs.table.refresh(false)
       })
     },

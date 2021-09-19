@@ -2,14 +2,14 @@ package seleniumOpt
 
 import (
 	"github.com/tebeka/selenium"
+	"github.com/utlai/utl/internal/agent/service/comm"
 	"github.com/utlai/utl/internal/comm/domain"
-	"sync"
 )
 
 const ()
 
 type SeleniumPage struct {
-	syncMap sync.Map
+	InstructionService *comm.InstructionService `inject:""`
 }
 
 func NewSeleniumPage() *SeleniumPage {

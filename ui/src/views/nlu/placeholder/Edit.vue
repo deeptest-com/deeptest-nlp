@@ -44,10 +44,10 @@
 
 <script>
 import { labelCol, wrapperCol, wrapperFull } from '@/utils/const'
-import { requestSuccess, getLookup, saveLookup, validDictCode } from '@/api/manage'
+import { requestSuccess, getPlaceholder, savePlaceholder, validDictCode } from '@/api/manage'
 
 export default {
-  name: 'LookupEdit',
+  name: 'PlaceholderEdit',
   props: {
     id: {
       type: Number,
@@ -66,7 +66,7 @@ export default {
       clearTimeout(checkPending)
       const that = this
       checkPending = setTimeout(() => {
-        validDictCode(value, this.model.id, 'lookup').then(json => {
+        validDictCode(value, this.model.id, 'placeholder').then(json => {
           console.log('validDictCode', json)
           if (requestSuccess(json.code) && json.data.pass) {
             callback()
@@ -96,8 +96,6 @@ export default {
       this.loadData()
     }
   },
-  create () {
-  },
   mounted () {
     this.loadData()
   },
@@ -115,7 +113,7 @@ export default {
       }
     },
     getModel () {
-      return getLookup(this.id)
+      return getPlaceholder(this.id)
     },
     save (e) {
       console.log(this.model)
@@ -125,10 +123,10 @@ export default {
           return false
         }
 
-        saveLookup(this.model).then(json => {
-          console.log('saveLookup', json)
+        savePlaceholder(this.model).then(json => {
+          console.log('savePlaceholder', json)
           if (requestSuccess(json.code)) {
-            this.$router.push('/nlu/lookup/list')
+            this.$router.push('/nlu/placeholder/list')
           }
         })
       })
@@ -138,7 +136,7 @@ export default {
       this.$refs.form.resetFields()
     },
     back () {
-      this.$router.push('/nlu/lookup/list')
+      this.$router.push('/nlu/placeholder/list')
     }
   }
 }

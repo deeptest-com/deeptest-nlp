@@ -17,7 +17,7 @@ func NewNluRegexItemRepo() *NluRegexItemRepo {
 }
 
 func (r *NluRegexItemRepo) Query(regexId int, keywords, status string, pageNo int, pageSize int) (pos []model.NluRegexItem, total int64) {
-	query := r.DB.Model(&model.NluRegexItem{}).Order("id ASC")
+	query := r.DB.Model(&model.NluRegexItem{})
 	query = query.Where("regex_id = ?", regexId).Where("NOT deleted")
 
 	if status == "true" {
@@ -33,6 +33,7 @@ func (r *NluRegexItemRepo) Query(regexId int, keywords, status string, pageNo in
 		query = query.Offset((pageNo - 1) * pageSize).Limit(pageSize)
 	}
 
+	query.Order("ordr ASC")
 	err := query.Find(&pos).Error
 	if err != nil {
 		_logUtils.Errorf("sql error %s", err.Error())
@@ -66,6 +67,7 @@ func (r *NluRegexItemRepo) Get(id uint) (po model.NluRegexItem) {
 }
 
 func (r *NluRegexItemRepo) Save(po *model.NluRegexItem) (err error) {
+	po.Ordr = r.GetMaxOrder(po.RegexId)
 	err = r.DB.Model(&po).Omit("").Create(&po).Error
 	return
 }
@@ -116,12 +118,48 @@ func (r *NluRegexItemRepo) BatchDelete(ids []int) (err error) {
 func (r *NluRegexItemRepo) List() (pos []map[string]interface{}) {
 	err := r.DB.Model(&model.NluRegexItem{}).
 		Where("NOT deleted").
-		Order("id ASC").
+		Order("ordr ASC").
 		Find(&pos).
 		Error
 	if err != nil {
 		_logUtils.Errorf("sql error %s", err.Error())
 	}
 
+	return
+}
+
+func (r *NluRegexItemRepo) Resort(srcId, targetId, parentId int) (err error) {
+	target := r.Get(uint(targetId))
+
+	err = r.DB.Transaction(func(tx *gorm.DB) error {
+		err = r.DB.Model(&model.NluRegexItem{}).Where("regex_id = ? AND ordr >= ?", parentId, target.Ordr).
+			Updates(map[string]interface{}{"ordr": gorm.Expr("ordr + 1")}).Error
+		if err != nil {
+			return err
+		}
+
+		err = r.DB.Model(&model.NluRegexItem{}).Where("regex_id = ? AND id = ?", parentId, srcId).
+			Updates(map[string]interface{}{"ordr": target.Ordr}).Error
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	return
+}
+
+func (r *NluRegexItemRepo) GetMaxOrder(parentId uint) (order int) {
+	var po model.NluRegexItem
+	r.DB.Model(&po).Where("regex_id = ?", parentId).
+		Where("NOT deleted").
+		Order("ordr DESC").
+		Limit(1).
+		First(&po)
+
+	if po.ID > 0 {
+		order = po.Ordr + 1
+	}
 	return
 }

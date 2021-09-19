@@ -37,6 +37,11 @@ const locale = {
   'menu.slot': '语义槽',
   'menu.slot.list': '意语义槽列表',
   'menu.slot.edit': '语义槽编辑',
+
+  'menu.placeholder': '占位符',
+  'menu.placeholder.list': '占位符列表',
+  'menu.placeholder.edit': '占位符编辑',
+
   'menu.synonym': '同义词',
   'menu.synonym.list': '同义词表',
   'menu.synonym.edit': '编辑同义词表',

@@ -24,6 +24,7 @@ var (
 		&NluRule{},
 		&NluSent{},
 		&NluSlot{},
+		&NluPlaceholder{},
 		&NluSynonym{},
 		&NluSynonymItem{},
 		&NluLookup{},

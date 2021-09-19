@@ -41,10 +41,11 @@ type Router struct {
 	NluRuleCtrl        *handler.NluRuleCtrl        `inject:""`
 	NluSentCtrl        *handler.NluSentCtrl        `inject:""`
 	NluSlotCtrl        *handler.NluSlotCtrl        `inject:""`
-	NluLookupCtrl      *handler.NluLookupCtrl      `inject:""`
-	NluLookupItemCtrl  *handler.NluLookupItemCtrl  `inject:""`
+	NluPlaceholderCtrl *handler.NluPlaceholderCtrl `inject:""`
 	NluSynonymCtrl     *handler.NluSynonymCtrl     `inject:""`
 	NluSynonymItemCtrl *handler.NluSynonymItemCtrl `inject:""`
+	NluLookupCtrl      *handler.NluLookupCtrl      `inject:""`
+	NluLookupItemCtrl  *handler.NluLookupItemCtrl  `inject:""`
 	NluRegexCtrl       *handler.NluRegexCtrl       `inject:""`
 	NluRegexItemCtrl   *handler.NluRegexItemCtrl   `inject:""`
 	NluDictCtrl        *handler.NluDictCtrl        `inject:""`
@@ -163,7 +164,7 @@ func (r *Router) App() {
 					party.Put("/{id:uint}", r.NluSentCtrl.Update).Name = "更新说法"
 					party.Delete("/{id:uint}", r.NluSentCtrl.Delete).Name = "删除说法"
 					party.Post("/{id:uint}/disable", r.NluSentCtrl.Disable).Name = "禁用/启动句子"
-					party.Post("/{intentId:uint}/resort", r.NluSentCtrl.Resort).Name = "排序"
+					party.Post("/{parentId:uint}/resort", r.NluSentCtrl.Resort).Name = "句子排序"
 				})
 				admin.PartyFunc("/slots", func(party iris.Party) {
 					party.Get("/", r.NluSlotCtrl.List).Name = "语义槽列表"
@@ -174,6 +175,15 @@ func (r *Router) App() {
 					party.Post("/{id:uint}/disable", r.NluSlotCtrl.Disable).Name = "禁用/启动语义槽"
 				})
 
+				admin.PartyFunc("/placeholders", func(party iris.Party) {
+					party.Get("/", r.NluPlaceholderCtrl.List).Name = "占位符列表"
+					party.Get("/{id:uint}", r.NluPlaceholderCtrl.Get).Name = "占位符详情"
+					party.Post("/", r.NluPlaceholderCtrl.Create).Name = "创建占位符"
+					party.Put("/{id:uint}", r.NluPlaceholderCtrl.Update).Name = "更新占位符"
+					party.Delete("/{id:uint}", r.NluPlaceholderCtrl.Delete).Name = "删除占位符"
+					party.Post("/{id:uint}/disable", r.NluPlaceholderCtrl.Disable).Name = "禁用/启动占位符"
+					party.Post("/resort", r.NluPlaceholderCtrl.Resort).Name = "占位符排序"
+				})
 				admin.PartyFunc("/synonyms", func(party iris.Party) {
 					party.Get("/", r.NluSynonymCtrl.List).Name = "同义词列表"
 					party.Get("/{id:uint}", r.NluSynonymCtrl.Get).Name = "同义词详情"
@@ -181,6 +191,7 @@ func (r *Router) App() {
 					party.Put("/{id:uint}", r.NluSynonymCtrl.Update).Name = "更新同义词"
 					party.Delete("/{id:uint}", r.NluSynonymCtrl.Delete).Name = "删除同义词"
 					party.Post("/{id:uint}/disable", r.NluSynonymCtrl.Disable).Name = "禁用/启动同义词"
+					party.Post("/resort", r.NluSynonymCtrl.Resort).Name = "同义词排序"
 				})
 				admin.PartyFunc("/synonymItems", func(party iris.Party) {
 					party.Get("/", r.NluSynonymItemCtrl.List).Name = "同义词项列表"
@@ -190,6 +201,7 @@ func (r *Router) App() {
 					party.Delete("/{id:uint}", r.NluSynonymItemCtrl.Delete).Name = "删除同义词项"
 					party.Post("/{id:uint}/disable", r.NluSynonymItemCtrl.Disable).Name = "禁用/启动同义词项"
 					party.Post("/batchRemove", r.NluSynonymItemCtrl.BatchRemove).Name = "批量删除同义词项"
+					party.Post("/{parentId:uint}/resort", r.NluSynonymItemCtrl.Resort).Name = "同义词项排序"
 				})
 
 				admin.PartyFunc("/lookups", func(party iris.Party) {
@@ -199,6 +211,7 @@ func (r *Router) App() {
 					party.Put("/{id:uint}", r.NluLookupCtrl.Update).Name = "更新同类词"
 					party.Delete("/{id:uint}", r.NluLookupCtrl.Delete).Name = "删除同类词"
 					party.Post("/{id:uint}/disable", r.NluLookupCtrl.Disable).Name = "禁用/启动同类词"
+					party.Post("/resort", r.NluLookupCtrl.Resort).Name = "同类词排序"
 				})
 				admin.PartyFunc("/lookupItems", func(party iris.Party) {
 					party.Get("/", r.NluLookupItemCtrl.List).Name = "同类词项列表"
@@ -208,6 +221,7 @@ func (r *Router) App() {
 					party.Delete("/{id:uint}", r.NluLookupItemCtrl.Delete).Name = "删除同类词项"
 					party.Post("/{id:uint}/disable", r.NluLookupItemCtrl.Disable).Name = "禁用/启动同类词项"
 					party.Post("/batchRemove", r.NluLookupItemCtrl.BatchRemove).Name = "批量删除同类词项"
+					party.Post("/{parentId:uint}/resort", r.NluLookupItemCtrl.Resort).Name = "同类词项排序"
 				})
 
 				admin.PartyFunc("/regexes", func(party iris.Party) {
@@ -217,6 +231,7 @@ func (r *Router) App() {
 					party.Put("/{id:uint}", r.NluRegexCtrl.Update).Name = "更新正则表达式"
 					party.Delete("/{id:uint}", r.NluRegexCtrl.Delete).Name = "删除正则表达式"
 					party.Post("/{id:uint}/disable", r.NluRegexCtrl.Disable).Name = "禁用/启动正则表达式"
+					party.Post("/resort", r.NluRegexCtrl.Resort).Name = "正则表达式排序"
 				})
 				admin.PartyFunc("/regexItems", func(party iris.Party) {
 					party.Get("/", r.NluRegexItemCtrl.List).Name = "正则表达式项列表"
@@ -226,6 +241,7 @@ func (r *Router) App() {
 					party.Delete("/{id:uint}", r.NluRegexItemCtrl.Delete).Name = "删除正则表达式项"
 					party.Post("/{id:uint}/disable", r.NluRegexItemCtrl.Disable).Name = "禁用/启动正则表达式项"
 					party.Post("/batchRemove", r.NluRegexItemCtrl.BatchRemove).Name = "批量删除正则表达式项"
+					party.Post("/{parentId:uint}/resort", r.NluRegexItemCtrl.Resort).Name = "正则表达式项排序"
 				})
 
 				admin.PartyFunc("/dicts", func(party iris.Party) {

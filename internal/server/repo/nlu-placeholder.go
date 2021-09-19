@@ -8,18 +8,17 @@ import (
 	"time"
 )
 
-type NluLookupRepo struct {
+type NluPlaceholderRepo struct {
 	CommonRepo
 	DB *gorm.DB `inject:""`
 }
 
-func NewNluLookupRepo() *NluLookupRepo {
-	return &NluLookupRepo{}
+func NewNluPlaceholderRepo() *NluPlaceholderRepo {
+	return &NluPlaceholderRepo{}
 }
 
-func (r *NluLookupRepo) Query(keywords, status string, pageNo int, pageSize int) (pos []model.NluLookup, total int64) {
-	query := r.DB.Model(&model.NluLookup{}).Where("NOT deleted")
-
+func (r *NluPlaceholderRepo) Query(keywords, status string, pageNo int, pageSize int) (pos []model.NluPlaceholder, total int64) {
+	query := r.DB.Model(&model.NluPlaceholder{}).Where("NOT deleted")
 	if status == "true" {
 		query = query.Where("NOT disabled")
 	} else if status == "false" {
@@ -34,7 +33,6 @@ func (r *NluLookupRepo) Query(keywords, status string, pageNo int, pageSize int)
 	}
 
 	query.Order("ordr ASC")
-
 	err := query.Find(&pos).Error
 	if err != nil {
 		_logUtils.Errorf("sql error %s", err.Error())
@@ -48,7 +46,7 @@ func (r *NluLookupRepo) Query(keywords, status string, pageNo int, pageSize int)
 	return
 }
 
-func (r *NluLookupRepo) ListByProjectId(projectId uint) (pos []model.NluLookup) {
+func (r *NluPlaceholderRepo) ListByProjectId(projectId uint) (pos []model.NluPlaceholder) {
 	query := r.DB.Select("*").
 		Where("NOT deleted AND NOT disabled").
 		//Where("project_id = ?", projectId).
@@ -62,69 +60,51 @@ func (r *NluLookupRepo) ListByProjectId(projectId uint) (pos []model.NluLookup) 
 	return
 }
 
-func (r *NluLookupRepo) Get(id uint) (po model.NluLookup) {
+func (r *NluPlaceholderRepo) Get(id uint) (po model.NluPlaceholder) {
 	r.DB.Where("id = ?", id).First(&po)
 	return
 }
-func (r *NluLookupRepo) GetByCode(code string) (po model.NluLookup) {
+func (r *NluPlaceholderRepo) GetByCode(code string) (po model.NluPlaceholder) {
 	r.DB.Where("code = ? AND NOT deleted", code).First(&po)
 	return
 }
 
-func (r *NluLookupRepo) Save(po *model.NluLookup) (err error) {
+func (r *NluPlaceholderRepo) Save(po *model.NluPlaceholder) (err error) {
 	po.Name = strings.TrimSpace(po.Name)
 	po.Ordr = r.GetMaxOrder()
-
 	err = r.DB.Model(&po).Omit("").Create(&po).Error
 	return
 }
 
-func (r *NluLookupRepo) Update(po *model.NluLookup) (err error) {
+func (r *NluPlaceholderRepo) Update(po *model.NluPlaceholder) (err error) {
 	po.Name = strings.TrimSpace(po.Name)
 	err = r.DB.Omit("").Save(&po).Error
 	return
 }
 
-func (r *NluLookupRepo) SetDefault(id uint) (err error) {
-	r.DB.Transaction(func(tx *gorm.DB) error {
-		err = r.DB.Model(&model.NluLookup{}).Where("id = ?", id).
-			Updates(map[string]interface{}{"is_default": true}).Error
-		if err != nil {
-			return err
-		}
-
-		err = r.DB.Model(&model.NluLookup{}).Where("id != ?", id).
-			Updates(map[string]interface{}{"is_default": false}).Error
-
-		return nil
-	})
-
-	return
-}
-
-func (r *NluLookupRepo) Disable(id uint) (err error) {
-	err = r.DB.Model(&model.NluLookup{}).Where("id = ?", id).
+func (r *NluPlaceholderRepo) Disable(id uint) (err error) {
+	err = r.DB.Model(&model.NluPlaceholder{}).Where("id = ?", id).
 		Updates(map[string]interface{}{"disabled": gorm.Expr("NOT disabled")}).Error
 
 	return
 }
 
-func (r *NluLookupRepo) Delete(id uint) (err error) {
-	err = r.DB.Model(&model.NluLookup{}).Where("id = ?", id).
+func (r *NluPlaceholderRepo) Delete(id uint) (err error) {
+	err = r.DB.Model(&model.NluPlaceholder{}).Where("id = ?", id).
 		Updates(map[string]interface{}{"deleted": true, "deleted_at": time.Now()}).Error
 
 	return
 }
 
-func (r *NluLookupRepo) BatchDelete(ids []int) (err error) {
-	err = r.DB.Model(&model.NluLookup{}).Where("id IN (?)", ids).
+func (r *NluPlaceholderRepo) BatchDelete(ids []int) (err error) {
+	err = r.DB.Model(&model.NluPlaceholder{}).Where("id IN (?)", ids).
 		Updates(map[string]interface{}{"deleted": true, "deleted_at": time.Now()}).Error
 
 	return
 }
 
-func (r *NluLookupRepo) List() (pos []map[string]interface{}) {
-	err := r.DB.Model(&model.NluLookup{}).
+func (r *NluPlaceholderRepo) List() (pos []map[string]interface{}) {
+	err := r.DB.Model(&model.NluPlaceholder{}).
 		Where("NOT deleted").
 		Order("ordr ASC").
 		Find(&pos).
@@ -136,17 +116,17 @@ func (r *NluLookupRepo) List() (pos []map[string]interface{}) {
 	return
 }
 
-func (r *NluLookupRepo) Resort(srcId, targetId int) (err error) {
+func (r *NluPlaceholderRepo) Resort(srcId, targetId int) (err error) {
 	target := r.Get(uint(targetId))
 
 	err = r.DB.Transaction(func(tx *gorm.DB) error {
-		err = r.DB.Model(&model.NluLookup{}).Where("ordr >= ?", target.Ordr).
+		err = r.DB.Model(&model.NluPlaceholder{}).Where("ordr >= ?", target.Ordr).
 			Updates(map[string]interface{}{"ordr": gorm.Expr("ordr + 1")}).Error
 		if err != nil {
 			return err
 		}
 
-		err = r.DB.Model(&model.NluLookup{}).Where("id = ?", srcId).
+		err = r.DB.Model(&model.NluPlaceholder{}).Where("id = ?", srcId).
 			Updates(map[string]interface{}{"ordr": target.Ordr}).Error
 		if err != nil {
 			return err
@@ -158,8 +138,8 @@ func (r *NluLookupRepo) Resort(srcId, targetId int) (err error) {
 	return
 }
 
-func (r *NluLookupRepo) GetMaxOrder() (order int) {
-	var po model.NluLookup
+func (r *NluPlaceholderRepo) GetMaxOrder() (order int) {
+	var po model.NluPlaceholder
 	r.DB.Model(&po).Where("NOT deleted").
 		Order("ordr DESC").
 		Limit(1).

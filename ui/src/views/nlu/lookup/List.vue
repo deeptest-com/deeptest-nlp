@@ -45,14 +45,16 @@
         rowKey="id"
         :columns="columns"
         :data="loadData"
+        :pageSize="40"
         :alert="true"
         showPagination="auto"
+        class="sort-table"
       >
         <span slot="serial" slot-scope="text, record, index">
           {{ index + 1 }}
         </span>
 
-<!--        <span slot="code" slot-scope="text">
+        <!--        <span slot="code" slot-scope="text">
           {{ text }}
         </span>-->
 
@@ -95,8 +97,9 @@
 
 <script>
 import moment from 'moment'
+import Sortable from 'sortablejs'
 import { STable, Ellipsis } from '@/components'
-import { listLookup, disableLookup, removeLookup } from '@/api/manage'
+import { listLookup, disableLookup, removeLookup, resortLookUp } from '@/api/manage'
 
 export default {
   name: 'LookupList',
@@ -113,10 +116,12 @@ export default {
       mdl: null,
       advanced: false,
       queryParam: { status: '' },
+      models: [],
       loadData: parameter => {
         const requestParameters = Object.assign({}, parameter, this.queryParam)
         return listLookup(requestParameters)
           .then(res => {
+            this.models = res.data
             return res
           })
       },
@@ -138,10 +143,10 @@ export default {
         title: this.$t('form.no'),
         scopedSlots: { customRender: 'serial' }
       },
-      // {
-      //   title: this.$t('form.code'),
-      //   dataIndex: 'code'
-      // },
+      {
+        title: this.$t('form.code'),
+        dataIndex: 'code'
+      },
       {
         title: this.$t('form.name'),
         dataIndex: 'name'
@@ -170,9 +175,36 @@ export default {
       }
     }
   },
+  mounted () {
+    this.initSortable()
+  },
   computed: {
   },
   methods: {
+    initSortable () {
+      const that = this
+      const el = this.$el.querySelector('.sort-table table tbody')
+      Sortable.create(el, {
+        handle: '.ant-table-row',
+        animation: 150,
+        onUpdate: function (evt) {
+          console.log(evt)
+          that.resort(evt)
+        }
+      })
+    },
+    resort (evt) {
+      if (evt.oldIndex === evt.newIndex) {
+        return
+      }
+
+      const src = this.models[evt.oldIndex]
+      const target = this.models[evt.newIndex]
+      resortLookUp(src.id, target.id).then(json => {
+        this.$refs.table.refresh(false)
+      })
+    },
+
     create () {
       this.mdl = null
       this.visible = true

@@ -18,7 +18,7 @@ func NewNluRegexRepo() *NluRegexRepo {
 }
 
 func (r *NluRegexRepo) Query(keywords, status string, pageNo int, pageSize int) (pos []model.NluRegex, total int64) {
-	query := r.DB.Model(&model.NluRegex{}).Where("NOT deleted").Order("id ASC")
+	query := r.DB.Model(&model.NluRegex{}).Where("NOT deleted")
 	if status == "true" {
 		query = query.Where("NOT disabled")
 	} else if status == "false" {
@@ -32,6 +32,7 @@ func (r *NluRegexRepo) Query(keywords, status string, pageNo int, pageSize int) 
 		query = query.Offset((pageNo - 1) * pageSize).Limit(pageSize)
 	}
 
+	query.Order("ordr ASC")
 	err := query.Find(&pos).Error
 	if err != nil {
 		_logUtils.Errorf("sql error %s", err.Error())
@@ -63,13 +64,15 @@ func (r *NluRegexRepo) Get(id uint) (po model.NluRegex) {
 	r.DB.Where("id = ?", id).First(&po)
 	return
 }
-func (r *NluRegexRepo) GetByName(code string) (po model.NluRegex) {
-	r.DB.Where("name = ? AND NOT deleted", code).First(&po)
+func (r *NluRegexRepo) GetByCode(code string) (po model.NluRegex) {
+	r.DB.Where("code = ? AND NOT deleted", code).First(&po)
 	return
 }
 
 func (r *NluRegexRepo) Save(po *model.NluRegex) (err error) {
 	po.Name = strings.TrimSpace(po.Name)
+	po.Ordr = r.GetMaxOrder()
+
 	err = r.DB.Model(&po).Omit("").Create(&po).Error
 	return
 }
@@ -121,12 +124,47 @@ func (r *NluRegexRepo) BatchDelete(ids []int) (err error) {
 func (r *NluRegexRepo) List() (pos []map[string]interface{}) {
 	err := r.DB.Model(&model.NluRegex{}).
 		Where("NOT deleted").
-		Order("id ASC").
+		Order("ordr ASC").
 		Find(&pos).
 		Error
 	if err != nil {
 		_logUtils.Errorf("sql error %s", err.Error())
 	}
 
+	return
+}
+
+func (r *NluRegexRepo) Resort(srcId, targetId int) (err error) {
+	target := r.Get(uint(targetId))
+
+	err = r.DB.Transaction(func(tx *gorm.DB) error {
+		err = r.DB.Model(&model.NluRegex{}).Where("ordr >= ?", target.Ordr).
+			Updates(map[string]interface{}{"ordr": gorm.Expr("ordr + 1")}).Error
+		if err != nil {
+			return err
+		}
+
+		err = r.DB.Model(&model.NluRegex{}).Where("id = ?", srcId).
+			Updates(map[string]interface{}{"ordr": target.Ordr}).Error
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	return
+}
+
+func (r *NluRegexRepo) GetMaxOrder() (order int) {
+	var po model.NluRegex
+	r.DB.Model(&po).Where("NOT deleted").
+		Order("ordr DESC").
+		Limit(1).
+		First(&po)
+
+	if po.ID > 0 {
+		order = po.Ordr + 1
+	}
 	return
 }

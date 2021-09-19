@@ -151,25 +151,25 @@ func (s *NluParseRasaService) GenRegexStr(ruleText string) (regex string, slotMa
 
 		list := make([]string, 0)
 		if tag == "s" {
-			dict := s.NluSynonymRepo.GetByName(text)
+			dict := s.NluSynonymRepo.GetByCode(text)
 			dictItems := s.NluSynonymItemRepo.ListBySynonymId(dict.ID)
 
 			for _, i := range dictItems {
-				list = append(list, i.Content)
+				list = append(list, i.Name)
 			}
 		} else if tag == "l" {
-			dict := s.NluLookupRepo.GetByName(text)
+			dict := s.NluLookupRepo.GetByCode(text)
 			dictItems := s.NluLookupItemRepo.ListByLookupId(dict.ID)
 
 			for _, i := range dictItems {
-				list = append(list, i.Content)
+				list = append(list, i.Name)
 			}
 		} else if tag == "r" {
-			dict := s.NluRegexRepo.GetByName(text)
+			dict := s.NluRegexRepo.GetByCode(text)
 			dictItems := s.NluRegexItemRepo.ListByRegexId(dict.ID)
 
 			for _, i := range dictItems {
-				list = append(list, i.Content)
+				list = append(list, i.Name)
 			}
 		} else {
 			list = append(list, ".*")

@@ -5,9 +5,10 @@ import (
 )
 
 type NluDictService struct {
-	NluSynonymRepo *repo.NluSynonymRepo `inject:""`
-	NluLookupRepo  *repo.NluLookupRepo  `inject:""`
-	NluRegexRepo   *repo.NluRegexRepo   `inject:""`
+	NluPlaceholderRepo *repo.NluPlaceholderRepo `inject:""`
+	NluSynonymRepo     *repo.NluSynonymRepo     `inject:""`
+	NluLookupRepo      *repo.NluLookupRepo      `inject:""`
+	NluRegexRepo       *repo.NluRegexRepo       `inject:""`
 }
 
 func NewNluDictService() *NluDictService {
@@ -15,7 +16,9 @@ func NewNluDictService() *NluDictService {
 }
 
 func (s *NluDictService) List(tp string) (pos []map[string]interface{}) {
-	if tp == "synonym" {
+	if tp == "_slot_" {
+		pos = s.NluPlaceholderRepo.List()
+	} else if tp == "synonym" {
 		pos = s.NluSynonymRepo.List()
 	} else if tp == "lookup" {
 		pos = s.NluLookupRepo.List()

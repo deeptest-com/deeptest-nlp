@@ -3,22 +3,24 @@ package seleniumOpt
 import (
 	"fmt"
 	"github.com/tebeka/selenium"
+	"github.com/utlai/utl/internal/agent/service/comm"
 	"github.com/utlai/utl/internal/comm/domain"
-	"sync"
 )
 
 const ()
 
 type SeleniumNavigation struct {
-	syncMap sync.Map
+	InstructionService *comm.InstructionService `inject:""`
 }
 
 func NewSeleniumNavigation() *SeleniumNavigation {
 	return &SeleniumNavigation{}
 }
 
-func (s *SeleniumNavigation) Load(rasaRep domain.RasaResp, driver selenium.WebDriver) (instructionResult domain.InstructionResult) {
-	url := rasaRep.Entities[1].Value
+func (s *SeleniumNavigation) Load(instruction domain.RasaResp, driver selenium.WebDriver) (instructionResult domain.InstructionResult) {
+	mp := s.InstructionService.Parer(instruction)
+	url := mp["expression"].(string)
+
 	err := driver.Get(url)
 
 	if err != nil {

@@ -3,8 +3,9 @@ package model
 type NluSynonym struct {
 	BaseModel
 
-	//Code  string           `json:"code"`
+	Code  string           `json:"code"`
 	Name  string           `json:"name"`
+	Ordr  int              `json:"ordr"`
 	Items []NluSynonymItem `json:"items" gorm:"-"`
 
 	ProjectId uint `json:"projectId"`
@@ -12,7 +13,8 @@ type NluSynonym struct {
 type NluSynonymItem struct {
 	BaseModel
 
-	Content   string `json:"content"`
+	Name      string `json:"name"`
+	Ordr      int    `json:"ordr"`
 	SynonymId uint   `json:"synonymId"`
 }
 

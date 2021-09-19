@@ -125,7 +125,7 @@ func (s *NluCompilePatternService) getSynonymMap(projectId uint) (ret map[uint][
 	for _, synonym := range synonyms {
 		synonymItems := s.NluSynonymItemRepo.ListBySynonymId(synonym.ID)
 		for _, item := range synonymItems {
-			ret[synonym.ID] = append(ret[synonym.ID], item.Content)
+			ret[synonym.ID] = append(ret[synonym.ID], item.Name)
 		}
 	}
 
@@ -138,7 +138,7 @@ func (s *NluCompilePatternService) getLookupMap(projectId uint) (ret map[uint][]
 	for _, lookup := range lookups {
 		lookupItems := s.NluLookupItemRepo.ListByLookupId(lookup.ID)
 		for _, item := range lookupItems {
-			ret[lookup.ID] = append(ret[lookup.ID], item.Content)
+			ret[lookup.ID] = append(ret[lookup.ID], item.Name)
 		}
 	}
 
@@ -151,7 +151,7 @@ func (s *NluCompilePatternService) getRegexMap(projectId uint) (ret map[uint][]s
 	for _, regex := range regexes {
 		regexItems := s.NluRegexItemRepo.ListByRegexId(regex.ID)
 		for _, item := range regexItems {
-			ret[regex.ID] = append(ret[regex.ID], item.Content)
+			ret[regex.ID] = append(ret[regex.ID], item.Name)
 		}
 	}
 

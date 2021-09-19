@@ -2,11 +2,11 @@
   <a-card :body-style="{padding: '24px 32px'}" :bordered="false">
     <a-form-model ref="form" :model="model" :rules="rules">
       <a-form-model-item
-        :label="$t('form.content')"
-        prop="content"
+        :label="$t('form.name')"
+        prop="name"
         :labelCol="labelCol"
         :wrapperCol="wrapperCol">
-        <a-input v-model="model.content" />
+        <a-input v-model="model.name" />
       </a-form-model-item>
       <a-form-model-item
         :label="$t('form.desc')"
@@ -53,7 +53,7 @@ export default {
       wrapperFull: wrapperFull,
       model: {},
       rules: {
-        content: [{ required: true, message: this.$t('valid.required.name'), trigger: 'blur' }]
+        name: [{ required: true, message: this.$t('valid.required.name'), trigger: 'blur' }]
       }
     }
   },

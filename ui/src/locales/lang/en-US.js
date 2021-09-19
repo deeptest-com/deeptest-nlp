@@ -37,6 +37,11 @@ const locale = {
   'menu.slot': 'Slot',
   'menu.slot.list': 'Slot List',
   'menu.slot.edit': 'Slot Edit',
+
+  'menu.placeholder': 'Placeholder',
+  'menu.placeholder.list': 'Placeholder List',
+  'menu.placeholder.edit': 'Placeholder Edit',
+
   'menu.synonym': 'Synonym',
   'menu.synonym.list': 'Synonym List',
   'menu.synonym.edit': 'Synonym Edit',
