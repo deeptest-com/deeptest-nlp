@@ -1,7 +1,0 @@
-version: "2.0"
-nlu:
-- synonym: 退出_syn
-  examples: |
-    - 跳出
-    - 退出
-    - 结束

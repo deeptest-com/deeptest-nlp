@@ -1,6 +1,0 @@
-version: "2.0"
-nlu:
-- synonym: 运行_syn
-  examples: |
-    - 执行
-    - 运行

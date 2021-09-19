@@ -1,6 +1,0 @@
-version: "2.0"
-nlu:
-- synonym: 启动_syn
-  examples: |
-    - 启动
-    - 运行

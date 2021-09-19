@@ -1,9 +1,0 @@
-version: "2.0"
-nlu:
-- intent: 确定
-  examples: |
-    - [确定]{"entity":"确定", "value":"确定_lkp"}
-- intent: 取消
-  examples: |
-    - [取消]{"entity":"取消", "value":"取消_lkp"}
-    - [关闭]{"entity":"取消", "value":"取消_lkp"}

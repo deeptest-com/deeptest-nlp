@@ -1,7 +1,0 @@
-version: "2.0"
-nlu:
-- synonym: 如果_syn
-  examples: |
-    - 如果
-    - 假如
-    - 倘若

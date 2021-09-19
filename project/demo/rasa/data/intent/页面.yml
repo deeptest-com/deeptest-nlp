@@ -1,7 +1,0 @@
-version: "2.0"
-nlu:
-- intent: 加载
-  examples: |
-    - [加载]{"entity":"页面访问", "value":"页面访问_lkp"}[expression](expression)
-    - [打开]{"entity":"页面访问", "value":"页面访问_lkp"}[expression](expression)
-    - [访问]{"entity":"页面访问", "value":"页面访问_lkp"}[expression](expression)

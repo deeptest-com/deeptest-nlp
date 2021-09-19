@@ -1,9 +1,0 @@
-version: "2.0"
-nlu:
-- lookup: 浏览导航_lkp
-  examples: |
-    - 前进
-    - 后退
-    - 返回
-    - 刷新
-    - 重载
