@@ -17,8 +17,12 @@ func NewNluLookupRepo() *NluLookupRepo {
 	return &NluLookupRepo{}
 }
 
-func (r *NluLookupRepo) Query(keywords, status string, pageNo int, pageSize int) (pos []model.NluLookup, total int64) {
+func (r *NluLookupRepo) Query(keywords, status string, pageNo, pageSize, projectId int) (pos []model.NluLookup, total int64) {
 	query := r.DB.Model(&model.NluLookup{}).Where("NOT deleted")
+
+	if projectId > 0 {
+		query = query.Where("project_id = ?", projectId)
+	}
 
 	if status == "true" {
 		query = query.Where("NOT disabled")

@@ -9,8 +9,7 @@ import (
 )
 
 type NluSynonymCtrl struct {
-	BaseCtrl
-
+	CommCtrl       *CommCtrl                        `inject:""`
 	SynonymService *serverService.NluSynonymService `inject:""`
 }
 
@@ -19,6 +18,8 @@ func NewNluSynonymCtrl() *NluSynonymCtrl {
 }
 
 func (c *NluSynonymCtrl) List(ctx iris.Context) {
+	projectId, _ := c.CommCtrl.GetDefaultProject(ctx)
+
 	keywords := ctx.URLParam("keywords")
 	status := ctx.URLParam("status")
 	pageNo, _ := ctx.URLParamInt("pageNo")
@@ -27,7 +28,7 @@ func (c *NluSynonymCtrl) List(ctx iris.Context) {
 		pageSize = serverConst.PageSize
 	}
 
-	synonyms, total := c.SynonymService.List(keywords, status, pageNo, pageSize)
+	synonyms, total := c.SynonymService.List(keywords, status, pageNo, pageSize, projectId)
 
 	_, _ = ctx.JSON(_httpUtils.ApiResPage(200, "请求成功",
 		synonyms, pageNo, pageSize, total))
@@ -51,10 +52,6 @@ func (c *NluSynonymCtrl) Create(ctx iris.Context) {
 	model := model.NluSynonym{}
 	if err := ctx.ReadJSON(&model); err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
-		return
-	}
-
-	if c.Validate(model, ctx) {
 		return
 	}
 

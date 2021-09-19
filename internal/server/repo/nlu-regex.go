@@ -17,8 +17,13 @@ func NewNluRegexRepo() *NluRegexRepo {
 	return &NluRegexRepo{}
 }
 
-func (r *NluRegexRepo) Query(keywords, status string, pageNo int, pageSize int) (pos []model.NluRegex, total int64) {
+func (r *NluRegexRepo) Query(keywords, status string, pageNo, pageSize, projectId int) (pos []model.NluRegex, total int64) {
 	query := r.DB.Model(&model.NluRegex{}).Where("NOT deleted")
+
+	if projectId > 0 {
+		query = query.Where("project_id = ?", projectId)
+	}
+
 	if status == "true" {
 		query = query.Where("NOT disabled")
 	} else if status == "false" {

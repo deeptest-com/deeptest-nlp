@@ -106,6 +106,7 @@ const locale = {
   'form.createdBy': '创建人',
   'form.createdAt': '创建时间',
   'form.updatedAt': '更新时间',
+  'form.set.default': '设为默认',
   'form.is.default': '是否默认',
   'form.opt': '操作',
   'form.opt.log': '操作日志',

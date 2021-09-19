@@ -9,7 +9,7 @@ import (
 )
 
 type NluTaskCtrl struct {
-	BaseCtrl
+	CommCtrl *CommCtrl `inject:""`
 
 	NluTaskService *serverService.NluTaskService `inject:""`
 	UserService    *serverService.UserService    `inject:""`
@@ -20,7 +20,8 @@ func NewNluTaskCtrl() *NluTaskCtrl {
 }
 
 func (c *NluTaskCtrl) List(ctx iris.Context) {
-	projectId, _ := ctx.URLParamInt("projectId")
+	projectId, _ := c.CommCtrl.GetDefaultProject(ctx)
+
 	keywords := ctx.URLParam("keywords")
 	status := ctx.URLParam("status")
 	pageNo, _ := ctx.URLParamInt("pageNo")
@@ -55,10 +56,6 @@ func (c *NluTaskCtrl) Create(ctx iris.Context) {
 	model := model.NluTask{}
 	if err := ctx.ReadJSON(&model); err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
-		return
-	}
-
-	if c.Validate(model, ctx) {
 		return
 	}
 
@@ -119,4 +116,23 @@ func (c *NluTaskCtrl) Delete(ctx iris.Context) {
 
 	c.NluTaskService.Delete(uint(id))
 	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", ""))
+}
+
+func (c *NluTaskCtrl) Resort(ctx iris.Context) {
+	projectId, _ := c.CommCtrl.GetDefaultProject(ctx)
+
+	srcId, err := ctx.URLParamInt("srcId")
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		return
+	}
+
+	targetId, err := ctx.URLParamInt("targetId")
+	if err != nil {
+		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
+		return
+	}
+
+	c.NluTaskService.Resort(srcId, targetId, projectId)
+	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", nil))
 }

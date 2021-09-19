@@ -55,9 +55,9 @@ func (s *SeleniumService) Exec(instruction *domain.RasaResp, rpcResult *_domain.
 	}
 
 	switch cmd {
-	case consts.Load.ToString():
+	case consts.PageLoad.ToString():
 		instructionResult = s.SeleniumNavigation.Load(*instruction, driver)
-	case consts.GetSource.ToString():
+	case consts.PageGetSource.ToString():
 		instructionResult = s.SeleniumPage.GetPageSource(*instruction, driver)
 
 	default:

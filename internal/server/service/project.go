@@ -62,3 +62,9 @@ func (s *ProjectService) Delete(id uint) (err error) {
 
 	return
 }
+
+func (s *ProjectService) GetDefault() (project model.Project, err error) {
+	project, err = s.ProjectRepo.GetDefault()
+
+	return
+}

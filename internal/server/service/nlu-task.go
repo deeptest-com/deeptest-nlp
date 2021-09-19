@@ -65,3 +65,9 @@ func (s *NluTaskService) BatchDelete(ids []int) (err error) {
 
 	return
 }
+
+func (s *NluTaskService) Resort(srcId, targetId, parentId int) (err error) {
+	err = s.NluTaskRepo.Resort(srcId, targetId, parentId)
+
+	return
+}

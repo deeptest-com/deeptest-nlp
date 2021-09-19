@@ -9,7 +9,7 @@ import (
 )
 
 type WsCtrl struct {
-	BaseCtrl
+	CommCtrl
 	Namespace         string
 	*websocket.NSConn `stateless:"true"`
 

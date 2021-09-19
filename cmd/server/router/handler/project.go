@@ -12,7 +12,7 @@ import (
 )
 
 type ProjectCtrl struct {
-	BaseCtrl
+	CommCtrl *CommCtrl `inject:""`
 
 	ProjectService *serverService.ProjectService `inject:""`
 	AgentService   *serverService.AgentService   `inject:""`
@@ -90,10 +90,6 @@ func (c *ProjectCtrl) Create(ctx iris.Context) {
 		return
 	}
 
-	if c.Validate(model, ctx) {
-		return
-	}
-
 	cred := jwt.GetCredentials(ctx)
 
 	err := c.ProjectService.Save(&model, _stringUtils.ParseUint(cred.UserId))
@@ -130,6 +126,7 @@ func (c *ProjectCtrl) SetDefault(ctx iris.Context) {
 	}
 
 	c.ProjectService.SetDefault(uint(id))
+	c.CommCtrl.SetDefaultProject(id, ctx)
 	_, _ = ctx.JSON(_httpUtils.ApiRes(200, "操作成功", ""))
 }
 

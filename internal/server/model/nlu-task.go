@@ -5,6 +5,7 @@ type NluTask struct {
 
 	Name    string      `json:"name"`
 	Intents []NluIntent `json:"intents" gorm:"-"`
+	Ordr    int         `json:"ordr"`
 
 	ProjectId   uint   `json:"projectId"`
 	ProjectName string `json:"projectName"`

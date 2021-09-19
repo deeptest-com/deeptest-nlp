@@ -9,8 +9,6 @@ import (
 )
 
 type NluSentCtrl struct {
-	BaseCtrl
-
 	SentService *serverService.NluSentService `inject:""`
 }
 
@@ -52,10 +50,6 @@ func (c *NluSentCtrl) Create(ctx iris.Context) {
 	model := model.NluSent{}
 	if err := ctx.ReadJSON(&model); err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
-		return
-	}
-
-	if c.Validate(model, ctx) {
 		return
 	}
 

@@ -96,6 +96,10 @@ perms:
     displayname: "任务禁用"
     description: ""
     act: "POST"
+  - name: "/api/v1/admin/tasks/resort"
+    displayname: "任务排序"
+    description: ""
+    act: "POST"
 
   # 意图
   - name: "/api/v1/admin/intents"

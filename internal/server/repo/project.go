@@ -47,13 +47,13 @@ func (r *ProjectRepo) Query(keywords, status string, pageNo int, pageSize int) (
 }
 
 func (r *ProjectRepo) Get(id uint) (po model.Project) {
-	r.DB.Where("id = ?", id).First(&po)
+	r.DB.Model(&po).Where("id = ?", id).First(&po)
 
 	return
 }
 
 func (r *ProjectRepo) GetDetail(id uint) (po model.Project) {
-	r.DB.Where("id = ?", id).First(&po)
+	r.DB.Model(&po).Where("id = ?", id).First(&po)
 
 	histories := r.NluHistoryRepo.ListByProjectId(id)
 
@@ -75,6 +75,16 @@ func (r *ProjectRepo) Update(po *model.Project) (err error) {
 	return
 }
 
+func (r *ProjectRepo) GetDefault() (po model.Project, err error) {
+	err = r.DB.Model(&po).Where("is_default").First(&po).Error
+
+	if po.ID == 0 {
+		err = r.DB.Model(&po).Order("id ASC").Limit(1).First(&po).Error
+		r.SetDefault(po.ID)
+	}
+
+	return
+}
 func (r *ProjectRepo) SetDefault(id uint) (err error) {
 	r.DB.Transaction(func(tx *gorm.DB) error {
 		err = r.DB.Model(&model.Project{}).Where("id = ?", id).

@@ -56,6 +56,9 @@
           <span slot="name" slot-scope="text">
             <ellipsis :length="4" tooltip>{{ text }}</ellipsis>
           </span>
+          <span slot="isDefault" slot-scope="text">
+            {{ text }}
+          </span>
 
           <span slot="path" slot-scope="text">
             <ellipsis :length="4" tooltip>{{ text }}</ellipsis>
@@ -67,6 +70,9 @@
 
           <span slot="action" slot-scope="text, record">
             <template>
+              <a @click="setDefault(record)">{{ $t('form.set.default') }}</a>
+              <a-divider type="vertical" />
+
               <a @click="view(record)">{{ $t('form.view') }}</a>
               <a-divider type="vertical" />
 
@@ -100,7 +106,7 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { listProject, disableProject, removeProject } from '@/api/manage'
+import { listProject, disableProject, removeProject, setDefaultProject } from '@/api/manage'
 
 export default {
   name: 'ProjectList',
@@ -156,6 +162,10 @@ export default {
         dataIndex: 'name'
       },
       {
+        title: this.$t('form.is.default'),
+        dataIndex: 'isDefault'
+      },
+      {
         title: this.$t('form.path'),
         dataIndex: 'path'
       },
@@ -172,7 +182,7 @@ export default {
       {
         title: this.$t('form.opt'),
         dataIndex: 'action',
-        width: '260px',
+        width: '320px',
         scopedSlots: { customRender: 'action' }
       }
     ]
@@ -204,6 +214,7 @@ export default {
 
       this.$router.push('/project/' + record.id + '/test')
     },
+
     view (record) {
       this.visible = true
       this.mdl = { ...record }
@@ -217,6 +228,12 @@ export default {
       this.$router.push('/project/' + record.id + '/edit')
     },
 
+    setDefault (record) {
+      setDefaultProject(record).then(json => {
+        console.log('setDefault', json)
+        this.$refs.table.refresh(false)
+      })
+    },
     disable (record) {
       disableProject(record).then(json => {
         console.log('disableProject', json)

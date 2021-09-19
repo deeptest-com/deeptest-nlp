@@ -9,8 +9,6 @@ import (
 )
 
 type NluLookupItemCtrl struct {
-	BaseCtrl
-
 	LookupItemService *serverService.NluLookupItemService `inject:""`
 }
 
@@ -52,10 +50,6 @@ func (c *NluLookupItemCtrl) Create(ctx iris.Context) {
 	model := model.NluLookupItem{}
 	if err := ctx.ReadJSON(&model); err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
-		return
-	}
-
-	if c.Validate(model, ctx) {
 		return
 	}
 

@@ -138,6 +138,7 @@ func (r *Router) App() {
 					party.Put("/{id:uint}", r.NluTaskCtrl.Update).Name = "更新任务"
 					party.Delete("/{id:uint}", r.NluTaskCtrl.Delete).Name = "删除任务"
 					party.Post("/{id:uint}/disable", r.NluTaskCtrl.Disable).Name = "禁用/启动任务"
+					party.Post("/resort", r.NluTaskCtrl.Resort).Name = "任务排序"
 				})
 
 				admin.PartyFunc("/intents", func(party iris.Party) {

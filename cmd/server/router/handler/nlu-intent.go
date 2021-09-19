@@ -9,8 +9,6 @@ import (
 )
 
 type NluIntentCtrl struct {
-	BaseCtrl
-
 	IntentService *serverService.NluIntentService `inject:""`
 }
 

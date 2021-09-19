@@ -105,6 +105,7 @@ const locale = {
   'form.createdBy': 'Created By',
   'form.createdAt': 'Created Time',
   'form.updatedAt': 'Updated Time',
+  'form.set.default': 'Set Default',
   'form.is.default': 'Is Default',
   'form.opt': 'Operation',
   'form.opt.log': 'Operation Log',

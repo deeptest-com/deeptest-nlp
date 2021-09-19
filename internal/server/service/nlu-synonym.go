@@ -13,8 +13,8 @@ func NewNluSynonymService() *NluSynonymService {
 	return &NluSynonymService{}
 }
 
-func (s *NluSynonymService) List(keywords, status string, pageNo int, pageSize int) (pos []model.NluSynonym, total int64) {
-	pos, total = s.NluSynonymRepo.Query(keywords, status, pageNo, pageSize)
+func (s *NluSynonymService) List(keywords, status string, pageNo, pageSize, projectId int) (pos []model.NluSynonym, total int64) {
+	pos, total = s.NluSynonymRepo.Query(keywords, status, pageNo, pageSize, projectId)
 	return
 }
 

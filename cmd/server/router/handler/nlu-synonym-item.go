@@ -9,8 +9,6 @@ import (
 )
 
 type NluSynonymItemCtrl struct {
-	BaseCtrl
-
 	SynonymItemService *serverService.NluSynonymItemService `inject:""`
 }
 
@@ -52,10 +50,6 @@ func (c *NluSynonymItemCtrl) Create(ctx iris.Context) {
 	model := model.NluSynonymItem{}
 	if err := ctx.ReadJSON(&model); err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
-		return
-	}
-
-	if c.Validate(model, ctx) {
 		return
 	}
 

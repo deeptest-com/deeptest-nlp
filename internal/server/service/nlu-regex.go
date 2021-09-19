@@ -13,8 +13,8 @@ func NewNluRegexService() *NluRegexService {
 	return &NluRegexService{}
 }
 
-func (s *NluRegexService) List(keywords, status string, pageNo int, pageSize int) (pos []model.NluRegex, total int64) {
-	pos, total = s.NluRegexRepo.Query(keywords, status, pageNo, pageSize)
+func (s *NluRegexService) List(keywords, status string, pageNo, pageSize, projectId int) (pos []model.NluRegex, total int64) {
+	pos, total = s.NluRegexRepo.Query(keywords, status, pageNo, pageSize, projectId)
 	return
 }
 

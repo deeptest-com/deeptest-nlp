@@ -9,8 +9,7 @@ import (
 )
 
 type NluRegexCtrl struct {
-	BaseCtrl
-
+	CommCtrl     *CommCtrl                      `inject:""`
 	RegexService *serverService.NluRegexService `inject:""`
 }
 
@@ -19,6 +18,8 @@ func NewNluRegexCtrl() *NluRegexCtrl {
 }
 
 func (c *NluRegexCtrl) List(ctx iris.Context) {
+	projectId, _ := c.CommCtrl.GetDefaultProject(ctx)
+
 	keywords := ctx.URLParam("keywords")
 	status := ctx.URLParam("status")
 	pageNo, _ := ctx.URLParamInt("pageNo")
@@ -27,7 +28,7 @@ func (c *NluRegexCtrl) List(ctx iris.Context) {
 		pageSize = serverConst.PageSize
 	}
 
-	lookups, total := c.RegexService.List(keywords, status, pageNo, pageSize)
+	lookups, total := c.RegexService.List(keywords, status, pageNo, pageSize, projectId)
 
 	_, _ = ctx.JSON(_httpUtils.ApiResPage(200, "请求成功",
 		lookups, pageNo, pageSize, total))
@@ -51,10 +52,6 @@ func (c *NluRegexCtrl) Create(ctx iris.Context) {
 	model := model.NluRegex{}
 	if err := ctx.ReadJSON(&model); err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
-		return
-	}
-
-	if c.Validate(model, ctx) {
 		return
 	}
 

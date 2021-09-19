@@ -9,8 +9,7 @@ import (
 )
 
 type NluPlaceholderCtrl struct {
-	BaseCtrl
-
+	CommCtrl           *CommCtrl                            `inject:""`
 	PlaceholderService *serverService.NluPlaceholderService `inject:""`
 }
 
@@ -19,6 +18,8 @@ func NewNluPlaceholderCtrl() *NluPlaceholderCtrl {
 }
 
 func (c *NluPlaceholderCtrl) List(ctx iris.Context) {
+	projectId, _ := c.CommCtrl.GetDefaultProject(ctx)
+
 	keywords := ctx.URLParam("keywords")
 	status := ctx.URLParam("status")
 	pageNo, _ := ctx.URLParamInt("pageNo")
@@ -27,7 +28,7 @@ func (c *NluPlaceholderCtrl) List(ctx iris.Context) {
 		pageSize = serverConst.PageSize
 	}
 
-	models, total := c.PlaceholderService.List(keywords, status, pageNo, pageSize)
+	models, total := c.PlaceholderService.List(keywords, status, pageNo, pageSize, projectId)
 
 	_, _ = ctx.JSON(_httpUtils.ApiResPage(200, "请求成功",
 		models, pageNo, pageSize, total))
@@ -51,10 +52,6 @@ func (c *NluPlaceholderCtrl) Create(ctx iris.Context) {
 	model := model.NluPlaceholder{}
 	if err := ctx.ReadJSON(&model); err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
-		return
-	}
-
-	if c.Validate(model, ctx) {
 		return
 	}
 

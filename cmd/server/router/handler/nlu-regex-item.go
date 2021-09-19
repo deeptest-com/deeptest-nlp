@@ -9,8 +9,6 @@ import (
 )
 
 type NluRegexItemCtrl struct {
-	BaseCtrl
-
 	RegexItemService *serverService.NluRegexItemService `inject:""`
 }
 
@@ -52,10 +50,6 @@ func (c *NluRegexItemCtrl) Create(ctx iris.Context) {
 	model := model.NluRegexItem{}
 	if err := ctx.ReadJSON(&model); err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
-		return
-	}
-
-	if c.Validate(model, ctx) {
 		return
 	}
 

@@ -210,6 +210,13 @@ export function removeTask (model) {
     params: {}
   })
 }
+export function resortTask (srcId, targetId) {
+  return request({
+    url: api.tasks + '/resort',
+    method: 'post',
+    params: { srcId: srcId, targetId: targetId }
+  })
+}
 
 // 意图
 export function listIntent (taskId) {

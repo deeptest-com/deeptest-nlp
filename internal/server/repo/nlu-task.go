@@ -17,9 +17,12 @@ func NewNluTaskRepo() *NluTaskRepo {
 }
 
 func (r *NluTaskRepo) Query(projectId int, keywords, status string, pageNo int, pageSize int) (pos []model.NluTask, total int64) {
-	query := r.DB.Model(&model.NluTask{}).Where("NOT deleted").Order("id ASC")
+	query := r.DB.Model(&model.NluTask{}).
+		Where("NOT deleted").
+		Order("ordr ASC")
+
 	if projectId > 0 {
-		query = query.Where("project_id = %d", projectId)
+		query = query.Where("project_id = ?", projectId)
 	}
 
 	if status == "true" {
@@ -54,7 +57,7 @@ func (r *NluTaskRepo) ListByProjectId(projectId uint) (pos []model.NluTask) {
 	query := r.DB.Select("*").
 		Where("NOT deleted AND NOT disabled").
 		Where("project_id = ?", projectId).
-		Order("id ASC")
+		Order("ordr ASC")
 
 	err := query.Find(&pos).Error
 	if err != nil {
@@ -113,6 +116,28 @@ func (r *NluTaskRepo) Delete(id uint) (err error) {
 func (r *NluTaskRepo) BatchDelete(ids []int) (err error) {
 	err = r.DB.Model(&model.NluTask{}).Where("id IN (?)", ids).
 		Updates(map[string]interface{}{"deleted": true, "deleted_at": time.Now()}).Error
+
+	return
+}
+
+func (r *NluTaskRepo) Resort(srcId, targetId, parentId int) (err error) {
+	target := r.Get(uint(targetId))
+
+	err = r.DB.Transaction(func(tx *gorm.DB) error {
+		err = r.DB.Model(&model.NluTask{}).Where("project_id = ? AND ordr >= ?", parentId, target.Ordr).
+			Updates(map[string]interface{}{"ordr": gorm.Expr("ordr + 1")}).Error
+		if err != nil {
+			return err
+		}
+
+		err = r.DB.Model(&model.NluTask{}).Where("project_id = ? AND id = ?", parentId, srcId).
+			Updates(map[string]interface{}{"ordr": target.Ordr}).Error
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
 
 	return
 }

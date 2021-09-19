@@ -7,8 +7,6 @@ import (
 )
 
 type NluDictCtrl struct {
-	BaseCtrl
-
 	DictService *serverService.NluDictService `inject:""`
 }
 

@@ -13,8 +13,8 @@ func NewNluLookupService() *NluLookupService {
 	return &NluLookupService{}
 }
 
-func (s *NluLookupService) List(keywords, status string, pageNo int, pageSize int) (pos []model.NluLookup, total int64) {
-	pos, total = s.NluLookupRepo.Query(keywords, status, pageNo, pageSize)
+func (s *NluLookupService) List(keywords, status string, pageNo, pageSize, projectId int) (pos []model.NluLookup, total int64) {
+	pos, total = s.NluLookupRepo.Query(keywords, status, pageNo, pageSize, projectId)
 	return
 }
 

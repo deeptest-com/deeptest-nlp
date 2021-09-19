@@ -51,6 +51,7 @@
           :data="loadData"
           :alert="true"
           showPagination="auto"
+          class="sort-table"
         >
           <span slot="serial" slot-scope="text, record, index">
             {{ index + 1 }}
@@ -62,10 +63,6 @@
 
           <span slot="status" slot-scope="text, record">
             <a-badge :status="!record.disabled | statusTypeFilter(statusMap)" :text="!record.disabled | statusFilter(statusMap)" />
-          </span>
-
-          <span slot="project" slot-scope="text">
-            <span>{{ text }}</span>
           </span>
 
           <span slot="action" slot-scope="text, record">
@@ -111,9 +108,10 @@
 <script>
 import moment from 'moment'
 import { STable, Ellipsis } from '@/components'
-import { listTask, disableTask, removeTask, listForSelect } from '@/api/manage'
+import { listTask, disableTask, removeTask, listForSelect, resortTask } from '@/api/manage'
 
 import TaskDesign from './Design'
+import Sortable from 'sortablejs'
 
 export default {
   name: 'TaskList',
@@ -132,14 +130,14 @@ export default {
       time: 0,
       advanced: false,
       queryParam: { projectId: '0', status: '' },
+      models: [],
       projects: [],
 
-      isInit: true, // first time, use projectId in session to query
       loadData: parameter => {
-        const requestParameters = Object.assign({ isInit: this.isInit }, parameter, this.queryParam)
+        const requestParameters = Object.assign({}, parameter, this.queryParam)
         return listTask(requestParameters)
           .then(res => {
-            this.isInit = false
+            this.models = res.data
             return res
           })
       },
@@ -176,10 +174,6 @@ export default {
         scopedSlots: { customRender: 'status' }
       },
       {
-        title: this.$t('menu.project'),
-        dataIndex: 'projectName'
-      },
-      {
         title: this.$t('form.opt'),
         dataIndex: 'action',
         width: '220px',
@@ -198,9 +192,36 @@ export default {
       }
     }
   },
+  mounted () {
+    this.initSortable()
+  },
   computed: {
   },
   methods: {
+    initSortable () {
+      const that = this
+      const el = this.$el.querySelector('.sort-table table tbody')
+      Sortable.create(el, {
+        handle: '.ant-table-row',
+        animation: 150,
+        onUpdate: function (evt) {
+          console.log(evt)
+          that.resort(evt)
+        }
+      })
+    },
+    resort (evt) {
+      if (evt.oldIndex === evt.newIndex) {
+        return
+      }
+
+      const src = this.models[evt.oldIndex]
+      const target = this.models[evt.newIndex]
+      resortTask(src.id, target.id).then(json => {
+        this.$refs.table.refresh(false)
+      })
+    },
+
     create () {
       this.$router.push('/nlu/task/0/edit')
     },

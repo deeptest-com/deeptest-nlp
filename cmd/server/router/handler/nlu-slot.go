@@ -9,8 +9,6 @@ import (
 )
 
 type NluSlotCtrl struct {
-	BaseCtrl
-
 	SlotService *serverService.NluSlotService `inject:""`
 }
 
@@ -51,10 +49,6 @@ func (c *NluSlotCtrl) Create(ctx iris.Context) {
 	model := model.NluSlot{}
 	if err := ctx.ReadJSON(&model); err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
-		return
-	}
-
-	if c.Validate(model, ctx) {
 		return
 	}
 

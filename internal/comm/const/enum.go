@@ -25,11 +25,21 @@ func (e AgentStatus) ToString() string {
 type SeleniumIntent string
 
 const (
-	SeleniumStart SeleniumIntent = "启动浏览器"
-	SeleniumStop  SeleniumIntent = "停止浏览器"
+	LogPrint SeleniumIntent = "打印日志"
+	TimeWait SeleniumIntent = "等待"
 
-	Load      SeleniumIntent = "加载"
-	GetSource SeleniumIntent = "获取源"
+	BrowserOpen  SeleniumIntent = "打开浏览器"
+	BrowserClose SeleniumIntent = "关闭浏览器"
+
+	NavForward SeleniumIntent = "前进"
+	NavBack    SeleniumIntent = "后退"
+	NavRefresh SeleniumIntent = "刷新"
+
+	PageLoad      SeleniumIntent = "加载"
+	PageGetSource SeleniumIntent = "获取源"
+
+	WindowsConfirm SeleniumIntent = "确定"
+	WindowsCancel  SeleniumIntent = "取消"
 
 	CookieSet SeleniumIntent = "Cookie设置"
 	CookieGet SeleniumIntent = "Cookie获取"
@@ -37,36 +47,25 @@ const (
 	VariableSetToExpression         SeleniumIntent = "设置变量为表达式"
 	VariableSetSetToElementProperty SeleniumIntent = "设置变量为元素属性"
 
-	WindowsConfirm SeleniumIntent = "确定"
-	WindowsCancel  SeleniumIntent = "取消"
-
 	IterationAlways   SeleniumIntent = "迭代永久"
 	IterationTime     SeleniumIntent = "迭代次数"
 	IterationData     SeleniumIntent = "迭代数据"
 	IterationBreak    SeleniumIntent = "迭代退出"
 	IterationContinue SeleniumIntent = "迭代继续"
 
-	PrintLog SeleniumIntent = "打印日志"
+	ElementClick       SeleniumIntent = "点击"
+	ElementDoubleClick SeleniumIntent = "双击"
+	ElementRightClick  SeleniumIntent = "右击"
+	ElementMouseDown   SeleniumIntent = "按下"
+	ElementMouseUp     SeleniumIntent = "抬起"
+	ElementMouseOver   SeleniumIntent = "悬停"
+	ElementDragDrop    SeleniumIntent = "拖动"
 
-	Click       SeleniumIntent = "点击"
-	DoubleClick SeleniumIntent = "双击"
-	RightClick  SeleniumIntent = "右击"
-	MouseDown   SeleniumIntent = "按下"
-	MouseUp     SeleniumIntent = "抬起"
-	MouseOver   SeleniumIntent = "悬停"
-	DragDrop    SeleniumIntent = "拖动"
+	ElementInput SeleniumIntent = "输入"
+	ElementClear SeleniumIntent = "清除"
 
-	Input SeleniumIntent = "输入"
-	Clear SeleniumIntent = "清除"
-
-	Assert SeleniumIntent = "断言"
-	If     SeleniumIntent = "判断"
-
-	Forward SeleniumIntent = "前进"
-	Back    SeleniumIntent = "后退"
-	Refresh SeleniumIntent = "刷新"
-
-	Wait SeleniumIntent = "等待"
+	LogicAssert SeleniumIntent = "断言"
+	LogicIf     SeleniumIntent = "判断"
 )
 
 func (e SeleniumIntent) ToString() string {
@@ -75,7 +74,16 @@ func (e SeleniumIntent) ToString() string {
 
 type NluPlaceholder string
 
-const ()
+const (
+	Variable    NluPlaceholder = "variable"
+	Value       NluPlaceholder = "value"
+	Version     NluPlaceholder = "version"
+	Expression  NluPlaceholder = "expression"
+	Expression2 NluPlaceholder = "expression2"
+	Data        NluPlaceholder = "data"
+	Element     NluPlaceholder = "element"
+	Property    NluPlaceholder = "property"
+)
 
 func (e NluPlaceholder) ToString() string {
 	return string(e)
@@ -83,7 +91,21 @@ func (e NluPlaceholder) ToString() string {
 
 type NluSynonym string
 
-const ()
+const (
+	Assert   NluSynonym = "assert"
+	Print    NluSynonym = "print"
+	Run      NluSynonym = "run"
+	Script   NluSynonym = "script"
+	If       NluSynonym = "if"
+	Iterator NluSynonym = "iterator"
+	Exit     NluSynonym = "exit"
+	Continue NluSynonym = "continue"
+	Wait     NluSynonym = "wait"
+	Get      NluSynonym = "get"
+	Set      NluSynonym = "set"
+	Launch   NluSynonym = "launch"
+	Stop     NluSynonym = "stop"
+)
 
 func (e NluSynonym) ToString() string {
 	return string(e)

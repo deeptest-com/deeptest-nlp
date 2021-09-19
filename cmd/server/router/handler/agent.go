@@ -8,8 +8,6 @@ import (
 )
 
 type AgentCtrl struct {
-	BaseCtrl
-
 	AgentService *serverService.AgentService `inject:""`
 }
 

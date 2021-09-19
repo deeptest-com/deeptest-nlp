@@ -13,8 +13,8 @@ func NewNluPlaceholderService() *NluPlaceholderService {
 	return &NluPlaceholderService{}
 }
 
-func (s *NluPlaceholderService) List(keywords, status string, pageNo int, pageSize int) (pos []model.NluPlaceholder, total int64) {
-	pos, total = s.NluPlaceholderRepo.Query(keywords, status, pageNo, pageSize)
+func (s *NluPlaceholderService) List(keywords, status string, pageNo, pageSize, projectId int) (pos []model.NluPlaceholder, total int64) {
+	pos, total = s.NluPlaceholderRepo.Query(keywords, status, pageNo, pageSize, projectId)
 	return
 }
 

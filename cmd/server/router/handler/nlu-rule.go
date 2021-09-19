@@ -9,8 +9,6 @@ import (
 )
 
 type NluRuleCtrl struct {
-	BaseCtrl
-
 	RuleService *serverService.NluRuleService `inject:""`
 }
 
@@ -52,10 +50,6 @@ func (c *NluRuleCtrl) Create(ctx iris.Context) {
 	model := model.NluRule{}
 	if err := ctx.ReadJSON(&model); err != nil {
 		_, _ = ctx.JSON(_httpUtils.ApiRes(400, err.Error(), nil))
-		return
-	}
-
-	if c.Validate(model, ctx) {
 		return
 	}
 
