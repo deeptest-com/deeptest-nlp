@@ -116,7 +116,7 @@ export default {
   display: flex;
   .left {
     padding: 8px;
-    width: 220px;
+    width: 280px;
     height: 100%;
     border-right: 1px solid #e9f2fb;
   }

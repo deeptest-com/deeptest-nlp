@@ -83,8 +83,17 @@ func (r *NluIntentRepo) Save(po *model.NluIntent) (err error) {
 }
 
 func (r *NluIntentRepo) Update(po *model.NluIntent) (err error) {
+	mp := map[string]interface{}{}
+	if po.Code != "" {
+		mp["code"] = po.Code
+	} else if po.Name != "" {
+		mp["name"] = po.Name
+	} else {
+		return
+	}
+
 	err = r.DB.Model(&model.NluIntent{}).Where("id = ?", po.ID).
-		Updates(map[string]interface{}{"name": po.Name}).Error
+		Updates(mp).Error
 	return
 }
 

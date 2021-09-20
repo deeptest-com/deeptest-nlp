@@ -1,11 +1,28 @@
 <template>
   <div v-show="model.id">
     <div class="header">
-      <div v-if="!isEditTitle" class="title">
+      <span class="label">{{ $t('form.code') }}</span>
+      <span v-if="!isEditCode" class="code">
+        <span>{{ model.code }}</span>&nbsp;&nbsp;
+        <a @click="editCode()"><a-icon class="edit-icon" type="edit" /></a>
+      </span>
+      <span v-if="isEditCode">
+        <a-form layout="inline">
+          <a-form-item>
+            <a-input v-model="model.code" type="text"></a-input>
+          </a-form-item>
+          <a-form-item>
+            <a @click="saveCode()"><a-icon type="check" /></a>
+          </a-form-item>
+        </a-form>
+      </span>
+
+      <span class="label">{{ $t('form.name') }}</span>
+      <span v-if="!isEditTitle" class="title">
         <span>{{ model.name }}</span>&nbsp;&nbsp;
         <a @click="editTitle()"><a-icon class="edit-icon" type="edit" /></a>
-      </div>
-      <div v-if="isEditTitle">
+      </span>
+      <span v-if="isEditTitle">
         <a-form layout="inline">
           <a-form-item>
             <a-input v-model="model.name" type="text"></a-input>
@@ -14,7 +31,8 @@
             <a @click="saveTitle()"><a-icon type="check" /></a>
           </a-form-item>
         </a-form>
-      </div>
+      </span>
+
       <div class="buttons"></div>
     </div>
 
@@ -263,6 +281,7 @@ export default {
       selectedSlot: {},
       selectedIndex: -1,
       slot: {},
+      isEditCode: false,
       isEditTitle: false,
       tabKey: 'maintainSent',
       mouseLocation: -1,
@@ -433,6 +452,18 @@ export default {
         this.$global.EventBus.$emit(this.$global.intentUpdateEvent, { 'id': this.model.id })
       })
     },
+    editCode () {
+      this.isEditCode = true
+    },
+    saveCode () {
+      const data = { id: this.model.id, code: this.model.code }
+      updateIntent(data).then(json => {
+        this.isEditCode = false
+
+        this.$global.EventBus.$emit(this.$global.intentUpdateEvent, { 'id': this.model.id })
+      })
+    },
+
     tabClick (key) {
       this.tabKey = key
     },
@@ -526,10 +557,22 @@ export default {
 .header {
   display: flex;
   border-bottom: 1px solid #e9f2fb;
-  .title {
-    flex: 1;
+  .label {
+    display: inline-block;
+    margin-right: 6px;
     font-weight: bolder;
     font-size: 20px;
+    line-height: 20px;
+  }
+  .code {
+    width: 160px;
+    font-size: 20px;
+    line-height: 20px;
+  }
+  .title {
+    flex: 1;
+    font-size: 20px;
+    line-height: 20px;
   }
   .buttons {
     width: 160px;

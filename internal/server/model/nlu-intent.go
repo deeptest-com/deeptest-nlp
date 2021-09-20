@@ -2,7 +2,7 @@ package model
 
 type NluIntent struct {
 	BaseModel
-
+	Code   string    `json:"code"`
 	Name   string    `json:"name"`
 	Sents  []NluSent `json:"sents" gorm:"-"`
 	Rules  []NluRule `json:"rules" gorm:"-"`

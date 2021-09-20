@@ -276,6 +276,7 @@ export function moveIntent (srcId, targetId, mode, taskId) {
 export function wrapperIntents (intents, rootName) {
   const root = { id: 0, name: rootName, children: [] }
   intents.forEach((item, index) => {
+    item.name = item.name + ' (' + item.code + ')'
     root.children.push(item)
   })
   return [root]
