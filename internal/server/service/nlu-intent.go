@@ -84,15 +84,16 @@ func (s *NluIntentService) Delete(id uint) (err error) {
 func (s *NluIntentService) Move(srcId, targetId, taskId uint, mode string) (src model.NluIntent, err error) {
 	src = s.NluIntentRepo.Get(srcId)
 	target := s.NluIntentRepo.Get(targetId)
+	//modeInt, _ := strconv.Atoi(mode)
 
-	if "0" == mode || "-1" == mode {
+	if "-1" == mode {
 		err = s.NluIntentRepo.AddOrderForTargetAndNext(src.ID, target.Ordr, taskId)
 		if err != nil {
 			return
 		}
 
 		src.Ordr = target.Ordr
-	} else if "1" == mode {
+	} else {
 		err = s.NluIntentRepo.AddOrderForNext(src.ID, target.Ordr, taskId)
 		if err != nil {
 			return

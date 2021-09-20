@@ -180,9 +180,10 @@ export default {
     },
     onDrop (info) {
       console.log('onDrop', info, info.dropToGap, info.dragNode.eventKey, info.node.eventKey, info.dropPosition)
+      if (info.node.eventKey === 0) return
 
-      if (!info.dropToGap || info.node.eventKey === 0) return
-      moveIntent(info.dragNode.eventKey, info.node.eventKey, info.dropPosition, this.taskId).then(json => {
+      const pos = info.dropPosition - Number(info.node.pos.split('-')[2])
+      moveIntent(info.dragNode.eventKey, info.node.eventKey, pos, this.taskId).then(json => {
         console.log('moveIntent', json)
         this.updateCallback(json)
       })
