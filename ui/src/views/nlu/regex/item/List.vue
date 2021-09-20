@@ -182,6 +182,10 @@ export default {
         scopedSlots: { customRender: 'serial' }
       },
       {
+        title: this.$t('form.code'),
+        dataIndex: 'code'
+      },
+      {
         title: this.$t('form.name'),
         dataIndex: 'name'
       },

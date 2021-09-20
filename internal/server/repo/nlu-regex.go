@@ -54,7 +54,7 @@ func (r *NluRegexRepo) Query(keywords, status string, pageNo, pageSize, projectI
 func (r *NluRegexRepo) ListByProjectId(projectId uint) (pos []model.NluRegex) {
 	query := r.DB.Select("*").
 		Where("NOT deleted AND NOT disabled").
-		//Where("project_id = ?", projectId).
+		Where("project_id = ?", projectId).
 		Order("id ASC")
 
 	err := query.Find(&pos).Error
@@ -66,11 +66,11 @@ func (r *NluRegexRepo) ListByProjectId(projectId uint) (pos []model.NluRegex) {
 }
 
 func (r *NluRegexRepo) Get(id uint) (po model.NluRegex) {
-	r.DB.Where("id = ?", id).First(&po)
+	r.DB.Model(&po).Where("id = ?", id).First(&po)
 	return
 }
 func (r *NluRegexRepo) GetByCode(code string) (po model.NluRegex) {
-	r.DB.Where("code = ? AND NOT deleted", code).First(&po)
+	r.DB.Model(&po).Where("code = ? AND NOT deleted", code).First(&po)
 	return
 }
 

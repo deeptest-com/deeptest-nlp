@@ -43,5 +43,20 @@ SELECT * FROM
 ORDER BY task_order, intent_ordr
 
 SELECT * FROM
-(SELECT t.name task_name, i.code intent_code, i.name intent_name, t.ordr task_order, i.ordr intent_ordr FROM nlu_intent i JOIN nlu_task t ON i.task_id = t.id)
-ORDER BY task_order, intent_ordr
+(SELECT t.code lookup_code, t.name lookup_name, i.code item_code, i.name item_name, t.ordr lookup_order, i.ordr item_ordr
+    FROM nlu_lookup_item i JOIN nlu_lookup t ON i.lookup_id = t.id)
+ORDER BY lookup_order, item_ordr
+
+SELECT * FROM
+(SELECT t.code synonym_code, t.name synonym_name, i.name item_name, t.ordr synonym_order, i.ordr item_ordr
+    FROM nlu_synonym_item i JOIN nlu_synonym t ON i.synonym_id = t.id)
+ORDER BY synonym_order, item_ordr
+
+SELECT * FROM
+(SELECT t.code regex_code, t.name regex_name, i.name item_name, t.ordr regex_order, i.ordr item_ordr
+    FROM nlu_regex_item i JOIN nlu_regex t ON i.regex_id = t.id)
+ORDER BY regex_order, item_ordr
+
+SELECT code, name, ordr
+    FROM nlu_placeholder
+ORDER BY ordr

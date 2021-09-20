@@ -163,3 +163,8 @@ func (r *NluRegexItemRepo) GetMaxOrder(parentId uint) (order int) {
 	}
 	return
 }
+
+func (r *NluRegexItemRepo) GetByCode(code string) (po model.NluRegexItem) {
+	r.DB.Model(&po).Where("code = ? AND NOT deleted", code).First(&po)
+	return
+}

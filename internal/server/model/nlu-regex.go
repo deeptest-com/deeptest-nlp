@@ -12,7 +12,7 @@ type NluRegex struct {
 }
 type NluRegexItem struct {
 	BaseModel
-
+	Code    string `json:"code"`
 	Name    string `json:"name"`
 	Ordr    int    `json:"ordr"`
 	RegexId uint   `json:"regexId"`

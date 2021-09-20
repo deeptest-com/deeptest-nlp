@@ -17,6 +17,7 @@ type ValidService struct {
 	NluLookupRepo      *repo.NluLookupRepo      `inject:""`
 	NluLookupItemRepo  *repo.NluLookupItemRepo  `inject:""`
 	NluRegexRepo       *repo.NluRegexRepo       `inject:""`
+	NluRegexItemRepo   *repo.NluRegexItemRepo   `inject:""`
 }
 
 func NewValidService() *ValidService {
@@ -72,6 +73,11 @@ func (s *ValidService) ValidDictCode(value string, id uint, tp string) (result s
 		}
 	} else if tp == "regex" {
 		po := s.NluRegexRepo.GetByCode(value)
+		if po.ID == id {
+			result.Pass = true
+		}
+	} else if tp == "regexItem" {
+		po := s.NluRegexItemRepo.GetByCode(value)
 		if po.ID == id {
 			result.Pass = true
 		}
