@@ -1,14 +1,13 @@
-# [utl.ai](http://utl.ai)
+# [DeepTest.com](http://deeptest.com)
 
-## Unified Testing Language
-
-Rasa Nlu, Golang, MySQL, Vue.js
+## DeepTest Software Testing Platform - Natural Language Processing
+Rasa Nlu, Golang, Iris, Gorm, Protobuf, WebSocket, MySQL
 
 ### Quick start
 TODO
 
 ### Licenses
-All SERVER SIDE source code is licensed under the [GPLv3 License](LICENSE).
+All source code is licensed under the [GPLv3 License](LICENSE.md).
 
 ## Thanks
 Thank you [JetBrains](https://www.jetbrains.com) for providing free open source licenses.
